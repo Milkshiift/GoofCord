@@ -16,7 +16,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/armcord/armcord.git"
+        "url": "git+https://github.com/Milkshiift/GoofCord"
     },
     "author": "MilkShift",
     "license": "OSL-3.0",
@@ -55,7 +55,7 @@
             "package.json",
             "LICENSE"
         ],
-        "appId": "com.smartfridge.armcord",
+        "appId": "com.milkshift.goofcord",
         "productName": "GoofCord",
         "mac": {
             "category": "Network"
@@ -63,7 +63,7 @@
         "linux": {
             "icon": "build/icon.icns",
             "category": "Network",
-            "maintainer": "smartfridge@vivaldi.net",
+            "maintainer": "milkshiftdev@gmail.com",
             "target": [
                 "deb",
                 "tar.gz",
