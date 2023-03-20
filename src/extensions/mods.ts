@@ -13,7 +13,6 @@ const unstrictCSP = () => {
             // raw.githubusercontent.com
             responseHeaders["content-type"] = ["text/css"];
         }
-
         done({responseHeaders});
     });
 };
