@@ -4,25 +4,14 @@
     <meta charset="UTF-8"/>
     <link href="./favicon.ico" rel="icon" type="image/ico"/>
     <title>GoofCord</title>
-    <style>
-        @import url("css/splash.css");
-    </style>
-    <script>
-        window.onbeforeunload = function () {
-            const style = document.createElement("style");
-            style.textContent = "body { display: none; }";
-            document.head.append(style);
-        };
-    </script>
 </head>
 
 <body>
-<div class="container">
-    <video autoplay class="logo" id="splashscreen-armcord" loop>
-        <source src="https://armcord.xyz/discord_loading.webm" type="video/webm"/>
-    </video>
-    <p id="text-splashscreen"></p>
-</div>
 </body>
-<script src="js/splash.ts"></script>
+<script>
+    async function load() {
+        window.location.replace("https://canary.discord.com/app");
+    }
+    load();
+</script>
 </html>

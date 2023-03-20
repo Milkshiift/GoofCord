@@ -10,12 +10,6 @@ window.localStorage.setItem("hideNag", "true");
 
 const version = ipcRenderer.sendSync("displayVersion");
 
-declare global {
-    interface Window {
-        armcord: any;
-    }
-}
-
 console.log("GoofCord " + version);
 ipcRenderer.on("themeLoader", (event, message) => {
     addStyle(message);

@@ -4,7 +4,8 @@
 // I'm sorry for this mess but I'm not sure how to fix it.
 import {app, BrowserWindow, dialog, nativeImage, shell} from "electron";
 import fetch from 'cross-fetch'; // required 'fetch'
-import path from "path";
+const path = require('path');
+const url = require('url');
 import {checkIfConfigIsBroken, contentPath, getConfig, setConfig, setWindowState, transparency} from "./utils";
 import {registerIpc} from "./ipc";
 import {setMenu} from "./menu";
@@ -195,7 +196,8 @@ async function doAfterDefiningTheWindow() {
         mainWindow.webContents.executeJavaScript(`document.body.removeAttribute("isMaximized");`);
     });
     console.log(contentPath);
-    await mainWindow.loadURL("https://canary.discord.com/app");
+    //await mainWindow.loadURL("https://canary.discord.com/app");
+    await mainWindow.loadFile(path.join(__dirname, "/content/splash.html"));
     if (await getConfig("startMinimized")) {
         mainWindow.hide();
     } else {
@@ -203,7 +205,7 @@ async function doAfterDefiningTheWindow() {
     }
 }
 
-export function createCustomWindow() {
+export async function createCustomWindow() {
     mainWindow = new BrowserWindow({
         width: 300,
         height: 350,
@@ -216,7 +218,9 @@ export function createCustomWindow() {
         autoHideMenuBar: true,
         webPreferences: {
             sandbox: false,
-            preload: path.join(__dirname, "preload/preload.js"),
+            preload: path.resolve(app.getAppPath(), 'preload/preload.js'),
+            //preload: path.join(__dirname, "preload/preload.js"),
+            contextIsolation: true,
             spellcheck: true
         }
     });
