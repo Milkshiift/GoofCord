@@ -114,7 +114,7 @@ async function doAfterDefiningTheWindow() {
 
     //Blocking discords trash
     mainWindow.webContents.session.webRequest.onBeforeRequest(
-        {urls: ["https://*/api/v*/science", "https://*/api/v*/track", "https://*/api/v*/promotions/ack", "https://sentry.io/*", "https://*.nel.cloudflare.com/*"]},
+        {urls: ["https://*/api/v*/science", "https://*/api/v*/track", "https://*/api/v*/promotions/ack", "https://*/api/v*/creator-monetization", "https://*/api/v*/applications/detectable", "https://*/api/v*/users/@me/burst-credits", "https://*/api/v*/users/@me/billing/payment-sources", "https://*/api/v*/users/@me/billing/country-code", "https://sentry.io/*", "https://*.nel.cloudflare.com/*"]},
         (_, callback) => callback({cancel: true})
     );
 
