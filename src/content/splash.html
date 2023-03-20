@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <link href="./favicon.ico" rel="icon" type="image/ico"/>
+    <title>GoofCord</title>
+    <style>
+        @import url("css/splash.css");
+    </style>
+    <script>
+        window.onbeforeunload = function () {
+            const style = document.createElement("style");
+            style.textContent = "body { display: none; }";
+            document.head.append(style);
+        };
+    </script>
+</head>
+
+<body>
+<div class="container">
+    <video autoplay class="logo" id="splashscreen-armcord" loop>
+        <source src="https://armcord.xyz/discord_loading.webm" type="video/webm"/>
+    </video>
+    <p id="text-splashscreen"></p>
+</div>
+</body>
+<script>
+    import * as armcord from "../utils";
+
+    async function loadLang() {
+        const text = document.getElementById("text-splashscreen");
+        if (window.navigator.onLine === false) {
+            text.innerHTML = await armcord.getLang("loading_screen_offline");
+        } else {
+            text.innerHTML = await armcord.getLang("loading_screen_start");
+            if (window.armcord.version === "3.2.0") {
+                console.log("Running a development build of GoofCord. Skipping updater.");
+            } else {
+                const response = await fetch("https://armcord.xyz/latest.json");
+                const data = await response.json();
+                if (data.version !== window.armcord.version) {
+                    const elem = document.createElement("img");
+                    elem.classList.add("logo");
+                    elem.src = "https://armcord.xyz/update.webp";
+                    document.body.prepend(elem);
+                    document.getElementById("splashscreen-armcord").remove();
+                    text.innerHTML = await armcord.getLang("loading_screen_update");
+                } else {
+                    console.log("GoofCord is up to date.");
+                }
+            }
+
+            function check() {
+                if (armcordinternal.installState === "installing") {
+                    text.innerHTML = "Installing mods";
+                } else if (armcordinternal.installState === "done") {
+                    return true;
+                } else if (armcordinternal.installState === "modDownload") {
+                    text.innerHTML = "Updating Vencord";
+                } else if (armcordinternal.installState === "none") {
+                    text.innerHTML = "Nothing to install.";
+                    return true;
+                } else {
+                    return true;
+                }
+            }
+
+            while (check() === false) await new Promise((r) => setTimeout(r, 10));
+            setTimeout(() => {
+                window.armcord.splashEnd();
+                window.location.replace("https://canary.discord.com/app");
+            }, 3000);
+        }
+    }
+
+    loadLang();
+</script>
+</html>

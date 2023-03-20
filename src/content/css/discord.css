@@ -1,0 +1,36 @@
+[customTitlebar] .base-2jDfDU {
+    border-top-left-radius: 8px;
+}
+
+[customTitlebar] .scroller-3X7KbA {
+    padding: 4px 0 0;
+}
+
+[customTitlebar] .backdrop-2ByYRN {
+    top: -30px;
+    padding-top: 30px;
+}
+
+* {
+    outline: none;
+}
+
+[class^="socialLinks-"] + [class^="info-"] {
+    padding-right: 0;
+}
+
+#ac-ver {
+    text-transform: none;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+#ac-ver:hover {
+    text-decoration: underline;
+    color: var(--text-normal);
+}
+
+[class|="listItem"]:has([data-list-item-id="guildsnav___app-download-button"]),
+[class|="listItem"]:has(+ [class|="listItem"] [data-list-item-id="guildsnav___app-download-button"]) {
+    display: none;
+}

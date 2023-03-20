@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        @import url("../content/css/settings.css");
+    </style>
+</head>
+
+<body>
+<div class="saveBar">
+    <button class="center" data-string="settings-save" onclick="saveSettings()"></button>
+</div>
+
+<div class="restartBar">
+    <button class="center" data-string="settings-restart" onclick="settings.restart()"></button>
+</div>
+
+<br/>
+
+<div class="switch acTray">
+    <label class="header" data-string="settings-tray"></label>
+    <input class="tgl tgl-light left" data-setting="minimizeToTray" id="tray" type="checkbox"/>
+    <label class="tgl-btn left" for="tray"></label>
+    <p class="description" data-string="settings-tray-desc"></p>
+</div>
+<br/>
+
+<div class="switch acMinimized">
+    <label class="header" data-string="settings-startMinimized"></label>
+    <input class="tgl tgl-light left" data-setting="startMinimized" id="startMinimized" type="checkbox"/>
+    <label class="tgl-btn left" for="startMinimized"></label>
+    <p class="description" data-string="settings-startMinimized-desc"></p>
+</div>
+<br/>
+
+<div class="switch acAutogain">
+    <label class="header" data-string="settings-disableAutogain"></label>
+    <input class="tgl tgl-light left" data-setting="disableAutogain" id="disableAutogain" type="checkbox"/>
+    <label class="tgl-btn left" for="disableAutogain"></label>
+    <p class="description" data-string="settings-disableAutogain-desc"></p>
+</div>
+<br/>
+
+<div class="switch acDynamicIcon">
+    <label class="header" data-string="settings-dynamicIcon"></label>
+    <input class="tgl tgl-light left" data-setting="dynamicIcon" id="dynamicIcon" type="checkbox"/>
+    <label class="tgl-btn left" for="dynamicIcon"></label>
+    <p class="description" data-string="settings-dynamicIcon-desc"></p>
+</div>
+<br/>
+
+<div class="switch acPrfmMode">
+    <select class="left dropdown" data-setting="performanceMode" name="prfmMode">
+        <option data-string="settings-none" selected value="none"></option>
+        <option data-string="settings-prfmMode-performance" value="performance"></option>
+        <option data-string="settings-prfmMode-battery" value="battery"></option>
+    </select>
+
+    <p class="header" data-string="settings-prfmMode"></p>
+    <p class="description" data-string="settings-prfmMode-desc"></p>
+</div>
+<br/>
+<br/>
+
+<div class="switch acAdvSettings">
+    <h1 class="center advancedText" data-string="settings-advanced"></h1>
+    <br/>
+    <br/>
+    <button class="center" data-open="Plugins" data-string="settings-pluginsFolder"></button>
+    <br/>
+    <button class="center" data-open="Themes" data-string="settings-themesFolder"></button>
+    <br/>
+    <button class="center" data-open="Storage" data-string="settings-storageFolder"></button>
+    <br/>
+    <button class="center" data-open="Crashes" data-string="settings-crashesFolder"></button>
+    <br/>
+    <button
+            class="center"
+            data-string="settings-copyDebugInfo"
+            id="settings-copyDebugInfo"
+            onclick="settings.copyDebugInfo()"
+    ></button>
+    <br/>
+    <button
+            class="center"
+            data-string="settings-forceNativeCrash"
+            id="settings-forceNativeCrash"
+            onclick="settings.crash()"
+    ></button>
+</div>
+</body>
+
+<script>
+    document.querySelectorAll("[data-string]").forEach(async (el) => {
+        el.textContent = await settings.getLang(el.dataset.string);
+    });
+
+    const elements = document.querySelectorAll("[data-setting]");
+    elements.forEach(async (e) => {
+        const value = await settings.get(e.dataset.setting);
+        if (e.tagName === "SELECT") e.value = value;
+        else e.checked = value;
+    });
+
+    function saveSettings() {
+        const elements = Array.from(document.querySelectorAll("[data-setting]"));
+        const obj = Object.fromEntries(
+            elements.map((e) => [e.dataset.setting, e.tagName === "SELECT" ? e.value : e.checked])
+        );
+        settings.save(obj);
+
+        const doRestart = confirm(`Your settings have been saved!
+Some changes may require the app to restart before taking effect, would you like to do so now?`);
+        if (doRestart) settings.restart();
+    }
+
+    document.querySelectorAll("[data-open]").forEach((e) => {
+        e.addEventListener("click", settings[`open${e.dataset.open}Folder`]);
+    });
+</script>
+</html>
