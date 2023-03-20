@@ -112,8 +112,9 @@ async function doAfterDefiningTheWindow() {
         return {action: "deny"};
     });
 
+    //Blocking discords trash
     mainWindow.webContents.session.webRequest.onBeforeRequest(
-        {urls: ["https://*/api/v*/science", "https://sentry.io/*", "https://*.nel.cloudflare.com/*"]},
+        {urls: ["https://*/api/v*/science", "https://*/api/v*/track", "https://*/api/v*/promotions/ack", "https://sentry.io/*", "https://*.nel.cloudflare.com/*"]},
         (_, callback) => callback({cancel: true})
     );
 
@@ -218,8 +219,8 @@ export async function createCustomWindow() {
         autoHideMenuBar: true,
         webPreferences: {
             sandbox: false,
-            preload: path.resolve(app.getAppPath(), 'preload/preload.js'),
-            //preload: path.join(__dirname, "preload/preload.js"),
+            //preload: path.resolve(app.getAppPath(), 'preload/preload.js'),
+            preload: path.join(__dirname, "preload/preload.js"),
             contextIsolation: true,
             spellcheck: true
         }
