@@ -10,12 +10,6 @@ window.localStorage.setItem("hideNag", "true");
 
 const version = ipcRenderer.sendSync("displayVersion");
 
-async function updateLang() {
-    const value = `; ${document.cookie}`;
-    const parts: any = value.split(`; locale=`);
-    if (parts.length === 2) ipcRenderer.send("setLang", parts.pop().split(";").shift());
-}
-
 declare global {
     interface Window {
         armcord: any;
@@ -56,7 +50,6 @@ sleep(5000).then(async () => {
             fixTitlebar();
         }
     }
-    await updateLang();
 });
 
 // Settings info version injection

@@ -220,49 +220,9 @@ export function createCustomWindow() {
             spellcheck: true
         }
     });
+    mainWindow.maximize();
     doAfterDefiningTheWindow();
 }
-
-export function createNativeWindow() {
-    mainWindow = new BrowserWindow({
-        width: 300,
-        height: 350,
-        title: "GoofCord",
-        darkTheme: true,
-        icon: iconPath,
-        show: false,
-        frame: true,
-        backgroundColor: "#202225",
-        autoHideMenuBar: true,
-        webPreferences: {
-            sandbox: false,
-            preload: path.join(__dirname, "preload/preload.js"),
-            spellcheck: true
-        }
-    });
-    doAfterDefiningTheWindow();
-}
-
-export function createTransparentWindow() {
-    mainWindow = new BrowserWindow({
-        width: 300,
-        height: 350,
-        title: "GoofCord",
-        darkTheme: true,
-        icon: iconPath,
-        frame: true,
-        backgroundColor: "#00000000",
-        show: false,
-        autoHideMenuBar: true,
-        webPreferences: {
-            sandbox: false,
-            preload: path.join(__dirname, "preload/preload.js"),
-            spellcheck: true
-        }
-    });
-    doAfterDefiningTheWindow();
-}
-
 export function createInviteWindow(code: string) {
     inviteWindow = new BrowserWindow({
         width: 800,
