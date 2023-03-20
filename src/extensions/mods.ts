@@ -17,5 +17,6 @@ const unstrictCSP = () => {
     });
 };
 electron.app.whenReady().then(async () => {
+    console.log("TESTTTTTTT");
     unstrictCSP();
 });

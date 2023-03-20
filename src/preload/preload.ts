@@ -26,42 +26,38 @@ console.log("GoofCord " + version);
 ipcRenderer.on("themeLoader", (event, message) => {
     addStyle(message);
 });
-if (window.location.href.indexOf("splash.html") > -1) {
-    console.log("Skipping titlebar injection and client mod injection.");
-} else {
-    if (ipcRenderer.sendSync("titlebar")) {
-        injectTitlebar();
-    }
-    sleep(5000).then(async () => {
-        // dirty hack to make clicking notifications focus GoofCord
-        addScript(`
-        (() => {
-        const originalSetter = Object.getOwnPropertyDescriptor(Notification.prototype, "onclick").set;
-        Object.defineProperty(Notification.prototype, "onclick", {
-            set(onClick) {
-            originalSetter.call(this, function() {
-                onClick.apply(this, arguments);
-                armcord.window.show();
-            })
-            },
-            configurable: true
-        });
-        })();
-        `);
-        if (ipcRenderer.sendSync("disableAutogain")) {
-            addScript(fs.readFileSync(path.join(__dirname, "../", "/content/js/disableAutogain.js"), "utf8"));
-        }
-        const cssPath = path.join(__dirname, "../", "/content/css/discord.css");
-        addStyle(fs.readFileSync(cssPath, "utf8"));
-        if (document.getElementById("window-controls-container") == null) {
-            console.warn("Titlebar didn't inject, retrying...");
-            if (ipcRenderer.sendSync("titlebar")) {
-                fixTitlebar();
-            }
-        }
-        await updateLang();
-    });
+if (ipcRenderer.sendSync("titlebar")) {
+    injectTitlebar();
 }
+sleep(5000).then(async () => {
+    // dirty hack to make clicking notifications focus GoofCord
+    addScript(`
+    (() => {
+    const originalSetter = Object.getOwnPropertyDescriptor(Notification.prototype, "onclick").set;
+    Object.defineProperty(Notification.prototype, "onclick", {
+        set(onClick) {
+        originalSetter.call(this, function() {
+            onClick.apply(this, arguments);
+            armcord.window.show();
+        })
+        },
+        configurable: true
+    });
+    })();
+    `);
+    if (ipcRenderer.sendSync("disableAutogain")) {
+        addScript(fs.readFileSync(path.join(__dirname, "../", "/content/js/disableAutogain.js"), "utf8"));
+    }
+    const cssPath = path.join(__dirname, "../", "/content/css/discord.css");
+    addStyle(fs.readFileSync(cssPath, "utf8"));
+    if (document.getElementById("window-controls-container") == null) {
+        console.warn("Titlebar didn't inject, retrying...");
+        if (ipcRenderer.sendSync("titlebar")) {
+            fixTitlebar();
+        }
+    }
+    await updateLang();
+});
 
 // Settings info version injection
 setInterval(() => {

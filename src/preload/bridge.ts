@@ -66,10 +66,3 @@ let windowCallback: (arg0: object) => void;
 contextBridge.exposeInMainWorld("GoofCordRPC", {
     listen: (callback: any) => (windowCallback = callback)
 });
-//to be only used inside armcord internal setup/splash etc
-if (window.location.href.indexOf("splash.html") > -1) {
-    contextBridge.exposeInMainWorld("armcordinternal", {
-        restart: () => ipcRenderer.send("restart"),
-        saveSettings: (...args: any) => ipcRenderer.send("saveSettings", ...args)
-    });
-}

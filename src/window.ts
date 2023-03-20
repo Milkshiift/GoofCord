@@ -3,7 +3,6 @@
 // WHY? Because I can't use the same code for both due to annoying bug with value `frame` not responding to variables
 // I'm sorry for this mess but I'm not sure how to fix it.
 import {app, BrowserWindow, dialog, nativeImage, shell} from "electron";
-import {ElectronBlocker} from '@cliqz/adblocker-electron';
 import fetch from 'cross-fetch'; // required 'fetch'
 import path from "path";
 import {checkIfConfigIsBroken, contentPath, getConfig, setConfig, setWindowState, transparency} from "./utils";
@@ -54,15 +53,6 @@ async function doAfterDefiningTheWindow() {
     const ignoreProtocolWarning = await getConfig("ignoreProtocolWarning");
     await checkIfConfigIsBroken();
     registerIpc();
-
-    const blocker = await ElectronBlocker.fromLists(
-        fetch,
-        ['https://easylist.to/easylist/easylist.txt'],
-        {
-            enableCompression: true,
-        }
-    );
-    blocker.enableBlockingInSession(mainWindow.webContents.session);
     // A little sloppy but it works :p
     if (osType == "Windows_NT") {
         osType = "Windows " + os.release().split(".")[0] + " (" + os.release() + ")";
@@ -205,7 +195,7 @@ async function doAfterDefiningTheWindow() {
         mainWindow.webContents.executeJavaScript(`document.body.removeAttribute("isMaximized");`);
     });
     console.log(contentPath);
-    await mainWindow.loadFile(path.join(__dirname, "/content/splash.html"));
+    await mainWindow.loadURL("https://canary.discord.com/app");
     if (await getConfig("startMinimized")) {
         mainWindow.hide();
     } else {
