@@ -3,9 +3,6 @@
 // WHY? Because I can't use the same code for both due to annoying bug with value `frame` not responding to variables
 // I'm sorry for this mess but I'm not sure how to fix it.
 import {app, BrowserWindow, dialog, nativeImage, shell} from "electron";
-import fetch from 'cross-fetch'; // required 'fetch'
-const path = require('path');
-const url = require('url');
 import {checkIfConfigIsBroken, contentPath, getConfig, setConfig, setWindowState, transparency} from "./utils";
 import {registerIpc} from "./ipc";
 import {setMenu} from "./menu";
@@ -14,6 +11,9 @@ import contextMenu from "electron-context-menu";
 import os from "os";
 import {tray} from "./tray";
 import {iconPath} from "./main";
+
+const path = require('path');
+const url = require('url');
 
 export let mainWindow: BrowserWindow;
 export let inviteWindow: BrowserWindow;
@@ -41,15 +41,6 @@ async function doAfterDefiningTheWindow() {
         mainWindow.hide();
     } else {
         mainWindow.show();
-    }
-    if (transparency && process.platform === "win32") {
-        import("@pyke/vibe").then(async (vibe) => {
-            vibe.applyEffect(mainWindow, "acrylic");
-            vibe.forceTheme(mainWindow, "dark");
-            if ((await getConfig("startMinimized")) == false) {
-                mainWindow.show();
-            }
-        });
     }
     const ignoreProtocolWarning = await getConfig("ignoreProtocolWarning");
     await checkIfConfigIsBroken();
@@ -114,7 +105,7 @@ async function doAfterDefiningTheWindow() {
 
     //Blocking discords trash
     mainWindow.webContents.session.webRequest.onBeforeRequest(
-        {urls: ["https://*/api/v*/science", "https://*/api/v*/track", "https://*/api/v*/promotions/ack", "https://*/api/v*/creator-monetization", "https://*/api/v*/applications/detectable", "https://*/api/v*/users/@me/burst-credits", "https://*/api/v*/users/@me/billing/payment-sources", "https://*/api/v*/users/@me/billing/country-code", "https://sentry.io/*", "https://*.nel.cloudflare.com/*"]},
+        {urls: ["https://*/api/v*/science", "https://*/api/v*/metrics", "https://*/api/v*/track", "https://*/api/v*/promotions/ack", "https://*/api/v*/creator-monetization", "https://*/api/v*/applications/detectable", "https://*/api/v*/users/@me/burst-credits", "https://*/api/v*/users/@me/billing/payment-sources", "https://*/api/v*/users/@me/billing/country-code", "https://sentry.io/*", "https://*.nel.cloudflare.com/*"]},
         (_, callback) => callback({cancel: true})
     );
 
@@ -228,6 +219,7 @@ export async function createCustomWindow() {
     mainWindow.maximize();
     doAfterDefiningTheWindow();
 }
+
 export function createInviteWindow(code: string) {
     inviteWindow = new BrowserWindow({
         width: 800,
