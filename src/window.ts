@@ -3,7 +3,7 @@
 // WHY? Because I can't use the same code for both due to annoying bug with value `frame` not responding to variables
 // I'm sorry for this mess but I'm not sure how to fix it.
 import {app, BrowserWindow, dialog, nativeImage, shell} from "electron";
-import {checkIfConfigIsBroken, contentPath, getConfig, setConfig, setWindowState, transparency} from "./utils";
+import {checkIfConfigIsBroken, contentPath, getConfig, setConfig, setWindowState} from "./utils";
 import {registerIpc} from "./ipc";
 import {setMenu} from "./menu";
 import * as fs from "fs";
@@ -13,7 +13,6 @@ import {tray} from "./tray";
 import {iconPath} from "./main";
 
 const path = require('path');
-const url = require('url');
 
 export let mainWindow: BrowserWindow;
 export let inviteWindow: BrowserWindow;
@@ -23,17 +22,7 @@ contextMenu({
     showSaveImageAs: true,
     showCopyImageAddress: true,
     showSearchWithGoogle: false,
-    showSearchWithDuckDuckGo: false,
-    prepend: (defaultActions, parameters) => [
-        {
-            label: "Search with DuckDuckGo",
-            // Only show it when right-clicking text
-            visible: parameters.selectionText.trim().length > 0,
-            click: () => {
-                shell.openExternal(`https://duckduckgo.com/?q=${encodeURIComponent(parameters.selectionText)}`);
-            }
-        }
-    ]
+    showSearchWithDuckDuckGo: true
 });
 
 async function doAfterDefiningTheWindow() {
@@ -188,7 +177,6 @@ async function doAfterDefiningTheWindow() {
         mainWindow.webContents.executeJavaScript(`document.body.removeAttribute("isMaximized");`);
     });
     console.log(contentPath);
-    //await mainWindow.loadURL("https://canary.discord.com/app");
     await mainWindow.loadFile(path.join(__dirname, "/content/splash.html"));
     if (await getConfig("startMinimized")) {
         mainWindow.hide();

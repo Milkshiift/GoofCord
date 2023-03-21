@@ -33,9 +33,6 @@ sleep(5000).then(async () => {
     });
     })();
     `);
-    if (ipcRenderer.sendSync("disableAutogain")) {
-        addScript(fs.readFileSync(path.join(__dirname, "../", "/content/js/disableAutogain.js"), "utf8"));
-    }
     const cssPath = path.join(__dirname, "../", "/content/css/discord.css");
     addStyle(fs.readFileSync(cssPath, "utf8"));
     if (document.getElementById("window-controls-container") == null) {

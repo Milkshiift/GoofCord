@@ -1,16 +1,7 @@
 //ipc stuff
 import {app, desktopCapturer, ipcMain, nativeImage, shell} from "electron";
 import {mainWindow} from "./window";
-import {
-    getConfig,
-    getDisplayVersion,
-    getLang,
-    getVersion,
-    getWindowState,
-    packageVersion,
-    setConfigBulk,
-    setLang
-} from "./utils";
+import {getConfig, getDisplayVersion, getVersion, getWindowState, packageVersion, setConfigBulk} from "./utils";
 import {customTitlebar} from "./main";
 import {createSettingsWindow} from "./settings/main";
 import os from "os";
@@ -19,12 +10,6 @@ import path from "path";
 export function registerIpc() {
     ipcMain.on("get-app-path", (event) => {
         event.reply("app-path", app.getAppPath());
-    });
-    ipcMain.on("setLang", (event, lang: string) => {
-        setLang(lang);
-    });
-    ipcMain.handle("getLang", (event, toGet: string) => {
-        return getLang(toGet);
     });
     ipcMain.on("open-external-link", (event, href: string) => {
         shell.openExternal(href);
@@ -106,9 +91,6 @@ export function registerIpc() {
     });
     ipcMain.on("minimizeToTray", async (event) => {
         event.returnValue = await getConfig("minimizeToTray");
-    });
-    ipcMain.on("disableAutogain", async (event) => {
-        event.returnValue = await getConfig("disableAutogain");
     });
     ipcMain.on("titlebar", (event) => {
         event.returnValue = customTitlebar;

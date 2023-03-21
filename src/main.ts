@@ -1,7 +1,7 @@
 // Modules to control application life and create native browser window
 import {app, BrowserWindow, crashReporter, session} from "electron";
 import "v8-compile-cache";
-import {checkForDataFolder, checkIfConfigExists, getConfig, injectElectronFlags, installModLoader} from "./utils";
+import {checkForDataFolder, checkIfConfigExists, installModLoader} from "./utils";
 import "./extensions/mods";
 import "./tray";
 import {createCustomWindow} from "./window";
@@ -21,13 +21,8 @@ if (!app.requestSingleInstanceLock()) {
 
     checkForDataFolder();
     checkIfConfigExists();
-    injectElectronFlags();
     app.whenReady().then(async () => {
-        if ((await getConfig("customIcon")) !== undefined ?? null) {
-            iconPath = await getConfig("customIcon");
-        } else {
-            iconPath = path.join(__dirname, "../", "/assets/ac_icon_transparent.png");
-        }
+        iconPath = path.join(__dirname, "../", "/assets/ac_icon_transparent.png");
 
         async function init() {
             createCustomWindow();

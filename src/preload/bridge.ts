@@ -51,18 +51,8 @@ contextBridge.exposeInMainWorld("armcord", {
         isTitlebar: ipcRenderer.sendSync("titlebar")
     },
     electron: process.versions.electron,
-    setPingCount: (pingCount: number) => ipcRenderer.send("setPing", pingCount),
-    getLang: (toGet: string) =>
-        ipcRenderer.invoke("getLang", toGet).then((result) => {
-            return result;
-        }),
-    getDisplayMediaSelector: getDisplayMediaSelector,
     version: ipcRenderer.sendSync("get-app-version", "app-version"),
     packageVersion: ipcRenderer.sendSync("get-package-version", "app-version"),
     splashEnd: () => ipcRenderer.send("splashEnd"),
     openSettingsWindow: () => ipcRenderer.send("openSettingsWindow")
-});
-let windowCallback: (arg0: object) => void;
-contextBridge.exposeInMainWorld("GoofCordRPC", {
-    listen: (callback: any) => (windowCallback = callback)
 });

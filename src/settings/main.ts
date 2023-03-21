@@ -1,14 +1,5 @@
 import {app, BrowserWindow, clipboard, ipcMain, shell} from "electron";
-import {
-    getConfig,
-    getConfigLocation,
-    getDisplayVersion,
-    getLangName,
-    getVersion,
-    setConfigBulk,
-    Settings,
-    sleep
-} from "../utils";
+import {getConfig, getConfigLocation, getDisplayVersion, getVersion, setConfigBulk, Settings, sleep} from "../utils";
 import path from "path";
 import os from "os";
 import fs from "fs";
@@ -89,9 +80,6 @@ export function createSettingsWindow() {
         ipcMain.on("openCrashesFolder", async () => {
             shell.showItemInFolder(path.join(app.getPath("temp"), app.getName() + " Crashes"));
             await sleep(1000);
-        });
-        ipcMain.on("getLangName", async (event) => {
-            event.returnValue = await getLangName();
         });
         ipcMain.on("crash", async () => {
             process.crash();
