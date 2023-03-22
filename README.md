@@ -1,4 +1,4 @@
-# GoofCord
+![GoofCord](./assets/GoofCord.svg)
 
 **GoofCord is a Discord client based on the open-source [ArmCord](https://github.com/ArmCord/ArmCord) client.**
 
