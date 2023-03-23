@@ -91,6 +91,8 @@ async function doAfterDefiningTheWindow() {
         }
         return {action: "deny"};
     });
+    console.log("Starting screenshare module...");
+    import("./screenshare/main");
 
     //Blocking discords trash
     mainWindow.webContents.session.webRequest.onBeforeRequest(

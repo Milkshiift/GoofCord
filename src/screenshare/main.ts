@@ -14,10 +14,7 @@ function registerCustomHandler() {
         capturerWindow = new BrowserWindow({
             width: 800,
             height: 600,
-            title: "GoofCord Screenshare",
-            darkTheme: true,
-            icon: iconPath,
-            frame: true,
+            frame: false,
             autoHideMenuBar: true,
             webPreferences: {
                 sandbox: false,
@@ -26,8 +23,8 @@ function registerCustomHandler() {
             }
         });
         ipcMain.once("selectScreenshareSource", (event, id, name) => {
-            console.log(sources[id]);
-            console.log(id);
+            //console.log(sources[id]);
+            //console.log(id);
             capturerWindow.close();
             const result = {id, name, width: 9999, height: 9999};
             callback({video: result});
