@@ -26,8 +26,8 @@ function registerCustomHandler() {
             }
         });
         ipcMain.once("selectScreenshareSource", (event, id, name) => {
-            //console.log(sources[id]);
-            //console.log(id);
+            console.log(sources[id]);
+            console.log(id);
             capturerWindow.close();
             const result = {id, name, width: 9999, height: 9999};
             callback({video: result});

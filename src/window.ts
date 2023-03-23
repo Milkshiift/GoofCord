@@ -12,7 +12,7 @@ import os from "os";
 import {tray} from "./tray";
 import {iconPath} from "./main";
 
-const path = require('path');
+const path = require("path");
 
 export let mainWindow: BrowserWindow;
 export let inviteWindow: BrowserWindow;
@@ -94,7 +94,21 @@ async function doAfterDefiningTheWindow() {
 
     //Blocking discords trash
     mainWindow.webContents.session.webRequest.onBeforeRequest(
-        {urls: ["https://*/api/v*/science", "https://*/api/v*/metrics", "https://*/api/v*/track", "https://*/api/v*/promotions/ack", "https://*/api/v*/creator-monetization", "https://*/api/v*/applications/detectable", "https://*/api/v*/users/@me/burst-credits", "https://*/api/v*/users/@me/billing/payment-sources", "https://*/api/v*/users/@me/billing/country-code", "https://sentry.io/*", "https://*.nel.cloudflare.com/*"]},
+        {
+            urls: [
+                "https://*/api/v*/science",
+                "https://*/api/v*/metrics",
+                "https://*/api/v*/track",
+                "https://*/api/v*/promotions/ack",
+                "https://*/api/v*/creator-monetization",
+                "https://*/api/v*/applications/detectable",
+                "https://*/api/v*/users/@me/burst-credits",
+                "https://*/api/v*/users/@me/billing/payment-sources",
+                "https://*/api/v*/users/@me/billing/country-code",
+                "https://sentry.io/*",
+                "https://*.nel.cloudflare.com/*"
+            ]
+        },
         (_, callback) => callback({cancel: true})
     );
 
@@ -117,10 +131,8 @@ async function doAfterDefiningTheWindow() {
         const buf = new Buffer(faviconBase64.replace(/^data:image\/\w+;base64,/, ""), "base64");
         fs.writeFileSync(path.join(app.getPath("temp"), "/", "tray.png"), buf, "utf-8");
         let trayPath = nativeImage.createFromPath(path.join(app.getPath("temp"), "/", "tray.png"));
-        if (process.platform === "darwin" && trayPath.getSize().height > 22)
-            trayPath = trayPath.resize({height: 22});
-        if (process.platform === "win32" && trayPath.getSize().height > 32)
-            trayPath = trayPath.resize({height: 32});
+        if (process.platform === "darwin" && trayPath.getSize().height > 22) trayPath = trayPath.resize({height: 22});
+        if (process.platform === "win32" && trayPath.getSize().height > 32) trayPath = trayPath.resize({height: 32});
         tray.setImage(trayPath);
     });
     const userDataPath = app.getPath("userData");

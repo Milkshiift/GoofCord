@@ -91,18 +91,18 @@ export function createSettingsWindow() {
             let settingsFileContent = fs.readFileSync(getConfigLocation(), "utf-8");
             clipboard.writeText(
                 "**OS:** " +
-                os.platform() +
-                " " +
-                os.version() +
-                "\n**Architecture:** " +
-                os.arch() +
-                "\n**GoofCord version:** " +
-                getVersion() +
-                "\n**Electron version:** " +
-                process.versions.electron +
-                "\n`" +
-                settingsFileContent +
-                "`"
+                    os.platform() +
+                    " " +
+                    os.version() +
+                    "\n**Architecture:** " +
+                    os.arch() +
+                    "\n**GoofCord version:** " +
+                    getVersion() +
+                    "\n**Electron version:** " +
+                    process.versions.electron +
+                    "\n`" +
+                    settingsFileContent +
+                    "`"
             );
         });
         settingsWindow.webContents.setWindowOpenHandler(({url}) => {

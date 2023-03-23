@@ -16,8 +16,8 @@ async function addDisplays() {
         selectionElem.innerHTML = `<div class="desktop-capturer-selection__scroller">
     <ul class="desktop-capturer-selection__list">
       ${sources
-            .map(
-                ({id, name, thumbnail}) => `
+          .map(
+              ({id, name, thumbnail}) => `
         <li class="desktop-capturer-selection__item">
           <button class="desktop-capturer-selection__btn" data-id="${id}" title="${name}">
             <img class="desktop-capturer-selection__thumbnail" src="${thumbnail.toDataURL()}" />
@@ -25,8 +25,8 @@ async function addDisplays() {
           </button>
         </li>
       `
-            )
-            .join("")}
+          )
+          .join("")}
       <li class="desktop-capturer-selection__item">
         <button class="desktop-capturer-selection__btn" data-id="screen-cancel" title="Cancel">
           <span class="desktop-capturer-selection__name desktop-capturer-selection__name--cancel">Cancel</span>

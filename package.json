@@ -6,12 +6,12 @@
     "scripts": {
         "build": "tsc && copyfiles -u 1 src/**/*.html src/**/**/*.css src/**/**/*.js ts-out/ && copyfiles package.json ts-out/ && copyfiles assets/**/** ts-out/",
         "watch": "tsc -w",
-        "start": "npm run build && electron ./ts-out/main.js",
-        "startNoSandbox": "npm run build && electron ./ts-out/main.js --no-sandbox",
-        "package": "npm run build && electron-builder",
-        "packageQuick": "npm run build && electron-builder --dir",
+        "start": "pnpm run build && electron ./ts-out/main.js",
+        "startNoSandbox": "pnpm run build && electron ./ts-out/main.js --no-sandbox",
+        "package": "pnpm run build && electron-builder",
+        "packageQuick": "pnpm run build && electron-builder --dir",
         "format": "prettier --write src *.json",
-        "CIbuild": "npm run build && electron-builder --linux zip && electron-builder --windows zip && electron-builder --macos zip",
+        "CIbuild": "pnpm run build && electron-builder --linux zip && electron-builder --windows zip && electron-builder --macos zip",
         "prepare": "git config --local core.hooksPath .hooks/"
     },
     "repository": {
@@ -30,34 +30,35 @@
         "electron": "^23.1.4",
         "electron-builder": "^24.0.0",
         "prettier": "^2.8.4",
-        "typescript": "^5.0.2"
+        "typescript": "^5.0.2",
+        "modclean": "3.0.0-beta.1"
     },
     "dependencies": {
         "cross-fetch": "^3.1.5",
         "electron-context-menu": "github:ArmCord/electron-context-menu",
         "extract-zip": "^2.0.1",
-        "modclean": "3.0.0-beta.1",
         "v8-compile-cache": "^2.3.0"
     },
     "build": {
         "nsis": {
             "include": "build/installer.nsh"
         },
+        "appId": "com.milkshift.goofcord",
+        "compression": "maximum",
+        "productName": "GoofCord",
         "files": [
             "!*",
+            "!ts-out/assets",
             "assets",
             "ts-out",
             "package.json",
             "LICENSE"
         ],
-        "asarUnpack": [
-            "node_modules/electron-dl/**/*"
-        ],
-        "appId": "com.milkshift.goofcord",
-        "compression": "maximum",
-        "productName": "GoofCord",
         "mac": {
             "category": "Network"
+        },
+        "win": {
+            "target": "nsis"
         },
         "linux": {
             "icon": "build/icon.icns",

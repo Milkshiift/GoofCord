@@ -60,7 +60,7 @@ export function getVersion() {
 export function getDisplayVersion() {
     //Checks if the app version # has 4 sections (3.1.0.0) instead of 3 (3.1.0) / Shitty way to check if Kernel Mod is installed
     if (!(app.getVersion() == packageVersion)) {
-        if ((app.getVersion() == process.versions.electron)) {
+        if (app.getVersion() == process.versions.electron) {
             return `Dev Build (${packageVersion})`;
         } else {
             return `${packageVersion} [Modified]`;
@@ -166,9 +166,13 @@ async function updateModBundle() {
             while (!fs.existsSync(distFolder)) {
                 //waiting
             }
-            const bundle: string = await (await fetch("https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js")).text();
+            const bundle: string = await (
+                await fetch("https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js")
+            ).text();
             fs.writeFileSync(distFolder + "bundle.js", bundle, "utf-8");
-            const css: string = await (await fetch("https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css")).text();
+            const css: string = await (
+                await fetch("https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css")
+            ).text();
             fs.writeFileSync(distFolder + "bundle.css", css, "utf-8");
         } catch (e) {
             console.log("[Mod loader] Failed to install mods");
