@@ -22,12 +22,12 @@
 #ac-ver {
     text-transform: none;
     cursor: pointer;
-    color: #b5bac1;
+    color: #ffffff;
 }
 
 #ac-ver:hover {
     text-decoration: underline;
-    color: #f2f3f5;
+    color: #cecece;
 }
 
 [class|="listItem"]:has([data-list-item-id="guildsnav___app-download-button"]),

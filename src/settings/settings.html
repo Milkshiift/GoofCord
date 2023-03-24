@@ -9,73 +9,70 @@
 
     <body>
         <div class="saveBar">
-            <button class="center" data-string="settings-save" onclick="saveSettings()"></button>
+            <button class="center" data-string="settings-save" onclick="saveSettings()">Save Settings</button>
         </div>
 
         <div class="restartBar">
-            <button class="center" data-string="settings-restart" onclick="settings.restart()"></button>
+            <button class="center" data-string="settings-restart" onclick="settings.restart()">Restart App</button>
         </div>
 
         <br />
 
         <div class="switch acTray">
-            <label class="header" data-string="settings-tray"></label>
+            <label class="header" data-string="settings-tray">Minimize to tray</label>
             <input class="tgl tgl-light left" data-setting="minimizeToTray" id="tray" type="checkbox" />
             <label class="tgl-btn left" for="tray"></label>
-            <p class="description" data-string="settings-tray-desc"></p>
+            <p class="description" data-string="settings-tray-desc">When disabled, GoofCord will close like any other window when closed, otherwise it'll sit back and relax
+                in your system tray for later.</p>
         </div>
         <br />
 
         <div class="switch acMinimized">
-            <label class="header" data-string="settings-startMinimized"></label>
+            <label class="header" data-string="settings-startMinimized">Start minimized</label>
             <input class="tgl tgl-light left" data-setting="startMinimized" id="startMinimized" type="checkbox" />
             <label class="tgl-btn left" for="startMinimized"></label>
-            <p class="description" data-string="settings-startMinimized-desc"></p>
+            <p class="description" data-string="settings-startMinimized-desc">GoofCord starts in background and remains out of your way.</p>
         </div>
         <br />
 
         <div class="switch acDynamicIcon">
-            <label class="header" data-string="settings-dynamicIcon"></label>
+            <label class="header" data-string="settings-dynamicIcon">Dynamic icon</label>
             <input class="tgl tgl-light left" data-setting="dynamicIcon" id="dynamicIcon" type="checkbox" />
             <label class="tgl-btn left" for="dynamicIcon"></label>
-            <p class="description" data-string="settings-dynamicIcon-desc"></p>
+            <p class="description" data-string="settings-dynamicIcon-desc">Following Discord's behaviour on Windows, this shows unread messages/pings count on GoofCord's icon instead of it's tray.</p>
         </div>
         <br />
         <br />
 
         <div class="switch acAdvSettings">
-            <h1 class="center advancedText" data-string="settings-advanced"></h1>
+            <h1 class="center advancedText" data-string="settings-advanced">Advanced user zone</h1>
             <br />
             <br />
-            <button class="center" data-open="Plugins" data-string="settings-pluginsFolder"></button>
+            <button class="center" data-open="Plugins" data-string="settings-pluginsFolder">Open plugins folder</button>
             <br />
-            <button class="center" data-open="Themes" data-string="settings-themesFolder"></button>
+            <button class="center" data-open="Themes" data-string="settings-themesFolder">Open themes folder</button>
             <br />
-            <button class="center" data-open="Storage" data-string="settings-storageFolder"></button>
+            <button class="center" data-open="Storage" data-string="settings-storageFolder">Open storage folder</button>
             <br />
-            <button class="center" data-open="Crashes" data-string="settings-crashesFolder"></button>
+            <button class="center" data-open="Crashes" data-string="settings-crashesFolder">Open native crashes folder</button>
             <br />
             <button
                 class="center"
                 data-string="settings-copyDebugInfo"
                 id="settings-copyDebugInfo"
                 onclick="settings.copyDebugInfo()"
-            ></button>
+            >Copy Debug Info</button>
             <br />
             <button
                 class="center"
                 data-string="settings-forceNativeCrash"
                 id="settings-forceNativeCrash"
                 onclick="settings.crash()"
-            ></button>
+            >Force native crash</button>
         </div>
     </body>
 
     <script>
-        document.querySelectorAll("[data-string]").forEach(async (el) => {
-            el.textContent = await settings.getLang(el.dataset.string);
-        });
-
         const elements = document.querySelectorAll("[data-setting]");
         elements.forEach(async (e) => {
             const value = await settings.get(e.dataset.setting);

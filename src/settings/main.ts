@@ -1,5 +1,5 @@
 import {app, BrowserWindow, clipboard, ipcMain, shell} from "electron";
-import {getConfig, getConfigLocation, getDisplayVersion, getVersion, setConfigBulk, Settings, sleep} from "../utils";
+import {getConfig, getLang, getConfigLocation, getDisplayVersion, getVersion, setConfigBulk, Settings, sleep} from "../utils";
 import path from "path";
 import os from "os";
 import fs from "fs";

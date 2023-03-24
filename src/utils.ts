@@ -70,6 +70,13 @@ export function getDisplayVersion() {
     }
 }
 
+export async function getLang(object: string) {
+    let langPath = path.join(__dirname, "../", "/assets/lang/en-US.json");
+    let rawdata = fs.readFileSync(langPath, "utf-8");
+    let parsed = JSON.parse(rawdata);
+    return parsed[object];
+}
+
 //GoofCord Window State manager
 export interface WindowState {
     width: number;

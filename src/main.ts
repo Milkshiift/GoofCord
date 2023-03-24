@@ -8,7 +8,6 @@ import {createCustomWindow} from "./window";
 import path from "path";
 
 export var iconPath: string;
-export var settings: any;
 export var customTitlebar: boolean;
 export var clientName: "GoofCord";
 

@@ -50,7 +50,7 @@ setInterval(() => {
     const el = host.firstChild!.cloneNode() as HTMLSpanElement;
     el.id = "ac-ver";
 
-    el.textContent = `GoofCord Version: ${version}`;
+    el.textContent = `GoofCord Version: ${version} ⚙️`;
     el.onclick = () => ipcRenderer.send("openSettingsWindow");
     host.append(el);
 }, 2000);
