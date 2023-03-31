@@ -1,15 +1,18 @@
 // Modules to control application life and create native browser window
-import {app, BrowserWindow, crashReporter, session} from "electron";
+import {app, BrowserWindow, crashReporter, protocol, session} from "electron";
 import "v8-compile-cache";
-import {checkForDataFolder, checkIfConfigExists, installModLoader} from "./utils";
+import {checkForDataFolder, checkIfConfigExists, installModLoader, checkConfig} from "./utils";
 import "./extensions/mods";
 import "./tray";
 import {createCustomWindow} from "./window";
 import path from "path";
+import ProtocolRequest = Electron.ProtocolRequest;
 
 export var iconPath: string;
 export var customTitlebar: boolean;
 export var clientName: "GoofCord";
+
+const NodeCache = require('node-cache');
 
 if (!app.requestSingleInstanceLock()) {
     // kill if 2nd instance
@@ -17,7 +20,8 @@ if (!app.requestSingleInstanceLock()) {
 } else {
     // Your data now belongs to CCP
     crashReporter.start({uploadToServer: false});
-
+    app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
+    checkConfig();
     checkForDataFolder();
     checkIfConfigExists();
     app.whenReady().then(async () => {

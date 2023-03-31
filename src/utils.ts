@@ -1,9 +1,10 @@
 import * as fs from "fs";
 import {app, dialog} from "electron";
 import path from "path";
-import fetch from "cross-fetch";
+import {fetch, Response} from "cross-fetch";
 import extract from "extract-zip";
 import util from "util";
+import {mainWindow} from "./window";
 
 const streamPipeline = util.promisify(require("stream").pipeline);
 export var firstRun: boolean;
@@ -43,11 +44,47 @@ export function setup() {
         minimizeToTray: true,
         inviteWebsocket: true,
         startMinimized: false,
-        dynamicIcon: false
+        dynamicIcon: false,
+        whitelist: [
+            'wss:',
+            'file:',                                              // Allow local files
+            'devtools:',                                          // Allow devtools
+            'PATCH',                                              // Mute/Unmute/notification/cosmetic guild changes
+            'DELETE',                                             // Leaving a guild / Deleting messages
+            'https://canary.discord.com/app',
+            'https://canary.discord.com/assets',
+            'https://canary.discord.com/login',
+            'https://cdn.discordapp.com/',
+            'https://canary.discord.com/api/v9/channels/',        // Text channel address
+            'https://canary.discord.com/api/v9/auth/',             // Login address
+            'https://canary.discord.com/api/v9/invites/',         // Accepting guild invite
+            'https://canary.discord.com/api/v9/voice/regions',    // Required when creating new guild
+            'https://canary.discord.com/api/v9/guilds',           // Creating a guild
+            'https://canary.discord.com/api/v9/gateway',          // This may be required to get past login screen if not cached locally
+            'https://canary.discord.com/api/v9/interactions',     // Slash Commands
+            "https://canary.discord.com/api/v9/activities/",      // Discord activities so you can have fun with your friends
+            'https://canary.discord.com/api/v9/users/',
+            'https://images-ext',
+            'https://media.discordapp.net/',
+            'https://discord-attachments',
+            'https://raw.githubusercontent.com/'           // Required for themes to work
+        ]
     };
     setConfigBulk({
         ...defaults
     });
+}
+
+export function checkConfig(): boolean {
+    const requiredParams: string[] = ['minimizeToTray', 'inviteWebsocket', 'startMinimized', 'dynamicIcon', 'whitelist'];
+    for (const param of requiredParams) {
+        if (getConfig(param) == undefined) {
+            console.error(`Missing parameter: ${param}`);
+            setup();
+            return false;
+        }
+    }
+    return true;
 }
 
 //Get the version value from the "package.json" file
@@ -106,7 +143,6 @@ export async function getWindowState(object: string) {
 }
 
 //GoofCord Settings/Storage manager
-
 export function checkForDataFolder() {
     const dataPath = path.join(path.dirname(app.getPath("exe")), "armcord-data");
     if (fs.existsSync(dataPath) && fs.statSync(dataPath).isDirectory()) {
@@ -120,6 +156,7 @@ export interface Settings {
     dynamicIcon: boolean;
     startMinimized: boolean;
     inviteWebsocket: boolean;
+    whitelist: string[];
 }
 
 export function getConfigLocation() {
@@ -173,12 +210,13 @@ async function updateModBundle() {
             while (!fs.existsSync(distFolder)) {
                 //waiting
             }
+            const timeout = 10000;
             const bundle: string = await (
-                await fetch("https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js")
+                await fetchWithTimeout("https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js", { method: "GET" }, timeout)
             ).text();
             fs.writeFileSync(distFolder + "bundle.js", bundle, "utf-8");
             const css: string = await (
-                await fetch("https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css")
+                await fetchWithTimeout("https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css", { method: "GET" }, timeout)
             ).text();
             fs.writeFileSync(distFolder + "bundle.css", css, "utf-8");
         } catch (e) {
@@ -192,6 +230,14 @@ async function updateModBundle() {
     } else {
         console.log("[Mod loader] Skipping mod bundle update");
     }
+}
+
+async function fetchWithTimeout(url: string, options: RequestInit = {}, timeout = 10000): Promise<Response> {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+    const response = await fetch(url, { signal: controller.signal, ...options });
+    clearTimeout(timeoutId);
+    return response;
 }
 
 export async function installModLoader() {

@@ -32,7 +32,14 @@ export function createSettingsWindow() {
             autoHideMenuBar: true,
             webPreferences: {
                 sandbox: false,
-                preload: path.join(__dirname, "preload.js")
+                preload: path.join(__dirname, "preload.js"),
+                nodeIntegration: false,
+                webviewTag: true,
+                nodeIntegrationInSubFrames: false,
+                webSecurity: true,
+                allowRunningInsecureContent: false,
+                plugins: false,
+                experimentalFeatures: false
             }
         });
 

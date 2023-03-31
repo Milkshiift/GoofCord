@@ -1,6 +1,6 @@
 {
     "name": "GoofCord",
-    "version": "0.3.1",
+    "version": "0.4.0",
     "description": "GoofCord is a custom client designed to enhance your Discord experience while keeping everything lightweight.",
     "main": "ts-out/main.js",
     "scripts": {
@@ -29,14 +29,15 @@
         "copyfiles": "^2.4.1",
         "electron": "^23.1.4",
         "electron-builder": "^24.0.0",
+        "modclean": "3.0.0-beta.1",
         "prettier": "^2.8.4",
-        "typescript": "^5.0.2",
-        "modclean": "3.0.0-beta.1"
+        "typescript": "^5.0.2"
     },
     "dependencies": {
         "cross-fetch": "^3.1.5",
         "electron-context-menu": "github:ArmCord/electron-context-menu",
         "extract-zip": "^2.0.1",
+        "node-cache": "^5.1.2",
         "v8-compile-cache": "^2.3.0"
     },
     "build": {

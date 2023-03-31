@@ -76,11 +76,12 @@ p {
 }
 
 .switch {
+    display: flow-root;
+    height: max-content;
     vertical-align: middle;
     border-radius: 10px;
     background: var(--background-floating);
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: 0 20px 20px 20px;
     border-color: var(--background-floating);
     border-style: solid;
 }
@@ -181,7 +182,6 @@ button:active {
 }
 
 .acAdvSettings {
-    height: 500px !important;
 }
 
 .tgl {
@@ -230,6 +230,30 @@ button:active {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+.text {
+    margin-top: 20px;
+    outline: 0;
+    display: block;
+    width: 25em;
+    height: 20em;
+    position: relative;
+    background-color: #1e1f22;
+    border-radius: 20px;
+    border: none;
+    padding: 10px;
+    color: #ffffff;
+}
+
+.text::-webkit-scrollbar {
+    width: 0.4em;
+    background: var(--background-secondary-alt);
+}
+
+.text::-webkit-scrollbar-thumb {
+    background: var(--background-floating);
+    border-radius: 25px;
 }
 
 .tgl + .tgl-btn:after,

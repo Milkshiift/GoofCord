@@ -2,13 +2,12 @@
 // I had to add most of the window creation code here to split both into seperete functions
 // WHY? Because I can't use the same code for both due to annoying bug with value `frame` not responding to variables
 // I'm sorry for this mess but I'm not sure how to fix it.
-import {app, BrowserWindow, dialog, nativeImage, shell} from "electron";
+import {app, BrowserWindow, dialog, nativeImage, session, shell} from "electron";
 import {checkIfConfigIsBroken, contentPath, getConfig, setConfig, setWindowState} from "./utils";
 import {registerIpc} from "./ipc";
 import {setMenu} from "./menu";
 import * as fs from "fs";
 import contextMenu from "electron-context-menu";
-import os from "os";
 import {tray} from "./tray";
 import {iconPath} from "./main";
 
@@ -17,7 +16,7 @@ const path = require("path");
 export let mainWindow: BrowserWindow;
 export let inviteWindow: BrowserWindow;
 
-let osType = os.type();
+//let osType = os.type();
 contextMenu({
     showSaveImageAs: true,
     showCopyImageAddress: true,
@@ -34,11 +33,13 @@ async function doAfterDefiningTheWindow() {
     const ignoreProtocolWarning = await getConfig("ignoreProtocolWarning");
     await checkIfConfigIsBroken();
     registerIpc();
+    /*
     // A little sloppy but it works :p
     if (osType == "Windows_NT") {
         osType = "Windows " + os.release().split(".")[0] + " (" + os.release() + ")";
     }
-    mainWindow.webContents.userAgent = `Mozilla/5.0 (X11; ${osType} ${os.arch()}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36`; //fake useragent for screenshare to work
+    mainWindow.webContents.userAgent = `Mozilla/5.0 (X11; ${osType} ${os.arch()}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36`;
+    */
     app.on("second-instance", (event, commandLine, workingDirectory, additionalData) => {
         // Print out data received from the second instance.
         console.log(additionalData);
@@ -94,25 +95,28 @@ async function doAfterDefiningTheWindow() {
     console.log("Starting screenshare module...");
     import("./screenshare/main");
 
-    //Blocking discords trash
-    mainWindow.webContents.session.webRequest.onBeforeRequest(
-        {
-            urls: [
-                "https://*/api/v*/science",
-                "https://*/api/v*/metrics",
-                "https://*/api/v*/track",
-                "https://*/api/v*/promotions/ack",
-                "https://*/api/v*/creator-monetization",
-                "https://*/api/v*/applications/detectable",
-                "https://*/api/v*/users/@me/burst-credits",
-                "https://*/api/v*/users/@me/billing/payment-sources",
-                "https://*/api/v*/users/@me/billing/country-code",
-                "https://sentry.io/*",
-                "https://*.nel.cloudflare.com/*"
-            ]
-        },
-        (_, callback) => callback({cancel: true})
-    );
+    const whiteList = await getConfig("whitelist");
+
+    session.defaultSession.webRequest.onBeforeSendHeaders({ urls: ['<all_urls>'] }, (details, callback) => {
+        const requestUrl = new URL(details.url)
+        //console.log(requestUrl.href) // Test to see what is blocked
+        const isAllowedUrl = whiteList.some((url: string) => requestUrl.href.startsWith(url))
+        const headers = details.requestHeaders;
+        const blockedHeaders = ["User-Agent", "Referer"]; // List of blocked headers
+
+        if (!isAllowedUrl) {
+            //console.log("!! BLOCKED") // Test to see what is blocked
+            callback({ cancel: true })
+        } else {
+            for (const blockedHeader of blockedHeaders) {
+                if (headers[blockedHeader]) {
+                    delete headers[blockedHeader];
+                }
+            }
+            //console.log("PASSED") // Test to see what is blocked
+            callback({requestHeaders: headers})
+        }
+    })
 
     mainWindow.webContents.on("page-favicon-updated", async () => {
         const faviconBase64 = await mainWindow.webContents.executeJavaScript(`
@@ -130,7 +134,11 @@ async function doAfterDefiningTheWindow() {
             }
             getFavicon()
         `);
-        const buf = new Buffer(faviconBase64.replace(/^data:image\/\w+;base64,/, ""), "base64");
+        const buf = Buffer.alloc(
+            Buffer.byteLength(faviconBase64.replace(/^data:image\/\w+;base64,/, ""), "base64"),
+            faviconBase64.replace(/^data:image\/\w+;base64,/, ""),
+            "base64"
+        );
         fs.writeFileSync(path.join(app.getPath("temp"), "/", "tray.png"), buf, "utf-8");
         let trayPath = nativeImage.createFromPath(path.join(app.getPath("temp"), "/", "tray.png"));
         if (process.platform === "darwin" && trayPath.getSize().height > 22) trayPath = trayPath.resize({height: 22});
@@ -215,7 +223,13 @@ export async function createCustomWindow() {
             //preload: path.resolve(app.getAppPath(), 'preload/preload.js'),
             preload: path.join(__dirname, "preload/preload.js"),
             contextIsolation: true,
-            spellcheck: true
+            spellcheck: true,
+            nodeIntegration: false, // https://electronjs.org/docs/tutorial/security#2-do-not-enable-nodejs-integration-for-remote-content
+            webviewTag: true,
+            nodeIntegrationInSubFrames: false,
+            webSecurity: true,
+            plugins: false,
+            experimentalFeatures: false
         }
     });
     mainWindow.maximize();

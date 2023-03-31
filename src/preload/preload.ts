@@ -27,6 +27,7 @@ sleep(5000).then(async () => {
         originalSetter.call(this, function() {
             onClick.apply(this, arguments);
             armcord.window.show();
+            armcord.window.maximize();
         })
         },
         configurable: true
