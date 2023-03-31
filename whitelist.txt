@@ -21,3 +21,4 @@ https://images-ext
 https://media.discordapp.net/
 https://discord-attachments
 https://raw.githubusercontent.com/
+https://github.com/Vendicated/Vencord

@@ -1,7 +1,7 @@
 // Modules to control application life and create native browser window
 import {app, BrowserWindow, crashReporter, protocol, session} from "electron";
 import "v8-compile-cache";
-import {checkForDataFolder, checkIfConfigExists, installModLoader, checkConfig, checkIfWhitelistIsNotEmpty} from "./utils";
+import {checkIfConfigExists, installModLoader, checkConfig, checkIfWhitelistIsNotEmpty} from "./utils";
 import "./extensions/mods";
 import "./tray";
 import {createCustomWindow} from "./window";
@@ -23,7 +23,6 @@ if (!app.requestSingleInstanceLock()) {
     app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
     checkConfig();
     checkIfWhitelistIsNotEmpty();
-    checkForDataFolder();
     checkIfConfigExists();
     app.whenReady().then(async () => {
         iconPath = path.join(__dirname, "../", "/assets/ac_icon_transparent.png");

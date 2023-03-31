@@ -142,13 +142,6 @@ export async function getWindowState(object: string) {
 }
 
 //GoofCord Settings/Storage manager
-export function checkForDataFolder() {
-    const dataPath = path.join(path.dirname(app.getPath("exe")), "armcord-data");
-    if (fs.existsSync(dataPath) && fs.statSync(dataPath).isDirectory()) {
-        console.log("Found armcord-data folder. Running in portable mode.");
-        app.setPath("userData", dataPath);
-    }
-}
 
 export interface Settings {
     minimizeToTray: boolean;
