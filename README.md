@@ -6,6 +6,7 @@ GoofCord aims to be even more lightweight and privacy-focused than ArmCord, but 
 
 Better readme will be later.
 
-## Acknowledgements
+## Credits
 
-GoofCord is based on the [ArmCord](https://github.com/ArmCord/ArmCord) client, which was created by the ArmCord team.
+[ArmCord](https://github.com/ArmCord/ArmCord)  
+[Discord Sandboxed](https://github.com/khlam/discord-sandboxed)
