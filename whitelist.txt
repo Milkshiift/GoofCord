@@ -16,6 +16,7 @@ https://canary.discord.com/api/v9/gateway
 https://canary.discord.com/api/v9/interactions
 https://canary.discord.com/api/v9/activities/
 https://canary.discord.com/api/v9/users/
+https://canary.discord.com/api/v9/gifs/
 https://images-ext
 https://media.discordapp.net/
 https://discord-attachments
