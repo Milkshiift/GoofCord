@@ -4,7 +4,6 @@ import path from "path";
 import {fetch, Response} from "cross-fetch";
 import extract from "extract-zip";
 import util from "util";
-import {mainWindow} from "./window";
 
 const streamPipeline = util.promisify(require("stream").pipeline);
 export var firstRun: boolean;
@@ -45,38 +44,38 @@ export function setup() {
         inviteWebsocket: true,
         startMinimized: false,
         dynamicIcon: false,
-        whitelist: [
-            'wss:',
-            'file:',                                              // Allow local files
-            'devtools:',                                          // Allow devtools
-            'PATCH',                                              // Mute/Unmute/notification/cosmetic guild changes
-            'DELETE',                                             // Leaving a guild / Deleting messages
-            'https://canary.discord.com/app',
-            'https://canary.discord.com/assets',
-            'https://canary.discord.com/login',
-            'https://cdn.discordapp.com/',
-            'https://canary.discord.com/api/v9/channels/',        // Text channel address
-            'https://canary.discord.com/api/v9/auth/',             // Login address
-            'https://canary.discord.com/api/v9/invites/',         // Accepting guild invite
-            'https://canary.discord.com/api/v9/voice/regions',    // Required when creating new guild
-            'https://canary.discord.com/api/v9/guilds',           // Creating a guild
-            'https://canary.discord.com/api/v9/gateway',          // This may be required to get past login screen if not cached locally
-            'https://canary.discord.com/api/v9/interactions',     // Slash Commands
-            "https://canary.discord.com/api/v9/activities/",      // Discord activities so you can have fun with your friends
-            'https://canary.discord.com/api/v9/users/',
-            'https://images-ext',
-            'https://media.discordapp.net/',
-            'https://discord-attachments',
-            'https://raw.githubusercontent.com/'           // Required for themes to work
-        ]
+        autoWhitelist: true,
+        whitelist: []
     };
     setConfigBulk({
         ...defaults
     });
 }
 
+export async function fetchWhiteList() {
+    const whitelistUrl = 'https://raw.githubusercontent.com/Milkshiift/GoofCord/main/whitelist.txt';
+    const response = await fetch(whitelistUrl);
+    const whitelist = await response.text();
+    return whitelist.split('\n').filter(Boolean) // Split the string into an array of URLs and filter out empty lines
+}
+
+export async function checkIfWhitelistIsNotEmpty() {
+    const whitelist = await getConfig("whitelist");
+    if (await getConfig('autoWhitelist') == false) {
+        if (whitelist === undefined) {
+            let fetchedWhitelist = await fetchWhiteList();
+            await setConfig("whitelist", fetchedWhitelist);
+        }
+        return
+    }
+    else {
+        let fetchedWhitelist = await fetchWhiteList();
+        await setConfig("whitelist", fetchedWhitelist);
+    }
+}
+
 export function checkConfig(): boolean {
-    const requiredParams: string[] = ['minimizeToTray', 'inviteWebsocket', 'startMinimized', 'dynamicIcon', 'whitelist'];
+    const requiredParams: string[] = ['minimizeToTray', 'inviteWebsocket', 'startMinimized', 'dynamicIcon', 'autoWhitelist', 'whitelist'];
     for (const param of requiredParams) {
         if (getConfig(param) == undefined) {
             console.error(`Missing parameter: ${param}`);
@@ -156,6 +155,7 @@ export interface Settings {
     dynamicIcon: boolean;
     startMinimized: boolean;
     inviteWebsocket: boolean;
+    autoWhitelist: boolean;
     whitelist: string[];
 }
 

@@ -1,7 +1,7 @@
 // Modules to control application life and create native browser window
 import {app, BrowserWindow, crashReporter, protocol, session} from "electron";
 import "v8-compile-cache";
-import {checkForDataFolder, checkIfConfigExists, installModLoader, checkConfig} from "./utils";
+import {checkForDataFolder, checkIfConfigExists, installModLoader, checkConfig, checkIfWhitelistIsNotEmpty} from "./utils";
 import "./extensions/mods";
 import "./tray";
 import {createCustomWindow} from "./window";
@@ -22,6 +22,7 @@ if (!app.requestSingleInstanceLock()) {
     crashReporter.start({uploadToServer: false});
     app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors');
     checkConfig();
+    checkIfWhitelistIsNotEmpty();
     checkForDataFolder();
     checkIfConfigExists();
     app.whenReady().then(async () => {
