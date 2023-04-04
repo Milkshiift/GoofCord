@@ -1,329 +1,228 @@
-/*MIT License
+/*
+  CSS code originally created by SpacingBat3
+  Source: https://github.com/SpacingBat3/WebCord
+  Licensed under the MIT License
+*/
 
-Copyright (c) 2022 GooseMod
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.*/
 :root {
-    --background-secondary: #313338;
-    --background-secondary-alt: #292b2f;
-    --background-floating: #23272a;
-    --background-modifier-hover: rgba(106, 116, 128, 0.16);
-    --brand-experiment: #5865f2;
-    --brand-experiment-560: #5c6fb1;
-    --brand-experiment-600: #aca5db;
-    --interactive-normal: #b9bbbe;
-    --interactive-hover: #dcddde;
-    --text-muted: #72767d;
-    --font-primary: "Whitney";
-    --header-primary: #fff;
+    --color-primary: #5865f2;
+    --color-primary-light: #797eff;
+    --color-primary-ultralight: #9499ff;
+    --bg-primary: #36393f;
+    --bg-secondary: #2f3136;
+    --bg-secondary-alt: #1b1c1f;
+    --font-color-settings: #8e9297;
+    --font-color-code: #b9bbbe;
+    --font-color-normal: #dcddde;
+    --font-color-header: #fff;
+    --input-bg: #484c52;
+    --scrollbar-width: 6px;
+    --scrollbar-thumb-color: #202225;
+    --font-family: "Ubuntu";
+    --checkmark-icon: url("data:image/svg+xml,%3Csvg width='64px' height='64px' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m53 0-29 40-13-17-11 8.3 24 33 40-56z' fill='%23fff'/%3E%3C/svg%3E");
 }
 
-@font-face {
-    font-family: Whitney;
-    font-weight: 400;
-    font-style: normal;
-    src: url(https://armcord.xyz/whitney_400.woff) format("woff");
-}
-
-html,
-body {
-    overflow-x: hidden;
-    overflow-y: scroll;
-    padding: 0;
-    margin: 2%;
-    background: var(--background-secondary);
-}
-
-body::-webkit-scrollbar {
-    width: 0.4em;
-    background: transparent;
-}
-
-body::-webkit-scrollbar-thumb {
-    background: var(--background-floating);
-    border-radius: 25px;
-}
-
-* {
-    font-family: "Whitney", sans-serif;
-    box-sizing: border-box;
+html {
+    padding: 10px;
+    background-color: var(--bg-primary);
+    font-family: var(--font-family);
+    color: var(--font-color-normal);
+    line-height: 1.25;
     cursor: default;
 }
 
-.left {
-    float: right;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--font-color-header);
+    margin-top: 1em;
+    margin-bottom: 0.5em;
 }
 
-p {
-    pointer-events: none;
-    user-select: none;
+::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+    background-color: transparent;
+    border-radius: 25px;
 }
 
-.switch {
-    display: flow-root;
-    height: max-content;
-    vertical-align: middle;
-    border-radius: 10px;
-    background: var(--background-floating);
-    padding: 0 20px 20px 20px;
-    border-color: var(--background-floating);
-    border-style: solid;
+::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-color);
+    border-radius: 25px;
+    box-sizing: border-box;
 }
 
-.saveBar {
-    position: fixed;
-    bottom: 20px;
-    float: left;
-    left: 0;
-    font-weight: bold;
-    z-index: 999;
-    font-size: 10px;
+a {
+    color: #fff;
+}
+a:active {
+    color: #d52735;
 }
 
-.restartBar {
-    position: fixed;
-    bottom: 20px;
-    float: right;
-    right: 0;
-    font-weight: bold;
-    z-index: 999;
-    font-size: 10px;
+h1 {
+    font-size: 1.6em;
 }
 
-.saveBar > button {
-    width: 90px;
-    transform: translateX(56%);
-}
-
-.restartBar > button {
-    width: 90px;
-    transform: translateX(50%);
-}
-
-.header {
-    color: var(--header-primary);
-    font-size: 1.5em;
-    position: relative;
-    font-weight: bold;
-    top: 15px;
-    margin: auto;
+h2 {
+    text-transform: uppercase;
+    margin-left: 15px;
+    font-size: 0.8em;
 }
 
 .description {
-    position: relative;
-    color: white;
-    font-size: 1.2em;
-    font-weight: lighter;
+    margin-top: 0.5em;
+    margin-left: 2.1em;
+    font-size: 1em;
+    padding-right: 1em;
+    color: var(--font-color-settings);
 }
 
-.dropdown {
-    position: relative;
-    font-size: 25px;
-    margin-top: 20px;
-}
-
-.center {
-    text-align: center;
-    left: 50%;
-    margin-right: 50%;
-    transform: translateX(50%);
-    float: right;
-}
-
-.advancedText {
-    color: var(--header-primary);
-    font-size: 1.5em;
-    font-weight: bold;
-    width: max-content;
-}
-
-/*buttons*/
-button {
-    background: var(--brand-experiment);
-    color: var(--header-primary);
-    outline: none;
-    border: none;
+form {
+    display: flex;
+    overflow-x: hidden;
+    flex-direction: column;
+    margin: 0 40px 2em 40px;
+    padding: 10px 15px 0;
+    background-color: var(--bg-secondary);
+    font-size: 0.8em;
     border-radius: 5px;
-    padding: 8px;
-    margin-top: 10px;
-    transition: 0.17s ease;
 }
 
-button:hover {
-    background: var(--brand-experiment-600);
-    cursor: pointer;
-    transition: 0.17s ease;
-}
-
-button:active {
-    background: var(--brand-experiment-600);
-    cursor: pointer;
-    transition: 0.17s ease;
-}
-
-#save {
-    font-size: 15px;
-}
-
-.acAdvSettings {
-}
-
-.tgl {
-    display: none;
-}
-
-.tgl,
-.tgl:after,
-.tgl:before,
-.tgl *,
-.tgl *:after,
-.tgl *:before,
-.tgl + .tgl-btn {
-    box-sizing: border-box;
-    margin-top: 20px;
-}
-
-.tgl::-moz-selection,
-.tgl:after::-moz-selection,
-.tgl:before::-moz-selection,
-.tgl *::-moz-selection,
-.tgl *:after::-moz-selection,
-.tgl *:before::-moz-selection,
-.tgl + .tgl-btn::-moz-selection {
-    background: none;
-}
-
-.tgl::selection,
-.tgl:after::selection,
-.tgl:before::selection,
-.tgl *::selection,
-.tgl *:after::selection,
-.tgl *:before::selection,
-.tgl + .tgl-btn::selection {
-    background: none;
-}
-
-.tgl + .tgl-btn {
-    outline: 0;
-    display: block;
-    width: 4em;
-    height: 2em;
-    position: relative;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-.text {
-    margin-top: 20px;
-    outline: 0;
-    display: block;
-    width: 25em;
-    height: 20em;
-    position: relative;
-    background-color: #1e1f22;
-    border-radius: 20px;
+fieldset {
+    display: flex;
+    flex-direction: column;
+    margin: 0.5em 0;
+    padding: 0;
     border: none;
-    padding: 10px;
-    color: #ffffff;
 }
 
-.text::-webkit-scrollbar {
-    width: 0.4em;
-    background: var(--background-secondary-alt);
+.checkbox-container {
+    display: flex;
 }
 
-.text::-webkit-scrollbar-thumb {
-    background: var(--background-floating);
-    border-radius: 25px;
+label {
+    margin-top: 0.25em;
+    margin-left: -0.5em;
+    font-size: 1em;
 }
 
-.tgl + .tgl-btn:after,
-.tgl + .tgl-btn:before {
-    position: relative;
-    display: block;
-    content: "";
-    width: 50%;
-    height: 100%;
+label.disabled {
+    color: var(--font-color-settings);
 }
 
-.tgl + .tgl-btn:after {
-    left: 1px;
+input,
+label {
+    cursor: pointer;
 }
 
-.tgl + .tgl-btn:before {
-    display: none;
+input:disabled,
+label.disabled {
+    cursor: default;
 }
 
-.tgl:checked + .tgl-btn:after {
-    left: 56%;
+input[type="checkbox"],
+input[type="radio"] {
+    flex-shrink: 0;
+    margin: 0 1em;
+    height: 1.5em;
+    width: 1.5em;
+    border-radius: 5px;
+    appearance: none;
+    background-color: var(--input-bg);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: solid #0000 4px;
 }
 
-.tgl-light + .tgl-btn {
-    background: var(--text-muted);
-    border-radius: 25px;
-    padding: 4px;
-    transition: all 0.4s ease;
+input[type="radio"] {
+    border-radius: 100%;
+    background-color: var(--bg-secondary);
+    border: solid var(--bg-secondary) 4px;
+    outline: none;
+    box-shadow: 0 0 0 2px var(--font-color-normal);
 }
 
-.tgl-light + .tgl-btn:after {
-    border-radius: 50px;
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 24px;
-    height: 24px;
-    background: rgb(255, 255, 255);
-    transition: all 0.2s ease;
+input[type="checkbox"] {
+    border-color: var(--input-bg);
 }
 
-.tgl-light:checked + .tgl-btn {
-    background: var(--brand-experiment);
+input[type="radio"]:disabled {
+    outline-color: var(--font-color-settings);
 }
 
-select optgroup {
-    color: #fff6;
-    font-weight: 200;
-    font-style: italic;
-}
-
-select option {
-    color: #fff;
-    font-weight: 400;
-    font-style: normal;
-}
-
-select {
-    -webkit-appearance: button;
-    -moz-appearance: button;
-    background-color: var(--background-secondary-alt);
-    background-position: center right;
+input[type="checkbox"]:checked {
+    background-color: var(--color-primary);
+    background-image: var(--checkmark-icon);
     background-repeat: no-repeat;
-    border: 1px solid var(--background-floating);
-    border-radius: 2px;
-    color: #fff;
-    font-size: 1.2em;
-    margin: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    outline: none !important;
+    background-position: center;
+    background-size: contain;
+    border-color: var(--color-primary);
+    animation: checkmark-animation 0.4s ease-in-out;
+}
+input[type="checkbox"]:not(:checked) {
+    animation: checkmark-animation-unchecked 0.3s ease-in-out;
+}
+
+input[type="radio"]:checked {
+    background-color: var(--color-primary-light);
+    outline-color: var(--font-color-header);
+}
+
+@keyframes checkmark-animation {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+@keyframes checkmark-animation-unchecked {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+textarea {
+    flex-shrink: 0;
+    margin: 0 1em;
+    height: 20em;
+    width: 24em;
+    border-radius: 5px;
+    appearance: none;
+    background-color: var(--input-bg);
+    border: none;
+    color: #ffffff;
+    padding: 10px;
+    font-family: var(--font-family);
+}
+
+button {
+    flex-shrink: 0;
+    margin: 0.2em auto;
+    padding: 5px;
+    width: fit-content;
+    border-radius: 5px;
+    background-color: var(--color-primary-light);
+    color: white;
+    border: solid #0000 4px;
+    transition: background-color 0.2s ease-in-out;
+}
+button:hover {
+    background-color: var(--color-primary-ultralight);
+}
+
+p.center {
+    text-align: center;
 }
