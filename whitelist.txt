@@ -25,3 +25,4 @@ https://discord-attachments
 https://raw.githubusercontent.com/
 https://github.com/Vendicated/Vencord
 https://armcord.xyz/loader
+https://fonts.googleapis.com
