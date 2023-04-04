@@ -31,7 +31,7 @@ export function createSettingsWindow() {
             backgroundColor: "#2f3136",
             autoHideMenuBar: true,
             webPreferences: {
-                sandbox: false,
+                sandbox: true,
                 preload: path.join(__dirname, "preload.js"),
                 nodeIntegration: false,
                 webviewTag: true,

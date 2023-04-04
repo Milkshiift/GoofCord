@@ -1,5 +1,5 @@
 import {app, Menu, nativeImage, Tray} from "electron";
-import {createInviteWindow, mainWindow} from "./window";
+import {mainWindow} from "./window";
 import {getConfig, getDisplayVersion} from "./utils";
 import * as path from "path";
 import {createSettingsWindow} from "./settings/main";
@@ -41,12 +41,6 @@ app.whenReady().then(async () => {
             label: "Open Settings",
             click: function () {
                 createSettingsWindow();
-            }
-        },
-        {
-            label: "Support Discord Server",
-            click: function () {
-                createInviteWindow("TnhxcqynZ2");
             }
         },
         {

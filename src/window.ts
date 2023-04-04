@@ -14,14 +14,12 @@ import {iconPath} from "./main";
 const path = require("path");
 
 export let mainWindow: BrowserWindow;
-export let inviteWindow: BrowserWindow;
-
 //let osType = os.type();
 contextMenu({
     showSaveImageAs: true,
     showCopyImageAddress: true,
     showSearchWithGoogle: false,
-    showSearchWithDuckDuckGo: true
+    //showSearchWithDuckDuckGo: true
 });
 
 async function doAfterDefiningTheWindow() {
@@ -219,9 +217,9 @@ export async function createCustomWindow() {
         backgroundColor: "#202225",
         autoHideMenuBar: true,
         webPreferences: {
-            sandbox: false,
-            //preload: path.resolve(app.getAppPath(), 'preload/preload.js'),
-            preload: path.join(__dirname, "preload/preload.js"),
+            sandbox: false, // Needed for Vencord loading and cool custom titlebar to work
+            preload: path.resolve(app.getAppPath(), 'preload/preload.js'),
+            //preload: path.join(__dirname, "preload/preload.js"),
             contextIsolation: true,
             spellcheck: true,
             nodeIntegration: false, // https://electronjs.org/docs/tutorial/security#2-do-not-enable-nodejs-integration-for-remote-content
@@ -232,34 +230,7 @@ export async function createCustomWindow() {
             experimentalFeatures: false
         }
     });
+
     mainWindow.maximize();
     doAfterDefiningTheWindow();
-}
-
-export function createInviteWindow(code: string) {
-    inviteWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
-        title: "GoofCord Invite Manager",
-        darkTheme: true,
-        icon: iconPath,
-        frame: true,
-        autoHideMenuBar: true,
-        webPreferences: {
-            sandbox: false,
-            spellcheck: true
-        }
-    });
-    const formInviteURL = `https://discord.com/invite/${code}`;
-    inviteWindow.webContents.session.webRequest.onBeforeRequest((details, callback) => {
-        if (details.url.includes("ws://")) return callback({cancel: true});
-        return callback({});
-    });
-    inviteWindow.loadURL(formInviteURL);
-    inviteWindow.webContents.once("did-finish-load", () => {
-        inviteWindow.show();
-        inviteWindow.webContents.once("will-navigate", () => {
-            inviteWindow.close();
-        });
-    });
 }
