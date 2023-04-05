@@ -1,5 +1,6 @@
 import {contextBridge, ipcRenderer} from "electron";
 import {addStyle} from "../utils";
+const { shell } = require('electron');
 
 console.log("GoofCord Settings");
 
@@ -13,7 +14,8 @@ contextBridge.exposeInMainWorld("settings", {
     openStorageFolder: () => ipcRenderer.send("openStorageFolder"),
     openCrashesFolder: () => ipcRenderer.send("openCrashesFolder"),
     copyDebugInfo: () => ipcRenderer.send("copyDebugInfo"),
-    crash: () => ipcRenderer.send("crash")
+    crash: () => ipcRenderer.send("crash"),
+    openExternalLink: (url: string) => shell.openExternal(url)
 });
 
 ipcRenderer.on("themeLoader", (event, message) => {

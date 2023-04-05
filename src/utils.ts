@@ -161,7 +161,7 @@ export function getConfigLocation() {
 export async function getConfig(object: string) {
     let rawdata = fs.readFileSync(getConfigLocation(), "utf-8");
     let returndata = JSON.parse(rawdata);
-    console.log("[Config manager] " + object + ": " + returndata[object]);
+    //console.log("[Config manager] " + object + ": " + returndata[object]);
     return returndata[object];
 }
 

@@ -1,7 +1,3 @@
-// To allow seamless switching between custom titlebar and native os titlebar,
-// I had to add most of the window creation code here to split both into seperete functions
-// WHY? Because I can't use the same code for both due to annoying bug with value `frame` not responding to variables
-// I'm sorry for this mess but I'm not sure how to fix it.
 import {app, BrowserWindow, dialog, nativeImage, session, shell} from "electron";
 import {checkIfConfigIsBroken, contentPath, getConfig, setConfig, setWindowState} from "./utils";
 import {registerIpc} from "./ipc";
@@ -218,16 +214,21 @@ export async function createCustomWindow() {
         autoHideMenuBar: true,
         webPreferences: {
             sandbox: false, // Needed for Vencord loading and cool custom titlebar to work
-            preload: path.resolve(app.getAppPath(), 'preload/preload.js'),
-            //preload: path.join(__dirname, "preload/preload.js"),
-            contextIsolation: true,
-            spellcheck: true,
+            //preload: path.resolve(app.getAppPath(), 'preload/preload.js'),
+            preload: path.join(__dirname, "preload/preload.js"),
+            /*contextIsolation: true,
             nodeIntegration: false, // https://electronjs.org/docs/tutorial/security#2-do-not-enable-nodejs-integration-for-remote-content
             webviewTag: true,
             nodeIntegrationInSubFrames: false,
             webSecurity: true,
-            plugins: false,
-            experimentalFeatures: false
+            enableWebSQL: false,
+            webgl: false,
+            safeDialogs: true, // prevents dialog spam by the website
+            autoplayPolicy: "no-user-gesture-required",
+            plugins: true,
+            spellcheck: true,
+            devTools: true, // Allows the use of the devTools.
+            experimentalFeatures: false*/
         }
     });
 

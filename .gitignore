@@ -7,3 +7,5 @@ package-lock.json
 yes.txt
 changeLogDraft.txt
 .idea
+src/settings/settingsold.html
+src/content/css/settingsold.css
