@@ -1,6 +1,7 @@
 import {contextBridge, ipcRenderer} from "electron";
 import {addStyle} from "../utils";
-const { shell } = require('electron');
+
+const {shell} = require("electron");
 
 console.log("GoofCord Settings");
 

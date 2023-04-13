@@ -53,29 +53,35 @@ export function setup() {
 }
 
 export async function fetchWhiteList() {
-    const whitelistUrl = 'https://raw.githubusercontent.com/Milkshiift/GoofCord/main/whitelist.txt';
-    const response = await fetch(whitelistUrl);
+    const whitelistUrl = "https://raw.githubusercontent.com/Milkshiift/GoofCord/main/whitelist.txt";
+    const response = await fetchWithTimeout(whitelistUrl);
     const whitelist = await response.text();
-    return whitelist.split('\n').filter(Boolean) // Split the string into an array of URLs and filter out empty lines
+    return whitelist.split("\n").filter(Boolean); // Split the string into an array of URLs and filter out empty lines
 }
 
 export async function checkIfWhitelistIsNotEmpty() {
     const whitelist = await getConfig("whitelist");
-    if (await getConfig('autoWhitelist') == false) {
+    if ((await getConfig("autoWhitelist")) == false) {
         if (whitelist === undefined) {
             let fetchedWhitelist = await fetchWhiteList();
             await setConfig("whitelist", fetchedWhitelist);
         }
-        return
-    }
-    else {
+        return;
+    } else {
         let fetchedWhitelist = await fetchWhiteList();
         await setConfig("whitelist", fetchedWhitelist);
     }
 }
 
 export function checkConfig(): boolean {
-    const requiredParams: string[] = ['minimizeToTray', 'inviteWebsocket', 'startMinimized', 'dynamicIcon', 'autoWhitelist', 'whitelist'];
+    const requiredParams: string[] = [
+        "minimizeToTray",
+        "inviteWebsocket",
+        "startMinimized",
+        "dynamicIcon",
+        "autoWhitelist",
+        "whitelist"
+    ];
     for (const param of requiredParams) {
         if (getConfig(param) == undefined) {
             console.error(`Missing parameter: ${param}`);
@@ -104,13 +110,6 @@ export function getDisplayVersion() {
     } else {
         return packageVersion;
     }
-}
-
-export async function getLang(object: string) {
-    let langPath = path.join(__dirname, "../", "/assets/lang/en-US.json");
-    let rawdata = fs.readFileSync(langPath, "utf-8");
-    let parsed = JSON.parse(rawdata);
-    return parsed[object];
 }
 
 //GoofCord Window State manager
@@ -205,11 +204,19 @@ async function updateModBundle() {
             }
             const timeout = 10000;
             const bundle: string = await (
-                await fetchWithTimeout("https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js", { method: "GET" }, timeout)
+                await fetchWithTimeout(
+                    "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",
+                    {method: "GET"},
+                    timeout
+                )
             ).text();
             fs.writeFileSync(distFolder + "bundle.js", bundle, "utf-8");
             const css: string = await (
-                await fetchWithTimeout("https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css", { method: "GET" }, timeout)
+                await fetchWithTimeout(
+                    "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
+                    {method: "GET"},
+                    timeout
+                )
             ).text();
             fs.writeFileSync(distFolder + "bundle.css", css, "utf-8");
         } catch (e) {
@@ -228,7 +235,7 @@ async function updateModBundle() {
 async function fetchWithTimeout(url: string, options: RequestInit = {}, timeout = 10000): Promise<Response> {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
-    const response = await fetch(url, { signal: controller.signal, ...options });
+    const response = await fetch(url, {signal: controller.signal, ...options});
     clearTimeout(timeoutId);
     return response;
 }

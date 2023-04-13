@@ -14,7 +14,7 @@ export let mainWindow: BrowserWindow;
 contextMenu({
     showSaveImageAs: true,
     showCopyImageAddress: true,
-    showSearchWithGoogle: false,
+    showSearchWithGoogle: false
     //showSearchWithDuckDuckGo: true
 });
 
@@ -27,13 +27,7 @@ async function doAfterDefiningTheWindow() {
     const ignoreProtocolWarning = await getConfig("ignoreProtocolWarning");
     await checkIfConfigIsBroken();
     registerIpc();
-    /*
-    // A little sloppy but it works :p
-    if (osType == "Windows_NT") {
-        osType = "Windows " + os.release().split(".")[0] + " (" + os.release() + ")";
-    }
-    mainWindow.webContents.userAgent = `Mozilla/5.0 (X11; ${osType} ${os.arch()}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36`;
-    */
+    mainWindow.webContents.userAgent = `Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/1.0.9012 Chrome/108.0.5359.215 Electron/22.3.2 Safari/537.36`;
     app.on("second-instance", (event, commandLine, workingDirectory, additionalData) => {
         // Print out data received from the second instance.
         console.log(additionalData);
@@ -91,16 +85,16 @@ async function doAfterDefiningTheWindow() {
 
     const whiteList = await getConfig("whitelist");
 
-    session.defaultSession.webRequest.onBeforeSendHeaders({ urls: ['<all_urls>'] }, (details, callback) => {
-        const requestUrl = new URL(details.url)
+    session.defaultSession.webRequest.onBeforeSendHeaders({urls: ["<all_urls>"]}, (details, callback) => {
+        const requestUrl = new URL(details.url);
         //console.log(requestUrl.href) // Test to see what is blocked
-        const isAllowedUrl = whiteList.some((url: string) => requestUrl.href.startsWith(url))
+        const isAllowedUrl = whiteList.some((url: string) => requestUrl.href.startsWith(url));
         const headers = details.requestHeaders;
-        const blockedHeaders = ["User-Agent", "Referer"]; // List of blocked headers
+        const blockedHeaders = ["Referer"]; // List of blocked headers
 
         if (!isAllowedUrl) {
             //console.log("!! BLOCKED") // Test to see what is blocked
-            callback({ cancel: true })
+            callback({cancel: true});
         } else {
             for (const blockedHeader of blockedHeaders) {
                 if (headers[blockedHeader]) {
@@ -108,9 +102,9 @@ async function doAfterDefiningTheWindow() {
                 }
             }
             //console.log("PASSED") // Test to see what is blocked
-            callback({requestHeaders: headers})
+            callback({requestHeaders: headers});
         }
-    })
+    });
 
     mainWindow.webContents.on("page-favicon-updated", async () => {
         const faviconBase64 = await mainWindow.webContents.executeJavaScript(`
@@ -213,10 +207,10 @@ export async function createCustomWindow() {
         backgroundColor: "#202225",
         autoHideMenuBar: true,
         webPreferences: {
-            sandbox: false, // Needed for Vencord loading and cool custom titlebar to work
+            sandbox: false,
             //preload: path.resolve(app.getAppPath(), 'preload/preload.js'),
             preload: path.join(__dirname, "preload/preload.js"),
-            /*contextIsolation: true,
+            contextIsolation: true,
             nodeIntegration: false, // https://electronjs.org/docs/tutorial/security#2-do-not-enable-nodejs-integration-for-remote-content
             webviewTag: true,
             nodeIntegrationInSubFrames: false,
@@ -228,7 +222,7 @@ export async function createCustomWindow() {
             plugins: true,
             spellcheck: true,
             devTools: true, // Allows the use of the devTools.
-            experimentalFeatures: false*/
+            experimentalFeatures: false
         }
     });
 

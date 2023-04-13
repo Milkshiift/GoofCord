@@ -11,6 +11,7 @@ interface IPCSources {
     name: string;
     thumbnail: HTMLCanvasElement;
 }
+
 contextBridge.exposeInMainWorld("armcord", {
     window: {
         show: () => ipcRenderer.send("win-show"),

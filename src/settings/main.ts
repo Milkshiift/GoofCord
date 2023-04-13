@@ -1,5 +1,5 @@
 import {app, BrowserWindow, clipboard, ipcMain, shell} from "electron";
-import {getConfig, getLang, getConfigLocation, getDisplayVersion, getVersion, setConfigBulk, Settings, sleep} from "../utils";
+import {getConfig, getConfigLocation, getDisplayVersion, getVersion, setConfigBulk, Settings, sleep} from "../utils";
 import path from "path";
 import os from "os";
 import fs from "fs";
@@ -31,15 +31,15 @@ export function createSettingsWindow() {
             backgroundColor: "#2f3136",
             autoHideMenuBar: true,
             webPreferences: {
-                sandbox: true,
-                preload: path.join(__dirname, "preload.js"),
-                nodeIntegration: false,
+                sandbox: false,
+                preload: path.join(__dirname, "preload.js")
+                /*nodeIntegration: false,
                 webviewTag: true,
                 nodeIntegrationInSubFrames: false,
                 webSecurity: true,
                 allowRunningInsecureContent: false,
                 plugins: false,
-                experimentalFeatures: false
+                experimentalFeatures: false*/
             }
         });
 

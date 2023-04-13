@@ -59,6 +59,7 @@ h6 {
 a {
     color: #fff;
 }
+
 a:active {
     color: #d52735;
 }
@@ -162,6 +163,7 @@ input[type="checkbox"]:checked {
     border-color: var(--color-primary);
     animation: checkmark-animation 0.4s ease-in-out;
 }
+
 input[type="checkbox"]:not(:checked) {
     animation: checkmark-animation-unchecked 0.3s ease-in-out;
 }
@@ -182,6 +184,7 @@ input[type="radio"]:checked {
         transform: scale(1);
     }
 }
+
 @keyframes checkmark-animation-unchecked {
     0% {
         transform: scale(1);
@@ -219,8 +222,10 @@ button {
     border: solid #0000 4px;
     transition: background-color 0.2s ease-in-out;
 }
+
 button:hover {
     background-color: var(--color-primary-ultralight);
+    cursor: pointer;
 }
 
 p.center {

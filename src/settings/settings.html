@@ -1,147 +1,147 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8" />
-    <style>
-        @import url("../content/css/settings.css");
-    </style>
-    <title>Settings</title>
-</head>
-<body>
-<p class="center">Some changes may require the app to restart before taking effect</p>
-<h1>General</h1>
+    <head>
+        <meta charset="UTF-8" />
+        <style>
+            @import url("../content/css/settings.css");
+        </style>
+    </head>
+    <body>
+        <p class="center">Some changes may require the app to restart before taking effect</p>
+        <h1>General</h1>
 
-<h2>Window settings</h2>
-<form class="settingsContainer">
-    <fieldset>
-        <div class="checkbox-container">
-        <input
-                type="checkbox"
-                data-setting="minimizeToTray"
-                id="minimizeToTray"
-        />
-        <label for="minimizeToTray">Minimize to tray</label>
-        </div>
-        <p class="description">When disabled, GoofCord will close like any other window when closed, otherwise, it'll sit back and relax in your system tray for later.</p>
-    </fieldset>
-    <fieldset>
-        <div class="checkbox-container">
-            <input
-                    type="checkbox"
-                    data-setting="startMinimized"
-                    id="startMinimized"
-            />
-            <label for="startMinimized">Start minimized</label>
-        </div>
-        <p class="description">GoofCord starts in the background and remains out of your way.</p>
-    </fieldset>
-</form>
+        <h2>Window settings</h2>
+        <form class="settingsContainer">
+            <fieldset>
+                <div class="checkbox-container">
+                    <input data-setting="minimizeToTray" id="minimizeToTray" type="checkbox" />
+                    <label for="minimizeToTray">Minimize to tray</label>
+                </div>
+                <p class="description">
+                    When disabled, GoofCord will close like any other window when closed, otherwise, it'll sit back and
+                    relax in your system tray for later.
+                </p>
+            </fieldset>
+            <fieldset>
+                <div class="checkbox-container">
+                    <input data-setting="startMinimized" id="startMinimized" type="checkbox" />
+                    <label for="startMinimized">Start minimized</label>
+                </div>
+                <p class="description">GoofCord starts in the background and remains out of your way.</p>
+            </fieldset>
+        </form>
 
-<h2>Other settings</h2>
-<form class="settingsContainer">
-    <fieldset>
-        <div class="checkbox-container">
-            <input
-                    type="checkbox"
-                    data-setting="dynamicIcon"
-                    id="dynamicIcon"
-            />
-            <label for="dynamicIcon">Dynamic icon</label>
-        </div>
-        <p class="description">Following Discord's behavior on Windows, this shows unread messages/pings count on GoofCord's icon instead of its tray.</p>
-    </fieldset>
-</form>
+        <h2>Other settings</h2>
+        <form class="settingsContainer">
+            <fieldset>
+                <div class="checkbox-container">
+                    <input data-setting="dynamicIcon" id="dynamicIcon" type="checkbox" />
+                    <label for="dynamicIcon">Dynamic icon</label>
+                </div>
+                <p class="description">
+                    Following Discord's behavior on Windows, this shows unread messages/pings count on GoofCord's icon
+                    instead of its tray.
+                </p>
+            </fieldset>
+        </form>
 
-<h1>Advanced</h1>
-<a id="link" href="https://github.com/Milkshiift/GoofCord/wiki/Placeholder">Please see our wiki before changing anything</a>
-<h2>Whitelist settings</h2>
-<form class="settingsContainer">
-    <fieldset>
-        <div class="checkbox-container">
-            <textarea data-setting="whitelist" id="whitelist" type="text"></textarea>
-        </div>
-        <p class="description">Any request URL that does not begin with a URL from the provided list will be restricted. Please ensure to separate each entry in the list with a comma.</p>
-    </fieldset>
-    <fieldset>
-        <div class="checkbox-container">
-            <input
-                    type="checkbox"
-                    data-setting="autoWhitelist"
-                    id="autoWhitelist"
-            />
-            <label for="autoWhitelist">Automatic whitelist updates</label>
-        </div>
-        <p class="description">Automatically updates whitelist values on startup. If activated, manual changes to it do nothing.</p>
-    </fieldset>
-</form>
-<fieldset>
-    <button class="center" data-open="Plugins" data-string="settings-pluginsFolder">Open plugins folder</button>
-    <button class="center" data-open="Themes" data-string="settings-themesFolder">Open themes folder</button>
-    <button class="center" data-open="Storage" data-string="settings-storageFolder">Open storage folder</button>
-    <button
-            class="center"
-            data-string="settings-copyDebugInfo"
-            id="settings-copyDebugInfo"
-            onclick="settings.copyDebugInfo()"
-    >Copy Debug Info</button>
-    <button
-            class="center"
-            data-string="settings-forceNativeCrash"
-            id="settings-forceNativeCrash"
-            onclick="settings.crash()"
-    >Force native crash</button>
-</fieldset>
-</body>
-<script>
-    const linkElement = document.getElementById('link');
-    linkElement.addEventListener('click', (event) => {
-        event.preventDefault();
-        const url = linkElement.href;
-        settings.openExternalLink(url);
-    })
-
-    const elements = document.querySelectorAll("[data-setting]");
-    elements.forEach(async (e) => {
-        const value = await settings.get(e.dataset.setting);
-        if (typeof value == "boolean") {
-            if (e.tagName === "SELECT") e.value = value;
-            else e.checked = value;
-        }
-        else if (typeof value == "object") {
-            e.value = value.join(",\n");
-        }
-    });
-
-    elements.forEach((element) => {
-        element.addEventListener("change", () => {
-            saveSettings();
+        <h1>Advanced</h1>
+        <a href="https://github.com/Milkshiift/GoofCord/wiki/Placeholder" id="link"
+            >Please see our wiki before changing anything</a
+        >
+        <h2>Whitelist settings</h2>
+        <form class="settingsContainer">
+            <fieldset>
+                <div class="checkbox-container">
+                    <textarea data-setting="whitelist" id="whitelist" type="text"></textarea>
+                </div>
+                <p class="description">
+                    Any request URL that does not begin with a URL from the provided list will be restricted. Please
+                    ensure to separate each entry in the list with a comma.
+                </p>
+            </fieldset>
+            <fieldset>
+                <div class="checkbox-container">
+                    <input data-setting="autoWhitelist" id="autoWhitelist" type="checkbox" />
+                    <label for="autoWhitelist">Automatic whitelist updates</label>
+                </div>
+                <p class="description">
+                    Automatically updates whitelist values on startup. If activated, manual changes to it do nothing.
+                </p>
+            </fieldset>
+        </form>
+        <fieldset>
+            <button class="center" data-open="Plugins" data-string="settings-pluginsFolder">Open plugins folder</button>
+            <button class="center" data-open="Themes" data-string="settings-themesFolder">Open themes folder</button>
+            <button class="center" data-open="Storage" data-string="settings-storageFolder">Open storage folder</button>
+            <button
+                class="center"
+                data-string="settings-copyDebugInfo"
+                id="settings-copyDebugInfo"
+                onclick="settings.copyDebugInfo()"
+            >
+                Copy Debug Info
+            </button>
+            <button
+                class="center"
+                data-string="settings-forceNativeCrash"
+                id="settings-forceNativeCrash"
+                onclick="settings.crash()"
+            >
+                Force native crash
+            </button>
+        </fieldset>
+    </body>
+    <script>
+        const linkElement = document.getElementById("link");
+        linkElement.addEventListener("click", (event) => {
+            event.preventDefault();
+            const url = linkElement.href;
+            settings.openExternalLink(url);
         });
-    });
 
-    function saveSettings() {
-        const elements = Array.from(document.querySelectorAll("[data-setting]"));
-        const obj = Object.fromEntries(
-            elements.map((e) => [e.dataset.setting, e.tagName === "SELECT" ? e.value : e.checked])
-        );
-        const settingsObj = {
-            ...obj, // Add the other settings to the object
-            whitelist: createUrlArray() // Add the whitelist to the object
-        };
-        //console.log(settingsObj);
-        settings.save(settingsObj);
-    }
+        const elements = document.querySelectorAll("[data-setting]");
+        elements.forEach(async (e) => {
+            const value = await settings.get(e.dataset.setting);
+            if (typeof value == "boolean") {
+                if (e.tagName === "SELECT") e.value = value;
+                else e.checked = value;
+            } else if (typeof value == "object") {
+                e.value = value.join(",\n");
+            }
+        });
 
-    function createUrlArray() {
-        let urlInput = document.getElementById("whitelist").value.replace(/\s/g, ''); // Remove all whitespace from input
-        if (urlInput.endsWith(",")) { // Check if input ends with a comma
-            urlInput = urlInput.slice(0, -1); // Remove the comma from the end of the input
+        elements.forEach((element) => {
+            element.addEventListener("change", () => {
+                saveSettings();
+            });
+        });
+
+        function saveSettings() {
+            const elements = Array.from(document.querySelectorAll("[data-setting]"));
+            const obj = Object.fromEntries(
+                elements.map((e) => [e.dataset.setting, e.tagName === "SELECT" ? e.value : e.checked])
+            );
+            const settingsObj = {
+                ...obj, // Add the other settings to the object
+                whitelist: createUrlArray() // Add the whitelist to the object
+            };
+            //console.log(settingsObj);
+            settings.save(settingsObj);
         }
-        let urls = urlInput.split(",");
-        return(urls);
-    }
 
-    document.querySelectorAll("[data-open]").forEach((e) => {
-        e.addEventListener("click", settings[`open${e.dataset.open}Folder`]);
-    });
-</script>
+        function createUrlArray() {
+            let urlInput = document.getElementById("whitelist").value.replace(/\s/g, ""); // Remove all whitespace from input
+            if (urlInput.endsWith(",")) {
+                // Check if input ends with a comma
+                urlInput = urlInput.slice(0, -1); // Remove the comma from the end of the input
+            }
+            let urls = urlInput.split(",");
+            return urls;
+        }
+
+        document.querySelectorAll("[data-open]").forEach((e) => {
+            e.addEventListener("click", settings[`open${e.dataset.open}Folder`]);
+        });
+    </script>
 </html>

@@ -1,6 +1,5 @@
 import {BrowserWindow, desktopCapturer, ipcMain, session} from "electron";
 import path from "path";
-import {iconPath} from "../main";
 
 let capturerWindow: BrowserWindow;
 
