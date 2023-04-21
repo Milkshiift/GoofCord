@@ -1,6 +1,7 @@
 wss:
 file:
 devtools:
+chrome-extension:
 PATCH
 DELETE
 https://canary.discord.com/app
