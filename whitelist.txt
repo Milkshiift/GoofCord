@@ -20,6 +20,7 @@ https://canary.discord.com/api/v9/users/
 https://canary.discord.com/api/v9/gifs/
 https://canary.discord.com/api/v9/invites
 https://canary.discord.com/api/v9/creator-monetization
+https://canary.discord.com/api/v9/soundboard
 https://images-ext
 https://media.discordapp.net/
 https://media.tenor.com/
