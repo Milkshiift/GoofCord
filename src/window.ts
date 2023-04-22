@@ -77,27 +77,6 @@ async function doAfterDefiningTheWindow() {
         if (process.platform === "win32" && trayPath.getSize().height > 32) trayPath = trayPath.resize({height: 32});
         tray.setImage(trayPath);
     });
-    const userDataPath = app.getPath("userData");
-    /*const themesFolder = userDataPath + "/themes/";
-    if (!fs.existsSync(themesFolder)) {
-        fs.mkdirSync(themesFolder);
-        console.log("Created missing theme folder");
-    }
-    mainWindow.webContents.on("did-finish-load", () => {
-        fs.readdirSync(themesFolder).forEach((file) => {
-            try {
-                const manifest = fs.readFileSync(`${themesFolder}/${file}/manifest.json`, "utf8");
-                const themeFile = JSON.parse(manifest);
-                mainWindow.webContents.send(
-                    "themeLoader",
-                    fs.readFileSync(`${themesFolder}/${file}/${themeFile.theme}`, "utf-8")
-                );
-                console.log(`%cLoaded ${themeFile.name} made by ${themeFile.author}`, "color:red");
-            } catch (err) {
-                console.error(err);
-            }
-        });
-    });*/
     await setMenu();
     mainWindow.on("close", async (e) => {
         let [width, height] = mainWindow.getSize();
@@ -108,10 +87,12 @@ async function doAfterDefiningTheWindow() {
             x: mainWindow.getPosition()[0],
             y: mainWindow.getPosition()[1]
         });
-        if (await getConfig("minimizeToTray")) {
+        let minim = await getConfig("minimizeToTray");
+        if (minim) {
             e.preventDefault();
             mainWindow.hide();
-        } else if (!(await getConfig("minimizeToTray"))) {
+        }
+        else {
             e.preventDefault();
             app.quit();
         }
@@ -137,9 +118,9 @@ async function doAfterDefiningTheWindow() {
     } else {
         mainWindow.show();
     }
-
+    const disUrl = await getConfig("discordUrl");
     await mainWindow.webContents.executeJavaScript(`
-        window.location.replace("https://canary.discord.com/app");
+        window.location.replace("${disUrl}");
     `).then(async () => {
         loadMods();
 

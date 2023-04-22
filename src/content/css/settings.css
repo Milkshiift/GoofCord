@@ -218,6 +218,20 @@ textarea {
     font-family: var(--font-family);
 }
 
+#text {
+    flex-shrink: 0;
+    margin: 0 1em;
+    border-radius: 5px;
+    width: 190px;
+    appearance: none;
+    background-color: var(--input-bg);
+    border: none;
+    color: #ffffff;
+    padding: 10px;
+    font-family: var(--font-family);
+    cursor: text;
+}
+
 button {
     flex-shrink: 0;
     margin: 0.2em auto;

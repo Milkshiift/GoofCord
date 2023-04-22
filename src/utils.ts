@@ -37,21 +37,6 @@ export async function checkIfConfigIsBroken() {
     }
 }
 
-export function setup() {
-    console.log("Setting up temporary GoofCord settings.");
-    const defaults: Settings = {
-        minimizeToTray: true,
-        inviteWebsocket: true,
-        startMinimized: false,
-        dynamicIcon: false,
-        autoWhitelist: true,
-        whitelist: []
-    };
-    setConfigBulk({
-        ...defaults
-    });
-}
-
 export async function fetchWhiteList() {
     const whitelistUrl = "https://raw.githubusercontent.com/Milkshiift/GoofCord/main/whitelist.txt";
     const response = await fetchWithTimeout(whitelistUrl);
@@ -71,25 +56,6 @@ export async function checkIfWhitelistIsNotEmpty() {
         let fetchedWhitelist = await fetchWhiteList();
         await setConfig("whitelist", fetchedWhitelist);
     }
-}
-
-export function checkConfig(): boolean {
-    const requiredParams: string[] = [
-        "minimizeToTray",
-        "inviteWebsocket",
-        "startMinimized",
-        "dynamicIcon",
-        "autoWhitelist",
-        "whitelist"
-    ];
-    for (const param of requiredParams) {
-        if (getConfig(param) == undefined) {
-            console.error(`Missing parameter: ${param}`);
-            setup();
-            return false;
-        }
-    }
-    return true;
 }
 
 //Get the version value from the "package.json" file
@@ -149,6 +115,43 @@ export interface Settings {
     inviteWebsocket: boolean;
     autoWhitelist: boolean;
     whitelist: string[];
+    discordUrl: string;
+}
+
+export function setup() {
+    console.log("Setting up temporary GoofCord settings.");
+    const defaults: Settings = {
+        minimizeToTray: true,
+        inviteWebsocket: true,
+        startMinimized: false,
+        dynamicIcon: false,
+        autoWhitelist: true,
+        whitelist: [],
+        discordUrl: "https://canary.discord.com/app"
+    };
+    setConfigBulk({
+        ...defaults
+    });
+}
+
+export function checkConfig(): boolean {
+    const requiredParams: string[] = [
+        "minimizeToTray",
+        "inviteWebsocket",
+        "startMinimized",
+        "dynamicIcon",
+        "autoWhitelist",
+        "whitelist",
+        "discordUrl"
+    ];
+    for (const param of requiredParams) {
+        if (getConfig(param) == undefined) {
+            console.error(`Missing parameter: ${param}`);
+            setup();
+            return false;
+        }
+    }
+    return true;
 }
 
 export function getConfigLocation() {

@@ -70,6 +70,18 @@
                 </p>
             </fieldset>
         </form>
+        <h2>Other</h2>
+        <form class="settingsContainer">
+            <fieldset>
+                <div class="checkbox-container">
+                    <input data-setting="discordUrl" id="text" type="text" />
+                    <label for="text">Discord URL</label>
+                </div>
+                <p class="description">
+                    URL of the discord. Variations: https://canary.discord.com/app, https://ptb.discord.com/app or https://discord.com/app
+                </p>
+            </fieldset>
+        </form>
         <fieldset>
             <button class="center" data-open="Plugins" data-string="settings-pluginsFolder">Open plugins folder</button>
             <button class="center" data-open="Themes" data-string="settings-themesFolder">Open themes folder</button>
@@ -103,11 +115,16 @@
         const elements = document.querySelectorAll("[data-setting]");
         elements.forEach(async (e) => {
             const value = await settings.get(e.dataset.setting);
-            if (typeof value == "boolean") {
+            console.log(typeof value);
+            let type = typeof value;
+            if (type === "boolean") {
                 if (e.tagName === "SELECT") e.value = value;
                 else e.checked = value;
-            } else if (typeof value == "object") {
+            } else if (type === "object") {
                 e.value = value.join(",\n");
+            }
+            else if (type === "string") {
+                e.value = value;
             }
         });
 
@@ -124,9 +141,10 @@
             );
             const settingsObj = {
                 ...obj, // Add the other settings to the object
-                whitelist: createUrlArray() // Add the whitelist to the object
+                whitelist: createUrlArray(), // Add the whitelist to the object
+                discordUrl: document.getElementById("text").value
             };
-            //console.log(settingsObj);
+            console.log(settingsObj);
             settings.save(settingsObj);
         }
 
