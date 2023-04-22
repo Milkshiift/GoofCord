@@ -7,6 +7,7 @@ import contextMenu from "electron-context-menu";
 import {tray} from "./tray";
 import {iconPath} from "./main";
 import {loadMods} from "./extensions/plugin";
+import {type} from "os";
 
 const path = require("path");
 
@@ -136,31 +137,28 @@ async function doAfterDefiningTheWindow() {
     } else {
         mainWindow.show();
     }
-    // Loading discord and changing doctype to html
+
     await mainWindow.webContents.executeJavaScript(`
         window.location.replace("https://canary.discord.com/app");
     `).then(async () => {
         loadMods();
+
         const whiteList = await getConfig("whitelist");
         const regexList = whiteList.map((url: string) => new RegExp(`^${url.replace(/\*/g, '.*')}`));
 
-        session.defaultSession.webRequest.onBeforeSendHeaders({urls: ["<all_urls>"]}, (details, callback) => {
-            const requestUrl = new URL(details.url);
-            const isAllowedUrl = regexList.some((regex: RegExp) => regex.test(requestUrl.href));
-            const headers = details.requestHeaders;
-            const blockedHeaders = ["Referer"];
-
-            if (!isAllowedUrl) {
-                callback({cancel: true});
-            } else {
-                for (const blockedHeader of blockedHeaders) {
-                    if (headers[blockedHeader]) {
-                        delete headers[blockedHeader];
-                    }
+        setTimeout(() => {
+            session.defaultSession.webRequest.onBeforeRequest({urls: ["<all_urls>"]}, async (details, callback) => {
+                const requestUrl = details.url;
+                const isAllowedUrl = regexList.some((regex: RegExp) => regex.test(requestUrl));
+                if (!isAllowedUrl) {
+                    callback({cancel: true});
+                    return;
+                } else {
+                    callback({});
+                    return;
                 }
-                callback({requestHeaders: headers});
-            }
-        });
+            });
+        }, 10);
     })
 }
 
