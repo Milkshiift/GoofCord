@@ -42,3 +42,4 @@ If you want to compile it yourself for any platform:
 [ArmCord](https://github.com/ArmCord/ArmCord)  
 [Discord Sandboxed](https://github.com/khlam/discord-sandboxed)  
 [Vencord](https://github.com/Vendicated/Vencord)
+[WebCord](https://github.com/SpacingBat3/WebCord)
