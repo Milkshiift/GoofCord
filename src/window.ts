@@ -6,6 +6,7 @@ import * as fs from "fs";
 import contextMenu from "electron-context-menu";
 import {tray} from "./tray";
 import {iconPath} from "./main";
+import {loadMods} from "./extensions/plugin";
 
 const path = require("path");
 
@@ -27,7 +28,7 @@ async function doAfterDefiningTheWindow() {
     const ignoreProtocolWarning = await getConfig("ignoreProtocolWarning");
     await checkIfConfigIsBroken();
     registerIpc();
-    mainWindow.webContents.userAgent = `Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/1.0.9012 Chrome/108.0.5359.215 Electron/22.3.2 Safari/537.36`;
+    mainWindow.webContents.userAgent = `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${process.versions.chrome} Safari/537.36`;
     app.on("second-instance", (event, commandLine, workingDirectory, additionalData) => {
         // Print out data received from the second instance.
         console.log(additionalData);
@@ -40,71 +41,13 @@ async function doAfterDefiningTheWindow() {
         }
     });
     mainWindow.webContents.setWindowOpenHandler(({url}) => {
-        // Allow about:blank (used by Vencord QuickCss popup)
-        if (url === "about:blank") return {action: "allow"};
-        // Allow Discord stream popout
-        if (url === "https://discord.com/popout") return {action: "allow"};
         if (url.startsWith("https:") || url.startsWith("http:") || url.startsWith("mailto:")) {
             shell.openExternal(url);
-        } else {
-            if (ignoreProtocolWarning) {
-                shell.openExternal(url);
-            } else {
-                const options = {
-                    type: "question",
-                    buttons: ["Yes, please", "No, I don't"],
-                    defaultId: 1,
-                    title: url,
-                    message: `Do you want to open ${url}?`,
-                    detail: "This url was detected to not use normal browser protocols. It could mean that this url leads to a local program on your computer. Please check if you recognise it, before proceeding!",
-                    checkboxLabel: "Remember my answer and ignore this warning for future sessions",
-                    checkboxChecked: false
-                };
-
-                dialog.showMessageBox(mainWindow, options).then(({response, checkboxChecked}) => {
-                    console.log(response, checkboxChecked);
-                    if (checkboxChecked) {
-                        if (response == 0) {
-                            setConfig("ignoreProtocolWarning", true);
-                        } else {
-                            setConfig("ignoreProtocolWarning", false);
-                        }
-                    }
-                    if (response == 0) {
-                        shell.openExternal(url);
-                    } else {
-                        return;
-                    }
-                });
-            }
         }
         return {action: "deny"};
     });
     console.log("Starting screenshare module...");
     import("./screenshare/main");
-
-    const whiteList = await getConfig("whitelist");
-
-    session.defaultSession.webRequest.onBeforeSendHeaders({urls: ["<all_urls>"]}, (details, callback) => {
-        const requestUrl = new URL(details.url);
-        //console.log(requestUrl.href) // Test to see what is blocked
-        const isAllowedUrl = whiteList.some((url: string) => requestUrl.href.startsWith(url));
-        const headers = details.requestHeaders;
-        const blockedHeaders = ["Referer"]; // List of blocked headers
-
-        if (!isAllowedUrl) {
-            //console.log("!! BLOCKED") // Test to see what is blocked
-            callback({cancel: true});
-        } else {
-            for (const blockedHeader of blockedHeaders) {
-                if (headers[blockedHeader]) {
-                    delete headers[blockedHeader];
-                }
-            }
-            //console.log("PASSED") // Test to see what is blocked
-            callback({requestHeaders: headers});
-        }
-    });
 
     mainWindow.webContents.on("page-favicon-updated", async () => {
         const faviconBase64 = await mainWindow.webContents.executeJavaScript(`
@@ -134,7 +77,7 @@ async function doAfterDefiningTheWindow() {
         tray.setImage(trayPath);
     });
     const userDataPath = app.getPath("userData");
-    const themesFolder = userDataPath + "/themes/";
+    /*const themesFolder = userDataPath + "/themes/";
     if (!fs.existsSync(themesFolder)) {
         fs.mkdirSync(themesFolder);
         console.log("Created missing theme folder");
@@ -153,7 +96,7 @@ async function doAfterDefiningTheWindow() {
                 console.error(err);
             }
         });
-    });
+    });*/
     await setMenu();
     mainWindow.on("close", async (e) => {
         let [width, height] = mainWindow.getSize();
@@ -193,6 +136,32 @@ async function doAfterDefiningTheWindow() {
     } else {
         mainWindow.show();
     }
+    // Loading discord and changing doctype to html
+    await mainWindow.webContents.executeJavaScript(`
+        window.location.replace("https://canary.discord.com/app");
+    `).then(async () => {
+        loadMods();
+        const whiteList = await getConfig("whitelist");
+        const regexList = whiteList.map((url: string) => new RegExp(`^${url.replace(/\*/g, '.*')}`));
+
+        session.defaultSession.webRequest.onBeforeSendHeaders({urls: ["<all_urls>"]}, (details, callback) => {
+            const requestUrl = new URL(details.url);
+            const isAllowedUrl = regexList.some((regex: RegExp) => regex.test(requestUrl.href));
+            const headers = details.requestHeaders;
+            const blockedHeaders = ["Referer"];
+
+            if (!isAllowedUrl) {
+                callback({cancel: true});
+            } else {
+                for (const blockedHeader of blockedHeaders) {
+                    if (headers[blockedHeader]) {
+                        delete headers[blockedHeader];
+                    }
+                }
+                callback({requestHeaders: headers});
+            }
+        });
+    })
 }
 
 export async function createCustomWindow() {

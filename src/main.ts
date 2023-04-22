@@ -20,6 +20,7 @@ if (!app.requestSingleInstanceLock()) {
     // Your data now belongs to CCP
     crashReporter.start({uploadToServer: false});
     app.commandLine.appendSwitch("disable-features", "OutOfBlinkCors");
+    app.commandLine.appendSwitch('enable-features', 'WebRTC');
     checkConfig();
     checkIfWhitelistIsNotEmpty();
     checkIfConfigExists();
