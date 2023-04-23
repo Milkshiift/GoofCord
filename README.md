@@ -1,5 +1,5 @@
 <div align="center">
-<img src="./assets/GoofCord.svg" width="520">
+<img src="./assets/GoofCord.png" width="520">
   <br>Take control of your Discord experience with GoofCord – the highly configurable and privacy focussed Discord client.<br>Based on <a href="https://github.com/ArmCord/ArmCord">ArmCord</a>.
 </div>
 
