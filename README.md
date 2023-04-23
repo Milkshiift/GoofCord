@@ -3,7 +3,8 @@
   <br>Take control of your Discord experience with GoofCord – the highly configurable and privacy focussed Discord client.<br>Based on <a href="https://github.com/ArmCord/ArmCord">ArmCord</a>.
 </div>
 
-### :warning: GoofCord is very young, although it is usable, many of its features are not yet done. :warning:
+### ~~:warning: GoofCord is very young, although it is usable, many of its features are not yet done. :warning:~~
+### As of the time of writing this, version 0.5.0 is fully usable and already provides more privacy than other clients
 
 ## Features (In the future)
 - **:lock: Privacy first**: GoofCord blocks all tracking and uses multiple techniques to improve your privacy and security. [More here](https://github.com/Milkshiift/GoofCord/wiki/Placeholder)
