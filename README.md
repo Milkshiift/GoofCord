@@ -4,7 +4,7 @@
 </div>
 
 ### ~~:warning: GoofCord is very young, although it is usable, many of its features are not yet done. :warning:~~
-### As of the time of writing this, version 0.5.0 is fully usable and already provides more privacy than other clients
+### As of the time of writing this, version 0.5.0 is fully usable and already should provide more privacy than most other clients
 
 ## Features (In the future)
 - **:lock: Privacy first**: GoofCord blocks all tracking and uses multiple techniques to improve your privacy and security. [More here](https://github.com/Milkshiift/GoofCord/wiki/Placeholder)
