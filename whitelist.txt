@@ -24,6 +24,7 @@ https://*discord.com/api/*/soundboard
 https://*discord.com/api/*/sticker-packs
 https://*discord.com/api/*/oauth2/applications/
 https://*discord.com/api/*/oauth2/@me
+https://*discord.com/api/*/webhooks
 https://*.discordsays.com/
 https://*discord.com/stickers
 https://images-ext
