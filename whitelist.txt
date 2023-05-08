@@ -23,6 +23,7 @@ https://*discord.com/api/*/creator-monetization
 https://*discord.com/api/*/soundboard
 https://*discord.com/api/*/sticker-packs
 https://*discord.com/api/*/oauth2/applications/
+https://*discord.com/api/*/oauth2/@me
 https://*.discordsays.com/
 https://*discord.com/stickers
 https://images-ext
