@@ -27,8 +27,7 @@ Otherwise donwload source code using big green button on top of the page and ext
 
 ## FAQ
 ### Do you have a support Discord?
-- Currently no.
-
+[![](https://dcbadge.vercel.app/api/server/INVITEID)](https://discord.gg/CZc4bpnjmm)
 ### Will I get banned for using this?   
 - You are breaking [Discord ToS](https://discord.com/terms#software-in-discord%E2%80%99s-services) by using GoofCord, **but** no one has been banned from using it or any of the client mods.
 
