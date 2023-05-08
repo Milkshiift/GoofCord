@@ -78,7 +78,8 @@
                     <label for="text">Discord URL</label>
                 </div>
                 <p class="description">
-                    URL of the discord. Variations: https://canary.discord.com/app, https://ptb.discord.com/app or https://discord.com/app
+                    URL of the discord. Variations: https://canary.discord.com/app, https://ptb.discord.com/app or
+                    https://discord.com/app
                 </p>
             </fieldset>
         </form>
@@ -122,8 +123,7 @@
                 else e.checked = value;
             } else if (type === "object") {
                 e.value = value.join(",\n");
-            }
-            else if (type === "string") {
+            } else if (type === "string") {
                 e.value = value;
             }
         });

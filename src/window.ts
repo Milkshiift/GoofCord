@@ -91,8 +91,7 @@ async function doAfterDefiningTheWindow() {
         if (minim) {
             e.preventDefault();
             mainWindow.hide();
-        }
-        else {
+        } else {
             e.preventDefault();
             app.quit();
         }
@@ -119,28 +118,37 @@ async function doAfterDefiningTheWindow() {
         mainWindow.show();
     }
     const disUrl = await getConfig("discordUrl");
-    await mainWindow.webContents.executeJavaScript(`
+    await mainWindow.webContents
+        .executeJavaScript(
+            `
         window.location.replace("${disUrl}");
-    `).then(async () => {
-        loadMods();
+    `
+        )
+        .then(async () => {
+            loadMods();
 
-        const whiteList = await getConfig("whitelist");
-        const regexList = whiteList.map((url: string) => new RegExp(`^${url.replace(/\*/g, '.*')}`));
+            await mainWindow.webContents.executeJavaScript(`
+            const Logger = window.__SENTRY__.logger
+            Logger.disable()
+        `);
 
-        setTimeout(() => {
-            session.defaultSession.webRequest.onBeforeRequest({urls: ["<all_urls>"]}, async (details, callback) => {
-                const requestUrl = details.url;
-                const isAllowedUrl = regexList.some((regex: RegExp) => regex.test(requestUrl));
-                if (!isAllowedUrl) {
-                    callback({cancel: true});
-                    return;
-                } else {
-                    callback({});
-                    return;
-                }
-            });
-        }, 10);
-    })
+            const whiteList = await getConfig("whitelist");
+            const regexList = whiteList.map((url: string) => new RegExp(`^${url.replace(/\*/g, ".*")}`));
+
+            setTimeout(() => {
+                session.defaultSession.webRequest.onBeforeRequest({urls: ["<all_urls>"]}, async (details, callback) => {
+                    const requestUrl = details.url;
+                    const isAllowedUrl = regexList.some((regex: RegExp) => regex.test(requestUrl));
+                    if (!isAllowedUrl) {
+                        callback({cancel: true});
+                        return;
+                    } else {
+                        callback({});
+                        return;
+                    }
+                });
+            }, 10);
+        });
 }
 
 export async function createCustomWindow() {
@@ -175,5 +183,5 @@ export async function createCustomWindow() {
     });
 
     mainWindow.maximize();
-    doAfterDefiningTheWindow();
+    await doAfterDefiningTheWindow();
 }

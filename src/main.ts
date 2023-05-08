@@ -2,6 +2,7 @@
 import {app, BrowserWindow, crashReporter, session} from "electron";
 import "v8-compile-cache";
 import {checkConfig, checkIfConfigExists, checkIfWhitelistIsNotEmpty, installModLoader} from "./utils";
+import {autoUpdater} from "electron-updater";
 import "./extensions/mods";
 import "./tray";
 import {createCustomWindow} from "./window";
@@ -11,16 +12,17 @@ export var iconPath: string;
 export var customTitlebar: boolean;
 export var clientName: "GoofCord";
 
-const NodeCache = require("node-cache");
-
 if (!app.requestSingleInstanceLock()) {
     // kill if 2nd instance
     app.quit();
 } else {
     // Your data now belongs to CCP
     crashReporter.start({uploadToServer: false});
+
+    autoUpdater.checkForUpdatesAndNotify();
+
     app.commandLine.appendSwitch("disable-features", "OutOfBlinkCors");
-    app.commandLine.appendSwitch('enable-features', 'WebRTC');
+    app.commandLine.appendSwitch("enable-features", "WebRTC");
     checkConfig();
     checkIfWhitelistIsNotEmpty();
     checkIfConfigExists();
@@ -28,7 +30,7 @@ if (!app.requestSingleInstanceLock()) {
         iconPath = path.join(__dirname, "../", "/assets/ac_icon_transparent.png");
 
         async function init() {
-            createCustomWindow();
+            await createCustomWindow();
             customTitlebar = true;
         }
 

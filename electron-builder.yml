@@ -1,0 +1,25 @@
+appId: com.milkshift.goofcord
+productName: GoofCord
+directories:
+  output: dist
+
+# Windows configuration
+win:
+  target:
+    - nsis
+    - zip
+  icon: assets/icon.ico
+  arch:
+    - x64
+    - arm64
+
+# Linux configuration
+linux:
+  target:
+    - AppImage
+    - tar.gz
+  icon: assets/icon.png
+  # Set the architectures to build for
+  arch:
+    - x64
+    - arm64
