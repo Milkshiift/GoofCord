@@ -22,6 +22,8 @@ https://*discord.com/api/*/invites
 https://*discord.com/api/*/creator-monetization
 https://*discord.com/api/*/soundboard
 https://*discord.com/api/*/sticker-packs
+https://*discord.com/api/*/oauth2/applications/
+https://*.discordsays.com/
 https://*discord.com/stickers
 https://images-ext
 https://media.*
