@@ -12,7 +12,7 @@ interface IPCSources {
     thumbnail: HTMLCanvasElement;
 }
 
-contextBridge.exposeInMainWorld("armcord", {
+contextBridge.exposeInMainWorld("goofcord", {
     window: {
         show: () => ipcRenderer.send("win-show"),
         hide: () => ipcRenderer.send("win-hide"),

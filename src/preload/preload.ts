@@ -26,8 +26,8 @@ sleep(5000).then(async () => {
         set(onClick) {
         originalSetter.call(this, function() {
             onClick.apply(this, arguments);
-            armcord.window.show();
-            armcord.window.maximize();
+            goofcord.window.show();
+            goofcord.window.maximize();
         })
         },
         configurable: true

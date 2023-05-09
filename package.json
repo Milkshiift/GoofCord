@@ -1,5 +1,5 @@
 {
-    "name": "goofcord",
+    "name": "GoofCord",
     "version": "0.5.1",
     "description": "GoofCord is a custom client designed to enhance your Discord experience while keeping everything lightweight.",
     "main": "ts-out/main.js",
@@ -44,7 +44,6 @@
             "include": "build/installer.nsh"
         },
         "appId": "com.milkshift.goofcord",
-        "compression": "maximum",
         "productName": "GoofCord",
         "files": [
             "!*",
@@ -65,16 +64,15 @@
             "category": "Network"
         },
         "win": {
-            "target": "nsis"
+            "target": ["nsis","zip"]
         },
         "linux": {
-            "icon": "build/icon.icns",
+            "icon": "build/icon.png",
             "category": "Network",
             "maintainer": "milkshiftdev@gmail.com",
             "target": [
                 "deb",
                 "tar.gz",
-                "rpm",
                 "AppImage"
             ]
         }

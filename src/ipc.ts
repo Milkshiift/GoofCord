@@ -2,7 +2,6 @@
 import {app, desktopCapturer, ipcMain, nativeImage, shell} from "electron";
 import {mainWindow} from "./window";
 import {getConfig, getDisplayVersion, getVersion, getWindowState, packageVersion, setConfigBulk} from "./utils";
-import {customTitlebar} from "./main";
 import {createSettingsWindow} from "./settings/main";
 import os from "os";
 import path from "path";
@@ -93,7 +92,7 @@ export function registerIpc() {
         event.returnValue = await getConfig("minimizeToTray");
     });
     ipcMain.on("titlebar", (event) => {
-        event.returnValue = customTitlebar;
+        event.returnValue = true;
     });
     ipcMain.on("openSettingsWindow", () => {
         createSettingsWindow();

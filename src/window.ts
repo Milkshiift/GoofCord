@@ -1,5 +1,5 @@
-import {app, BrowserWindow, dialog, nativeImage, session, shell} from "electron";
-import {checkIfConfigIsBroken, contentPath, getConfig, setConfig, setWindowState} from "./utils";
+import {app, BrowserWindow, nativeImage, session, shell} from "electron";
+import {checkIfConfigIsBroken, contentPath, getConfig, setWindowState} from "./utils";
 import {registerIpc} from "./ipc";
 import {setMenu} from "./menu";
 import * as fs from "fs";
@@ -7,17 +7,14 @@ import contextMenu from "electron-context-menu";
 import {tray} from "./tray";
 import {iconPath} from "./main";
 import {loadMods} from "./extensions/plugin";
-import {type} from "os";
 
 const path = require("path");
 
 export let mainWindow: BrowserWindow;
-//let osType = os.type();
 contextMenu({
     showSaveImageAs: true,
     showCopyImageAddress: true,
     showSearchWithGoogle: false
-    //showSearchWithDuckDuckGo: true
 });
 
 async function doAfterDefiningTheWindow() {
@@ -26,9 +23,9 @@ async function doAfterDefiningTheWindow() {
     } else {
         mainWindow.show();
     }
-    const ignoreProtocolWarning = await getConfig("ignoreProtocolWarning");
     await checkIfConfigIsBroken();
     registerIpc();
+    await setMenu();
     mainWindow.webContents.userAgent = `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${process.versions.chrome} Safari/537.36`;
     app.on("second-instance", (event, commandLine, workingDirectory, additionalData) => {
         // Print out data received from the second instance.
@@ -41,12 +38,7 @@ async function doAfterDefiningTheWindow() {
             mainWindow.focus();
         }
     });
-    mainWindow.webContents.setWindowOpenHandler(({url}) => {
-        if (url.startsWith("https:") || url.startsWith("http:") || url.startsWith("mailto:")) {
-            shell.openExternal(url);
-        }
-        return {action: "deny"};
-    });
+
     console.log("Starting screenshare module...");
     import("./screenshare/main");
 
@@ -77,7 +69,6 @@ async function doAfterDefiningTheWindow() {
         if (process.platform === "win32" && trayPath.getSize().height > 32) trayPath = trayPath.resize({height: 32});
         tray.setImage(trayPath);
     });
-    await setMenu();
     mainWindow.on("close", async (e) => {
         let [width, height] = mainWindow.getSize();
         await setWindowState({
@@ -96,58 +87,44 @@ async function doAfterDefiningTheWindow() {
             app.quit();
         }
     });
-
     mainWindow.on("focus", () => {
         mainWindow.webContents.executeJavaScript(`document.body.removeAttribute("unFocused");`);
     });
     mainWindow.on("blur", () => {
         mainWindow.webContents.executeJavaScript(`document.body.setAttribute("unFocused", "");`);
     });
-
     mainWindow.on("maximize", () => {
         mainWindow.webContents.executeJavaScript(`document.body.setAttribute("isMaximized", "");`);
     });
     mainWindow.on("unmaximize", () => {
         mainWindow.webContents.executeJavaScript(`document.body.removeAttribute("isMaximized");`);
     });
-    console.log(contentPath);
+
     await mainWindow.loadFile(path.join(__dirname, "/content/splash.html"));
-    if (await getConfig("startMinimized")) {
-        mainWindow.hide();
-    } else {
-        mainWindow.show();
-    }
     const disUrl = await getConfig("discordUrl");
     await mainWindow.webContents
-        .executeJavaScript(
-            `
-        window.location.replace("${disUrl}");
-    `
-        )
+        .executeJavaScript(`window.location.replace("${disUrl}");`)
         .then(async () => {
             loadMods();
 
             await mainWindow.webContents.executeJavaScript(`
-            const Logger = window.__SENTRY__.logger
-            Logger.disable()
-        `);
+                const Logger = window.__SENTRY__.logger
+                Logger.disable()
+            `);
 
             const whiteList = await getConfig("whitelist");
             const regexList = whiteList.map((url: string) => new RegExp(`^${url.replace(/\*/g, ".*")}`));
-
-            setTimeout(() => {
-                session.defaultSession.webRequest.onBeforeRequest({urls: ["<all_urls>"]}, async (details, callback) => {
-                    const requestUrl = details.url;
-                    const isAllowedUrl = regexList.some((regex: RegExp) => regex.test(requestUrl));
-                    if (!isAllowedUrl) {
-                        callback({cancel: true});
-                        return;
-                    } else {
-                        callback({});
-                        return;
-                    }
-                });
-            }, 10);
+            session.defaultSession.webRequest.onBeforeRequest({urls: ["<all_urls>"]}, async (details, callback) => {
+                const requestUrl = details.url;
+                const isAllowedUrl = regexList.some((regex: RegExp) => regex.test(requestUrl));
+                if (!isAllowedUrl) {
+                    callback({cancel: true});
+                    return;
+                } else {
+                    callback({});
+                    return;
+                }
+            });
         });
 }
 
@@ -164,21 +141,17 @@ export async function createCustomWindow() {
         autoHideMenuBar: true,
         webPreferences: {
             sandbox: false,
-            //preload: path.resolve(app.getAppPath(), 'preload/preload.js'),
             preload: path.join(__dirname, "preload/preload.js"),
             contextIsolation: true,
             nodeIntegration: false, // https://electronjs.org/docs/tutorial/security#2-do-not-enable-nodejs-integration-for-remote-content
-            webviewTag: true,
             nodeIntegrationInSubFrames: false,
             webSecurity: true,
             enableWebSQL: false,
             webgl: false,
-            safeDialogs: true, // prevents dialog spam by the website
             autoplayPolicy: "no-user-gesture-required",
             plugins: true,
             spellcheck: true,
-            devTools: true, // Allows the use of the devTools.
-            experimentalFeatures: false
+            devTools: true // Allows the use of the devTools.
         }
     });
 

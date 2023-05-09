@@ -34,7 +34,7 @@ Otherwise donwload source code using big green button on top of the page and ext
 ### How can I access the settings?
 - Multiple ways:
 - Right-click on the tray icon and click `Open Settings`
-- Open Discord settings and scroll down until you see information about versions. Click on the ArmCord version and the settings window will pop out. 
+- Open Discord settings and scroll down until you see information about versions. Click on the GoofCord version and the settings window will pop out. 
 - Press `Ctrl+Shift+'` shortcut.
 
 ### Where can I find the source code?

@@ -9,45 +9,39 @@ import {createCustomWindow} from "./window";
 import path from "path";
 
 export var iconPath: string;
-export var customTitlebar: boolean;
 export var clientName: "GoofCord";
 
 if (!app.requestSingleInstanceLock()) {
     // kill if 2nd instance
     app.quit();
-} else {
-    // Your data now belongs to CCP
-    crashReporter.start({uploadToServer: false});
-
-    autoUpdater.checkForUpdatesAndNotify();
-
-    app.commandLine.appendSwitch("disable-features", "OutOfBlinkCors");
-    app.commandLine.appendSwitch("enable-features", "WebRTC");
-    checkConfig();
-    checkIfWhitelistIsNotEmpty();
-    checkIfConfigExists();
-    app.whenReady().then(async () => {
-        iconPath = path.join(__dirname, "../", "/assets/ac_icon_transparent.png");
-
-        async function init() {
-            await createCustomWindow();
-            customTitlebar = true;
-        }
-
-        await init();
-        await installModLoader();
-        session.fromPartition("some-partition").setPermissionRequestHandler((webContents, permission, callback) => {
-            if (permission === "notifications") {
-                // Approves the permissions request
-                callback(true);
-            }
-            if (permission === "media") {
-                // Approves the permissions request
-                callback(true);
-            }
-        });
-        app.on("activate", async function () {
-            if (BrowserWindow.getAllWindows().length === 0) await init();
-        });
-    });
 }
+// Your data now belongs to CCP
+crashReporter.start({uploadToServer: false});
+
+autoUpdater.checkForUpdatesAndNotify();
+
+app.commandLine.appendSwitch("disable-features", "OutOfBlinkCors");
+app.commandLine.appendSwitch("enable-features", "WebRTC");
+checkConfig();
+checkIfWhitelistIsNotEmpty();
+checkIfConfigExists();
+app.whenReady().then(async () => {
+    iconPath = path.join(__dirname, "../", "/assets/ac_icon_transparent.png");
+
+    await createCustomWindow();
+    await installModLoader();
+    session.fromPartition("some-partition").setPermissionRequestHandler((webContents, permission, callback) => {
+        if (permission === "notifications") {
+            // Approves the permissions request
+            callback(true);
+        }
+        if (permission === "media") {
+            // Approves the permissions request
+            callback(true);
+        }
+    });
+    app.on("activate", async function () {
+        if (BrowserWindow.getAllWindows().length === 0) await createCustomWindow();
+    });
+});
+
