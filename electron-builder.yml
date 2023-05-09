@@ -5,21 +5,10 @@ directories:
 
 # Windows configuration
 win:
-  target:
-    - nsis
-    - zip
+  target: [ { target: "nsis", arch: [ "x64", "arm64", "ia32" ] }, { target: "zip", arch: [ "x64" ] } ]
   icon: assets/icon.ico
-  arch:
-    - x64
-    - arm64
 
 # Linux configuration
 linux:
-  target:
-    - AppImage
-    - tar.gz
+  target: [ { target: "AppImage", arch: [ "x64", "arm64" ] }, { target: "tar.gz", arch: [ "x64", "arm64" ] } ]
   icon: assets/icon.png
-  # Set the architectures to build for
-  arch:
-    - x64
-    - arm64

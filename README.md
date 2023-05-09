@@ -1,5 +1,5 @@
 <div align="center">
-<img src="./assets/GoofCord.png" width="520">
+<img src="./assets/GoofCord.png" width="520" alt="GoofCord logo">
 <h2>Take control of your Discord experience with GoofCord – the highly configurable and privacy-focused Discord client.<br>Based on <a href="https://github.com/ArmCord/ArmCord">ArmCord</a>.</h2>
 </div>
 
@@ -9,11 +9,12 @@
 - **:chart_with_upwards_trend: Performance**: Enjoy a smooth and lag-free chatting experience with GoofCord's superior speed and responsiveness. [Benchmarks](https://github.com/Milkshiift/GoofCord/wiki/Placeholder)
 - **:bookmark: Standalone**: GoofCord is built as a standalone client and doesn't rely on the original Discord client in any way.
 - **:electric_plug: Plugins & Themes support**: GoofCord supports other client mods such as [Vencord](https://github.com/Vendicated/Vencord) or [Shelter](https://github.com/uwu/shelter) which allows you to use plugins and themes.
-- **:iphone: Cross-platform**: GoofCord is available on every platform that Electron JS supports.
+- **:iphone: Cross-platform**: GoofCord is available on **Windows**, **Linux** and **Arm64**.
 
 ## How to run/install it?
 
-For now, we provide only Windows versions on the release page, just download the installer and run it. That's all.
+Windows: Download .exe installer and run it
+Linux: Download .AppImage for your architecture and run it
 
 If you want to compile it yourself for any platform:
 1. Install [NodeJS](https://nodejs.dev) and [pnpm](https://pnpm.io/installation#using-npm)     

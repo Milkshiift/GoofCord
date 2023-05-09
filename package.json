@@ -8,7 +8,7 @@
         "watch": "tsc -w",
         "start": "pnpm run build && electron ./ts-out/main.js",
         "startNoSandbox": "pnpm run build && electron ./ts-out/main.js --no-sandbox",
-        "package": "npm run build && electron-builder --windows --linux --x64 --arm64",
+        "package": "npm run build && electron-builder --win --linux",
         "packageQuick": "pnpm run build && electron-builder",
         "format": "prettier --write src *.json",
         "CIbuild": "pnpm run build && electron-builder --linux zip && electron-builder --windows zip && electron-builder --macos zip",
@@ -60,20 +60,43 @@
                 "repo": "GoofCord"
             }
         ],
-        "mac": {
-            "category": "Network"
-        },
         "win": {
-            "target": ["nsis","zip"]
+            "target": [
+                {
+                    "target": "nsis",
+                    "arch": [
+                        "x64",
+                        "ia32",
+                        "arm64"
+                    ]
+                },
+                {
+                    "target": "zip",
+                    "arch": [
+                        "x64"
+                    ]
+                }
+            ]
         },
         "linux": {
             "icon": "build/icon.png",
             "category": "Network",
             "maintainer": "milkshiftdev@gmail.com",
             "target": [
-                "deb",
-                "tar.gz",
-                "AppImage"
+                {
+                    "target": "AppImage",
+                    "arch": [
+                        "x64",
+                        "arm64"
+                    ]
+                },
+                {
+                    "target": "tar.gz",
+                    "arch": [
+                        "x64",
+                        "arm64"
+                    ]
+                }
             ]
         }
     },
