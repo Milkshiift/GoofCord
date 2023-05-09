@@ -38,6 +38,12 @@ async function doAfterDefiningTheWindow() {
             mainWindow.focus();
         }
     });
+    mainWindow.webContents.setWindowOpenHandler(({url}) => {
+        if (url.startsWith("https:") || url.startsWith("http:") || url.startsWith("mailto:")) {
+            shell.openExternal(url);
+        }
+        return {action: "deny"};
+    });
 
     console.log("Starting screenshare module...");
     import("./screenshare/main");
