@@ -159,7 +159,7 @@ export async function createCustomWindow() {
             webgl: false,
             autoplayPolicy: "no-user-gesture-required",
             plugins: true,
-            spellcheck: true,
+            spellcheck: await getConfig("spellcheck"),
             devTools: true // Allows the use of the devTools.
         }
     });

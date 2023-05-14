@@ -28,23 +28,28 @@ const waitForButton = setInterval(() => {
     }
 }, 1000);
 
-// 🤮
 function injectInSettings() {
     console.log("Injecting in settings...")
     const waitForSidebar = setInterval(() => { // Wait until sidebar appears
-        const host = document.querySelector<HTMLDivElement>("nav > [class|=side]"); // select the HTML element where settings buttons will be injected
+        const host = document.querySelector<HTMLDivElement>("nav > [class|=side]");
         if (host != null) { // if the element is found
             clearInterval(waitForSidebar); // stop running the setInterval function
-            const html = // create HTML code to be injected in the settings
-                "<div class=\"header-goof theme-dark\" tabindex=\"-1\" role=\"button\"><div class=\"headerText-goof theme-dark\">GoofCord</div></div>" +
-                "<div class=\"item-goof theme-dark\" role=\"tab\" aria-selected=\"false\" aria-disabled=\"false\" tabindex=\"-1\" data-custom-id=\"settingsButton\">Settings</div>" +
-                "<div class=\"separator-goof theme-dark\"></div>"
-            host.insertAdjacentHTML('afterbegin', html); // inject the HTML code at the beginning of the settings sidebar element
-
-            const settingsButton = host.querySelector('[data-custom-id="settingsButton"]')!; // select the settings button from the injected HTML
-            settingsButton.addEventListener('click', () => {
-                ipcRenderer.send('openSettingsWindow'); // when the button is clicked, open the settings window
-            });
+            // Finding elements to clone
+            let header = document.querySelectorAll('[class*=header-]')!;
+            let button = document.querySelectorAll('[class*=item-]')!;
+            let separator = document.querySelectorAll('[class*=separator-]')!;
+            // Cloning and modifying parameters
+            const headerClone = header[header.length - 1].cloneNode(true) as HTMLElement;
+                headerClone.children[0].innerHTML = "GoofCord";
+            const gcSettings = button[button.length - 1].cloneNode(true) as HTMLElement;
+                gcSettings.textContent = "Settings";
+                gcSettings.id = "goofcord";
+                gcSettings.onclick = () => ipcRenderer.send("openSettingsWindow");
+            const separatorClone = separator[button.length - 1].cloneNode(true) as HTMLElement;
+            // Inserting cloned elements
+            host.insertAdjacentElement("afterbegin", headerClone);
+            headerClone.insertAdjacentElement("afterend", gcSettings);
+            gcSettings.insertAdjacentElement("afterend", separatorClone);
 
             // Inject goofcord version in the settings info element
             const hostInfo = document.querySelector<HTMLDivElement>("nav > [class|=side] [class|=info]")!;

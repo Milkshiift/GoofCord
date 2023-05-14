@@ -112,6 +112,7 @@ export interface Settings {
     minimizeToTray: boolean;
     dynamicIcon: boolean;
     startMinimized: boolean;
+    spellcheck: boolean;
     inviteWebsocket: boolean;
     autoWhitelist: boolean;
     whitelist: string[];
@@ -125,6 +126,7 @@ const defaults: Settings = {
     inviteWebsocket: true,
     startMinimized: false,
     dynamicIcon: false,
+    spellcheck: true,
     autoWhitelist: true,
     whitelist: [],
     whitelistEnabled: true,
