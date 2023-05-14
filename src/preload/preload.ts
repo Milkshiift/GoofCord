@@ -14,7 +14,50 @@ if (ipcRenderer.sendSync("titlebar")) {
     injectTitlebar();
 }
 const version = ipcRenderer.sendSync("displayVersion");
-sleep(5000).then(async () => {
+
+const waitForButton = setInterval(() => {
+    // Waiting until settings button appears, also useful for detecting when splash is over
+    let settingsButton = document.querySelector('[aria-label="User Settings"]');
+    if (settingsButton) {
+        clearInterval(waitForButton);
+        settingsButton.addEventListener('click', () => {
+            injectInSettings();
+        });
+
+        injectAfterSplash();
+    }
+}, 1000);
+
+// 🤮
+function injectInSettings() {
+    console.log("Injecting in settings...")
+    const waitForSidebar = setInterval(() => { // Wait until sidebar appears
+        const host = document.querySelector<HTMLDivElement>("nav > [class|=side]"); // select the HTML element where settings buttons will be injected
+        if (host != null) { // if the element is found
+            clearInterval(waitForSidebar); // stop running the setInterval function
+            const html = // create HTML code to be injected in the settings
+                "<div class=\"header-goof theme-dark\" tabindex=\"-1\" role=\"button\"><div class=\"headerText-goof theme-dark\">GoofCord</div></div>" +
+                "<div class=\"item-goof theme-dark\" role=\"tab\" aria-selected=\"false\" aria-disabled=\"false\" tabindex=\"-1\" data-custom-id=\"settingsButton\">Settings</div>" +
+                "<div class=\"separator-goof theme-dark\"></div>"
+            host.insertAdjacentHTML('afterbegin', html); // inject the HTML code at the beginning of the settings sidebar element
+
+            const settingsButton = host.querySelector('[data-custom-id="settingsButton"]')!; // select the settings button from the injected HTML
+            settingsButton.addEventListener('click', () => {
+                ipcRenderer.send('openSettingsWindow'); // when the button is clicked, open the settings window
+            });
+
+            // Inject goofcord version in the settings info element
+            const hostInfo = document.querySelector<HTMLDivElement>("nav > [class|=side] [class|=info]")!;
+            const el = hostInfo.firstElementChild!.cloneNode() as HTMLSpanElement;
+            el.id = "ac-ver";
+            el.textContent = `GoofCord Version: ${version}`;
+            hostInfo.insertBefore(el, hostInfo.firstElementChild!);
+        }
+    }, 100);
+}
+
+function injectAfterSplash() {
+    console.log("Injecting after splash...")
     // dirty hack to make clicking notifications focus GoofCord
     addScript(`
     (() => {
@@ -39,41 +82,4 @@ sleep(5000).then(async () => {
             fixTitlebar();
         }
     }
-});
-
-const waitForButton = setInterval(() => {
-    let settingsButton = document.querySelector('[aria-label="User Settings"]');
-    if (settingsButton) {
-        clearInterval(waitForButton);
-        settingsButton.addEventListener('click', () => {
-            inject()
-        });
-    }
-}, 1000);
-
-// 🤮
-function inject() {
-    console.log("Injecting...")
-    const waitForSidebar = setInterval(() => {
-        const host = document.querySelector<HTMLDivElement>("nav > [class|=side]");
-        if (host != null) {
-            clearInterval(waitForSidebar);
-            const html =
-                "<div class=\"header-2F5_LB\" tabindex=\"-1\" role=\"button\"><div class=\"eyebrow-1Shfyi headerText-10ez_d\" data-text-variant=\"eyebrow\">GoofCord</div></div>" +
-                "<div class=\"item-2GWPIy themed-qqoYp3\" role=\"tab\" aria-selected=\"false\" aria-disabled=\"false\" tabindex=\"-1\" data-custom-id=\"settingsButton\">Settings</div>" +
-                "<div class=\"separator-2N511j\"></div>"
-            host.insertAdjacentHTML('afterbegin', html);
-
-            const settingsButton = host.querySelector('[data-custom-id="settingsButton"]')!;
-            settingsButton.addEventListener('click', () => {
-                ipcRenderer.send('openSettingsWindow');
-            });
-
-            const hostInfo = document.querySelector<HTMLDivElement>("nav > [class|=side] [class|=info]")!;
-            const el = hostInfo.firstElementChild!.cloneNode() as HTMLSpanElement;
-            el.id = "ac-ver";
-            el.textContent = `GoofCord Version: ${version}`;
-            hostInfo.insertBefore(el, hostInfo.firstElementChild!);
-        }
-    }, 500);
 }

@@ -23,3 +23,43 @@
 [class|="listItem"]:has(+ [class|="listItem"] [data-list-item-id="guildsnav___app-download-button"]) {
     display: none;
 }
+
+.separator-goof {
+    margin: 8px 10px;
+    height: 1px;
+    background-color: var(--background-modifier-accent);
+}
+
+.header-goof {
+    padding: 6px 10px;
+    color: var(--channels-default);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.headerText-goof {
+    overflow-x: hidden;
+    font-family: var(--font-display);
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+}
+
+.item-goof {
+    margin-bottom: 2px;
+    border-radius: 4px;
+    padding: 6px 10px;
+    color: var(--interactive-normal);
+    position: relative;
+    font-size: 16px;
+    line-height: 20px;
+    cursor: pointer;
+    font-weight: 500;
+}
+.item-goof:hover {
+    background-color: var(--background-modifier-hover);
+}

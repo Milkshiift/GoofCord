@@ -7,7 +7,6 @@ import contextMenu from "electron-context-menu";
 import {tray} from "./tray";
 import {iconPath} from "./main";
 import {loadMods} from "./extensions/plugin";
-import {createSettingsWindow} from "./settings/main";
 
 const path = require("path");
 
@@ -40,6 +39,7 @@ async function doAfterDefiningTheWindow() {
         }
     });
     mainWindow.webContents.setWindowOpenHandler(({url}) => {
+        if (url === "about:blank") return { action: "allow" }
         if (url.startsWith("https:") || url.startsWith("http:") || url.startsWith("mailto:")) {
             shell.openExternal(url);
         }
