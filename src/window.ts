@@ -1,5 +1,5 @@
-import {app, BrowserWindow, nativeImage, session, shell} from "electron";
-import {checkIfConfigIsBroken, contentPath, getConfig, setWindowState} from "./utils";
+import {app, BrowserWindow, ipcRenderer, nativeImage, session, shell} from "electron";
+import {checkIfConfigIsBroken, contentPath, getConfig, getDisplayVersion, setWindowState} from "./utils";
 import {registerIpc} from "./ipc";
 import {setMenu} from "./menu";
 import * as fs from "fs";
@@ -7,6 +7,7 @@ import contextMenu from "electron-context-menu";
 import {tray} from "./tray";
 import {iconPath} from "./main";
 import {loadMods} from "./extensions/plugin";
+import {createSettingsWindow} from "./settings/main";
 
 const path = require("path");
 
@@ -130,7 +131,7 @@ async function doAfterDefiningTheWindow() {
                     callback({});
                     return;
                 }
-            });
+            })
         });
 }
 

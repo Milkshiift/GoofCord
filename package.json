@@ -1,7 +1,7 @@
 {
     "name": "GoofCord",
-    "version": "0.5.1",
-    "description": "GoofCord is a custom client designed to enhance your Discord experience while keeping everything lightweight.",
+    "version": "0.6.0",
+    "description": "Take control of your Discord experience with GoofCord – the highly configurable and privacy first discord client.",
     "main": "ts-out/main.js",
     "scripts": {
         "build": "tsc && copyfiles -u 1 src/**/*.html src/**/**/*.css src/**/**/*.js ts-out/ && copyfiles package.json ts-out/ && copyfiles assets/**/** ts-out/",

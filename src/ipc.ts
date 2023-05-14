@@ -63,22 +63,25 @@ export function registerIpc() {
     });
     ipcMain.on("splashEnd", async () => {
         try {
-            var width = (await getWindowState("width")) ?? 800;
+            var width = (await getWindowState("width")) ?? 835;
             var height = (await getWindowState("height")) ?? 600;
             var isMaximized = (await getWindowState("isMaximized")) ?? false;
             var xValue = await getWindowState("x");
             var yValue = await getWindowState("y");
         } catch (e) {
             console.log("[Window state manager] No window state file found. Fallbacking to default values.");
-            mainWindow.setSize(800, 600);
+            mainWindow.setSize(835, 600);
         }
         if (isMaximized) {
-            mainWindow.setSize(800, 600); //just so the whole thing doesn't cover whole screen
+            mainWindow.setSize(835, 600); //just so the whole thing doesn't cover whole screen
             mainWindow.maximize();
         } else {
             mainWindow.setSize(width, height);
             mainWindow.setPosition(xValue, yValue);
             console.log("[Window state manager] Not maximized.");
+        }
+        if (await getConfig("startMinimized")) {
+            mainWindow.hide();
         }
     });
     ipcMain.on("restart", () => {

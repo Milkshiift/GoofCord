@@ -4,6 +4,7 @@ import path from "path";
 import os from "os";
 import fs from "fs";
 import {crash} from "process";
+import {mainWindow} from "../window";
 
 let settingsWindow: BrowserWindow;
 let instance: number = 0;

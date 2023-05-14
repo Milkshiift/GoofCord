@@ -43,6 +43,13 @@ export async function setMenu() {
                     }
                 },
                 {
+                    label: "Fullscreen",
+                    accelerator: "F11",
+                    click() {
+                        mainWindow.fullScreen = !mainWindow.fullScreen;
+                    }
+                },
+                {
                     label: "Quit",
                     accelerator: "CmdOrCtrl+Q",
                     click: function () {
