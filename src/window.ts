@@ -119,19 +119,21 @@ async function doAfterDefiningTheWindow() {
                 Logger.disable()
             `);
 
-            const whiteList = await getConfig("whitelist");
-            const regexList = whiteList.map((url: string) => new RegExp(`^${url.replace(/\*/g, ".*")}`));
-            session.defaultSession.webRequest.onBeforeRequest({urls: ["<all_urls>"]}, async (details, callback) => {
-                const requestUrl = details.url;
-                const isAllowedUrl = regexList.some((regex: RegExp) => regex.test(requestUrl));
-                if (!isAllowedUrl) {
-                    callback({cancel: true});
-                    return;
-                } else {
-                    callback({});
-                    return;
-                }
-            })
+            if (await getConfig("whitelistEnabled") == true) {
+                const whiteList = await getConfig("whitelist");
+                const regexList = whiteList.map((url: string) => new RegExp(`^${url.replace(/\*/g, ".*")}`));
+                session.defaultSession.webRequest.onBeforeRequest({urls: ["<all_urls>"]}, async (details, callback) => {
+                    const requestUrl = details.url;
+                    const isAllowedUrl = regexList.some((regex: RegExp) => regex.test(requestUrl));
+                    if (!isAllowedUrl) {
+                        callback({cancel: true});
+                        return;
+                    } else {
+                        callback({});
+                        return;
+                    }
+                })
+            }
         });
 }
 

@@ -115,43 +115,37 @@ export interface Settings {
     inviteWebsocket: boolean;
     autoWhitelist: boolean;
     whitelist: string[];
+    whitelistEnabled: boolean;
     discordUrl: string;
+    [key: string]: any;
 }
+
+const defaults: Settings = {
+    minimizeToTray: true,
+    inviteWebsocket: true,
+    startMinimized: false,
+    dynamicIcon: false,
+    autoWhitelist: true,
+    whitelist: [],
+    whitelistEnabled: true,
+    discordUrl: "https://canary.discord.com/app"
+};
 
 export function setup() {
     console.log("Setting up temporary GoofCord settings.");
-    const defaults: Settings = {
-        minimizeToTray: true,
-        inviteWebsocket: true,
-        startMinimized: false,
-        dynamicIcon: false,
-        autoWhitelist: true,
-        whitelist: [],
-        discordUrl: "https://canary.discord.com/app"
-    };
     setConfigBulk({
         ...defaults
     });
 }
 
-export function checkConfig(): boolean {
-    const requiredParams: string[] = [
-        "minimizeToTray",
-        "inviteWebsocket",
-        "startMinimized",
-        "dynamicIcon",
-        "autoWhitelist",
-        "whitelist",
-        "discordUrl"
-    ];
+export async function checkConfig() {
+    const requiredParams: string[] = Object.keys(defaults);
     for (const param of requiredParams) {
-        if (getConfig(param) == undefined) {
+        if (await getConfig(param) == undefined) {
             console.error(`Missing parameter: ${param}`);
-            setup();
-            return false;
+            await setConfig(param, defaults[param]);
         }
     }
-    return true;
 }
 
 export function getConfigLocation() {
