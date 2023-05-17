@@ -254,7 +254,7 @@ button:hover {
 select {
     margin: 0 1em;
     border-radius: 5px;
-    width: 100px;
+    width: fit-content;
     background-color: var(--input-bg);
     border: none;
     color: #ffffff;

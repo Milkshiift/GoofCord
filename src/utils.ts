@@ -118,6 +118,7 @@ export interface Settings {
     whitelistEnabled: boolean;
     discordUrl: string;
     modName: string;
+    prfmMode: string;
     [key: string]: any;
 }
 
@@ -130,7 +131,8 @@ const defaults: Settings = {
     whitelist: [],
     whitelistEnabled: true,
     discordUrl: "https://canary.discord.com/app",
-    modName: "vencord"
+    modName: "vencord",
+    prfmMode: "none"
 };
 
 export function setup() {
