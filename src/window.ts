@@ -7,6 +7,7 @@ import contextMenu from "electron-context-menu";
 import {tray} from "./tray";
 import {iconPath} from "./main";
 import {loadMods} from "./extensions/plugin";
+import {getUserAgent} from "./modules/agent";
 
 const path = require("path");
 
@@ -26,7 +27,7 @@ async function doAfterDefiningTheWindow() {
     await checkIfConfigIsBroken();
     registerIpc();
     await setMenu();
-    mainWindow.webContents.userAgent = `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${process.versions.chrome} Safari/537.36`;
+    mainWindow.webContents.userAgent = getUserAgent(process.versions.chrome);
     app.on("second-instance", (event, commandLine, workingDirectory, additionalData) => {
         // Print out data received from the second instance.
         console.log(additionalData);
