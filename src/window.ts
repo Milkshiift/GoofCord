@@ -1,5 +1,5 @@
-import {app, BrowserWindow, ipcRenderer, nativeImage, session, shell} from "electron";
-import {checkIfConfigIsBroken, contentPath, getConfig, getDisplayVersion, setWindowState} from "./utils";
+import {app, BrowserWindow, nativeImage, session, shell} from "electron";
+import {checkIfConfigIsBroken, getConfig, setWindowState} from "./utils";
 import {registerIpc} from "./ipc";
 import {setMenu} from "./menu";
 import * as fs from "fs";
@@ -112,7 +112,7 @@ async function doAfterDefiningTheWindow() {
     await mainWindow.webContents
         .executeJavaScript(`window.location.replace("${disUrl}");`)
         .then(async () => {
-            loadMods();
+            loadMods()
 
             await mainWindow.webContents.executeJavaScript(`
                 const Logger = window.__SENTRY__.logger
@@ -156,7 +156,6 @@ export async function createCustomWindow() {
             nodeIntegrationInSubFrames: false,
             webSecurity: true,
             enableWebSQL: false,
-            webgl: false,
             autoplayPolicy: "no-user-gesture-required",
             plugins: true,
             spellcheck: await getConfig("spellcheck"),

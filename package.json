@@ -8,8 +8,9 @@
         "watch": "tsc -w",
         "start": "pnpm run build && electron ./ts-out/main.js",
         "startNoSandbox": "pnpm run build && electron ./ts-out/main.js --no-sandbox",
-        "package": "npm run build && electron-builder --win --linux",
-        "packageQuick": "pnpm run build && electron-builder",
+        "packageLinux": "npm run build && electron-builder --linux",
+        "packageWindows": "npm run build && electron-builder --win --x64 && electron-builder --win --ia32 && electron-builder --win --arm64",
+        "packageQuick": "pnpm run build && electron-builder --win --x64",
         "format": "prettier --write src *.json",
         "CIbuild": "pnpm run build && electron-builder --linux zip && electron-builder --windows zip && electron-builder --macos zip",
         "prepare": "git config --local core.hooksPath .hooks/"
@@ -25,15 +26,15 @@
     },
     "homepage": "https://github.com/Milkshiift/GoofCord",
     "devDependencies": {
-        "@types/node": "^20.1.0",
+        "@types/node": "^20.1.4",
         "copyfiles": "^2.4.1",
-        "electron": "^24.2.0",
+        "electron": "^24.3.0",
         "electron-builder": "^24.3.0",
         "prettier": "^2.8.8",
         "typescript": "^5.0.4"
     },
     "dependencies": {
-        "cross-fetch": "^3.1.5",
+        "cross-fetch": "^3.1.6",
         "electron-context-menu": "^3.6.1",
         "electron-updater": "^5.3.0",
         "extract-zip": "^2.0.1",
@@ -73,7 +74,9 @@
                 {
                     "target": "zip",
                     "arch": [
-                        "x64"
+                        "x64",
+                        "ia32",
+                        "arm64"
                     ]
                 }
             ]
@@ -87,6 +90,7 @@
                     "target": "AppImage",
                     "arch": [
                         "x64",
+                        "ia32",
                         "arm64"
                     ]
                 },
@@ -94,6 +98,7 @@
                     "target": "tar.gz",
                     "arch": [
                         "x64",
+                        "ia32",
                         "arm64"
                     ]
                 }

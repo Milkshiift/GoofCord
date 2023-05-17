@@ -113,24 +113,24 @@ export interface Settings {
     dynamicIcon: boolean;
     startMinimized: boolean;
     spellcheck: boolean;
-    inviteWebsocket: boolean;
     autoWhitelist: boolean;
     whitelist: string[];
     whitelistEnabled: boolean;
     discordUrl: string;
+    modName: string;
     [key: string]: any;
 }
 
 const defaults: Settings = {
     minimizeToTray: true,
-    inviteWebsocket: true,
     startMinimized: false,
     dynamicIcon: false,
     spellcheck: true,
     autoWhitelist: true,
     whitelist: [],
     whitelistEnabled: true,
-    discordUrl: "https://canary.discord.com/app"
+    discordUrl: "https://canary.discord.com/app",
+    modName: "vencord"
 };
 
 export function setup() {
@@ -201,10 +201,21 @@ async function updateModBundle() {
             while (!fs.existsSync(distFolder)) {
                 //waiting
             }
+            let name: string = await getConfig("modName");
+            const clientMods = {
+                none: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",
+                vencord: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",
+                shelter: "https://raw.githubusercontent.com/uwu/shelter-builds/main/shelter.js"
+            };
+            const clientModsCss = {
+                none: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
+                vencord: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
+                shelter: "https://armcord.xyz/placeholder.css"
+            };
             const timeout = 10000;
             const bundle: string = await (
                 await fetchWithTimeout(
-                    "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",
+                    clientMods[name as keyof typeof clientMods],
                     {method: "GET"},
                     timeout
                 )
@@ -212,7 +223,7 @@ async function updateModBundle() {
             fs.writeFileSync(distFolder + "bundle.js", bundle, "utf-8");
             const css: string = await (
                 await fetchWithTimeout(
-                    "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
+                    clientModsCss[name as keyof typeof clientModsCss],
                     {method: "GET"},
                     timeout
                 )

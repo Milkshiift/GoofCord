@@ -1,9 +1,8 @@
 import "./bridge";
-import "./optimizer";
 import {ipcRenderer} from "electron";
 import * as fs from "fs";
 import * as path from "path";
-import {addScript, addStyle, sleep} from "../utils";
+import {addScript, addStyle} from "../utils";
 import {fixTitlebar, injectTitlebar} from "./titlebar";
 
 window.localStorage.setItem("hideNag", "true");
@@ -35,9 +34,10 @@ function injectInSettings() {
         if (host != null) { // if the element is found
             clearInterval(waitForSidebar); // stop running the setInterval function
             // Finding elements to clone
-            let header = document.querySelectorAll('[class*=header-]')!;
-            let button = document.querySelectorAll('[class*=item-]')!;
-            let separator = document.querySelectorAll('[class*=separator-]')!;
+            let header = document.querySelectorAll('div > [class*=header-]')!;
+            let button = document.querySelectorAll('div > [class*=item-]')!;
+            let separator = document.querySelectorAll('div > [class*=separator-]')!;
+            console.log(separator)
             // Cloning and modifying parameters
             const headerClone = header[header.length - 1].cloneNode(true) as HTMLElement;
                 headerClone.children[0].innerHTML = "GoofCord";
@@ -45,7 +45,7 @@ function injectInSettings() {
                 gcSettings.textContent = "Settings";
                 gcSettings.id = "goofcord";
                 gcSettings.onclick = () => ipcRenderer.send("openSettingsWindow");
-            const separatorClone = separator[button.length - 1].cloneNode(true) as HTMLElement;
+            const separatorClone = separator[separator.length - 1].cloneNode(true) as HTMLElement;
             // Inserting cloned elements
             host.insertAdjacentElement("afterbegin", headerClone);
             headerClone.insertAdjacentElement("afterend", gcSettings);
