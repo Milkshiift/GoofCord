@@ -1,5 +1,10 @@
 name: Release build
-on: workflow_dispatch
+on: 
+  workflow_dispatch:
+    inputs:
+      releaseTag:
+        description: 'Release tag'
+        required: true
 
 env:
   FORCE_COLOR: true
@@ -106,6 +111,7 @@ jobs:
     release:
         runs-on: ubuntu-latest
         needs: [build-linux, build-windows, build-windowsOnARM]
+        if: env.releaseTag != ''
 
         steps:
             - uses: actions/download-artifact@v2
