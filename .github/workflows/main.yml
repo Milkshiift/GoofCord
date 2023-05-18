@@ -3,9 +3,9 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version for the release'
+        description: 'Tag name for the release'
         required: true
-        default: '0.6.0'
+        default: 'v0.6.0'
 
 env:
   FORCE_COLOR: true
