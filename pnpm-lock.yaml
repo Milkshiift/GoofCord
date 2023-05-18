@@ -19,14 +19,14 @@ dependencies:
 
 devDependencies:
   '@types/node':
-    specifier: ^20.1.4
-    version: 20.1.4
+    specifier: ^20.2.1
+    version: 20.2.1
   copyfiles:
     specifier: ^2.4.1
     version: 2.4.1
   electron:
-    specifier: ^24.3.0
-    version: 24.3.0
+    specifier: ^24.3.1
+    version: 24.3.1
   electron-builder:
     specifier: ^24.3.0
     version: 24.3.0
@@ -211,7 +211,7 @@ packages:
     dependencies:
       '@types/http-cache-semantics': 4.0.1
       '@types/keyv': 3.1.4
-      '@types/node': 20.1.4
+      '@types/node': 20.2.1
       '@types/responselike': 1.0.0
     dev: true
 
@@ -222,21 +222,21 @@ packages:
   /@types/keyv@3.1.4:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
     dependencies:
-      '@types/node': 20.1.4
+      '@types/node': 20.2.1
     dev: true
 
   /@types/node@18.16.5:
     resolution: {integrity: sha512-seOA34WMo9KB+UA78qaJoCO20RJzZGVXQ5Sh6FWu0g/hfT44nKXnej3/tCQl7FL97idFpBhisLYCTB50S0EirA==}
     dev: true
 
-  /@types/node@20.1.4:
-    resolution: {integrity: sha512-At4pvmIOki8yuwLtd7BNHl3CiWNbtclUbNtScGx4OHfBd4/oWoJC8KRCIxXwkdndzhxOsPXihrsOoydxBjlE9Q==}
+  /@types/node@20.2.1:
+    resolution: {integrity: sha512-DqJociPbZP1lbZ5SQPk4oag6W7AyaGMO6gSfRwq3PWl4PXTwJpRQJhDq4W0kzrg3w6tJ1SwlvGZ5uKFHY13LIg==}
 
   /@types/plist@3.0.2:
     resolution: {integrity: sha512-ULqvZNGMv0zRFvqn8/4LSPtnmN4MfhlPNtJCTpKuIIxGVGZ2rYWzFXrvEBoh9CVyqSE7D6YFRJ1hydLHI6kbWw==}
     requiresBuild: true
     dependencies:
-      '@types/node': 20.1.4
+      '@types/node': 20.2.1
       xmlbuilder: 15.1.1
     dev: true
     optional: true
@@ -244,7 +244,7 @@ packages:
   /@types/responselike@1.0.0:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
     dependencies:
-      '@types/node': 20.1.4
+      '@types/node': 20.2.1
     dev: true
 
   /@types/semver@7.3.13:
@@ -261,7 +261,7 @@ packages:
     resolution: {integrity: sha512-Cn6WYCm0tXv8p6k+A8PvbDG763EDpBoTzHdA+Q/MF6H3sapGjCm9NzoaJncJS9tUKSuCoDs9XHxYYsQDgxR6kw==}
     requiresBuild: true
     dependencies:
-      '@types/node': 20.1.4
+      '@types/node': 20.2.1
     optional: true
 
   /abbrev@1.1.1:
@@ -919,8 +919,8 @@ packages:
       - supports-color
     dev: false
 
-  /electron@24.3.0:
-    resolution: {integrity: sha512-M7PpfpOzGdLeZPr2xhxXuvJeoXPEHMH40Rtv8BCGleRPolwna9BepAGc0H0F+Uz5kGKOv3xcm99fTurvXUH0nw==}
+  /electron@24.3.1:
+    resolution: {integrity: sha512-lKfC0umie1k5LW48troHzpPKJrqPEW+5j14/CPTC41K9+dJA98oUPt/05G7QAe8OGD4fHjQQuulfRdZ9MjjXeQ==}
     engines: {node: '>= 12.20.55'}
     hasBin: true
     requiresBuild: true
