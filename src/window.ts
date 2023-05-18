@@ -113,28 +113,24 @@ async function doAfterDefiningTheWindow() {
     await mainWindow.webContents
         .executeJavaScript(`window.location.replace("${disUrl}");`)
         .then(async () => {
-            loadMods()
+            if (await getConfig("modName") != "none") {loadMods()}
 
             await mainWindow.webContents.executeJavaScript(`
                 const Logger = window.__SENTRY__.logger
                 Logger.disable()
             `);
 
-            if (await getConfig("whitelistEnabled") == true) {
-                const whiteList = await getConfig("whitelist");
-                const regexList = whiteList.map((url: string) => new RegExp(`^${url.replace(/\*/g, ".*")}`));
-                session.defaultSession.webRequest.onBeforeRequest({urls: ["<all_urls>"]}, async (details, callback) => {
-                    const requestUrl = details.url;
-                    const isAllowedUrl = regexList.some((regex: RegExp) => regex.test(requestUrl));
-                    if (!isAllowedUrl) {
-                        callback({cancel: true});
-                        return;
-                    } else {
-                        callback({});
-                        return;
-                    }
-                })
-            }
+            session.defaultSession.webRequest.onBeforeRequest(
+                {urls: [
+                        "https://*/api/v*/science",
+                        "https://sentry.io/*",
+                        "https://*.nel.cloudflare.com/*",
+                        "https://*/api/v*/applications/detectable",
+                        "https://*/api/v*/auth/location-metadata",
+                        "https://cdn.discordapp.com/bad-domains/updated_hashes.json"
+                    ]},
+                (_, callback) => callback({cancel: true})
+            );
         });
 }
 

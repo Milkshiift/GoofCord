@@ -37,23 +37,23 @@ export async function checkIfConfigIsBroken() {
     }
 }
 
-export async function fetchWhiteList() {
+export async function fetchBlackList() {
     const whitelistUrl = "https://raw.githubusercontent.com/Milkshiift/GoofCord/main/whitelist.txt";
     const response = await fetchWithTimeout(whitelistUrl);
     const whitelist = await response.text();
     return whitelist.split("\n").filter(Boolean); // Split the string into an array of URLs and filter out empty lines
 }
 
-export async function checkIfWhitelistIsNotEmpty() {
+export async function checkIfBlacklistIsNotEmpty() {
     const whitelist = await getConfig("whitelist");
     if ((await getConfig("autoWhitelist")) == false) {
         if (whitelist === undefined) {
-            let fetchedWhitelist = await fetchWhiteList();
+            let fetchedWhitelist = await fetchBlackList();
             await setConfig("whitelist", fetchedWhitelist);
         }
         return;
     } else {
-        let fetchedWhitelist = await fetchWhiteList();
+        let fetchedWhitelist = await fetchBlackList();
         await setConfig("whitelist", fetchedWhitelist);
     }
 }
@@ -113,9 +113,6 @@ export interface Settings {
     dynamicIcon: boolean;
     startMinimized: boolean;
     spellcheck: boolean;
-    autoWhitelist: boolean;
-    whitelist: string[];
-    whitelistEnabled: boolean;
     discordUrl: string;
     modName: string;
     prfmMode: string;
@@ -127,9 +124,6 @@ const defaults: Settings = {
     startMinimized: false,
     dynamicIcon: false,
     spellcheck: true,
-    autoWhitelist: true,
-    whitelist: [],
-    whitelistEnabled: true,
     discordUrl: "https://canary.discord.com/app",
     modName: "vencord",
     prfmMode: "none"

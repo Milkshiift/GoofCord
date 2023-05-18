@@ -86,44 +86,6 @@
                     Performance mode is an experimental feature that may either increase responsiveness and performance of GoofCord or… decrease it. Please try every option and see which fits you the best.
                 </p>
             </fieldset>
-        </form>
-
-        <h1>Advanced</h1>
-        <a href="https://github.com/Milkshiift/GoofCord/wiki/Placeholder" id="link"
-            >Please see our wiki before changing anything</a
-        >
-        <h2>Whitelist settings</h2>
-        <form class="settingsContainer">
-            <fieldset>
-                <div class="checkbox-container">
-                    <textarea data-setting="whitelist" id="whitelist" type="text"></textarea>
-                </div>
-                <p class="description">
-                    Any request URL that does not begin with a URL from the provided list will be restricted. Please
-                    ensure to separate each entry in the list with a comma.
-                </p>
-            </fieldset>
-            <fieldset>
-                <div class="checkbox-container">
-                    <input data-setting="autoWhitelist" id="autoWhitelist" type="checkbox" />
-                    <label for="autoWhitelist">Automatic whitelist updates</label>
-                </div>
-                <p class="description">
-                    Automatically updates whitelist values on startup. If activated, manual changes to it do nothing.
-                </p>
-            </fieldset>
-            <fieldset>
-                <div class="checkbox-container">
-                    <input data-setting="whitelistEnabled" id="whitelistEnabled" type="checkbox" />
-                    <label for="whitelistEnabled">Whitelist enabled</label>
-                </div>
-                <p class="description">
-                    You shouldn't disable whitelist, if something is broken for you open an issue on github.
-                </p>
-            </fieldset>
-        </form>
-        <h2>Other</h2>
-        <form class="settingsContainer">
             <fieldset>
                 <div class="checkbox-container">
                     <input data-setting="discordUrl" id="text" type="text" />
@@ -158,12 +120,12 @@
         </fieldset>
     </body>
     <script>
-        const linkElement = document.getElementById("link");
+        /*const linkElement = document.getElementById("link");
         linkElement.addEventListener("click", (event) => {
             event.preventDefault();
             const url = linkElement.href;
             settings.openExternalLink(url);
-        });
+        });*/
 
         const elements = document.querySelectorAll("[data-setting]");
         elements.forEach(async (e) => {
@@ -193,21 +155,10 @@
             );
             const settingsObj = {
                 ...obj, // Add the other settings to the object
-                whitelist: createUrlArray(), // Add the whitelist to the object
                 discordUrl: document.getElementById("text").value
             };
             console.log(settingsObj);
             settings.save(settingsObj);
-        }
-
-        function createUrlArray() {
-            let urlInput = document.getElementById("whitelist").value.replace(/\s/g, ""); // Remove all whitespace from input
-            if (urlInput.endsWith(",")) {
-                // Check if input ends with a comma
-                urlInput = urlInput.slice(0, -1); // Remove the comma from the end of the input
-            }
-            let urls = urlInput.split(",");
-            return urls;
         }
 
         document.querySelectorAll("[data-open]").forEach((e) => {

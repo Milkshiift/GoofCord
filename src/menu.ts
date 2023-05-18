@@ -37,9 +37,6 @@ export async function setMenu() {
                     accelerator: "CmdOrCtrl+R",
                     click: async function () {
                         mainWindow.reload();
-                        await mainWindow.webContents.executeJavaScript(
-                            `window.location.replace("https://canary.discord.com/app");`
-                        );
                     }
                 },
                 {

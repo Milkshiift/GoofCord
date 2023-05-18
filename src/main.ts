@@ -1,7 +1,13 @@
 // Modules to control application life and create native browser window
 import {app, BrowserWindow, crashReporter, session} from "electron";
 import "v8-compile-cache";
-import {checkConfig, checkIfConfigExists, checkIfWhitelistIsNotEmpty, getConfig, installModLoader} from "./utils";
+import {
+    checkConfig,
+    checkIfBlacklistIsNotEmpty,
+    checkIfConfigExists,
+    getConfig,
+    installModLoader
+} from "./utils";
 import {autoUpdater} from "electron-updater";
 import "./extensions/mods";
 import "./tray";
@@ -22,13 +28,13 @@ autoUpdater.checkForUpdatesAndNotify();
 
 setFlags();
 checkConfig();
-checkIfWhitelistIsNotEmpty();
+checkIfBlacklistIsNotEmpty();
 checkIfConfigExists();
 app.whenReady().then(async () => {
     iconPath = path.join(__dirname, "../", "/assets/ac_icon_transparent.png");
 
     await createCustomWindow();
-    await installModLoader();
+    if (await getConfig("modName") != "none") {await installModLoader();}
     session.fromPartition("some-partition").setPermissionRequestHandler((webContents, permission, callback) => {
         if (permission === "notifications") {
             // Approves the permissions request
