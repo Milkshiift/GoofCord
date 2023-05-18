@@ -2,7 +2,7 @@ name: Release build
 on:
   workflow_dispatch:
     inputs:
-      version:
+      releaseTag:
         description: 'Tag name for the release'
         required: true
         default: 'v0.6.0'
