@@ -23,7 +23,7 @@ window.navigator.mediaDevices.getDisplayMedia = () => new Promise(async (resolve
               reject(new Error('Cancelled by user'));
             } else {
               const stream = await window.navigator.mediaDevices.getUserMedia({
-                audio: false,
+                audio: true,
                 video: {
                   mandatory: {
                     chromeMediaSource: 'desktop',

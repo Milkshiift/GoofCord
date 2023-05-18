@@ -33,6 +33,7 @@ function injectInSettings() {
         const host = document.querySelector<HTMLDivElement>("nav > [class|=side]");
         if (host != null) { // if the element is found
             clearInterval(waitForSidebar); // stop running the setInterval function
+
             // Finding elements to clone
             let header = document.querySelectorAll('div > [class*=header-]')!;
             let button = document.querySelectorAll('div > [class*=item-]')!;
@@ -55,7 +56,7 @@ function injectInSettings() {
             const hostInfo = document.querySelector<HTMLDivElement>("nav > [class|=side] [class|=info]")!;
             const el = hostInfo.firstElementChild!.cloneNode() as HTMLSpanElement;
             el.id = "ac-ver";
-            el.textContent = `GoofCord Version: ${version}`;
+            el.textContent = `GoofCord ${version}`;
             hostInfo.insertBefore(el, hostInfo.firstElementChild!);
         }
     }, 100);
