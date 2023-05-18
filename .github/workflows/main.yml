@@ -178,4 +178,4 @@ jobs:
                     });    
                   }
               env:
-                releaseTag: ${{ steps.vars.outputs.releaseTag }}
+                releaseTag: ${{ inputs.releaseTag }}
