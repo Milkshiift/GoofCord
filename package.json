@@ -71,6 +71,16 @@
                 "rpm",
                 "AppImage"
             ]
+        },
+        "win": {
+            "icon": "build/icon.ico",
+            "target": {
+                "target": "NSIS",
+                "arch": [
+                    "x64",
+                    "ia32"
+                ]
+            }
         }
     },
     "packageManager": "pnpm@7.13.4"
