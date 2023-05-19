@@ -33,7 +33,7 @@ jobs:
               run: pnpm install -g electron-builder
 
             - name: Build
-              run: npm run build && electron-builder --linux --x64 && electron-builder --arm64 --linux && electron-builder --armv7l --linux
+              run: npm run build && electron-builder --linux AppImage deb tar.gz --x64 && electron-builder --arm64 --linux AppImage deb tar.gz && electron-builder --armv7l --linux AppImage deb tar.gz
               env:
                 GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - name: List all files in the dist directory
@@ -66,7 +66,7 @@ jobs:
               run: pnpm install -g electron-builder
 
             - name: Build
-              run: npm run build && electron-builder --windows
+              run: npm run build && electron-builder --windows zip exe
               env:
                 GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - name: Delete unpacked builds
@@ -98,7 +98,7 @@ jobs:
               run: pnpm install -g electron-builder
 
             - name: Build
-              run: npm run build && electron-builder --windows --arm64 
+              run: npm run build && electron-builder --windows zip exe --arm64
               env:
                 GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - name: Delete unpacked builds
