@@ -17,6 +17,11 @@ import path from "path";
 export var iconPath: string;
 export var clientName: "GoofCord";
 
+app.on("render-process-gone", (event, webContents, details) => {
+    if (details.reason == "crashed") {
+        app.relaunch();
+    }
+});
 if (!app.requestSingleInstanceLock()) {
     // kill if 2nd instance
     app.quit();
@@ -61,6 +66,13 @@ async function setFlags() {
 
     app.commandLine.appendSwitch("disable-features", "OutOfBlinkCors, UseChromeOSDirectVideoDecoder");
     app.commandLine.appendSwitch("enable-features", "WebRTC,VaapiVideoDecoder,VaapiVideoEncoder");
+    app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+    // WinRetrieveSuggestionsOnlyOnDemand: Work around electron 13 bug w/ async spellchecking on Windows.
+    // HardwareMediaKeyHandling,MediaSessionService: Prevent Discord from registering as a media service.
+    app.commandLine.appendSwitch(
+        "disable-features",
+        "WinRetrieveSuggestionsOnlyOnDemand,HardwareMediaKeyHandling,MediaSessionService"
+    );
     if (isUnix) {
         if (isWaylandNative) {
             app.commandLine.appendSwitch("enable-features", "UseOzonePlatform,WebRTCPipeWireCapturer,WaylandWindowDecorations");

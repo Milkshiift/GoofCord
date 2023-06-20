@@ -33,6 +33,10 @@ async function addDisplays() {
         </button>
       </li>
     </ul>
+    </div>
+    <div class="checkbox-container">
+        <input id="audio-checkbox" type="checkbox" />
+        <label for="audio-checkbox">Stream audio</label>
     </div>`;
         document.body.appendChild(selectionElem);
         document.querySelectorAll(".desktop-capturer-selection__btn").forEach((button) => {
@@ -40,10 +44,12 @@ async function addDisplays() {
                 try {
                     const id = button.getAttribute("data-id");
                     const title = button.getAttribute("title");
+                    const audio = document.getElementById("audio-checkbox") as HTMLInputElement;
+
                     if (id === "${CANCEL_ID}") {
-                        new Error("Cancelled by user");
+                        ipcRenderer.sendSync("selectScreenshareSource", id, title, audio.checked, true);
                     } else {
-                        ipcRenderer.sendSync("selectScreenshareSource", id, title);
+                        ipcRenderer.sendSync("selectScreenshareSource", id, title, audio.checked);
                     }
                 } catch (err) {
                     console.error(err);

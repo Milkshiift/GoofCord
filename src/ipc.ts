@@ -1,5 +1,5 @@
 //ipc stuff
-import {app, desktopCapturer, ipcMain, nativeImage, shell} from "electron";
+import {app, desktopCapturer, ipcMain, nativeImage, shell, webContents} from "electron";
 import {mainWindow} from "./window";
 import {getConfig, getDisplayVersion, getVersion, getWindowState, packageVersion, setConfigBulk} from "./utils";
 import {createSettingsWindow} from "./settings/main";

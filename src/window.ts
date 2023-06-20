@@ -1,4 +1,4 @@
-import {app, BrowserWindow, nativeImage, session, shell} from "electron";
+import {app, BrowserWindow, ipcRenderer, nativeImage, session, shell} from "electron";
 import {checkIfConfigIsBroken, getConfig, setWindowState} from "./utils";
 import {registerIpc} from "./ipc";
 import {setMenu} from "./menu";
