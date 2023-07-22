@@ -4,6 +4,7 @@ import * as fs from "fs";
 import * as path from "path";
 import {addScript, addStyle} from "../utils";
 import {fixTitlebar, injectTitlebar} from "./titlebar";
+import "./optimizer";
 
 window.localStorage.setItem("hideNag", "true");
 ipcRenderer.on("themeLoader", (event, message) => {
@@ -19,7 +20,7 @@ const waitForButton = setInterval(() => {
     let settingsButton = document.querySelector('[aria-label="User Settings"]');
     if (settingsButton) {
         clearInterval(waitForButton);
-        settingsButton.addEventListener('click', () => {
+        settingsButton.addEventListener("click", () => {
             injectInSettings();
         });
 
@@ -28,24 +29,26 @@ const waitForButton = setInterval(() => {
 }, 1000);
 
 function injectInSettings() {
-    console.log("Injecting in settings...")
-    const waitForSidebar = setInterval(() => { // Wait until sidebar appears
+    console.log("Injecting in settings...");
+    const waitForSidebar = setInterval(() => {
+        // Wait until sidebar appears
         const host = document.querySelector<HTMLDivElement>("nav > [class|=side]");
-        if (host != null) { // if the element is found
+        if (host != null) {
+            // if the element is found
             clearInterval(waitForSidebar); // stop running the setInterval function
 
             // Finding elements to clone
-            let header = document.querySelectorAll('div > [class*=header-]')!;
-            let button = document.querySelectorAll('div > [class*=item-]')!;
-            let separator = document.querySelectorAll('div > [class*=separator-]')!;
-            console.log(separator)
+            let header = document.querySelectorAll("div > [class*=header-]")!;
+            let button = document.querySelectorAll("div > [class*=item-]")!;
+            let separator = document.querySelectorAll("div > [class*=separator-]")!;
+            console.log(separator);
             // Cloning and modifying parameters
             const headerClone = header[header.length - 1].cloneNode(true) as HTMLElement;
-                headerClone.children[0].innerHTML = "GoofCord";
+            headerClone.children[0].innerHTML = "GoofCord";
             const gcSettings = button[button.length - 1].cloneNode(true) as HTMLElement;
-                gcSettings.textContent = "Settings";
-                gcSettings.id = "goofcord";
-                gcSettings.onclick = () => ipcRenderer.send("openSettingsWindow");
+            gcSettings.textContent = "Settings";
+            gcSettings.id = "goofcord";
+            gcSettings.onclick = () => ipcRenderer.send("openSettingsWindow");
             const separatorClone = separator[separator.length - 1].cloneNode(true) as HTMLElement;
             // Inserting cloned elements
             host.insertAdjacentElement("afterbegin", headerClone);
@@ -63,7 +66,7 @@ function injectInSettings() {
 }
 
 function injectAfterSplash() {
-    console.log("Injecting after splash...")
+    console.log("Injecting after splash...");
     // dirty hack to make clicking notifications focus GoofCord
     addScript(`
     (() => {

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
     <head>
         <meta charset="UTF-8" />
@@ -35,18 +35,14 @@
         <form class="settingsContainer">
             <fieldset>
                 <div class="checkbox-container">
-                    <select name="modName" data-setting="modName" class="left dropdown">
+                    <select class="left dropdown" data-setting="modName" name="modName">
                         <option value="none">None</option>
-                        <option value="vencord" selected>Vencord</option>
+                        <option selected value="vencord">Vencord</option>
                         <option value="shelter">Shelter</option>
                     </select>
-                    <label>
-                        Client mod
-                    </label>
+                    <label> Client mod </label>
                 </div>
-                <p class="description">
-                    What client mod to use. Vencord is recommended.
-                </p>
+                <p class="description">What client mod to use. Vencord is recommended.</p>
             </fieldset>
         </form>
 
@@ -67,23 +63,20 @@
                     <input data-setting="spellcheck" id="spellcheck" type="checkbox" />
                     <label for="spellcheck">Spellcheck</label>
                 </div>
-                <p class="description">
-                    Whether to enable spellcheck for input fields or not.
-                </p>
+                <p class="description">Whether to enable spellcheck for input fields or not.</p>
             </fieldset>
             <fieldset>
                 <div class="checkbox-container">
-                    <select name="prfmMode" data-setting="prfmMode" class="left dropdown">
-                        <option value="none" selected>None</option>
+                    <select class="left dropdown" data-setting="prfmMode" name="prfmMode">
+                        <option selected value="none">None</option>
                         <option value="performance">Performance</option>
                         <option value="battery">Battery</option>
                     </select>
-                    <label>
-                        Performance mode
-                    </label>
+                    <label> Performance mode </label>
                 </div>
                 <p class="description">
-                    Performance mode is an experimental feature that may either increase responsiveness and performance of GoofCord or… decrease it. Please try every option and see which fits you the best.
+                    Performance mode is an experimental feature that may either increase responsiveness and performance
+                    of GoofCord or… decrease it. Please try every option and see which fits you the best.
                 </p>
             </fieldset>
             <fieldset>
@@ -121,11 +114,11 @@
     </body>
     <script>
         /*const linkElement = document.getElementById("link");
-        linkElement.addEventListener("click", (event) => {
-            event.preventDefault();
-            const url = linkElement.href;
-            settings.openExternalLink(url);
-        });*/
+    linkElement.addEventListener("click", (event) => {
+        event.preventDefault();
+        const url = linkElement.href;
+        settings.openExternalLink(url);
+    });*/
 
         const elements = document.querySelectorAll("[data-setting]");
         elements.forEach(async (e) => {

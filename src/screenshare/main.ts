@@ -36,7 +36,7 @@ function registerCustomHandler() {
             //console.log(sources[id]);
             //console.log(id);
             capturerWindow.close();
-            if (close){
+            if (close) {
                 return;
             }
             const result = {id, name, width: 9999, height: 9999};

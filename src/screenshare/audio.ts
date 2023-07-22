@@ -64,6 +64,7 @@ export function isAudioSupported(): boolean {
     });
     return false;
 }
+
 export function getSinks() {
     const pactl = spawn("pactl list sink-inputs");
 

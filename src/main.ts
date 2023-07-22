@@ -1,18 +1,12 @@
 // Modules to control application life and create native browser window
 import {app, BrowserWindow, crashReporter, session} from "electron";
 import "v8-compile-cache";
-import {
-    checkConfig,
-    checkIfBlacklistIsNotEmpty,
-    checkIfConfigExists,
-    getConfig,
-    installModLoader
-} from "./utils";
-import {autoUpdater} from "electron-updater";
+import {checkConfig, checkIfBlacklistIsNotEmpty, checkIfConfigExists, getConfig, installModLoader} from "./utils";
 import "./extensions/mods";
 import "./tray";
 import {createCustomWindow} from "./window";
 import path from "path";
+import "./modules/updateCheck";
 
 export var iconPath: string;
 export var clientName: "GoofCord";
@@ -22,14 +16,14 @@ app.on("render-process-gone", (event, webContents, details) => {
         app.relaunch();
     }
 });
+
 if (!app.requestSingleInstanceLock()) {
     // kill if 2nd instance
     app.quit();
 }
+
 // Your data now belongs to CCP
 crashReporter.start({uploadToServer: false});
-
-autoUpdater.checkForUpdatesAndNotify();
 
 setFlags();
 checkConfig();
@@ -39,7 +33,10 @@ app.whenReady().then(async () => {
     iconPath = path.join(__dirname, "../", "/assets/ac_icon_transparent.png");
 
     await createCustomWindow();
-    if (await getConfig("modName") != "none") {await installModLoader();}
+
+    if ((await getConfig("modName")) != "none") {
+        await installModLoader();
+    }
     session.fromPartition("some-partition").setPermissionRequestHandler((webContents, permission, callback) => {
         if (permission === "notifications") {
             // Approves the permissions request
@@ -58,11 +55,11 @@ app.whenReady().then(async () => {
 async function setFlags() {
     const isUnix = process.platform !== "win32" && process.platform !== "darwin";
     const isWayland = process.env["XDG_SESSION_TYPE"] === "wayland" || process.env["WAYLAND_DISPLAY"] !== undefined;
-    const isWaylandNative = isWayland && (
-        process.argv.includes("--ozone-platform=wayland") ||
-        process.argv.includes("--ozone-hint=auto") ||
-        process.argv.includes("--ozone-hint=wayland")
-    );
+    const isWaylandNative =
+        isWayland &&
+        (process.argv.includes("--ozone-platform=wayland") ||
+            process.argv.includes("--ozone-hint=auto") ||
+            process.argv.includes("--ozone-hint=wayland"));
 
     app.commandLine.appendSwitch("disable-features", "OutOfBlinkCors, UseChromeOSDirectVideoDecoder");
     app.commandLine.appendSwitch("enable-features", "WebRTC,VaapiVideoDecoder,VaapiVideoEncoder");
@@ -75,7 +72,10 @@ async function setFlags() {
     );
     if (isUnix) {
         if (isWaylandNative) {
-            app.commandLine.appendSwitch("enable-features", "UseOzonePlatform,WebRTCPipeWireCapturer,WaylandWindowDecorations");
+            app.commandLine.appendSwitch(
+                "enable-features",
+                "UseOzonePlatform,WebRTCPipeWireCapturer,WaylandWindowDecorations"
+            );
         } else if (isWayland) {
             app.commandLine.appendSwitch("enable-features", "WebRTCPipeWireCapturer");
         }

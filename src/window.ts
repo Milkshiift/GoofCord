@@ -1,4 +1,4 @@
-import {app, BrowserWindow, ipcRenderer, nativeImage, session, shell} from "electron";
+import {app, BrowserWindow, nativeImage, session, shell} from "electron";
 import {checkIfConfigIsBroken, getConfig, setWindowState} from "./utils";
 import {registerIpc} from "./ipc";
 import {setMenu} from "./menu";
@@ -40,7 +40,7 @@ async function doAfterDefiningTheWindow() {
         }
     });
     mainWindow.webContents.setWindowOpenHandler(({url}) => {
-        if (url === "about:blank") return { action: "allow" }
+        if (url === "about:blank") return {action: "allow"};
         if (url.startsWith("https:") || url.startsWith("http:") || url.startsWith("mailto:")) {
             shell.openExternal(url);
         }
@@ -110,28 +110,32 @@ async function doAfterDefiningTheWindow() {
 
     await mainWindow.loadFile(path.join(__dirname, "/content/splash.html"));
     const disUrl = await getConfig("discordUrl");
-    await mainWindow.webContents
-        .executeJavaScript(`window.location.replace("${disUrl}");`)
-        .then(async () => {
-            if (await getConfig("modName") != "none") {loadMods()}
+    await mainWindow.webContents.executeJavaScript(`window.location.replace("${disUrl}");`).then(async () => {
+        if ((await getConfig("modName")) != "none") {
+            loadMods();
+        }
 
-            await mainWindow.webContents.executeJavaScript(`
+        await mainWindow.webContents.executeJavaScript(`
                 const Logger = window.__SENTRY__.logger
                 Logger.disable()
             `);
 
-            session.defaultSession.webRequest.onBeforeRequest(
-                {urls: [
-                        "https://*/api/v*/science",
-                        "https://sentry.io/*",
-                        "https://*.nel.cloudflare.com/*",
-                        "https://*/api/v*/applications/detectable",
-                        "https://*/api/v*/auth/location-metadata",
-                        "https://cdn.discordapp.com/bad-domains/updated_hashes.json"
-                    ]},
-                (_, callback) => callback({cancel: true})
-            );
-        });
+        // Blocking URLs
+        session.defaultSession.webRequest.onBeforeRequest(
+            {
+                urls: [
+                    "https://*/api/v*/science",
+                    "https://sentry.io/*",
+                    "https://*.nel.cloudflare.com/*",
+                    "https://*/api/v*/applications/detectable",
+                    "https://*/api/v*/auth/location-metadata",
+                    "https://cdn.discordapp.com/bad-domains/*",
+                    "https://*/api/v*/users/@me/library?country_code=*"
+                ]
+            },
+            (_, callback) => callback({cancel: true})
+        );
+    });
 }
 
 export async function createCustomWindow() {

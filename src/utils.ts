@@ -116,6 +116,7 @@ export interface Settings {
     discordUrl: string;
     modName: string;
     prfmMode: string;
+
     [key: string]: any;
 }
 
@@ -139,7 +140,7 @@ export function setup() {
 export async function checkConfig() {
     const requiredParams: string[] = Object.keys(defaults);
     for (const param of requiredParams) {
-        if (await getConfig(param) == undefined) {
+        if ((await getConfig(param)) == undefined) {
             console.error(`Missing parameter: ${param}`);
             await setConfig(param, defaults[param]);
         }
@@ -210,19 +211,11 @@ async function updateModBundle() {
             };
             const timeout = 10000;
             const bundle: string = await (
-                await fetchWithTimeout(
-                    clientMods[name as keyof typeof clientMods],
-                    {method: "GET"},
-                    timeout
-                )
+                await fetchWithTimeout(clientMods[name as keyof typeof clientMods], {method: "GET"}, timeout)
             ).text();
             fs.writeFileSync(distFolder + "bundle.js", bundle, "utf-8");
             const css: string = await (
-                await fetchWithTimeout(
-                    clientModsCss[name as keyof typeof clientModsCss],
-                    {method: "GET"},
-                    timeout
-                )
+                await fetchWithTimeout(clientModsCss[name as keyof typeof clientModsCss], {method: "GET"}, timeout)
             ).text();
             fs.writeFileSync(distFolder + "bundle.css", css, "utf-8");
         } catch (e) {
