@@ -37,27 +37,6 @@ export async function checkIfConfigIsBroken() {
     }
 }
 
-export async function fetchBlackList() {
-    const whitelistUrl = "https://raw.githubusercontent.com/Milkshiift/GoofCord/main/whitelist.txt";
-    const response = await fetchWithTimeout(whitelistUrl);
-    const whitelist = await response.text();
-    return whitelist.split("\n").filter(Boolean); // Split the string into an array of URLs and filter out empty lines
-}
-
-export async function checkIfBlacklistIsNotEmpty() {
-    const whitelist = await getConfig("whitelist");
-    if ((await getConfig("autoWhitelist")) == false) {
-        if (whitelist === undefined) {
-            let fetchedWhitelist = await fetchBlackList();
-            await setConfig("whitelist", fetchedWhitelist);
-        }
-        return;
-    } else {
-        let fetchedWhitelist = await fetchBlackList();
-        await setConfig("whitelist", fetchedWhitelist);
-    }
-}
-
 //Get the version value from the "package.json" file
 export var packageVersion = require("../package.json").version;
 

@@ -8,8 +8,7 @@ import {tray} from "./tray";
 import {iconPath} from "./main";
 import {loadMods} from "./extensions/plugin";
 import {getUserAgent} from "./modules/agent";
-
-const path = require("path");
+import * as path from "path";
 
 export let mainWindow: BrowserWindow;
 contextMenu({
@@ -73,6 +72,9 @@ async function doAfterDefiningTheWindow() {
         );
         fs.writeFileSync(path.join(app.getPath("temp"), "/", "tray.png"), buf, "utf-8");
         let trayPath = nativeImage.createFromPath(path.join(app.getPath("temp"), "/", "tray.png"));
+        if (await getConfig("dynamicIcon") == true) {
+            mainWindow.setIcon(trayPath);
+        }
         if (process.platform === "darwin" && trayPath.getSize().height > 22) trayPath = trayPath.resize({height: 22});
         if (process.platform === "win32" && trayPath.getSize().height > 32) trayPath = trayPath.resize({height: 32});
         tray.setImage(trayPath);

@@ -1,15 +1,15 @@
 // Modules to control application life and create native browser window
-import {app, BrowserWindow, crashReporter, session} from "electron";
+import { app, BrowserWindow, crashReporter, session } from "electron";
+import path from "path";
 import "v8-compile-cache";
-import {checkConfig, checkIfBlacklistIsNotEmpty, checkIfConfigExists, getConfig, installModLoader} from "./utils";
+import { checkConfig, checkIfConfigExists, getConfig, installModLoader } from "./utils";
 import "./extensions/mods";
 import "./tray";
-import {createCustomWindow} from "./window";
-import path from "path";
+import { createCustomWindow } from "./window";
 import "./modules/updateCheck";
 
 export var iconPath: string;
-export var clientName: "GoofCord";
+export var clientName = "GoofCord";
 
 app.on("render-process-gone", (event, webContents, details) => {
     if (details.reason == "crashed") {
@@ -27,8 +27,8 @@ crashReporter.start({uploadToServer: false});
 
 setFlags();
 checkConfig();
-checkIfBlacklistIsNotEmpty();
 checkIfConfigExists();
+
 app.whenReady().then(async () => {
     iconPath = path.join(__dirname, "../", "/assets/ac_icon_transparent.png");
 
@@ -61,15 +61,12 @@ async function setFlags() {
             process.argv.includes("--ozone-hint=auto") ||
             process.argv.includes("--ozone-hint=wayland"));
 
-    app.commandLine.appendSwitch("disable-features", "OutOfBlinkCors, UseChromeOSDirectVideoDecoder");
-    app.commandLine.appendSwitch("enable-features", "WebRTC,VaapiVideoDecoder,VaapiVideoEncoder");
-    app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
     // WinRetrieveSuggestionsOnlyOnDemand: Work around electron 13 bug w/ async spellchecking on Windows.
     // HardwareMediaKeyHandling,MediaSessionService: Prevent Discord from registering as a media service.
-    app.commandLine.appendSwitch(
-        "disable-features",
-        "WinRetrieveSuggestionsOnlyOnDemand,HardwareMediaKeyHandling,MediaSessionService"
-    );
+    app.commandLine.appendSwitch("disable-features", "OutOfBlinkCors,UseChromeOSDirectVideoDecoder,WinRetrieveSuggestionsOnlyOnDemand,HardwareMediaKeyHandling,MediaSessionService");
+    app.commandLine.appendSwitch("enable-features", "WebRTC,VaapiVideoDecoder,VaapiVideoEncoder");
+    app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+
     if (isUnix) {
         if (isWaylandNative) {
             app.commandLine.appendSwitch(
