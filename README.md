@@ -40,6 +40,9 @@ Otherwise donwload source code using big green button on top of the page and ext
 
 ### Where can I find the source code?
 - The source code is on [GitHub](https://github.com/Milkshiift/GoofCord/).
+  
+### What's the difference between ArmCord and GoofCord?
+- GoofCord is designed to be more minimalistic by intentionally removing features that are not essential for most users. Its main focus is on prioritizing privacy, even though there may be limited scope for enhancing it further.
 
 ## Credits
 
