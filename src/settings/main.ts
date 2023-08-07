@@ -4,6 +4,7 @@ import path from "path";
 import os from "os";
 import fs from "fs";
 import {crash} from "process";
+import {iconPath} from "../main";
 
 let settingsWindow: BrowserWindow;
 let instance: number = 0;
@@ -28,6 +29,7 @@ export function createSettingsWindow() {
             title: `GoofCord Settings | Version: ${getDisplayVersion()}`,
             darkTheme: true,
             frame: true,
+            icon: iconPath,
             backgroundColor: "#2f3136",
             autoHideMenuBar: true,
             webPreferences: {

@@ -126,13 +126,26 @@ async function doAfterDefiningTheWindow() {
         session.defaultSession.webRequest.onBeforeRequest(
             {
                 urls: [
-                    "https://*/api/v*/science",
+                    // Discord. Blocking tracking and some URLs that just eat bandwidth.
+                    "https://*/api/v*/science", // General telemetry
                     "https://sentry.io/*",
                     "https://*.nel.cloudflare.com/*",
                     "https://*/api/v*/applications/detectable",
                     "https://*/api/v*/auth/location-metadata",
                     "https://cdn.discordapp.com/bad-domains/*",
-                    "https://*/api/v*/users/@me/library?country_code=*"
+                    "https://*/api/v*/users/@me/library?country_code=*",
+                    "https://*.discordsays.com/sentry/*", // Telemetry in "Activities"
+                    // Youtube. Blocking everything that is not needed for playback. TODO: Make it a whitelist
+                    "https://www.youtube.com/youtubei/v*/log_event?*",
+                    "https://jnn-pa.googleapis.com/*",
+                    "https://www.youtube.com/api/stats/*",
+                    "https://www.youtube.com/ptracking?*",
+                    "https://googleads.g.doubleclick.net/*",
+                    "https://www.youtube.com/generate_204",
+                    "https://www.youtube.com/api/stats/watchtime?*",
+                    "https://www.youtube.com/youtubei/v*/next?*",
+                    "https://play.google.com/*",
+                    "https://www.youtube.com/s/desktop/*"
                 ]
             },
             (_, callback) => callback({cancel: true})
@@ -149,7 +162,6 @@ export async function createCustomWindow() {
         darkTheme: true,
         icon: iconPath,
         frame: false,
-        backgroundColor: "#202225",
         autoHideMenuBar: true,
         webPreferences: {
             sandbox: false,

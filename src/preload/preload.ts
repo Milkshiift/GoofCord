@@ -83,6 +83,7 @@ function injectAfterSplash() {
     });
     })();
     `);
+
     const cssPath = path.join(__dirname, "../", "/content/css/discord.css");
     addStyle(fs.readFileSync(cssPath, "utf8"));
     if (document.getElementById("window-controls-container") == null) {

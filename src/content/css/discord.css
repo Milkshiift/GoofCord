@@ -23,3 +23,10 @@
 [class|="listItem"]:has(+ [class|="listItem"] [data-list-item-id="guildsnav___app-download-button"]) {
     display: none;
 }
+
+/* Could improve scrolling performance? Probably outdated. https://stackoverflow.com/questions/18529381/what-does-webkit-transform-translate3d0-0-0-exactly-do-apply-to-body */
+.scroller-kQBbkU {
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000px;
+}
