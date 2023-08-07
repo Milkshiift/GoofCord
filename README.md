@@ -9,7 +9,7 @@
 - **:chart_with_upwards_trend: Performance**: Enjoy a smooth and lag-free chatting experience with GoofCord's superior speed and responsiveness. [Benchmarks](https://github.com/Milkshiift/GoofCord/wiki/Placeholder)
 - **:bookmark: Standalone**: GoofCord is built as a standalone client and doesn't rely on the original Discord client in any way.
 - **:electric_plug: Plugins & Themes support**: GoofCord supports other client mods such as [Vencord](https://github.com/Vendicated/Vencord) or [Shelter](https://github.com/uwu/shelter) which allows you to use plugins and themes.
-- **:iphone: Cross-platform**: GoofCord is available on **Windows**, **Linux** and **Arm64**.
+- **:iphone: Cross-platform**: GoofCord is available on **Windows** and **Linux**.
 
 ## How to run/install it?
 
@@ -40,6 +40,9 @@ Otherwise donwload source code using big green button on top of the page and ext
 
 ### Where can I find the source code?
 - The source code is on [GitHub](https://github.com/Milkshiift/GoofCord/).
+  
+### What's the difference between ArmCord and GoofCord?
+- GoofCord is designed to be more minimalistic by intentionally removing features that are not essential for most users. Its main focus is on prioritizing privacy, even though there may be limited scope for enhancing it further.
 
 ## Credits
 
