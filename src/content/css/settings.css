@@ -220,7 +220,7 @@ textarea {
     font-family: var(--font-family);
 }
 
-#text {
+.text {
     flex-shrink: 0;
     margin: 0 1em;
     border-radius: 5px;

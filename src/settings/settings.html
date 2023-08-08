@@ -39,10 +39,23 @@
                         <option value="none">None</option>
                         <option selected value="vencord">Vencord</option>
                         <option value="shelter">Shelter</option>
+                        <option value="custom">Custom</option>
                     </select>
                     <label> Client mod </label>
                 </div>
                 <p class="description">What client mod to use. Vencord is recommended.</p>
+            </fieldset>
+            <fieldset id="customMod" style="display: none">
+                <div class="checkbox-container">
+                    <input data-setting="customJsBundle" class="text" type="text" />
+                    <label> Custom JS bundle </label>
+                </div>
+                <br>
+                <div class="checkbox-container">
+                    <input data-setting="customCssBundle" class="text" type="text" />
+                    <label> Custom CSS bundle </label>
+                </div>
+                <p class="description">A raw link to the JS bundle and CSS bundle of a client mod you want to use. Placeholder css: "https://armcord.xyz/placeholder.css"</p>
             </fieldset>
         </form>
 
@@ -81,8 +94,8 @@
             </fieldset>
             <fieldset>
                 <div class="checkbox-container">
-                    <input data-setting="discordUrl" id="text" type="text" />
-                    <label for="text">Discord URL</label>
+                    <input data-setting="discordUrl" class="text" type="text" />
+                    <label>Discord URL</label>
                 </div>
                 <p class="description">
                     URL of the discord. Variations: https://canary.discord.com/app, https://ptb.discord.com/app or
@@ -126,7 +139,12 @@
             console.log(typeof value);
             let type = typeof value;
             if (type === "boolean") {
-                if (e.tagName === "SELECT") e.value = value;
+                if (e.tagName === "SELECT") {
+                    e.value = value;
+                    if (value === 'custom') {
+                        document.getElementById('customMod').style.display = 'block';
+                    }
+                }
                 else e.checked = value;
             } else if (type === "object") {
                 e.value = value.join(",\n");
@@ -138,20 +156,24 @@
         elements.forEach((element) => {
             element.addEventListener("change", () => {
                 saveSettings();
+                if (element.name === "modName") {
+                    console.log(element.name)
+                    if (element.value === 'custom') {
+                        document.getElementById('customMod').style.display = 'block';
+                    } else {
+                        document.getElementById('customMod').style.display = 'none';
+                    }
+                }
             });
         });
 
         function saveSettings() {
             const elements = Array.from(document.querySelectorAll("[data-setting]"));
             const obj = Object.fromEntries(
-                elements.map((e) => [e.dataset.setting, e.tagName === "SELECT" ? e.value : e.checked])
+                elements.map((e) => [e.dataset.setting, e.tagName === "SELECT" || e.type === "text" ? e.value : e.checked])
             );
-            const settingsObj = {
-                ...obj, // Add the other settings to the object
-                discordUrl: document.getElementById("text").value
-            };
-            console.log(settingsObj);
-            settings.save(settingsObj);
+            console.log(obj);
+            settings.save(obj);
         }
 
         document.querySelectorAll("[data-open]").forEach((e) => {

@@ -95,6 +95,8 @@ export interface Settings {
     discordUrl: string;
     modName: string;
     prfmMode: string;
+    customJsBundle: RequestInfo | URL;
+    customCssBundle: RequestInfo | URL;
 
     [key: string]: any;
 }
@@ -106,7 +108,9 @@ const defaults: Settings = {
     spellcheck: true,
     discordUrl: "https://canary.discord.com/app",
     modName: "vencord",
-    prfmMode: "none"
+    prfmMode: "none",
+    customJsBundle: "https://armcord.xyz/placeholder.js",
+    customCssBundle: "https://armcord.xyz/placeholder.css",
 };
 
 export function setup() {
@@ -181,12 +185,14 @@ async function updateModBundle() {
             const clientMods = {
                 none: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",
                 vencord: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",
-                shelter: "https://raw.githubusercontent.com/uwu/shelter-builds/main/shelter.js"
+                shelter: "https://raw.githubusercontent.com/uwu/shelter-builds/main/shelter.js",
+                custom: await getConfig("customJsBundle")
             };
             const clientModsCss = {
                 none: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
                 vencord: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
-                shelter: "https://armcord.xyz/placeholder.css"
+                shelter: "https://armcord.xyz/placeholder.css",
+                custom: await getConfig("customCssBundle")
             };
             const timeout = 10000;
             const bundle: string = await (
