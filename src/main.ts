@@ -54,7 +54,7 @@ app.whenReady().then(async () => {
 
 async function setFlags() {
     const isUnix = process.platform !== "win32" && process.platform !== "darwin";
-    const isWayland = process.env["XDG_SESSION_TYPE"] === "wayland" || process.env["WAYLAND_DISPLAY"] !== undefined;
+    const isWayland = process.env.XDG_SESSION_TYPE?.toLowerCase() === "wayland" || process.env["WAYLAND_DISPLAY"] !== undefined;
     const isWaylandNative =
         isWayland &&
         (process.argv.includes("--ozone-platform=wayland") ||
@@ -66,6 +66,7 @@ async function setFlags() {
     app.commandLine.appendSwitch("disable-features", "OutOfBlinkCors,UseChromeOSDirectVideoDecoder,WinRetrieveSuggestionsOnlyOnDemand,HardwareMediaKeyHandling,MediaSessionService");
     app.commandLine.appendSwitch("enable-features", "WebRTC,VaapiVideoDecoder,VaapiVideoEncoder");
     app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+    app.commandLine.appendSwitch('webrtc-max-cpu-consumption-percentage', '100'); // For reducing screenshare stutters
 
     if (isUnix) {
         if (isWaylandNative) {
@@ -77,6 +78,7 @@ async function setFlags() {
             app.commandLine.appendSwitch("enable-features", "WebRTCPipeWireCapturer");
         }
     }
+
     const presets = {
         performance: `--enable-gpu-rasterization --enable-zero-copy --ignore-gpu-blocklist --enable-hardware-overlays=single-fullscreen,single-on-top,underlay --enable-features=EnableDrDc,CanvasOopRasterization,BackForwardCache:TimeToLiveInBackForwardCacheInSeconds/300/should_ignore_blocklists/true/enable_same_site/true,ThrottleDisplayNoneAndVisibilityHiddenCrossOriginIframes,UseSkiaRenderer,WebAssemblyLazyCompilation --disable-features=Vulkan --force_high_performance_gpu`, // Performance
         battery: "--enable-features=TurnOffStreamingMediaCachingOnBattery --force_low_power_gpu" // Known to have better battery life for Chromium?
