@@ -16,12 +16,12 @@ jobs:
 
         steps:
             - name: Checkout code
-              uses: actions/checkout@v2
+              uses: actions/checkout@v3
 
-            - uses: pnpm/action-setup@v2 # Install pnpm using packageManager key in package.json
+            - uses: pnpm/action-setup@v3 # Install pnpm using packageManager key in package.json
 
             - name: Use Node.js 20
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@v3
               with:
                   node-version: 20
                   cache: "pnpm"
@@ -41,7 +41,7 @@ jobs:
             - name: Delete unpacked builds
               run: rm -rf dist/linux-unpacked && rm -rf dist/linux-arm64-unpacked && rm -rf dist/linux-armv7l-unpacked
             - name: Upload artifact
-              uses: actions/upload-artifact@v2
+              uses: actions/upload-artifact@v3
               with:
                   name: GoofCordLinux
                   path: dist/
@@ -49,12 +49,12 @@ jobs:
         runs-on: windows-latest
         steps:
             - name: Checkout code
-              uses: actions/checkout@v2
+              uses: actions/checkout@v3
 
-            - uses: pnpm/action-setup@v2 # Install pnpm using packageManager key in package.json
+            - uses: pnpm/action-setup@v3 # Install pnpm using packageManager key in package.json
 
             - name: Use Node.js 20
-              uses: actions/setup-node@v2
+              uses: actions/setup-node@v3
               with:
                   node-version: 20
                   cache: "pnpm"
@@ -72,7 +72,7 @@ jobs:
             - name: Delete unpacked builds
               run: Remove-Item -LiteralPath ".\dist\win-unpacked" -Force -Recurse
             - name: Upload artifact
-              uses: actions/upload-artifact@v2
+              uses: actions/upload-artifact@v3
               with:
                   name: GoofCordWindows
                   path: dist/
@@ -81,11 +81,11 @@ jobs:
         needs: [build-linux, build-windows]
 
         steps:
-            - uses: actions/download-artifact@v2
+            - uses: actions/download-artifact@v3
               with:
                   name: GoofCordWindows
                   path: windows
-            - uses: actions/download-artifact@v2
+            - uses: actions/download-artifact@v3
               with:
                   name: GoofCordLinux
                   path: linux
@@ -103,7 +103,7 @@ jobs:
               run: |
                 echo "::set-output name=releaseTag::$(git describe --tags --abbrev=0)"
             - name: Create Release
-              uses: actions/github-script@v2
+              uses: actions/github-script@v3
               with:
                 github-token: ${{secrets.GITHUB_TOKEN}}
                 script: |
