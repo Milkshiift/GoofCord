@@ -4,7 +4,7 @@
 </div>
 
 ## Features :sparkles:
-- **:lock: Privacy first**: GoofCord blocks all tracking and uses multiple techniques to improve your privacy and security. [More here](https://github.com/Milkshiift/GoofCord/wiki/Placeholder)
+- **:lock: Privacy first**: GoofCord blocks all tracking and uses multiple techniques to improve your privacy and security. [More here](https://github.com/Milkshiift/GoofCord/wiki/Privacy-FAQ)
 - **:gear: Configurable**: Tailor your client to your liking with GoofCord's plethora of configuration options.
 - **:chart_with_upwards_trend: Performance**: Enjoy a smooth and lag-free chatting experience with GoofCord's superior speed and responsiveness. [Benchmarks](https://github.com/Milkshiift/GoofCord/wiki/Placeholder)
 - **:bookmark: Standalone**: GoofCord is built as a standalone client and doesn't rely on the original Discord client in any way.
