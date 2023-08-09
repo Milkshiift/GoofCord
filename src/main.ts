@@ -11,6 +11,8 @@ import "./modules/updateCheck";
 export var iconPath: string;
 export var clientName = "GoofCord";
 
+setFlags();
+
 app.on("render-process-gone", (event, webContents, details) => {
     if (details.reason == "crashed") {
         app.relaunch();
@@ -25,7 +27,6 @@ if (!app.requestSingleInstanceLock()) {
 // Your data now belongs to CCP
 crashReporter.start({uploadToServer: false});
 
-setFlags();
 checkConfig();
 checkIfConfigExists();
 
@@ -53,6 +54,7 @@ app.whenReady().then(async () => {
 });
 
 async function setFlags() {
+
     const isUnix = process.platform !== "win32" && process.platform !== "darwin";
     const isWayland = process.env.XDG_SESSION_TYPE?.toLowerCase() === "wayland" || process.env["WAYLAND_DISPLAY"] !== undefined;
     const isWaylandNative =
@@ -61,10 +63,16 @@ async function setFlags() {
             process.argv.includes("--ozone-hint=auto") ||
             process.argv.includes("--ozone-hint=wayland"));
 
-    // WinRetrieveSuggestionsOnlyOnDemand: Work around electron 13 bug w/ async spellchecking on Windows.
-    // HardwareMediaKeyHandling,MediaSessionService: Prevent Discord from registering as a media service.
-    app.commandLine.appendSwitch("disable-features", "OutOfBlinkCors,UseChromeOSDirectVideoDecoder,WinRetrieveSuggestionsOnlyOnDemand,HardwareMediaKeyHandling,MediaSessionService");
-    app.commandLine.appendSwitch("enable-features", "WebRTC,VaapiVideoDecoder,VaapiVideoEncoder");
+    // WinRetrieveSuggestionsOnlyOnDemand:
+    // HardwareMediaKeyHandling,MediaSessionService:
+    app.commandLine.appendSwitch("disable-features", "" +
+        "OutOfBlinkCors," +
+        "UseChromeOSDirectVideoDecoder," +
+        "WinRetrieveSuggestionsOnlyOnDemand," + // Work around electron 13 bug w/ async spellchecking on Windows.
+        "HardwareMediaKeyHandling," + // Prevent Discord from registering as a media service.
+        "MediaSessionService," //         ⤴
+    );
+    app.commandLine.appendSwitch("enable-features", "WebRTC,VaapiVideoDecoder,VaapiVideoEncoder,WebRtcHideLocalIpsWithMdns");
     app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
     app.commandLine.appendSwitch('webrtc-max-cpu-consumption-percentage', '100'); // For reducing screenshare stutters
 
