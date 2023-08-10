@@ -165,7 +165,13 @@ async function doAfterDefiningTheWindow() {
             if (blockRegex.test(details.url) && !allowRegex.test(details.url)) {
                 callback({ cancel: true });
             } else {
-                callback({ cancel: false });
+                callback({
+                    cancel: false,
+                    requestHeaders: {
+                        ...details.requestHeaders,
+                        'User-Agent': mainWindow.webContents.userAgent
+                    }
+                });
             }
         });
     });
