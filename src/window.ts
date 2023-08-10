@@ -122,34 +122,52 @@ async function doAfterDefiningTheWindow() {
                 Logger.disable()
             `);
 
-        // Blocking URLs
+        // Blocking URLs. This list works in tandem with "blockedStrings" list.
         session.defaultSession.webRequest.onBeforeRequest(
             {
                 urls: [
                     // Discord. Blocking tracking and some URLs that just eat bandwidth.
                     "https://*/api/v*/science", // General telemetry
-                    "https://sentry.io/*",
                     "https://*.nel.cloudflare.com/*",
                     "https://*/api/v*/applications/detectable",
                     "https://*/api/v*/auth/location-metadata",
                     "https://cdn.discordapp.com/bad-domains/*",
-                    "https://*/api/v*/users/@me/library?country_code=*",
-                    "https://*.discordsays.com/sentry/*", // Telemetry in "Activities"
-                    // Youtube. Blocking everything that is not needed for playback. TODO: Make it a whitelist
-                    "https://www.youtube.com/youtubei/v*/log_event?*",
-                    "https://jnn-pa.googleapis.com/*",
-                    "https://www.youtube.com/api/stats/*",
-                    "https://www.youtube.com/ptracking?*",
-                    "https://googleads.g.doubleclick.net/*",
-                    "https://www.youtube.com/generate_204",
-                    "https://www.youtube.com/api/stats/watchtime?*",
+                    // Youtube. Blocking everything that is not needed for playback.
                     "https://www.youtube.com/youtubei/v*/next?*",
-                    "https://play.google.com/*",
                     "https://www.youtube.com/s/desktop/*"
                 ]
             },
             (_, callback) => callback({cancel: true})
         );
+
+
+        /* If request url includes any of those, it is blocked.
+            * By doing so we can match multiple unwanted URLs, making the blocklist cleaner and more efficient */
+        const blockedStrings = [
+            'sentry',
+            'google',
+            'log',
+            'tracking',
+            'stats',
+            'spotify' // Turns out spotify embeds don't need xhr requests to function
+        ];
+        const blockRegex = new RegExp(blockedStrings.join('|'), 'i'); // 'i' flag for case-insensitive matching
+
+        const allowedStrings = ['googlevideo']; // "googlevideo" for youtube playback
+        const allowRegex = new RegExp(allowedStrings.join('|'), 'i');
+
+        session.defaultSession.webRequest.onBeforeSendHeaders({ urls: ['<all_urls>'] }, (details, callback) => {
+            if (details.resourceType != "xhr") { // Filtering out non-xhr requests for performance
+                callback({ cancel: false });
+                return; // Useless return?
+            }
+
+            if (blockRegex.test(details.url) && !allowRegex.test(details.url)) {
+                callback({ cancel: true });
+            } else {
+                callback({ cancel: false });
+            }
+        });
     });
 }
 
