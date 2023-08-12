@@ -30,12 +30,11 @@ function registerCustomHandler() {
             });
             capturerWindow.maximize();
             ipcMain.once("selectScreenshareSource", (event, id, name, audio, close) => {
-                //console.log(sources[id]);
-                //console.log(id);
                 capturerWindow.close();
-                if (close) {
+                /*if (close) {
+                    console.log("Closing!")
                     return;
-                }
+                }*/
                 const result = {id, name, width: 9999, height: 9999};
                 if (audio) {
                     if (process.platform === "win32") {

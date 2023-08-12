@@ -55,7 +55,7 @@ async function addDisplays() {
             });
         });
 
-        document.querySelectorAll(".closeIcon")[0].addEventListener("click", async () => {
+        document.querySelectorAll(".closeIcon")[0].addEventListener("click", () => {
             ipcRenderer.sendSync("selectScreenshareSource", "window:000000:0", "Close", false, true);
         });
     });
