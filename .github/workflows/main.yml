@@ -25,6 +25,9 @@ jobs:
               with:
                   node-version: 20
                   cache: "pnpm"
+                  
+            - name: Update pnpm
+              run: pnpm add -g pnpm
 
             - name: Install Node dependencies
               run: pnpm install -g cargo-cp-artifact && pnpm install
@@ -58,6 +61,9 @@ jobs:
               with:
                   node-version: 20
                   cache: "pnpm"
+
+            - name: Update pnpm
+              run: pnpm add -g pnpm
 
             - name: Install Node dependencies
               run: pnpm install -g cargo-cp-artifact && pnpm install
