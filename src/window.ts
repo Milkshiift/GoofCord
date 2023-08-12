@@ -153,7 +153,10 @@ async function doAfterDefiningTheWindow() {
         ];
         const blockRegex = new RegExp(blockedStrings.join('|'), 'i'); // 'i' flag for case-insensitive matching
 
-        const allowedStrings = ['googlevideo']; // "googlevideo" for youtube playback
+        const allowedStrings = [
+            'googlevideo', // For youtube playback
+            'discord-attachments'
+        ];
         const allowRegex = new RegExp(allowedStrings.join('|'), 'i');
 
         session.defaultSession.webRequest.onBeforeSendHeaders({ urls: ['<all_urls>'] }, (details, callback) => {
@@ -187,6 +190,7 @@ export async function createCustomWindow() {
         icon: iconPath,
         frame: false,
         autoHideMenuBar: true,
+        backgroundColor: "#313338",
         webPreferences: {
             sandbox: false,
             preload: path.join(__dirname, "preload/preload.js"),
@@ -198,7 +202,7 @@ export async function createCustomWindow() {
             autoplayPolicy: "no-user-gesture-required",
             plugins: true,
             spellcheck: await getConfig("spellcheck"),
-            devTools: true // Allows the use of the devTools.
+            devTools: true, // Allows the use of the devTools.
         }
     });
 

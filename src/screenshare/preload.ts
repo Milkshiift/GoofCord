@@ -13,25 +13,27 @@ async function addDisplays() {
         const selectionElem = document.createElement("div");
         //@ts-ignore
         selectionElem.classList = ["desktop-capturer-selection"];
-        selectionElem.innerHTML = `<div class="desktop-capturer-selection__scroller">
+        selectionElem.innerHTML = `
+<h1 style="margin-bottom: 0">Screen Share</h1>
+<button class="closeIcon" title="Cancel">
+    <svg width="24" height="24" viewBox="0 0 24 24">
+        <path fill="#73777c" d="M18.4 4L12 10.4L5.6 4L4 5.6L10.4 12L4 18.4L5.6 20L12 13.6L18.4 20L20 18.4L13.6 12L20 5.6L18.4 4Z"></path>
+    </svg>
+</button>
+<div class="desktop-capturer-selection__scroller">
     <ul class="desktop-capturer-selection__list">
       ${sources
           .map(
               ({id, name, thumbnail}) => `
         <li class="desktop-capturer-selection__item">
           <button class="desktop-capturer-selection__btn" data-id="${id}" title="${name}">
-            <img class="desktop-capturer-selection__thumbnail" src="${thumbnail.toDataURL()}" />
+            <img class="desktop-capturer-selection__thumbnail" src="${thumbnail.toDataURL()}"  alt="${name}"/>
             <span class="desktop-capturer-selection__name">${name}</span>
           </button>
         </li>
       `
           )
           .join("")}
-      <li class="desktop-capturer-selection__item">
-        <button class="desktop-capturer-selection__btn" data-id="screen-cancel" title="Cancel">
-          <span class="desktop-capturer-selection__name desktop-capturer-selection__name--cancel">Cancel</span>
-        </button>
-      </li>
     </ul>
     </div>
     <div class="checkbox-container">
@@ -46,15 +48,15 @@ async function addDisplays() {
                     const title = button.getAttribute("title");
                     const audio = document.getElementById("audio-checkbox") as HTMLInputElement;
 
-                    if (id === "${CANCEL_ID}") {
-                        ipcRenderer.sendSync("selectScreenshareSource", id, title, audio.checked, true);
-                    } else {
-                        ipcRenderer.sendSync("selectScreenshareSource", id, title, audio.checked);
-                    }
+                    ipcRenderer.sendSync("selectScreenshareSource", id, title, audio.checked);
                 } catch (err) {
                     console.error(err);
                 }
             });
+        });
+
+        document.querySelectorAll(".closeIcon")[0].addEventListener("click", async () => {
+            ipcRenderer.sendSync("selectScreenshareSource", "window:000000:0", "Close", false, true);
         });
     });
 }
