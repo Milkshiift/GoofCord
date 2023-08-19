@@ -29,6 +29,16 @@
                 </div>
                 <p class="description">GoofCord starts in the background and remains out of your way.</p>
             </fieldset>
+            <fieldset>
+                <div class="checkbox-container">
+                    <input data-setting="dynamicIcon" id="dynamicIcon" type="checkbox" />
+                    <label for="dynamicIcon">Dynamic icon</label>
+                </div>
+                <p class="description">
+                    Following Discord's behavior on Windows, this shows unread messages/pings count on GoofCord's icon
+                    instead of its tray.
+                </p>
+            </fieldset>
         </form>
 
         <h2>Client Mods settings</h2>
@@ -63,16 +73,6 @@
         <form class="settingsContainer">
             <fieldset>
                 <div class="checkbox-container">
-                    <input data-setting="dynamicIcon" id="dynamicIcon" type="checkbox" />
-                    <label for="dynamicIcon">Dynamic icon</label>
-                </div>
-                <p class="description">
-                    Following Discord's behavior on Windows, this shows unread messages/pings count on GoofCord's icon
-                    instead of its tray.
-                </p>
-            </fieldset>
-            <fieldset>
-                <div class="checkbox-container">
                     <input data-setting="spellcheck" id="spellcheck" type="checkbox" />
                     <label for="spellcheck">Spellcheck</label>
                 </div>
@@ -103,6 +103,19 @@
                 </p>
             </fieldset>
         </form>
+
+        <h2>Privacy settings</h2>
+        <form class="settingsContainer">
+            <fieldset>
+                <div class="checkbox-container">
+                    <textarea data-setting="blocklist"></textarea>
+                </div>
+                <p class="description">
+                    A list of URLs to block. Each entry must be separated by a comma.
+                </p>
+            </fieldset>
+        </form>
+
         <fieldset>
             <button class="center" data-open="Plugins" data-string="settings-pluginsFolder">Open plugins folder</button>
             <button class="center" data-open="Themes" data-string="settings-themesFolder">Open themes folder</button>
@@ -126,12 +139,14 @@
         </fieldset>
     </body>
     <script>
-        /*const linkElement = document.getElementById("link");
-    linkElement.addEventListener("click", (event) => {
-        event.preventDefault();
-        const url = linkElement.href;
-        settings.openExternalLink(url);
-    });*/
+        /* Link opener \/
+        const linkElement = document.getElementById("link");
+        linkElement.addEventListener("click", (event) => {
+            event.preventDefault();
+            const url = linkElement.href;
+            settings.openExternalLink(url);
+        });
+        */
 
         const elements = document.querySelectorAll("[data-setting]");
         elements.forEach(async (e) => {
@@ -169,11 +184,23 @@
 
         function saveSettings() {
             const elements = Array.from(document.querySelectorAll("[data-setting]"));
-            const obj = Object.fromEntries(
+            let obj = Object.fromEntries(
                 elements.map((e) => [e.dataset.setting, e.tagName === "SELECT" || e.type === "text" ? e.value : e.checked])
             );
+            obj = {
+                ...obj, // Add the other settings to the object
+                blocklist: createUrlArray() // Add the whitelist to the object
+            };
             console.log(obj);
             settings.save(obj);
+        }
+
+        function createUrlArray() { // TODO: Make expandable
+            let urlInput =document.querySelectorAll('[data-setting="blocklist"]')[0].value.replace(/\s/g, ''); // Remove all whitespace from input
+            if (urlInput.endsWith(",")) { // Check if input ends with a comma
+                urlInput = urlInput.slice(0, -1); // Remove the comma from the end of the input
+            }
+            return urlInput.split(",");
         }
 
         document.querySelectorAll("[data-open]").forEach((e) => {

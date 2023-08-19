@@ -125,17 +125,7 @@ async function doAfterDefiningTheWindow() {
         // Blocking URLs. This list works in tandem with "blockedStrings" list.
         session.defaultSession.webRequest.onBeforeRequest(
             {
-                urls: [
-                    // Discord. Blocking tracking and some URLs that just eat bandwidth.
-                    "https://*/api/v*/science", // General telemetry
-                    "https://*.nel.cloudflare.com/*",
-                    "https://*/api/v*/applications/detectable",
-                    "https://*/api/v*/auth/location-metadata",
-                    "https://cdn.discordapp.com/bad-domains/*",
-                    // Youtube. Blocking everything that is not needed for playback.
-                    "https://www.youtube.com/youtubei/v*/next?*",
-                    "https://www.youtube.com/s/desktop/*"
-                ]
+                urls: await getConfig("blocklist")
             },
             (_, callback) => callback({cancel: true})
         );

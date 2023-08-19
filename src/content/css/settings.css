@@ -207,12 +207,10 @@ input[type="radio"]:checked {
 }
 
 textarea {
-    flex-shrink: 0;
     margin: 0 1em;
-    height: 20em;
-    width: 24em;
+    height: 9em;
+    width: 22em;
     border-radius: 5px;
-    appearance: none;
     background-color: var(--input-bg);
     border: none;
     color: #ffffff;

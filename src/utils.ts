@@ -97,6 +97,7 @@ export interface Settings {
     prfmMode: string;
     customJsBundle: RequestInfo | URL;
     customCssBundle: RequestInfo | URL;
+    blocklist: string[];
 
     [key: string]: any;
 }
@@ -111,6 +112,17 @@ const defaults: Settings = {
     prfmMode: "none",
     customJsBundle: "https://armcord.xyz/placeholder.js",
     customCssBundle: "https://armcord.xyz/placeholder.css",
+    blocklist: [ // This list works in tandem with "blockedStrings" list located in window.ts
+        // Discord. Blocking tracking and some URLs that just eat bandwidth.
+        "https://*/api/v*/science", // General telemetry
+        "https://*.nel.cloudflare.com/*",
+        "https://*/api/v*/applications/detectable",
+        "https://*/api/v*/auth/location-metadata",
+        "https://cdn.discordapp.com/bad-domains/*",
+        // Youtube. Blocking everything that is not needed for playback.
+        "https://www.youtube.com/youtubei/v*/next?*",
+        "https://www.youtube.com/s/desktop/*"
+    ]
 };
 
 export function setup() {
