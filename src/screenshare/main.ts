@@ -9,7 +9,7 @@ function registerCustomHandler() {
         const sources = await desktopCapturer.getSources({
             types: ["screen", "window"]
         });
-        console.log(sources);
+        //console.log(sources);
         if (process.platform === "linux" && process.env.XDG_SESSION_TYPE?.toLowerCase() === "wayland") {
             console.log("WebRTC Capturer detected, skipping window creation."); //assume webrtc capturer is used
             console.log({video: {id: sources[0].id, name: sources[0].name}});

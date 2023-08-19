@@ -1,5 +1,4 @@
 import fetch from 'cross-fetch';
-import semver from 'semver';
 import {getVersion} from "../utils";
 import {shell} from "electron";
 const { Notification } = require('electron')
@@ -14,7 +13,7 @@ async function getLatestVersion(): Promise<string> {
 
 async function compareVersions() {
     const latestVersion = await getLatestVersion();
-    const isLower = semver.lt(currentVersion, latestVersion);
+    const isLower = isSemverLower(currentVersion, latestVersion);
 
     if (isLower) {
         let notification = new Notification({
@@ -29,6 +28,24 @@ async function compareVersions() {
 
         notification.show()
     }
+}
+
+function isSemverLower(version1: string, version2: string): boolean {
+    const v1Parts = version1.split('.');
+    const v2Parts = version2.split('.');
+
+    for (let i = 0; i < v1Parts.length; i++) {
+        const v1Part = parseInt(v1Parts[i]);
+        const v2Part = parseInt(v2Parts[i]);
+
+        if (v1Part < v2Part) {
+            return true;
+        } else if (v1Part > v2Part) {
+            return false;
+        }
+    }
+
+    return false;
 }
 
 compareVersions();
