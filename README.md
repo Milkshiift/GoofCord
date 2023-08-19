@@ -24,7 +24,7 @@ If you want to compile it yourself for any platform:
 Otherwise donwload source code using big green button on top of the page and extract the source code
 4. Open source code directory using `cd [DIRECTORY LOCATION]`
 4. Run `pnpm install` to install dependencies   
-5. Compile/Package with `pnpm run packageQuick`  
+5. Compile/Package with `pnpm run packageWindows` or `pnpm run packageLinux`
 6. You can find compiled app in `dist` folder
 
 ## FAQ

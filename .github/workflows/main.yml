@@ -18,13 +18,28 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v3
 
-            - uses: pnpm/action-setup@v3 # Install pnpm using packageManager key in package.json
+            - uses: pnpm/action-setup@v2 # Install pnpm using packageManager key in package.json
+              with:
+                  version: latest
 
             - name: Use Node.js 20
               uses: actions/setup-node@v3
               with:
                   node-version: 20
                   cache: "pnpm"
+
+            - name: Get pnpm store directory
+              shell: bash
+              run: |
+                echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+            - uses: actions/cache@v3
+              name: Setup pnpm cache
+              with:
+                path: ${{ env.STORE_PATH }}
+                key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+                restore-keys: |
+                  ${{ runner.os }}-pnpm-store-
 
             - name: Install Node dependencies
               run: pnpm install -g cargo-cp-artifact && pnpm install
@@ -51,13 +66,28 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v3
 
-            - uses: pnpm/action-setup@v3 # Install pnpm using packageManager key in package.json
+            - uses: pnpm/action-setup@v2 # Install pnpm using packageManager key in package.json
+              with:
+                  version: latest
 
             - name: Use Node.js 20
               uses: actions/setup-node@v3
               with:
                   node-version: 20
                   cache: "pnpm"
+
+            - name: Get pnpm store directory
+              shell: bash
+              run: |
+                echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+            - uses: actions/cache@v3
+              name: Setup pnpm cache
+              with:
+                path: ${{ env.STORE_PATH }}
+                key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+                restore-keys: |
+                  ${{ runner.os }}-pnpm-store-
 
             - name: Install Node dependencies
               run: pnpm install -g cargo-cp-artifact && pnpm install
