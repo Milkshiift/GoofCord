@@ -6,7 +6,7 @@ import { checkConfig, checkIfConfigExists, getConfig, installModLoader } from ".
 import "./extensions/mods";
 import "./tray";
 import { createCustomWindow } from "./window";
-import "./modules/updateCheck";
+import {compareVersions} from "./modules/updateCheck";
 
 export var iconPath: string;
 export var clientName = "GoofCord";
@@ -38,6 +38,11 @@ app.whenReady().then(async () => {
     if ((await getConfig("modName")) != "none") {
         await installModLoader();
     }
+
+    if (await getConfig("updateNotification")) {
+        await compareVersions();
+    }
+
     session.fromPartition("some-partition").setPermissionRequestHandler((webContents, permission, callback) => {
         if (permission === "notifications") {
             // Approves the permissions request

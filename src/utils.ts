@@ -98,6 +98,7 @@ export interface Settings {
     customJsBundle: RequestInfo | URL;
     customCssBundle: RequestInfo | URL;
     blocklist: string[];
+    updateNotification: boolean;
 
     [key: string]: any;
 }
@@ -122,7 +123,8 @@ const defaults: Settings = {
         // Youtube. Blocking everything that is not needed for playback.
         "https://www.youtube.com/youtubei/v*/next?*",
         "https://www.youtube.com/s/desktop/*"
-    ]
+    ],
+    updateNotification: true
 };
 
 export function setup() {
