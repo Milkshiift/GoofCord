@@ -146,7 +146,8 @@ async function doAfterDefiningTheWindow() {
         const allowedStrings = [
             'googlevideo', // For youtube playback
             'discord-attachments',
-            'login' // For discord login
+            'login', // For discord login
+            'googleapis'
         ];
         const allowRegex = new RegExp(allowedStrings.join('|'), 'i');
 
