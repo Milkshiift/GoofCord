@@ -2,7 +2,7 @@
 import { app, BrowserWindow, crashReporter, session } from "electron";
 import path from "path";
 import "v8-compile-cache";
-import { checkConfig, checkIfConfigExists, getConfig, installModLoader } from "./utils";
+import {checkConfig, checkIfConfigExists, getConfig, getConfigSync, installModLoader} from "./utils";
 import "./extensions/mods";
 import "./tray";
 import { createCustomWindow } from "./window";
@@ -19,7 +19,7 @@ app.on("render-process-gone", (event, webContents, details) => {
     }
 });
 
-if (!app.requestSingleInstanceLock()) {
+if (!app.requestSingleInstanceLock() && getConfigSync("multiInstance") == (false ?? undefined)) {
     // kill if 2nd instance
     app.quit();
 }
@@ -59,7 +59,6 @@ app.whenReady().then(async () => {
 });
 
 async function setFlags() {
-
     const isUnix = process.platform !== "win32" && process.platform !== "darwin";
     const isWayland = process.env.XDG_SESSION_TYPE?.toLowerCase() === "wayland" || process.env["WAYLAND_DISPLAY"] !== undefined;
     const isWaylandNative =
@@ -75,7 +74,8 @@ async function setFlags() {
         "UseChromeOSDirectVideoDecoder," +
         "WinRetrieveSuggestionsOnlyOnDemand," + // Work around electron 13 bug w/ async spellchecking on Windows.
         "HardwareMediaKeyHandling," + // Prevent Discord from registering as a media service.
-        "MediaSessionService," //         ⤴
+        "MediaSessionService," + //         ⤴
+        "WidgetLayering" // Fix dev tools layers
     );
     app.commandLine.appendSwitch("enable-features", "WebRTC,VaapiVideoDecoder,VaapiVideoEncoder,WebRtcHideLocalIpsWithMdns");
     app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");

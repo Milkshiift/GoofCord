@@ -24,7 +24,7 @@
     },
     "homepage": "https://github.com/Milkshiift/GoofCord",
     "devDependencies": {
-        "@types/node": "^20.5.1",
+        "@types/node": "^20.5.3",
         "copyfiles": "^2.4.1",
         "electron": "^26.0.0",
         "electron-builder": "^24.6.3",

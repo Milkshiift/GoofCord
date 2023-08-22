@@ -3,11 +3,13 @@ import {app, dialog} from "electron";
 import path from "path";
 import {fetch, Response} from "cross-fetch";
 import extract from "extract-zip";
-import util from "util";
+import util, {promisify} from "util";
 
 const streamPipeline = util.promisify(require("stream").pipeline);
+const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
+
 export var firstRun: boolean;
-export var contentPath: string;
 
 //utility functions that are used all over the codebase or just too obscure to be put in the file used in
 export function addStyle(styleString: string) {
@@ -92,13 +94,14 @@ export interface Settings {
     dynamicIcon: boolean;
     startMinimized: boolean;
     spellcheck: boolean;
+    updateNotification: boolean;
+    multiInstance: boolean;
     discordUrl: string;
     modName: string;
     prfmMode: string;
     customJsBundle: RequestInfo | URL;
     customCssBundle: RequestInfo | URL;
     blocklist: string[];
-    updateNotification: boolean;
 
     [key: string]: any;
 }
@@ -108,9 +111,11 @@ const defaults: Settings = {
     startMinimized: false,
     dynamicIcon: false,
     spellcheck: true,
-    discordUrl: "https://canary.discord.com/app",
+    updateNotification: true,
+    multiInstance: false,
     modName: "vencord",
     prfmMode: "none",
+    discordUrl: "https://canary.discord.com/app",
     customJsBundle: "https://armcord.xyz/placeholder.js",
     customCssBundle: "https://armcord.xyz/placeholder.css",
     blocklist: [ // This list works in tandem with "blockedStrings" list located in window.ts
@@ -124,7 +129,6 @@ const defaults: Settings = {
         "https://www.youtube.com/youtubei/v*/next?*",
         "https://www.youtube.com/s/desktop/*"
     ],
-    updateNotification: true
 };
 
 export function setup() {
@@ -144,30 +148,47 @@ export async function checkConfig() {
     }
 }
 
-export function getConfigLocation() {
+export function getConfigLocation(): string {
     const userDataPath = app.getPath("userData");
     const storagePath = path.join(userDataPath, "/storage/");
-    return storagePath + "settings.json";
+    return `${storagePath}settings.json`;
 }
 
 export async function getConfig(object: string) {
+    try {
+        const rawdata = await readFile(getConfigLocation(), 'utf-8');
+        const returndata = JSON.parse(rawdata);
+        return returndata[object];
+    } catch (error) {
+        throw error;
+    }
+}
+
+export function getConfigSync(object: string) {
     let rawdata = fs.readFileSync(getConfigLocation(), "utf-8");
     let returndata = JSON.parse(rawdata);
-    //console.log("[Config manager] " + object + ": " + returndata[object]);
     return returndata[object];
 }
 
 export async function setConfig(object: string, toSet: any) {
-    let rawdata = fs.readFileSync(getConfigLocation(), "utf-8");
-    let parsed = JSON.parse(rawdata);
-    parsed[object] = toSet;
-    let toSave = JSON.stringify(parsed, null, 4);
-    fs.writeFileSync(getConfigLocation(), toSave, "utf-8");
+    try {
+        const rawdata = await readFile(getConfigLocation(), 'utf-8');
+        const parsed = JSON.parse(rawdata);
+        parsed[object] = toSet;
+        const toSave = JSON.stringify(parsed, null, 4);
+        await writeFile(getConfigLocation(), toSave, 'utf-8');
+    } catch (error) {
+        throw error;
+    }
 }
 
 export async function setConfigBulk(object: Settings) {
-    let toSave = JSON.stringify(object, null, 4);
-    fs.writeFileSync(getConfigLocation(), toSave, "utf-8");
+    try {
+        const toSave = JSON.stringify(object, null, 4);
+        await writeFile(getConfigLocation(), toSave, 'utf-8');
+    } catch (error) {
+        throw error;
+    }
 }
 
 export async function checkIfConfigExists() {
