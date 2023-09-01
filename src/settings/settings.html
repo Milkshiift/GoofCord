@@ -46,7 +46,7 @@
                 </div>
                 <p class="description">
                     When a new version releases, every time you launch GoofCord a notification will pop up telling you that an update is available.
-                    You can disable this behaviour here.
+                    You can disable this behaviour here. Pings github.com
                 </p>
             </fieldset>
             <fieldset>
@@ -55,7 +55,7 @@
                     <label for="multiInstance">Multi Instance</label>
                 </div>
                 <p class="description">
-                    When enabled you'll be able to start up many instances of GoofCord. This is not tested properly though and may not do what you want.
+                    Experimental. When enabled you'll be able to start up many instances of GoofCord. This is not tested properly though and may not do what you want.
                 </p>
             </fieldset>
         </form>
@@ -158,15 +158,6 @@
         </fieldset>
     </body>
     <script>
-        /* Link opener \/
-        const linkElement = document.getElementById("link");
-        linkElement.addEventListener("click", (event) => {
-            event.preventDefault();
-            const url = linkElement.href;
-            settings.openExternalLink(url);
-        });
-        */
-
         const elements = document.querySelectorAll("[data-setting]");
         elements.forEach(async (e) => {
             const value = await settings.get(e.dataset.setting);

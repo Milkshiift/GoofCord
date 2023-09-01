@@ -40,11 +40,16 @@ export async function setMenu() {
                     }
                 },
                 {
-                    label: "Fullscreen",
-                    accelerator: "F11",
-                    click() {
-                        mainWindow.fullScreen = !mainWindow.fullScreen;
+                    label: "Full reload",
+                    accelerator: "Shift+Ctrl+R",
+                    click: async function () {
+                        app.relaunch();
+                        app.exit(0);
                     }
+                },
+                {
+                    label: "Fullscreen",
+                    role: "togglefullscreen"
                 },
                 {
                     label: "Quit",

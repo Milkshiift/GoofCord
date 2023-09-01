@@ -2,14 +2,17 @@
 import { app, BrowserWindow, crashReporter, session } from "electron";
 import path from "path";
 import "v8-compile-cache";
-import {checkConfig, checkIfConfigExists, getConfig, getConfigSync, installModLoader} from "./utils";
-import "./extensions/mods";
+import {
+    checkConfig,
+    checkIfConfigExists,
+    getConfig,
+    getConfigSync,
+    installModLoader
+} from "./utils";
+import "./modules/mods";
 import "./tray";
 import { createCustomWindow } from "./window";
 import {compareVersions} from "./modules/updateCheck";
-
-export var iconPath: string;
-export var clientName = "GoofCord";
 
 setFlags();
 
@@ -19,10 +22,7 @@ app.on("render-process-gone", (event, webContents, details) => {
     }
 });
 
-if (!app.requestSingleInstanceLock() && getConfigSync("multiInstance") == (false ?? undefined)) {
-    // kill if 2nd instance
-    app.quit();
-}
+if (!app.requestSingleInstanceLock() && getConfigSync("multiInstance") == (false ?? undefined)) app.quit();
 
 // Your data now belongs to CCP
 crashReporter.start({uploadToServer: false});
@@ -31,8 +31,6 @@ checkConfig();
 checkIfConfigExists();
 
 app.whenReady().then(async () => {
-    iconPath = path.join(__dirname, "../", "/assets/ac_icon_transparent.png");
-
     await createCustomWindow();
 
     if ((await getConfig("modName")) != "none") {
@@ -44,14 +42,8 @@ app.whenReady().then(async () => {
     }
 
     session.fromPartition("some-partition").setPermissionRequestHandler((webContents, permission, callback) => {
-        if (permission === "notifications") {
-            // Approves the permissions request
-            callback(true);
-        }
-        if (permission === "media") {
-            // Approves the permissions request
-            callback(true);
-        }
+        if (permission === "notifications") callback(true);
+        if (permission === "media") callback(true);
     });
     app.on("activate", async function () {
         if (BrowserWindow.getAllWindows().length === 0) await createCustomWindow();

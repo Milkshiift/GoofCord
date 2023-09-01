@@ -8,6 +8,7 @@ import util, {promisify} from "util";
 const streamPipeline = util.promisify(require("stream").pipeline);
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
+const exists = promisify(fs.exists);
 
 export var firstRun: boolean;
 
@@ -26,17 +27,6 @@ export function addScript(scriptString: string) {
 
 export async function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-export async function checkIfConfigIsBroken() {
-    if ((await getConfig("0")) == "d") {
-        console.log("Detected a corrupted config");
-        setup();
-        dialog.showErrorBox(
-            "Oops, something went wrong.",
-            "GoofCord has detected that your configuration file is corrupted, please restart the app and set your settings again. If this issue persists, report it on the support server/Github issues."
-        );
-    }
 }
 
 //Get the version value from the "package.json" file
@@ -207,50 +197,6 @@ export async function checkIfConfigExists() {
     }
 }
 
-// Mods
-async function updateModBundle() {
-    if ((await getConfig("noBundleUpdates")) == undefined ?? false) {
-        try {
-            console.log("Downloading mod bundle");
-            const distFolder = app.getPath("userData") + "/plugins/loader/dist/";
-            while (!fs.existsSync(distFolder)) {
-                //waiting
-            }
-            let name: string = await getConfig("modName");
-            const clientMods = {
-                none: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",
-                vencord: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",
-                shelter: "https://raw.githubusercontent.com/uwu/shelter-builds/main/shelter.js",
-                custom: await getConfig("customJsBundle")
-            };
-            const clientModsCss = {
-                none: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
-                vencord: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
-                shelter: "https://armcord.xyz/placeholder.css",
-                custom: await getConfig("customCssBundle")
-            };
-            const timeout = 10000;
-            const bundle: string = await (
-                await fetchWithTimeout(clientMods[name as keyof typeof clientMods], {method: "GET"}, timeout)
-            ).text();
-            fs.writeFileSync(distFolder + "bundle.js", bundle, "utf-8");
-            const css: string = await (
-                await fetchWithTimeout(clientModsCss[name as keyof typeof clientModsCss], {method: "GET"}, timeout)
-            ).text();
-            fs.writeFileSync(distFolder + "bundle.css", css, "utf-8");
-        } catch (e) {
-            console.log("[Mod loader] Failed to install mods");
-            console.error(e);
-            dialog.showErrorBox(
-                "Oops, something went wrong.",
-                "GoofCord couldn't install mods, please check if you have stable internet connection and restart the app. If this issue persists, report it on the support server/Github issues."
-            );
-        }
-    } else {
-        console.log("[Mod loader] Skipping mod bundle update");
-    }
-}
-
 async function fetchWithTimeout(url: string, options: RequestInit = {}, timeout = 10000): Promise<Response> {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
@@ -259,32 +205,105 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}, timeout 
     return response;
 }
 
+// Mods
+const MOD_BUNDLE_URLS = {
+    none: 'https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js',
+    vencord: 'https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js',
+    shelter: 'https://raw.githubusercontent.com/uwu/shelter-builds/main/shelter.js',
+    custom: '', // Initialize with an empty string and populate it later
+};
+
+const MOD_BUNDLE_CSS_URLS = {
+    none: 'https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css',
+    vencord: 'https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css',
+    shelter: 'https://armcord.xyz/placeholder.css',
+    custom: '', // Initialize with an empty string and populate it later
+};
+
+const TIMEOUT = 10000;
+
+async function downloadAndWriteBundle(url: string, filePath: string) {
+    try {
+        const response = await fetchWithTimeout(url, { method: 'GET' }, TIMEOUT);
+        if (!response.ok) {
+            throw new Error(`Unexpected response: ${response.statusText}`);
+        }
+        const bundle = await response.text();
+        await writeFile(filePath, bundle, 'utf-8');
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to download and write bundle');
+    }
+}
+
+async function updateModBundle() {
+    if (await getConfig('noBundleUpdates')) {
+        console.log('[Mod loader] Skipping mod bundle update');
+        return;
+    }
+
+    try {
+        console.log('Downloading mod bundle');
+        const distFolder = path.join(app.getPath('userData'), 'plugins/loader/dist/');
+        await fs.promises.mkdir(distFolder, { recursive: true });
+
+        // Provide a type annotation for modName
+        const modName: keyof typeof MOD_BUNDLE_URLS = await getConfig('modName');
+
+        if (modName === "custom") {
+            MOD_BUNDLE_URLS.custom = await getConfig('customJsBundle');
+            MOD_BUNDLE_CSS_URLS.custom = await getConfig('customCssBundle');
+        }
+
+        await downloadAndWriteBundle(MOD_BUNDLE_URLS[modName], path.join(distFolder, 'bundle.js'));
+        await downloadAndWriteBundle(MOD_BUNDLE_CSS_URLS[modName], path.join(distFolder, 'bundle.css'));
+
+        console.log('Mod bundle updated');
+    } catch (error) {
+        console.error('[Mod loader] Failed to install mods');
+        console.error(error);
+        dialog.showErrorBox(
+            'Oops, something went wrong.',
+            'GoofCord couldn\'t install mods, please check if you have a stable internet connection and restart the app. If this issue persists, report it on the support server/Github issues.'
+        );
+    }
+}
+
 export async function installModLoader() {
-    const pluginFolder = app.getPath("userData") + "/plugins/";
-    if (!fs.existsSync(pluginFolder + "loader") || !fs.existsSync(pluginFolder + "loader/dist/" + "bundle.css")) {
+    const pluginFolder = path.join(app.getPath('userData'), 'plugins/');
+    const loaderFolder = path.join(pluginFolder, 'loader');
+    const distFolder = path.join(loaderFolder, 'dist');
+    const bundleCssPath = path.join(distFolder, 'bundle.css');
+
+    if (!await exists(loaderFolder) || !await exists(bundleCssPath)) {
         try {
-            fs.rmSync(app.getPath("userData") + "/plugins/loader", {recursive: true, force: true});
-            const zipPath = app.getPath("temp") + "/" + "loader.zip";
-            if (!fs.existsSync(pluginFolder)) {
-                fs.mkdirSync(pluginFolder);
-                console.log("[Mod loader] Created missing plugin folder");
+            // Remove the existing loader folder recursively
+            await fs.promises.rm(loaderFolder, { recursive: true, force: true });
+
+            if (!await exists(pluginFolder)) {
+                await fs.promises.mkdir(pluginFolder);
+                console.log('[Mod loader] Created missing plugin folder');
             }
-            const loaderZip = await fetch("https://armcord.xyz/loader.zip");
-            if (!loaderZip.ok) throw new Error(`unexpected response ${loaderZip.statusText}`);
+
+            const zipPath = path.join(app.getPath('temp'), 'loader.zip');
+            const loaderZip = await fetchWithTimeout('https://armcord.xyz/loader.zip');
+
+            if (!loaderZip.ok) throw new Error(`Unexpected response: ${loaderZip.statusText}`);
+
             await streamPipeline(loaderZip.body, fs.createWriteStream(zipPath));
-            await extract(zipPath, {dir: path.join(app.getPath("userData"), "plugins")});
+            await extract(zipPath, { dir: path.join(app.getPath('userData'), 'plugins') });
             await updateModBundle();
-            import("./extensions/plugin");
-        } catch (e) {
-            console.log("[Mod loader] Failed to install modloader");
-            console.error(e);
+            import('./modules/plugin');
+        } catch (error) {
+            console.error('[Mod loader] Failed to install modloader');
+            console.error(error);
             dialog.showErrorBox(
-                "Oops, something went wrong.",
-                "GoofCord couldn't install internal mod loader, please check if you have stable internet connection and restart the app. If this issue persists, report it on the support server/Github issues."
+                'Oops, something went wrong.',
+                'GoofCord couldn\'t install the internal mod loader, please check if you have a stable internet connection and restart the app. If this issue persists, report it on the support server/Github issues.'
             );
         }
     } else {
         await updateModBundle();
-        import("./extensions/plugin");
+        import('./modules/plugin');
     }
 }

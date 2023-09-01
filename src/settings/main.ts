@@ -4,7 +4,6 @@ import path from "path";
 import os from "os";
 import fs from "fs";
 import {crash} from "process";
-import {iconPath} from "../main";
 
 let settingsWindow: BrowserWindow;
 let instance: number = 0;
@@ -29,19 +28,15 @@ export function createSettingsWindow() {
             title: `GoofCord Settings | Version: ${getDisplayVersion()}`,
             darkTheme: true,
             frame: true,
-            icon: iconPath,
+            icon: path.join(__dirname, "../", "/assets/gf_icon.png"),
             backgroundColor: "#2f3136",
             autoHideMenuBar: true,
             webPreferences: {
                 sandbox: false,
                 preload: path.join(__dirname, "preload.js"),
-                nodeIntegration: false,
-                webviewTag: true,
                 nodeIntegrationInSubFrames: false,
                 webSecurity: true,
-                allowRunningInsecureContent: false,
-                plugins: false,
-                experimentalFeatures: false
+                plugins: false
             }
         });
 
