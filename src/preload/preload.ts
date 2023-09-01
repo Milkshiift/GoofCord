@@ -4,7 +4,6 @@ import * as fs from "fs";
 import * as path from "path";
 import {addScript, addStyle} from "../utils";
 import {fixTitlebar, injectTitlebar} from "./titlebar";
-import "./optimizer";
 
 window.localStorage.setItem("hideNag", "true");
 ipcRenderer.on("themeLoader", (event, message) => {
