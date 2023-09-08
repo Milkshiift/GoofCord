@@ -1,6 +1,5 @@
 // Modules to control application life and create native browser window
-import { app, BrowserWindow, crashReporter, session } from "electron";
-import path from "path";
+import {app, crashReporter, net, session} from "electron";
 import "v8-compile-cache";
 import {
     checkConfig,
@@ -12,14 +11,12 @@ import {
 import "./modules/mods";
 import "./tray";
 import { createCustomWindow } from "./window";
-import {compareVersions} from "./modules/updateCheck";
+import {checkForUpdate} from "./modules/updateCheck";
 
 setFlags();
 
 app.on("render-process-gone", (event, webContents, details) => {
-    if (details.reason == "crashed") {
-        app.relaunch();
-    }
+    if (details.reason == "crashed") app.relaunch();
 });
 
 if (!app.requestSingleInstanceLock() && getConfigSync("multiInstance") == (false ?? undefined)) app.quit();
@@ -30,7 +27,27 @@ crashReporter.start({uploadToServer: false});
 checkConfig();
 checkIfConfigExists();
 
+const AutoLaunch = require('auto-launch');
+const gfAutoLauncher = new AutoLaunch({
+    name: 'GoofCord',
+});
+if (getConfigSync("launchWithOsBoot")) {
+    gfAutoLauncher.enable();
+}
+else {
+    gfAutoLauncher.disable();
+}
+
 app.whenReady().then(async () => {
+    const retry = setInterval(async () => {
+        if (net.isOnline()) {
+            clearInterval(retry);
+            await load();
+        }
+    });
+});
+
+async function load() {
     await createCustomWindow();
 
     if ((await getConfig("modName")) != "none") {
@@ -38,17 +55,14 @@ app.whenReady().then(async () => {
     }
 
     if (await getConfig("updateNotification")) {
-        await compareVersions();
+        await checkForUpdate();
     }
 
     session.fromPartition("some-partition").setPermissionRequestHandler((webContents, permission, callback) => {
         if (permission === "notifications") callback(true);
         if (permission === "media") callback(true);
     });
-    app.on("activate", async function () {
-        if (BrowserWindow.getAllWindows().length === 0) await createCustomWindow();
-    });
-});
+}
 
 async function setFlags() {
     const isUnix = process.platform !== "win32" && process.platform !== "darwin";

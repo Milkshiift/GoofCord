@@ -8,9 +8,7 @@
     </head>
     <body>
         <p class="center">Some changes may require the app to restart before taking effect</p>
-        <h1>General</h1>
-
-        <h2>Window settings</h2>
+        <h2>General settings</h2>
         <form class="settingsContainer">
             <fieldset>
                 <div class="checkbox-container">
@@ -47,6 +45,15 @@
                 <p class="description">
                     When a new version releases, every time you launch GoofCord a notification will pop up telling you that an update is available.
                     You can disable this behaviour here. Pings github.com
+                </p>
+            </fieldset>
+            <fieldset>
+                <div class="checkbox-container">
+                    <input data-setting="launchWithOsBoot" id="launchWithOsBoot" type="checkbox" />
+                    <label for="launchWithOsBoot">Launch with OS</label>
+                </div>
+                <p class="description">
+                    When enabled starts GoofCord on OS boot automatically.
                 </p>
             </fieldset>
             <fieldset>

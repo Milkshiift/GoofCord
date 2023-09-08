@@ -6,12 +6,10 @@
     "scripts": {
         "build": "tsc && copyfiles -u 1 src/**/*.html src/**/**/*.css src/**/**/*.js ts-out/ && copyfiles package.json ts-out/ && copyfiles assets/**/** ts-out/",
         "start": "pnpm run build && electron ./ts-out/main.js",
-        "startNoSandbox": "pnpm run build && electron ./ts-out/main.js --no-sandbox",
         "packageLinux": "npm run build && electron-builder --linux",
         "packageWindows64": "npm run build && electron-builder --win --x64",
         "packageWindows32": "npm run build && electron-builder --win --ia32",
-        "packageWindows": "npm run build && npm run packageWindows64 && npm run packageWindows32",
-        "format": "prettier --write src *.json"
+        "packageWindows": "npm run build && npm run packageWindows64 && npm run packageWindows32"
     },
     "repository": {
         "type": "git",
@@ -24,13 +22,14 @@
     },
     "homepage": "https://github.com/Milkshiift/GoofCord",
     "devDependencies": {
-        "@types/node": "^20.5.7",
+        "@types/node": "^20.5.9",
         "copyfiles": "^2.4.1",
-        "electron": "^26.1.0",
-        "electron-builder": "^24.6.3",
+        "electron": "^26.2.0",
+        "electron-builder": "^24.6.4",
         "typescript": "^5.2.2"
     },
     "dependencies": {
+        "auto-launch": "^5.0.6",
         "cross-fetch": "^4.0.0",
         "electron-context-menu": "^3.6.1",
         "extract-zip": "^2.0.1",
@@ -67,5 +66,5 @@
             }
         }
     },
-    "packageManager": "pnpm@7.13.4"
+    "packageManager": "pnpm@8.7.4"
 }
