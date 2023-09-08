@@ -263,4 +263,5 @@ select {
 
 p.center {
     text-align: center;
+    margin: 0;
 }

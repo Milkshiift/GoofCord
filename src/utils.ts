@@ -25,10 +25,6 @@ export function addScript(scriptString: string) {
     document.body.append(script);
 }
 
-export async function sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 //Get the version value from the "package.json" file
 export var packageVersion = require("../package.json").version;
 
@@ -58,22 +54,20 @@ export interface WindowState {
     isMaximized: boolean;
 }
 
-export async function setWindowState(object: WindowState) {
+function getSettingsFile() {
     const userDataPath = app.getPath("userData");
     const storagePath = path.join(userDataPath, "/storage/");
-    const saveFile = storagePath + "window.json";
+    return storagePath + "window.json";
+}
+
+export async function setWindowState(object: WindowState) {
     let toSave = JSON.stringify(object, null, 4);
-    fs.writeFileSync(saveFile, toSave, "utf-8");
+    await writeFile(getSettingsFile(), toSave, "utf-8");
 }
 
 export async function getWindowState(object: string) {
-    const userDataPath = app.getPath("userData");
-    const storagePath = path.join(userDataPath, "/storage/");
-    const settingsFile = storagePath + "window.json";
-    let rawdata = fs.readFileSync(settingsFile, "utf-8");
+    let rawdata = await readFile(getSettingsFile(), "utf-8");
     let returndata = JSON.parse(rawdata);
-    console.log(returndata);
-    console.log("[Window state manager] " + returndata);
     return returndata[object];
 }
 
@@ -86,6 +80,7 @@ export interface Settings {
     spellcheck: boolean;
     updateNotification: boolean;
     multiInstance: boolean;
+    launchWithOsBoot: boolean;
     discordUrl: string;
     modName: string;
     prfmMode: string;
@@ -93,7 +88,7 @@ export interface Settings {
     customCssBundle: RequestInfo | URL;
     blocklist: string[];
 
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 const defaults: Settings = {
@@ -103,6 +98,7 @@ const defaults: Settings = {
     spellcheck: true,
     updateNotification: true,
     multiInstance: false,
+    launchWithOsBoot: false,
     modName: "vencord",
     prfmMode: "none",
     discordUrl: "https://canary.discord.com/app",

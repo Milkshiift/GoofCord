@@ -11,7 +11,7 @@ async function getLatestVersion(): Promise<string> {
     return data.tag_name.replace("v", "");
 }
 
-export async function compareVersions() {
+export async function checkForUpdate() {
     const latestVersion = await getLatestVersion();
     const isLower = isSemverLower(currentVersion, latestVersion);
 

@@ -1,5 +1,5 @@
 import {app, BrowserWindow, clipboard, ipcMain, shell} from "electron";
-import {getConfigLocation, getConfig, getDisplayVersion, getVersion, setConfigBulk, Settings, sleep} from "../utils";
+import {getConfigLocation, getConfig, getDisplayVersion, getVersion, setConfigBulk, Settings} from "../utils";
 import path from "path";
 import os from "os";
 import fs from "fs";
@@ -71,19 +71,15 @@ export function createSettingsWindow() {
         });
         ipcMain.on("openStorageFolder", async () => {
             shell.showItemInFolder(storagePath);
-            await sleep(1000);
         });
         ipcMain.on("openThemesFolder", async () => {
             shell.showItemInFolder(themesPath);
-            await sleep(1000);
         });
         ipcMain.on("openPluginsFolder", async () => {
             shell.showItemInFolder(pluginsPath);
-            await sleep(1000);
         });
         ipcMain.on("openCrashesFolder", async () => {
             shell.showItemInFolder(path.join(app.getPath("temp"), app.getName() + " Crashes"));
-            await sleep(1000);
         });
         ipcMain.on("crash", async () => {
             process.crash();

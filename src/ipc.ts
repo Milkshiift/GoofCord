@@ -1,7 +1,7 @@
 //ipc stuff
 import {app, desktopCapturer, ipcMain} from "electron";
 import {mainWindow} from "./window";
-import {getConfig, getDisplayVersion, getVersion, getWindowState, packageVersion, setConfigBulk} from "./utils";
+import {getConfig, getDisplayVersion, getVersion, packageVersion, setConfigBulk} from "./utils";
 import {createSettingsWindow} from "./settings/main";
 
 export function registerIpc() {
