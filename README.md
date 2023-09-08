@@ -3,49 +3,55 @@
 <h2>Take control of your Discord experience with GoofCord – the highly configurable and privacy-focused Discord client.<br>Based on <a href="https://github.com/ArmCord/ArmCord">ArmCord</a>.</h2>
 </div>
 
-## Features :sparkles:
-- **:lock: Privacy first**: GoofCord blocks all tracking and uses multiple techniques to improve your privacy and security. [More here](https://github.com/Milkshiift/GoofCord/wiki/Privacy-FAQ)
-- **:gear: Configurable**: Tailor your client to your liking with GoofCord's plethora of configuration options.
-- **:chart_with_upwards_trend: Performant**: Enjoy a smooth and lag-free chatting experience with GoofCord's superior speed and responsiveness. [Benchmarks](https://github.com/Milkshiift/GoofCord/wiki/Placeholder)
-- **:white_circle: Minimal**: Sleek and Minimalistic: Packed only with the features you'll actually use.
-- **:bookmark: Standalone**: GoofCord is built as a standalone client and doesn't rely on the original Discord client in any way.
-- **:electric_plug: Plugins & Themes support**: GoofCord supports other client mods such as [Vencord](https://github.com/Vendicated/Vencord) or [Shelter](https://github.com/uwu/shelter) which allows you to use plugins and themes.
-- **:iphone: Cross-platform**: GoofCord is available on **Windows** and **Linux**. <sup>You can request ARM support in the issues tab</sup>
+## Features That Spark Joy! :sparkles:
+- **:lock: Privacy at Its Best**: GoofCord blocks all tracking and uses multiple techniques to improve your privacy and security. [Learn more](https://github.com/Milkshiift/GoofCord/wiki/Privacy-FAQ)
+- **:gear: Your Way, Your Client**: Personalize GoofCord to match your vibe with an array of customization options.
+- **:chart_with_upwards_trend: Fast and Performant**: Glide through your chats with GoofCord's superior speed and responsiveness. [Check the Benchmarks!](https://github.com/Milkshiift/GoofCord/wiki/Placeholder)
+- **:white_circle: Elegance in Simplicity**: We've kept it simple and sleek, delivering only the features you truly need.
+- **:bookmark: Standalone**: GoofCord is a standalone client, not reliant on the original Discord client in any way.
+- **:electric_plug: Plugins & Themes support**: Embrace other client mods like [Vencord](https://github.com/Vendicated/Vencord) or [Shelter](https://github.com/uwu/shelter) for a world of plugins and themes.
+- **:iphone: Cross the Platform**: Find GoofCord on **Windows** and **Linux**. <sup>Don't hesitate to request ARM support in our issues tab.</sup>
 
-## How to run/install it?
+## Ready to Dive In?
 
-Windows: Download .exe installer and run it
-Linux: Download .AppImage for your architecture and run it
+Windows: Simply download the .exe installer and run it.    
+Linux: Grab the .AppImage for your architecture and fire it up.   
 
-If you want to compile it yourself for any platform:
+Everything you'll need can be found in the Discords settings.    
+Simply look for the topmost button, which opens the GoofCord settings window.    
+To explore the enchanting world of plugins and themes, head over to the Vencord category within your Discord settings. Have fun!
+    
+For the brave souls who want to compile it themselves, here's how:
 1. Install [NodeJS](https://nodejs.dev) and [pnpm](https://pnpm.io/installation#using-npm)     
-2. Open command prompt
-3. If you know what is git then clone GoofCord repo: `git clone https://github.com/Milkshiift/GoofCord`    
-Otherwise donwload source code using big green button on top of the page and extract the source code
-4. Open source code directory using `cd [DIRECTORY LOCATION]`
-4. Run `pnpm install` to install dependencies   
-5. Compile/Package with `pnpm run packageWindows` or `pnpm run packageLinux`
-6. You can find compiled app in `dist` folder
+2. Open your command prompt
+3. If you're familiar with git, clone the GoofCord repo with `git clone https://github.com/Milkshiift/GoofCord`    
+Otherwise, grab the source code using the big green button at the top of the page and extract it.
+4. Navigate to the source code directory with `cd [DIRECTORY LOCATION]`
+5. Install the dependencies with pnpm install
+6. Compile or package it with `pnpm run packageWindows` or `pnpm run packageLinux`
+7. Find your freshly compiled app in the `dist` folder.
 
-## FAQ
-### Do you have a support Discord?
+## Burning Questions? We've Got Answers!
+### Need Support? Join Our Discord!
 [![](https://dcbadge.vercel.app/api/server/CZc4bpnjmm)](https://discord.gg/CZc4bpnjmm)
-### Will I get banned for using this?   
-- You are breaking [Discord ToS](https://discord.com/terms#software-in-discord%E2%80%99s-services) by using GoofCord, **but** no one has been banned from using it or any of the client mods.
 
-### How can I access the settings?
+### Is Using GoofCord Risky Business? 🤔
+- While using GoofCord goes against [Discord ToS](https://discord.com/terms#software-in-discord%E2%80%99s-services), rest assured that no one has ever been banned for using it or any client mods.    
+GoofCord also does some clever tricks to make Discord think you are just using a web client. 
+
+### How can I access the settings? ⚙️
 - Multiple ways:
-- Right-click on the tray icon and click `Open Settings`
-- Open Discord settings and scroll down until you see information about versions. Click on the GoofCord version and the settings window will pop out. 
-- Press `Ctrl+Shift+'` shortcut.
+  - Right-click on the tray icon and click `Open Settings`
+  - Open Discord settings, and you should see the top most button in the category "GoofCord", click it and the settings will pop out for you. 
+  - Press `Ctrl+Shift+'` shortcut.
 
-### Where can I find the source code?
-- The source code is on [GitHub](https://github.com/Milkshiift/GoofCord/).
+### Seeking the Source Code? 🕵️‍♂️
+- You can find our source code on [GitHub](https://github.com/Milkshiift/GoofCord/).
   
-### What's the difference between ArmCord and GoofCord?
-- GoofCord is designed to be more minimalistic by intentionally removing features that are not essential for most users. Its main focus is on prioritizing privacy, even though there may be limited scope for enhancing it further.
+### What's the difference between ArmCord and GoofCord? 🤷‍♂️
+- GoofCord takes the minimalist approach, intentionally shedding features that most users find non-essential. Our top priority? Guarding your privacy, we are trying our best!
 
-## Credits
+## Credits 🙌
 
 [ArmCord](https://github.com/ArmCord/ArmCord)  
 [Discord Sandboxed](https://github.com/khlam/discord-sandboxed)  
