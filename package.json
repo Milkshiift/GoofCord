@@ -1,6 +1,6 @@
 {
     "name": "GoofCord",
-    "version": "0.7.4",
+    "version": "0.7.5",
     "description": "Take control of your Discord experience with GoofCord – the highly configurable and privacy-first discord client.",
     "main": "ts-out/main.js",
     "scripts": {
@@ -22,6 +22,7 @@
     },
     "homepage": "https://github.com/Milkshiift/GoofCord",
     "devDependencies": {
+        "@types/auto-launch": "^5.0.2",
         "@types/node": "^20.5.9",
         "copyfiles": "^2.4.1",
         "electron": "^26.2.0",

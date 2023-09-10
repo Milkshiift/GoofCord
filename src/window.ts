@@ -153,8 +153,8 @@ export async function createCustomWindow() {
     mainWindow = new BrowserWindow({
         width: (await getWindowState("width")) ?? 835,
         height: (await getWindowState("height")) ?? 600,
-        x: await getWindowState("x"),
-        y: await getWindowState("y"),
+        x: await getWindowState("x") ?? 0,
+        y: await getWindowState("y") ?? 0,
         title: "GoofCord",
         show: false,
         darkTheme: true,

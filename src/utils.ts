@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import {app, dialog} from "electron";
 import path from "path";
-import {fetch, Response} from "cross-fetch";
+import {fetch} from "cross-fetch";
 import extract from "extract-zip";
 import util, {promisify} from "util";
 
@@ -9,8 +9,7 @@ const streamPipeline = util.promisify(require("stream").pipeline);
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 const exists = promisify(fs.exists);
-
-export var firstRun: boolean;
+const mkdir = promisify(fs.mkdir);
 
 //utility functions that are used all over the codebase or just too obscure to be put in the file used in
 export function addStyle(styleString: string) {
@@ -66,9 +65,14 @@ export async function setWindowState(object: WindowState) {
 }
 
 export async function getWindowState(object: string) {
-    let rawdata = await readFile(getSettingsFile(), "utf-8");
-    let returndata = JSON.parse(rawdata);
-    return returndata[object];
+    try {
+        let rawdata = await readFile(getSettingsFile(), "utf-8");
+        let returndata = JSON.parse(rawdata);
+        return returndata[object];
+    }
+    catch (e) {
+        return null;
+    }
 }
 
 //GoofCord Settings/Storage manager
@@ -189,7 +193,6 @@ export async function checkIfConfigExists() {
         }
         console.log("First run of the GoofCord. Starting setup.");
         setup();
-        firstRun = true;
     }
 }
 

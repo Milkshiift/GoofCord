@@ -22,6 +22,9 @@ dependencies:
     version: 2.4.0
 
 devDependencies:
+  '@types/auto-launch':
+    specifier: ^5.0.2
+    version: 5.0.2
   '@types/node':
     specifier: ^20.5.9
     version: 20.5.9
@@ -155,6 +158,10 @@ packages:
   /@tootallnate/once@2.0.0:
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
     engines: {node: '>= 10'}
+    dev: true
+
+  /@types/auto-launch@5.0.2:
+    resolution: {integrity: sha512-b03X09+GCM9t6AUECpwA2gUPYs8s5tJHFJw92sK8EiJ7G4QNbsHmXV7nfCfP6G6ivtm230vi4oNfe8AzRgzxMQ==}
     dev: true
 
   /@types/cacheable-request@6.0.3:

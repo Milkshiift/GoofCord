@@ -12,6 +12,7 @@ import "./modules/mods";
 import "./tray";
 import { createCustomWindow } from "./window";
 import {checkForUpdate} from "./modules/updateCheck";
+import AutoLaunch from 'auto-launch';
 
 setFlags();
 
@@ -19,18 +20,15 @@ app.on("render-process-gone", (event, webContents, details) => {
     if (details.reason == "crashed") app.relaunch();
 });
 
+checkConfig();
+checkIfConfigExists();
+
 if (!app.requestSingleInstanceLock() && getConfigSync("multiInstance") == (false ?? undefined)) app.quit();
 
 // Your data now belongs to CCP
 crashReporter.start({uploadToServer: false});
 
-checkConfig();
-checkIfConfigExists();
-
-const AutoLaunch = require('auto-launch');
-const gfAutoLauncher = new AutoLaunch({
-    name: 'GoofCord',
-});
+const gfAutoLauncher = new AutoLaunch({name: 'GoofCord'});
 if (getConfigSync("launchWithOsBoot")) {
     gfAutoLauncher.enable();
 }
