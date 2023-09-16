@@ -71,7 +71,7 @@ export async function setMenu() {
                 {
                     label: "Paste",
                     accelerator: "CmdOrCtrl+V",
-                    click: function () {
+                    click() {
                         paste(mainWindow.webContents);
                     }
                 },

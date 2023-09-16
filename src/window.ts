@@ -124,6 +124,9 @@ async function doAfterDefiningTheWindow() {
         mainWindow.webContents.executeJavaScript(`document.body.setAttribute("${attribute}", "${value}");`);
     };
 
+    // @ts-ignore
+    import("./arrpc/src/index.js");
+
     // Attach event listeners to the mainWindow for focus, blur, maximize, and unmaximize events.
     // These events trigger setting body attributes in the web contents.
     mainWindow.on("focus", () => setBodyAttribute("unFocused"));
@@ -131,9 +134,9 @@ async function doAfterDefiningTheWindow() {
     mainWindow.on("maximize", () => setBodyAttribute("isMaximized"));
     mainWindow.on("unmaximize", () => setBodyAttribute("isMaximized", ""));
 
-    // Load an initial HTML file (splash.html) into the mainWindow.
+    // Load an initial empty HTML file into the mainWindow.
     // Then, replace the window location with the configured Discord URL.
-    await mainWindow.loadFile(path.join(__dirname, "/content/splash.html"));
+    await mainWindow.loadURL("data:text/html,");
     const disUrl = await getConfig("discordUrl");
     await mainWindow.webContents.executeJavaScript(`window.location.replace("${disUrl}");`).then(async () => {
         // If a user chose any mods, load them.
