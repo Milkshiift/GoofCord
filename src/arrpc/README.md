@@ -11,6 +11,7 @@
 
 <br>
 
+<<<<<<< Updated upstream
 arRPC is an open source implementation of Discord's half-documented local RPC servers for their desktop client. This open source implementation purely in NodeJS allows it to be used in many places where it is otherwise impossible to do: Discord web and alternative clients like ArmCord/etc. It opens a simple bridge WebSocket server which messages the JSON of exactly what to dispatch with in the client with no extra processing needed, allowing small and simple mods or plugins. **arRPC is experimental and a work in progress, so expect bugs, etc.**
 
 <br>
@@ -20,6 +21,26 @@ Rich Presence (RPC) is the name for how some apps can talk to Discord desktop on
 -   App with Discord RPC
 -   ~~Discord Desktop's native server~~ arRPC
 -   ~~Discord Web's setting~~ mod/plugin
+=======
+arRPC is an open source implementation of Discord's half-documented local RPC servers for their desktop client. This
+open source implementation purely in NodeJS allows it to be used in many places where it is otherwise impossible to do:
+Discord web and alternative clients like ArmCord/etc. It opens a simple bridge WebSocket server which messages the JSON
+of exactly what to dispatch with in the client with no extra processing needed, allowing small and simple mods or
+plugins. **arRPC is experimental and a work in progress, so expect bugs, etc.**
+
+<br>
+
+Rich Presence (RPC) is the name for how some apps can talk to Discord desktop on your PC via localhost servers to
+display detailed info about the app's state. This usually works via parts of Discord desktop natively doing things +
+parts of Discord web interpreting that and setting it as your status. arRPC is an open source implementation of the
+local RPC servers on your PC, allowing apps to talk to it thinking it was just normal Discord. It can then send that
+info to apps which usually don't get RPC, like Discord Web, ArmCord, etc. which can then set that as your status. This
+would otherwise not be possible, as web apps/browsers/etc can't just use Discord's already existing code and version.
+
+- App with Discord RPC
+- ~~Discord Desktop's native server~~ arRPC
+- ~~Discord Web's setting~~ mod/plugin
+>>>>>>> Stashed changes
 
 <br>
 
@@ -53,8 +74,15 @@ ArmCord has arRPC specially integrated, just enable the option in it's settings 
 #### Webcord
 
 1. Get [the arRPC server running](#server-required)
+<<<<<<< Updated upstream
 2. Disable the `Use built-in Content Security Policy` option in Advanced settings: ![image](https://user-images.githubusercontent.com/19228318/202926723-93b772fc-f37d-47d4-81fd-b11c5d4051e8.png)
 3. With Webcord open, run the content of [`examples/bridge_mod.js`](examples/bridge_mod.js) in the DevTools Console (Ctrl+Shift+I).
+=======
+2. Disable the `Use built-in Content Security Policy` option in Advanced
+   settings: ![image](https://user-images.githubusercontent.com/19228318/202926723-93b772fc-f37d-47d4-81fd-b11c5d4051e8.png)
+3. With Webcord open, run the content of [`examples/bridge_mod.js`](examples/bridge_mod.js) in the DevTools Console (
+   Ctrl+Shift+I).
+>>>>>>> Stashed changes
 
 ---
 

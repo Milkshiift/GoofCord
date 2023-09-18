@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld("settings", {
     restart: () => ipcRenderer.send("restart"),
     saveAlert: (restartFunc: unknown) => ipcRenderer.send("saveAlert", restartFunc),
     get: (toGet: string) => ipcRenderer.invoke("getSetting", toGet),
-    openThemesFolder: () => ipcRenderer.send("openThemesFolder"),
+    openScriptsFolder: () => ipcRenderer.send("openScriptsFolder"),
     openPluginsFolder: () => ipcRenderer.send("openPluginsFolder"),
     openStorageFolder: () => ipcRenderer.send("openStorageFolder"),
     openCrashesFolder: () => ipcRenderer.send("openCrashesFolder"),

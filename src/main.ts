@@ -1,16 +1,16 @@
-// Modules to control application life and create native browser window
 import {app, crashReporter, net, session} from "electron";
 import "v8-compile-cache";
 import {
     checkConfig,
     checkIfConfigExists,
+    checkIfFoldersExist,
     getConfig,
     getConfigSync,
     installModLoader
 } from "./utils";
 import "./modules/mods";
 import "./tray";
-import { createCustomWindow } from "./window";
+import {createCustomWindow} from "./window";
 import {checkForUpdate} from "./modules/updateCheck";
 import AutoLaunch from 'auto-launch';
 
@@ -20,8 +20,9 @@ app.on("render-process-gone", (event, webContents, details) => {
     if (details.reason == "crashed") app.relaunch();
 });
 
-checkConfig();
+checkIfFoldersExist();
 checkIfConfigExists();
+checkConfig();
 
 if (!app.requestSingleInstanceLock() && getConfigSync("multiInstance") == (false ?? undefined)) app.quit();
 
@@ -31,14 +32,13 @@ crashReporter.start({uploadToServer: false});
 const gfAutoLauncher = new AutoLaunch({name: 'GoofCord'});
 if (getConfigSync("launchWithOsBoot")) {
     gfAutoLauncher.enable();
-}
-else {
+} else {
     gfAutoLauncher.disable();
 }
 
 app.whenReady().then(async () => {
     const retry = setInterval(async () => {
-        if (net.isOnline()) {
+        if (net.isOnline()) { // Wait until a user is online
             clearInterval(retry);
             await load();
         }

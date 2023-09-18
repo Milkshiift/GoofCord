@@ -6,8 +6,13 @@ settings:
 
 dependencies:
   arrpc:
+<<<<<<< Updated upstream
     specifier: link:..\src\arrpc
     version: link:../src/arrpc
+=======
+    specifier: file:src/arrpc
+    version: file:src/arrpc
+>>>>>>> Stashed changes
   auto-launch:
     specifier: ^5.0.6
     version: 5.0.6
@@ -1936,3 +1941,13 @@ packages:
     dependencies:
       buffer-crc32: 0.2.13
       fd-slicer: 1.1.0
+
+  file:src/arrpc:
+    resolution: {directory: src/arrpc, type: directory}
+    name: arrpc
+    dependencies:
+      ws: 8.14.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false

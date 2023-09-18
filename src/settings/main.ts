@@ -1,16 +1,14 @@
 import {app, BrowserWindow, clipboard, ipcMain, shell} from "electron";
-import {getConfigLocation, getConfig, getDisplayVersion, getVersion, setConfigBulk, Settings} from "../utils";
+import {getConfig, getConfigLocation, getDisplayVersion, getVersion, setConfigBulk, Settings} from "../utils";
 import path from "path";
 import os from "os";
 import fs from "fs";
-import {crash} from "process";
 
 let settingsWindow: BrowserWindow;
 let instance: number = 0;
-//checkForDataFolder();
 const userDataPath = app.getPath("userData");
 const storagePath = path.join(userDataPath, "/storage/");
-const themesPath = path.join(userDataPath, "/themes/");
+const scriptsPath = path.join(userDataPath, "/scripts/");
 const pluginsPath = path.join(userDataPath, "/plugins/");
 
 export function createSettingsWindow() {
@@ -44,42 +42,21 @@ export function createSettingsWindow() {
             await settingsWindow.loadURL(`file://${__dirname}/settings.html`);
         }
 
-        const userDataPath = app.getPath("userData");
-        const themesFolder = userDataPath + "/themes/";
-        if (!fs.existsSync(themesFolder)) {
-            fs.mkdirSync(themesFolder);
-            console.log("Created missing theme folder");
-        }
-        settingsWindow.webContents.on("did-finish-load", () => {
-            fs.readdirSync(themesFolder).forEach((file) => {
-                try {
-                    const manifest = fs.readFileSync(`${themesFolder}/${file}/manifest.json`, "utf8");
-                    const themeFile = JSON.parse(manifest);
-                    settingsWindow.webContents.send(
-                        "themeLoader",
-                        fs.readFileSync(`${themesFolder}/${file}/${themeFile.theme}`, "utf-8")
-                    );
-                    console.log(`%cLoaded ${themeFile.name} made by ${themeFile.author}`, "color:red");
-                } catch (err) {
-                    console.error(err);
-                }
-            });
-        });
         ipcMain.on("saveSettings", (event, args: Settings) => {
             console.log(args);
             setConfigBulk(args);
         });
         ipcMain.on("openStorageFolder", async () => {
-            shell.showItemInFolder(storagePath);
+            await shell.openPath(storagePath);
         });
-        ipcMain.on("openThemesFolder", async () => {
-            shell.showItemInFolder(themesPath);
+        ipcMain.on("openScriptsFolder", async () => {
+            await shell.openPath(scriptsPath);
         });
         ipcMain.on("openPluginsFolder", async () => {
-            shell.showItemInFolder(pluginsPath);
+            await shell.openPath(pluginsPath);
         });
         ipcMain.on("openCrashesFolder", async () => {
-            shell.showItemInFolder(path.join(app.getPath("temp"), app.getName() + " Crashes"));
+            await shell.openPath(path.join(app.getPath("temp"), app.getName() + " Crashes"));
         });
         ipcMain.on("crash", async () => {
             process.crash();
@@ -91,18 +68,18 @@ export function createSettingsWindow() {
             let settingsFileContent = fs.readFileSync(getConfigLocation(), "utf-8");
             clipboard.writeText(
                 "**OS:** " +
-                    os.platform() +
-                    " " +
-                    os.version() +
-                    "\n**Architecture:** " +
-                    os.arch() +
-                    "\n**GoofCord version:** " +
-                    getVersion() +
-                    "\n**Electron version:** " +
-                    process.versions.electron +
-                    "\n`" +
-                    settingsFileContent +
-                    "`"
+                os.platform() +
+                " " +
+                os.version() +
+                "\n**Architecture:** " +
+                os.arch() +
+                "\n**GoofCord version:** " +
+                getVersion() +
+                "\n**Electron version:** " +
+                process.versions.electron +
+                "\n`" +
+                settingsFileContent +
+                "`"
             );
         });
         settingsWindow.webContents.setWindowOpenHandler(({url}) => {

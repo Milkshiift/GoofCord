@@ -1,5 +1,8 @@
+<<<<<<< Updated upstream
 const rgb = (r, g, b, msg) => `\x1b[38;2;${r};${g};${b}m${msg}\x1b[0m`;
 const log = (...args) => console.log(`[${rgb(88, 101, 242, "arRPC")} > ${rgb(87, 242, 135, "bridge")}]`, ...args);
+=======
+>>>>>>> Stashed changes
 const {EventEmitter} = require("events");
 
 const IPCServer = require("./transports/ipc.js");
@@ -7,6 +10,10 @@ const WSServer = require("./transports/websocket.js");
 const ProcessServer = require("./process/index.js");
 
 let socketId = 0;
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 class RPCServer extends EventEmitter {
     constructor() {
         super();
@@ -31,13 +38,19 @@ class RPCServer extends EventEmitter {
 
     onConnection(socket) {
         socket.send({
+<<<<<<< Updated upstream
             cmd: "DISPATCH",
             evt: "READY",
+=======
+            cmd: 'DISPATCH',
+            evt: 'READY',
+>>>>>>> Stashed changes
 
             data: {
                 v: 1,
 
                 // needed otherwise some stuff errors out parsing json strictly
+<<<<<<< Updated upstream
                 user: {
                     // mock user data using arRPC app/bot
                     id: "1045800378228281345",
@@ -51,22 +64,45 @@ class RPCServer extends EventEmitter {
                     api_endpoint: "//discord.com/api",
                     cdn_host: "cdn.discordapp.com",
                     environment: "production"
+=======
+                user: { // mock user data using arRPC app/bot
+                    id: '1045800378228281345',
+                    username: 'arRPC',
+                    discriminator: '0000',
+                    avatar: 'cfefa4d9839fb4bdf030f91c2a13e95c',
+                    flags: 0,
+                    premium_type: 0,
+                },
+                config: {
+                    api_endpoint: '//discord.com/api',
+                    cdn_host: 'cdn.discordapp.com',
+                    environment: 'production'
+>>>>>>> Stashed changes
                 }
             }
         });
 
         socket.socketId = socketId++;
 
+<<<<<<< Updated upstream
         this.emit("connection", socket);
     }
 
     onClose(socket) {
         this.emit("activity", {
+=======
+        this.emit('connection', socket);
+    }
+
+    onClose(socket) {
+        this.emit('activity', {
+>>>>>>> Stashed changes
             activity: null,
             pid: socket.lastPid,
             socketId: socket.socketId.toString()
         });
 
+<<<<<<< Updated upstream
         this.emit("close", socket);
     }
 
@@ -75,6 +111,16 @@ class RPCServer extends EventEmitter {
 
         switch (cmd) {
             case "SET_ACTIVITY":
+=======
+        this.emit('close', socket);
+    }
+
+    async onMessage(socket, {cmd, args, nonce}) {
+        this.emit('message', {socket, cmd, args, nonce});
+
+        switch (cmd) {
+            case 'SET_ACTIVITY':
+>>>>>>> Stashed changes
                 const {activity, pid} = args; // translate given parameters into what discord dispatch expects
 
                 if (!activity) {
@@ -86,7 +132,11 @@ class RPCServer extends EventEmitter {
                         nonce
                     });
 
+<<<<<<< Updated upstream
                     return this.emit("activity", {
+=======
+                    return this.emit('activity', {
+>>>>>>> Stashed changes
                         activity: null,
                         pid,
                         socketId: socket.socketId.toString()
@@ -99,6 +149,7 @@ class RPCServer extends EventEmitter {
 
                 const metadata = {};
                 const extra = {};
+<<<<<<< Updated upstream
                 if (buttons) {
                     // map buttons into expected metadata
                     metadata.button_urls = buttons.map((x) => x.url);
@@ -113,11 +164,28 @@ class RPCServer extends EventEmitter {
                     }
 
                 this.emit("activity", {
+=======
+                if (buttons) { // map buttons into expected metadata
+                    metadata.button_urls = buttons.map(x => x.url);
+                    extra.buttons = buttons.map(x => x.label);
+                }
+
+                if (timestamps) for (const x in timestamps) { // translate s -> ms timestamps
+                    if (Date.now().toString().length - timestamps[x].toString().length > 2) timestamps[x] = Math.floor(1000 * timestamps[x]);
+                }
+
+
+                this.emit('activity', {
+>>>>>>> Stashed changes
                     activity: {
                         application_id: socket.clientId,
                         type: 0,
                         metadata,
+<<<<<<< Updated upstream
                         flags: instance ? 1 << 0 : 0,
+=======
+                        flags: instance ? (1 << 0) : 0,
+>>>>>>> Stashed changes
                         ...activity,
                         ...extra
                     },
@@ -134,6 +202,7 @@ class RPCServer extends EventEmitter {
 
                 break;
 
+<<<<<<< Updated upstream
             case "GUILD_TEMPLATE_BROWSER":
             case "INVITE_BROWSER":
                 const {code} = args;
@@ -150,8 +219,39 @@ class RPCServer extends EventEmitter {
 
             case "DEEP_LINK":
                 this.emit("link", args.params);
+=======
+            case 'GUILD_TEMPLATE_BROWSER':
+            case 'INVITE_BROWSER':
+                const {code} = args;
+
+                const isInvite = cmd === 'INVITE_BROWSER';
+                const callback = (isValid = true) => {
+                    socket.send({
+                        cmd,
+                        data: isValid
+                            ? {code}
+                            : {
+                                code: isInvite ? 4011 : 4017,
+                                message: `Invalid ${isInvite ? 'invite' : 'guild template'} id: ${code}`
+                            },
+                        evt: isValid ? null : 'ERROR',
+                        nonce
+                    });
+                }
+
+                this.emit(isInvite ? 'invite' : 'guild-template', code, callback);
+                break;
+
+            case 'DEEP_LINK':
+                this.emit('link', args.params);
+>>>>>>> Stashed changes
                 break;
         }
     }
 }
+<<<<<<< Updated upstream
 module.exports = RPCServer;
+=======
+
+module.exports = RPCServer;
+>>>>>>> Stashed changes

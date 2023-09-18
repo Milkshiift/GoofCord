@@ -1,4 +1,4 @@
-import {app, BrowserWindow, nativeImage, shell, net} from "electron";
+import {app, BrowserWindow, nativeImage, shell} from "electron";
 import {getConfig, getWindowState, setWindowState} from "./utils";
 import {registerIpc} from "./ipc";
 import {setMenu} from "./menu";
@@ -56,15 +56,15 @@ async function doAfterDefiningTheWindow() {
     });
 
     // Define a handler for opening new windows.
-    mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    mainWindow.webContents.setWindowOpenHandler(({url}) => {
         if (url === "about:blank") {
-            return { action: "allow" };
+            return {action: "allow"};
         }
         if (url.startsWith("http") || url.startsWith("mailto:")) {
             // Open external URLs using the system's default browser.
             shell.openExternal(url);
         }
-        return { action: "deny" };
+        return {action: "deny"};
     });
 
     // Handle the "page-favicon-updated" event, which updates the app's tray icon based on the website's favicon.
@@ -97,9 +97,9 @@ async function doAfterDefiningTheWindow() {
         if (await getConfig("dynamicIcon") == true) mainWindow.setIcon(trayPath);
 
         // Additionally, handle icon resizing based on the platform.
-        if (process.platform === "darwin" && trayPath.getSize().height > 22) trayPath.resize({ height: 22 });
+        if (process.platform === "darwin" && trayPath.getSize().height > 22) trayPath.resize({height: 22});
 
-        if (process.platform === "win32" && trayPath.getSize().height > 32) trayPath.resize({ height: 32 });
+        if (process.platform === "win32" && trayPath.getSize().height > 32) trayPath.resize({height: 32});
 
         // Finally, set the updated tray image.
         tray.setImage(trayPath);
@@ -125,7 +125,11 @@ async function doAfterDefiningTheWindow() {
     };
 
     // @ts-ignore
+<<<<<<< Updated upstream
     import("./arrpc/src/index.js");
+=======
+    if (await getConfig("arrpc")) import("arrpc");
+>>>>>>> Stashed changes
 
     // Attach event listeners to the mainWindow for focus, blur, maximize, and unmaximize events.
     // These events trigger setting body attributes in the web contents.

@@ -1,5 +1,5 @@
 import "./bridge";
-import {ipcRenderer} from "electron";
+import {app, contextBridge, ipcRenderer} from "electron";
 import * as fs from "fs";
 import * as path from "path";
 import {addScript, addStyle} from "../utils";
@@ -14,18 +14,17 @@ if (ipcRenderer.sendSync("titlebar")) {
 }
 const version = ipcRenderer.sendSync("displayVersion");
 
-const waitForButton = setInterval(() => {
-    // Waiting until settings button appears, also useful for detecting when splash is over
+window.document.addEventListener("DOMContentLoaded", function() {
+    injectAfterSplash();
+    loadScripts();
+
     let settingsButton = document.querySelector('[aria-label="User Settings"]');
     if (settingsButton) {
-        clearInterval(waitForButton);
         settingsButton.addEventListener("click", () => {
             injectInSettings();
         });
-
-        injectAfterSplash();
     }
-}, 1000);
+});
 
 function injectInSettings() {
     console.log("Injecting in settings...");
@@ -68,21 +67,22 @@ function injectAfterSplash() {
     console.log("Injecting after splash...");
     // dirty hack to make clicking notifications focus GoofCord
     addScript(`
-    (() => {
-    const originalSetter = Object.getOwnPropertyDescriptor(Notification.prototype, "onclick").set;
-    Object.defineProperty(Notification.prototype, "onclick", {
-        set(onClick) {
-        originalSetter.call(this, function() {
-            onClick.apply(this, arguments);
-            goofcord.window.show();
-            goofcord.window.maximize();
-        })
-        },
-        configurable: true
-    });
-    })();
+        (() => {
+        const originalSetter = Object.getOwnPropertyDescriptor(Notification.prototype, "onclick").set;
+        Object.defineProperty(Notification.prototype, "onclick", {
+            set(onClick) {
+            originalSetter.call(this, function() {
+                onClick.apply(this, arguments);
+                goofcord.window.show();
+                goofcord.window.maximize();
+            })
+            },
+            configurable: true
+        });
+        })();
     `);
 
+    addScript(fs.readFileSync(path.join(__dirname, "../", "/content/js/rpc.js"), "utf8"));
     const cssPath = path.join(__dirname, "../", "/content/css/discord.css");
     addStyle(fs.readFileSync(cssPath, "utf8"));
     if (document.getElementById("window-controls-container") == null) {
@@ -91,4 +91,18 @@ function injectAfterSplash() {
             fixTitlebar();
         }
     }
+}
+
+function loadScripts() {
+    const scriptsPath = path.join(ipcRenderer.sendSync("get-user-data-path"), "/scripts/");
+
+    fs.readdirSync(scriptsPath).forEach((file) => {
+        try {
+            const script = fs.readFileSync(path.join(scriptsPath, file), "utf8");
+            addScript(script);
+            console.log(`%cLoaded "${file}" script.`, "color:red");
+        } catch (err) {
+            console.error("An error occurred during script loading: " + err);
+        }
+    });
 }

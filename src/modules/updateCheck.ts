@@ -1,7 +1,8 @@
 import fetch from 'cross-fetch';
 import {getVersion} from "../utils";
 import {shell} from "electron";
-const { Notification } = require('electron')
+
+const {Notification} = require('electron')
 
 const currentVersion = getVersion();
 

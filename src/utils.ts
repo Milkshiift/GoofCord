@@ -69,8 +69,7 @@ export async function getWindowState(object: string) {
         let rawdata = await readFile(getSettingsFile(), "utf-8");
         let returndata = JSON.parse(rawdata);
         return returndata[object];
-    }
-    catch (e) {
+    } catch (e) {
         return null;
     }
 }
@@ -85,6 +84,7 @@ export interface Settings {
     updateNotification: boolean;
     multiInstance: boolean;
     launchWithOsBoot: boolean;
+    arrpc: boolean;
     discordUrl: string;
     modName: string;
     prfmMode: string;
@@ -103,6 +103,7 @@ const defaults: Settings = {
     updateNotification: true,
     multiInstance: false,
     launchWithOsBoot: false,
+    arrpc: false,
     modName: "vencord",
     prfmMode: "none",
     discordUrl: "https://canary.discord.com/app",
@@ -187,12 +188,23 @@ export async function checkIfConfigExists() {
     const settingsFile = storagePath + "settings.json";
 
     if (!fs.existsSync(settingsFile)) {
-        if (!fs.existsSync(storagePath)) {
-            fs.mkdirSync(storagePath);
-            console.log("Created missing storage folder");
-        }
         console.log("First run of the GoofCord. Starting setup.");
         setup();
+    }
+}
+
+export async function checkIfFoldersExist() {
+    const userDataPath = app.getPath("userData");
+    const storagePath = path.join(userDataPath, "/storage/");
+    const scriptsPath = path.join(userDataPath, "/scripts/");
+
+    if (!fs.existsSync(storagePath)) {
+        await mkdir(storagePath);
+        console.log("Created missing storage folder");
+    }
+    if (!fs.existsSync(scriptsPath)) {
+        await mkdir(scriptsPath);
+        console.log("Created missing scripts folder");
     }
 }
 
@@ -223,7 +235,7 @@ const TIMEOUT = 10000;
 
 async function downloadAndWriteBundle(url: string, filePath: string) {
     try {
-        const response = await fetchWithTimeout(url, { method: 'GET' }, TIMEOUT);
+        const response = await fetchWithTimeout(url, {method: 'GET'}, TIMEOUT);
         if (!response.ok) {
             throw new Error(`Unexpected response: ${response.statusText}`);
         }
@@ -244,7 +256,7 @@ async function updateModBundle() {
     try {
         console.log('Downloading mod bundle');
         const distFolder = path.join(app.getPath('userData'), 'plugins/loader/dist/');
-        await fs.promises.mkdir(distFolder, { recursive: true });
+        await mkdir(distFolder, {recursive: true});
 
         // Provide a type annotation for modName
         const modName: keyof typeof MOD_BUNDLE_URLS = await getConfig('modName');
@@ -277,10 +289,10 @@ export async function installModLoader() {
     if (!await exists(loaderFolder) || !await exists(bundleCssPath)) {
         try {
             // Remove the existing loader folder recursively
-            await fs.promises.rm(loaderFolder, { recursive: true, force: true });
+            await fs.promises.rm(loaderFolder, {recursive: true, force: true});
 
             if (!await exists(pluginFolder)) {
-                await fs.promises.mkdir(pluginFolder);
+                await mkdir(pluginFolder);
                 console.log('[Mod loader] Created missing plugin folder');
             }
 
@@ -290,7 +302,7 @@ export async function installModLoader() {
             if (!loaderZip.ok) throw new Error(`Unexpected response: ${loaderZip.statusText}`);
 
             await streamPipeline(loaderZip.body, fs.createWriteStream(zipPath));
-            await extract(zipPath, { dir: path.join(app.getPath('userData'), 'plugins') });
+            await extract(zipPath, {dir: path.join(app.getPath('userData'), 'plugins')});
             await updateModBundle();
             import('./modules/plugin');
         } catch (error) {

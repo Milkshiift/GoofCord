@@ -1,227 +1,237 @@
 <!doctype html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <style>
-            @import url("../content/css/settings.css");
-        </style>
-    </head>
-    <body>
-        <p class="center">Some changes may require the app to restart before taking effect</p>
-        <h2>General settings</h2>
-        <form class="settingsContainer">
-            <fieldset>
-                <div class="checkbox-container">
-                    <input data-setting="minimizeToTray" id="minimizeToTray" type="checkbox" />
-                    <label for="minimizeToTray">Minimize to tray</label>
-                </div>
-                <p class="description">
-                    When disabled, GoofCord will close like any other window when closed, otherwise, it'll sit back and
-                    relax in your system tray for later.
-                </p>
-            </fieldset>
-            <fieldset>
-                <div class="checkbox-container">
-                    <input data-setting="startMinimized" id="startMinimized" type="checkbox" />
-                    <label for="startMinimized">Start minimized</label>
-                </div>
-                <p class="description">GoofCord starts in the background and remains out of your way.</p>
-            </fieldset>
-            <fieldset>
-                <div class="checkbox-container">
-                    <input data-setting="dynamicIcon" id="dynamicIcon" type="checkbox" />
-                    <label for="dynamicIcon">Dynamic icon</label>
-                </div>
-                <p class="description">
-                    Following Discord's behavior on Windows, this shows unread messages/pings count on GoofCord's icon
-                    instead of its tray.
-                </p>
-            </fieldset>
-            <fieldset>
-                <div class="checkbox-container">
-                    <input data-setting="updateNotification" id="updateNotification" type="checkbox" />
-                    <label for="updateNotification">Update notification</label>
-                </div>
-                <p class="description">
-                    When a new version releases, every time you launch GoofCord a notification will pop up telling you that an update is available.
-                    You can disable this behaviour here. Pings github.com
-                </p>
-            </fieldset>
-            <fieldset>
-                <div class="checkbox-container">
-                    <input data-setting="launchWithOsBoot" id="launchWithOsBoot" type="checkbox" />
-                    <label for="launchWithOsBoot">Launch with OS</label>
-                </div>
-                <p class="description">
-                    When enabled starts GoofCord on OS boot automatically.
-                </p>
-            </fieldset>
-            <fieldset>
-                <div class="checkbox-container">
-                    <input data-setting="multiInstance" id="multiInstance" type="checkbox" />
-                    <label for="multiInstance">Multi Instance</label>
-                </div>
-                <p class="description">
-                    Experimental. When enabled you'll be able to start up many instances of GoofCord. This is not tested properly though and may not do what you want.
-                </p>
-            </fieldset>
-        </form>
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        @import url("../content/css/settings.css");
+    </style>
+</head>
+<body>
+<p class="center">Some changes may require the app to restart before taking effect</p>
+<h2>General settings</h2>
+<form class="settingsContainer">
+    <fieldset>
+        <div class="checkbox-container">
+            <input data-setting="minimizeToTray" id="minimizeToTray" type="checkbox"/>
+            <label for="minimizeToTray">Minimize to tray</label>
+        </div>
+        <p class="description">
+            When disabled, GoofCord will close like any other window when closed, otherwise, it'll sit back and
+            relax in your system tray for later.
+        </p>
+    </fieldset>
+    <fieldset>
+        <div class="checkbox-container">
+            <input data-setting="startMinimized" id="startMinimized" type="checkbox"/>
+            <label for="startMinimized">Start minimized</label>
+        </div>
+        <p class="description">GoofCord starts in the background and remains out of your way.</p>
+    </fieldset>
+    <fieldset>
+        <div class="checkbox-container">
+            <input data-setting="dynamicIcon" id="dynamicIcon" type="checkbox"/>
+            <label for="dynamicIcon">Dynamic icon</label>
+        </div>
+        <p class="description">
+            Following Discord's behavior on Windows, this shows unread messages/pings count on GoofCord's icon
+            instead of its tray.
+        </p>
+    </fieldset>
+    <fieldset>
+        <div class="checkbox-container">
+            <input data-setting="launchWithOsBoot" id="launchWithOsBoot" type="checkbox"/>
+            <label for="launchWithOsBoot">Launch with OS</label>
+        </div>
+        <p class="description">
+            When enabled starts GoofCord on OS boot automatically.
+        </p>
+    </fieldset>
+    <fieldset>
+        <div class="checkbox-container">
+            <input data-setting="multiInstance" id="multiInstance" type="checkbox"/>
+            <label for="multiInstance">Multi Instance</label>
+        </div>
+        <p class="description">
+            Experimental. When enabled you'll be able to start up many instances of GoofCord. This is not tested
+            properly though and may not do what you want.
+        </p>
+    </fieldset>
+</form>
 
-        <h2>Client Mods settings</h2>
-        <form class="settingsContainer">
-            <fieldset>
-                <div class="checkbox-container">
-                    <select class="left dropdown" data-setting="modName" name="modName">
-                        <option value="none">None</option>
-                        <option selected value="vencord">Vencord</option>
-                        <option value="shelter">Shelter</option>
-                        <option value="custom">Custom</option>
-                    </select>
-                    <label> Client mod </label>
-                </div>
-                <p class="description">What client mod to use. Vencord is recommended.</p>
-            </fieldset>
-            <fieldset id="customMod" style="display: none">
-                <div class="checkbox-container">
-                    <input data-setting="customJsBundle" class="text" type="text" />
-                    <label> Custom JS bundle </label>
-                </div>
-                <br>
-                <div class="checkbox-container">
-                    <input data-setting="customCssBundle" class="text" type="text" />
-                    <label> Custom CSS bundle </label>
-                </div>
-                <p class="description">A raw link to the JS bundle and CSS bundle of a client mod you want to use. Placeholder css: "https://armcord.xyz/placeholder.css"</p>
-            </fieldset>
-        </form>
+<h2>Client Mods settings</h2>
+<form class="settingsContainer">
+    <fieldset>
+        <div class="checkbox-container">
+            <select class="left dropdown" data-setting="modName" name="modName">
+                <option value="none">None</option>
+                <option selected value="vencord">Vencord</option>
+                <option value="shelter">Shelter</option>
+                <option value="custom">Custom</option>
+            </select>
+            <label> Client mod </label>
+        </div>
+        <p class="description">What client mod to use. Vencord is recommended.</p>
+    </fieldset>
+    <fieldset id="customMod" style="display: none">
+        <div class="checkbox-container">
+            <input class="text" data-setting="customJsBundle" type="text"/>
+            <label> Custom JS bundle </label>
+        </div>
+        <br>
+        <div class="checkbox-container">
+            <input class="text" data-setting="customCssBundle" type="text"/>
+            <label> Custom CSS bundle </label>
+        </div>
+        <p class="description">A raw link to the JS bundle and CSS bundle of a client mod you want to use. Placeholder
+            css: "https://armcord.xyz/placeholder.css"</p>
+    </fieldset>
+</form>
 
-        <h2>Other settings</h2>
-        <form class="settingsContainer">
-            <fieldset>
-                <div class="checkbox-container">
-                    <input data-setting="spellcheck" id="spellcheck" type="checkbox" />
-                    <label for="spellcheck">Spellcheck</label>
-                </div>
-                <p class="description">Whether to enable spellcheck for input fields or not.</p>
-            </fieldset>
-            <fieldset>
-                <div class="checkbox-container">
-                    <select class="left dropdown" data-setting="prfmMode" name="prfmMode">
-                        <option selected value="none">None</option>
-                        <option value="performance">Performance</option>
-                        <option value="battery">Battery</option>
-                    </select>
-                    <label> Performance mode </label>
-                </div>
-                <p class="description">
-                    Performance mode is an experimental feature that may either increase responsiveness and performance
-                    of GoofCord or… decrease it. Please try every option and see which fits you the best.
-                </p>
-            </fieldset>
-            <fieldset>
-                <div class="checkbox-container">
-                    <input data-setting="discordUrl" class="text" type="text" />
-                    <label>Discord URL</label>
-                </div>
-                <p class="description">
-                    URL of the discord. Variations: https://canary.discord.com/app, https://ptb.discord.com/app or
-                    https://discord.com/app
-                </p>
-            </fieldset>
-        </form>
+<h2>Other settings</h2>
+<form class="settingsContainer">
+    <fieldset>
+        <div class="checkbox-container">
+            <input data-setting="arrpc" id="arrpc" type="checkbox"/>
+            <label for="arrpc">Activity display</label>
+        </div>
+        <p class="description">Enables the use of an <b>open source</b> reimplementation of Discord's
+            rich presence called <a target="_blank" href="https://github.com/OpenAsar/arrpc">arRPC</a>.</p>
+    </fieldset>
+    <fieldset>
+        <div class="checkbox-container">
+            <input data-setting="spellcheck" id="spellcheck" type="checkbox"/>
+            <label for="spellcheck">Spellcheck</label>
+        </div>
+        <p class="description">Whether to enable spellcheck for input fields or not.</p>
+    </fieldset>
+    <fieldset>
+        <div class="checkbox-container">
+            <input data-setting="updateNotification" id="updateNotification" type="checkbox"/>
+            <label for="updateNotification">Update notification</label>
+        </div>
+        <p class="description">
+            When a new version releases, every time you launch GoofCord a notification will pop up telling you that an
+            update is available.
+            You can disable this behaviour here. Pings github.com
+        </p>
+    </fieldset>
+    <fieldset>
+        <div class="checkbox-container">
+            <select class="left dropdown" data-setting="prfmMode" name="prfmMode">
+                <option selected value="none">None</option>
+                <option value="performance">Performance</option>
+                <option value="battery">Battery</option>
+            </select>
+            <label> Performance mode </label>
+        </div>
+        <p class="description">
+            Performance mode is an experimental feature that may either increase responsiveness and performance
+            of GoofCord or… decrease it. Please try every option and see which fits you the best.
+        </p>
+    </fieldset>
+    <fieldset>
+        <div class="checkbox-container">
+            <input class="text" data-setting="discordUrl" type="text"/>
+            <label>Discord URL</label>
+        </div>
+        <p class="description">
+            URL of the discord. Variations: https://canary.discord.com/app, https://ptb.discord.com/app or
+            https://discord.com/app
+        </p>
+    </fieldset>
+</form>
 
-        <h2>Privacy settings</h2>
-        <form class="settingsContainer">
-            <fieldset>
-                <div class="checkbox-container">
-                    <textarea data-setting="blocklist"></textarea>
-                </div>
-                <p class="description">
-                    A list of URLs to block. Each entry must be separated by a comma.
-                </p>
-            </fieldset>
-        </form>
+<h2>Privacy settings</h2>
+<form class="settingsContainer">
+    <fieldset>
+        <div class="checkbox-container">
+            <textarea data-setting="blocklist"></textarea>
+        </div>
+        <p class="description">
+            A list of URLs to block. Each entry must be separated by a comma.
+        </p>
+    </fieldset>
+</form>
 
-        <fieldset>
-            <button class="center" data-open="Plugins" data-string="settings-pluginsFolder">Open plugins folder</button>
-            <button class="center" data-open="Themes" data-string="settings-themesFolder">Open themes folder</button>
-            <button class="center" data-open="Storage" data-string="settings-storageFolder">Open storage folder</button>
-            <button
-                class="center"
-                data-string="settings-copyDebugInfo"
-                id="settings-copyDebugInfo"
-                onclick="settings.copyDebugInfo()"
-            >
-                Copy Debug Info
-            </button>
-            <button
-                class="center"
-                data-string="settings-forceNativeCrash"
-                id="settings-forceNativeCrash"
-                onclick="settings.crash()"
-            >
-                Force native crash
-            </button>
-        </fieldset>
-    </body>
-    <script>
-        const elements = document.querySelectorAll("[data-setting]");
-        elements.forEach(async (e) => {
-            const value = await settings.get(e.dataset.setting);
-            console.log(typeof value);
-            let type = typeof value;
-            if (type === "boolean") {
-                if (e.tagName === "SELECT") {
-                    e.value = value;
-                    if (value === 'custom') {
-                        document.getElementById('customMod').style.display = 'block';
-                    }
-                }
-                else e.checked = value;
-            } else if (type === "object") {
-                e.value = value.join(",\n");
-            } else if (type === "string") {
+<fieldset>
+    <button class="center" data-open="Plugins" data-string="settings-pluginsFolder">Open plugins folder</button>
+    <button class="center" data-open="Scripts" data-string="settings-scriptsFolder">Open scripts folder</button>
+    <button class="center" data-open="Storage" data-string="settings-storageFolder">Open storage folder</button>
+    <button
+            class="center"
+            data-string="settings-copyDebugInfo"
+            id="settings-copyDebugInfo"
+            onclick="settings.copyDebugInfo()"
+    >
+        Copy Debug Info
+    </button>
+    <button
+            class="center"
+            data-string="settings-forceNativeCrash"
+            id="settings-forceNativeCrash"
+            onclick="settings.crash()"
+    >
+        Force native crash
+    </button>
+</fieldset>
+</body>
+<script>
+    const elements = document.querySelectorAll("[data-setting]");
+    elements.forEach(async (e) => {
+        const value = await settings.get(e.dataset.setting);
+        console.log(typeof value);
+        let type = typeof value;
+        if (type === "boolean") {
+            if (e.tagName === "SELECT") {
                 e.value = value;
-            }
-        });
-
-        elements.forEach((element) => {
-            element.addEventListener("change", () => {
-                saveSettings();
-                if (element.name === "modName") {
-                    console.log(element.name)
-                    if (element.value === 'custom') {
-                        document.getElementById('customMod').style.display = 'block';
-                    } else {
-                        document.getElementById('customMod').style.display = 'none';
-                    }
+                if (value === 'custom') {
+                    document.getElementById('customMod').style.display = 'block';
                 }
-            });
-        });
-
-        function saveSettings() {
-            const elements = Array.from(document.querySelectorAll("[data-setting]"));
-            let obj = Object.fromEntries(
-                elements.map((e) => [e.dataset.setting, e.tagName === "SELECT" || e.type === "text" ? e.value : e.checked])
-            );
-            obj = {
-                ...obj, // Add the other settings to the object
-                blocklist: createUrlArray() // Add the whitelist to the object
-            };
-            console.log(obj);
-            settings.save(obj);
+            } else e.checked = value;
+        } else if (type === "object") {
+            e.value = value.join(",\n");
+        } else if (type === "string") {
+            e.value = value;
         }
+    });
 
-        function createUrlArray() { // TODO: Make expandable
-            let urlInput =document.querySelectorAll('[data-setting="blocklist"]')[0].value.replace(/\s/g, ''); // Remove all whitespace from input
-            if (urlInput.endsWith(",")) { // Check if input ends with a comma
-                urlInput = urlInput.slice(0, -1); // Remove the comma from the end of the input
+    elements.forEach((element) => {
+        element.addEventListener("change", () => {
+            saveSettings();
+            if (element.name === "modName") {
+                console.log(element.name)
+                if (element.value === 'custom') {
+                    document.getElementById('customMod').style.display = 'block';
+                } else {
+                    document.getElementById('customMod').style.display = 'none';
+                }
             }
-            return urlInput.split(",");
-        }
-
-        document.querySelectorAll("[data-open]").forEach((e) => {
-            e.addEventListener("click", settings[`open${e.dataset.open}Folder`]);
         });
-    </script>
+    });
+
+    function saveSettings() {
+        const elements = Array.from(document.querySelectorAll("[data-setting]"));
+        let obj = Object.fromEntries(
+            elements.map((e) => [e.dataset.setting, e.tagName === "SELECT" || e.type === "text" ? e.value : e.checked])
+        );
+        obj = {
+            ...obj, // Add the other settings to the object
+            blocklist: createUrlArray() // Add the whitelist to the object
+        };
+        console.log(obj);
+        settings.save(obj);
+    }
+
+    function createUrlArray() { // TODO: Make expandable
+        let urlInput = document.querySelectorAll('[data-setting="blocklist"]')[0].value.replace(/\s/g, ''); // Remove all whitespace from input
+        if (urlInput.endsWith(",")) { // Check if input ends with a comma
+            urlInput = urlInput.slice(0, -1); // Remove the comma from the end of the input
+        }
+        return urlInput.split(",");
+    }
+
+    document.querySelectorAll("[data-open]").forEach((e) => {
+        e.addEventListener("click", settings[`open${e.dataset.open}Folder`]);
+    });
+</script>
 </html>
