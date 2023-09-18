@@ -30,11 +30,7 @@
         "typescript": "^5.2.2"
     },
     "dependencies": {
-<<<<<<< Updated upstream
-        "arrpc": "link:..\\src\\arrpc",
-=======
         "arrpc": "file:src/arrpc",
->>>>>>> Stashed changes
         "auto-launch": "^5.0.6",
         "cross-fetch": "^4.0.0",
         "electron-context-menu": "^3.6.1",

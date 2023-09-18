@@ -125,11 +125,7 @@ async function doAfterDefiningTheWindow() {
     };
 
     // @ts-ignore
-<<<<<<< Updated upstream
-    import("./arrpc/src/index.js");
-=======
     if (await getConfig("arrpc")) import("arrpc");
->>>>>>> Stashed changes
 
     // Attach event listeners to the mainWindow for focus, blur, maximize, and unmaximize events.
     // These events trigger setting body attributes in the web contents.
