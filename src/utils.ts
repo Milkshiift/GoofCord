@@ -255,7 +255,7 @@ async function updateModBundle() {
 
     try {
         console.log('Downloading mod bundle');
-        const distFolder = path.join(app.getPath('userData'), 'plugins/loader/dist/');
+        const distFolder = path.join(app.getPath('userData'), 'extensions/loader/dist/');
         await mkdir(distFolder, {recursive: true});
 
         // Provide a type annotation for modName
@@ -281,8 +281,8 @@ async function updateModBundle() {
 }
 
 export async function installModLoader() {
-    const pluginFolder = path.join(app.getPath('userData'), 'plugins/');
-    const loaderFolder = path.join(pluginFolder, 'loader');
+    const extensionFolder = path.join(app.getPath('userData'), 'extensions/');
+    const loaderFolder = path.join(extensionFolder, 'loader');
     const distFolder = path.join(loaderFolder, 'dist');
     const bundleCssPath = path.join(distFolder, 'bundle.css');
 
@@ -291,9 +291,9 @@ export async function installModLoader() {
             // Remove the existing loader folder recursively
             await fs.promises.rm(loaderFolder, {recursive: true, force: true});
 
-            if (!await exists(pluginFolder)) {
-                await mkdir(pluginFolder);
-                console.log('[Mod loader] Created missing plugin folder');
+            if (!await exists(extensionFolder)) {
+                await mkdir(extensionFolder);
+                console.log('[Mod loader] Created missing extension folder');
             }
 
             const zipPath = path.join(app.getPath('temp'), 'loader.zip');
@@ -302,9 +302,9 @@ export async function installModLoader() {
             if (!loaderZip.ok) throw new Error(`Unexpected response: ${loaderZip.statusText}`);
 
             await streamPipeline(loaderZip.body, fs.createWriteStream(zipPath));
-            await extract(zipPath, {dir: path.join(app.getPath('userData'), 'plugins')});
+            await extract(zipPath, {dir: path.join(app.getPath('userData'), 'extensions')});
             await updateModBundle();
-            import('./modules/plugin');
+            import('./modules/extensions');
         } catch (error) {
             console.error('[Mod loader] Failed to install modloader');
             console.error(error);
@@ -315,6 +315,6 @@ export async function installModLoader() {
         }
     } else {
         await updateModBundle();
-        import('./modules/plugin');
+        import('./modules/extensions');
     }
 }

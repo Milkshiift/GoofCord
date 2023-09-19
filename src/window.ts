@@ -5,7 +5,7 @@ import {setMenu} from "./menu";
 import * as fs from "fs";
 import contextMenu from "electron-context-menu";
 import {tray} from "./tray";
-import {loadMods} from "./modules/plugin";
+import {loadExtensions} from "./modules/extensions";
 import {getUserAgent} from "./modules/agent";
 import * as path from "path";
 import {initializeFirewall} from "./modules/firewall";
@@ -140,7 +140,7 @@ async function doAfterDefiningTheWindow() {
     const disUrl = await getConfig("discordUrl");
     await mainWindow.webContents.executeJavaScript(`window.location.replace("${disUrl}");`).then(async () => {
         // If a user chose any mods, load them.
-        if ((await getConfig("modName")) != "none") loadMods();
+        if ((await getConfig("modName")) != "none") loadExtensions();
 
         // Disable logging using Sentry logger. There is a chance that this is useless.
         await mainWindow.webContents.executeJavaScript(`

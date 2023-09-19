@@ -9,7 +9,7 @@ let instance: number = 0;
 const userDataPath = app.getPath("userData");
 const storagePath = path.join(userDataPath, "/storage/");
 const scriptsPath = path.join(userDataPath, "/scripts/");
-const pluginsPath = path.join(userDataPath, "/plugins/");
+const extensionsPath = path.join(userDataPath, "/extensions/");
 
 export function createSettingsWindow() {
     console.log("Creating a settings window.");
@@ -52,8 +52,8 @@ export function createSettingsWindow() {
         ipcMain.on("openScriptsFolder", async () => {
             await shell.openPath(scriptsPath);
         });
-        ipcMain.on("openPluginsFolder", async () => {
-            await shell.openPath(pluginsPath);
+        ipcMain.on("openExtensionsFolder", async () => {
+            await shell.openPath(extensionsPath);
         });
         ipcMain.on("openCrashesFolder", async () => {
             await shell.openPath(path.join(app.getPath("temp"), app.getName() + " Crashes"));
