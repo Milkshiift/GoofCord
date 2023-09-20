@@ -1,9 +1,10 @@
 import "./bridge";
-import {app, contextBridge, ipcRenderer} from "electron";
+import {ipcRenderer} from "electron";
 import * as fs from "fs";
 import * as path from "path";
 import {addScript, addStyle} from "../utils";
 import {fixTitlebar, injectTitlebar} from "./titlebar";
+import {loadScripts} from "../modules/scriptLoader";
 
 window.localStorage.setItem("hideNag", "true");
 ipcRenderer.on("themeLoader", (event, message) => {
@@ -91,18 +92,4 @@ function injectAfterSplash() {
             fixTitlebar();
         }
     }
-}
-
-function loadScripts() {
-    const scriptsPath = path.join(ipcRenderer.sendSync("get-user-data-path"), "/scripts/");
-
-    fs.readdirSync(scriptsPath).forEach((file) => {
-        try {
-            const script = fs.readFileSync(path.join(scriptsPath, file), "utf8");
-            addScript(script);
-            console.log(`%cLoaded "${file}" script.`, "color:red");
-        } catch (err) {
-            console.error("An error occurred during script loading: " + err);
-        }
-    });
 }
