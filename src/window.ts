@@ -2,13 +2,14 @@ import {app, BrowserWindow, nativeImage, shell} from "electron";
 import {getConfig, getWindowState, setWindowState} from "./utils";
 import {registerIpc} from "./ipc";
 import {setMenu} from "./menu";
-import * as fs from "fs";
+import * as fs from "graceful-fs";
 import contextMenu from "electron-context-menu";
 import {tray} from "./tray";
 import {loadExtensions} from "./modules/extensions";
 import {getUserAgent} from "./modules/agent";
 import * as path from "path";
 import {initializeFirewall} from "./modules/firewall";
+import {installGoofmod, loadScripts} from "./modules/scriptLoader";
 
 export let mainWindow: BrowserWindow;
 contextMenu({

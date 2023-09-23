@@ -1,15 +1,11 @@
-import * as fs from "fs";
+import * as fs from "graceful-fs";
 import {app, dialog} from "electron";
 import path from "path";
 import {fetch} from "cross-fetch";
 import extract from "extract-zip";
-import util, {promisify} from "util";
+import util from "util";
 
-const streamPipeline = util.promisify(require("stream").pipeline);
-const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
-const exists = promisify(fs.exists);
-const mkdir = promisify(fs.mkdir);
+export const streamPipeline = util.promisify(require("stream").pipeline);
 
 //utility functions that are used all over the codebase or just too obscure to be put in the file used in
 export function addStyle(styleString: string) {
@@ -61,12 +57,12 @@ function getSettingsFile() {
 
 export async function setWindowState(object: WindowState) {
     let toSave = JSON.stringify(object, null, 4);
-    await writeFile(getSettingsFile(), toSave, "utf-8");
+    await fs.promises.writeFile(getSettingsFile(), toSave, "utf-8");
 }
 
 export async function getWindowState(object: string) {
     try {
-        let rawdata = await readFile(getSettingsFile(), "utf-8");
+        let rawdata = await fs.promises.readFile(getSettingsFile(), "utf-8");
         let returndata = JSON.parse(rawdata);
         return returndata[object];
     } catch (e) {
@@ -147,7 +143,7 @@ export function getConfigLocation(): string {
 
 export async function getConfig(object: string) {
     try {
-        const rawdata = await readFile(getConfigLocation(), 'utf-8');
+        const rawdata = await fs.promises.readFile(getConfigLocation(), 'utf-8');
         const returndata = JSON.parse(rawdata);
         return returndata[object];
     } catch (error) {
@@ -163,11 +159,11 @@ export function getConfigSync(object: string) {
 
 export async function setConfig(object: string, toSet: any) {
     try {
-        const rawdata = await readFile(getConfigLocation(), 'utf-8');
+        const rawdata = await fs.promises.readFile(getConfigLocation(), 'utf-8');
         const parsed = JSON.parse(rawdata);
         parsed[object] = toSet;
         const toSave = JSON.stringify(parsed, null, 4);
-        await writeFile(getConfigLocation(), toSave, 'utf-8');
+        await fs.promises.writeFile(getConfigLocation(), toSave, 'utf-8');
     } catch (error) {
         throw error;
     }
@@ -176,7 +172,7 @@ export async function setConfig(object: string, toSet: any) {
 export async function setConfigBulk(object: Settings) {
     try {
         const toSave = JSON.stringify(object, null, 4);
-        await writeFile(getConfigLocation(), toSave, 'utf-8');
+        await fs.promises.writeFile(getConfigLocation(), toSave, 'utf-8');
     } catch (error) {
         throw error;
     }
@@ -199,16 +195,16 @@ export async function checkIfFoldersExist() {
     const scriptsPath = path.join(userDataPath, "/scripts/");
 
     if (!fs.existsSync(storagePath)) {
-        await mkdir(storagePath);
+        await fs.promises.mkdir(storagePath);
         console.log("Created missing storage folder");
     }
     if (!fs.existsSync(scriptsPath)) {
-        await mkdir(scriptsPath);
+        await fs.promises.mkdir(scriptsPath);
         console.log("Created missing scripts folder");
     }
 }
 
-async function fetchWithTimeout(url: string, options: RequestInit = {}, timeout = 10000): Promise<Response> {
+export async function fetchWithTimeout(url: string, options: RequestInit = {}, timeout = 10000): Promise<Response> {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeout);
     const response = await fetch(url, {signal: controller.signal, ...options});
@@ -240,7 +236,7 @@ async function downloadAndWriteBundle(url: string, filePath: string) {
             throw new Error(`Unexpected response: ${response.statusText}`);
         }
         const bundle = await response.text();
-        await writeFile(filePath, bundle, 'utf-8');
+        await fs.promises.writeFile(filePath, bundle, 'utf-8');
     } catch (error) {
         console.error(error);
         throw new Error('Failed to download and write bundle');
@@ -256,7 +252,7 @@ async function updateModBundle() {
     try {
         console.log('Downloading mod bundle');
         const distFolder = path.join(app.getPath('userData'), 'extensions/loader/dist/');
-        await mkdir(distFolder, {recursive: true});
+        await fs.promises.mkdir(distFolder, {recursive: true});
 
         // Provide a type annotation for modName
         const modName: keyof typeof MOD_BUNDLE_URLS = await getConfig('modName');
@@ -286,13 +282,13 @@ export async function installModLoader() {
     const distFolder = path.join(loaderFolder, 'dist');
     const bundleCssPath = path.join(distFolder, 'bundle.css');
 
-    if (!await exists(loaderFolder) || !await exists(bundleCssPath)) {
+    if (!await fs.promises.stat(loaderFolder) || !await fs.promises.stat(bundleCssPath)) {
         try {
             // Remove the existing loader folder recursively
             await fs.promises.rm(loaderFolder, {recursive: true, force: true});
 
-            if (!await exists(extensionFolder)) {
-                await mkdir(extensionFolder);
+            if (!await fs.promises.stat(extensionFolder)) {
+                await fs.promises.mkdir(extensionFolder);
                 console.log('[Mod loader] Created missing extension folder');
             }
 

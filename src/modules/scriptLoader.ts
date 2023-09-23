@@ -1,54 +1,70 @@
 import path from "path";
-import {ipcRenderer} from "electron";
-import fs from "fs";
-import {addScript} from "../utils";
+import {app, ipcRenderer} from "electron";
+import {addScript, fetchWithTimeout, streamPipeline} from "../utils";
 import {error, log} from "./logger";
+import extract from "extract-zip";
+import fs from "graceful-fs";
 
-export function loadScripts() {
+// Script loading, executes from renderer process (preload.ts)
+export async function loadScripts() {
     const scriptsPath = path.join(ipcRenderer.sendSync("get-user-data-path"), "/scripts/");
 
-    fs.readdirSync(scriptsPath).forEach((file) => {
+    const files = await fs.promises.readdir(scriptsPath);
+
+    for (const file of files) {
+        if (!file.endsWith('.js')) continue;
         try {
-            const scriptContent = fs.readFileSync(path.join(scriptsPath, file), "utf8");
+            const scriptContent = await fs.promises.readFile(path.join(scriptsPath, file), "utf8");
             addScript(scriptContent);
 
             const scriptInfo = parseScriptInfo(scriptContent);
             if (scriptInfo.name === "") {
                 log(`Loaded ${file} script. Version: ${scriptInfo.version}`);
-            }
-            else {
+            } else {
                 log(`Loaded "${scriptInfo.name}" script. Version: ${scriptInfo.version}`);
             }
         } catch (err) {
             error("An error occurred during script loading: " + err);
         }
-    });
+    }
 }
 
-// I suspect there is a better way to parse the information
+// Probably a better way to parse the information
 function parseScriptInfo(scriptContent: string) {
-    const infoRegex = /\/\*\*\s*\n([\s\S]*?)\n\s*\*\//;
-    const matches = scriptContent.match(infoRegex);
     const scriptInfo = { name: "", description: "", version: "" };
+    let linesProcessed = 0;
 
-    if (matches && matches[1]) {
-        const infoString = matches[1];
-        const infoLines = infoString.split("\n");
+    for (const line of scriptContent.split('\n')) {
+        if (linesProcessed >= 10) break; // Only parse the first N lines
 
-        infoLines.forEach((line) => {
-            const match = line.match(/^\s*\*\s*@(\w+)\s+(.*)/);
-            if (match) {
-                const [, key, value] = match;
-                if (key === "name") {
-                    scriptInfo.name = value.trim();
-                } else if (key === "description") {
-                    scriptInfo.description = value.trim();
-                } else if (key === "version") {
-                    scriptInfo.version = value.trim();
-                }
+        const match = line.match(/^\s*\*\s*@(\w+)\s+(.*)/);
+        if (match) {
+            const [, key, value] = match;
+            if (key === "name" && !scriptInfo.name) {
+                scriptInfo.name = value.trim();
+                linesProcessed++;
+            } else if (key === "version" && !scriptInfo.version) {
+                scriptInfo.version = value.trim();
+                linesProcessed++;
             }
-        });
+        }
     }
 
     return scriptInfo;
+}
+
+// GoofMod installer. Runs from main.ts
+export async function installGoofmod() {
+    const scriptsFolder = path.join(app.getPath('userData'), 'scripts/');
+    const zipPath = path.join(app.getPath('temp'), 'goofmod.zip');
+
+    try {
+        const goofmodZip = await fetchWithTimeout('https://github.com/Milkshiift/GoofMod/releases/download/Build/goofmod.zip');
+        await streamPipeline(goofmodZip.body, fs.createWriteStream(zipPath));
+        await extract(zipPath, {dir: scriptsFolder});
+        console.log("[Script Loader] Successfully installed GoofMod");
+    } catch (error) {
+        console.error('[Script Loader] Failed to install GoofMod');
+        console.error(error);
+    }
 }

@@ -2,7 +2,7 @@ import {app, BrowserWindow, clipboard, ipcMain, shell} from "electron";
 import {getConfig, getConfigLocation, getDisplayVersion, getVersion, setConfigBulk, Settings} from "../utils";
 import path from "path";
 import os from "os";
-import fs from "fs";
+import fs from "graceful-fs";
 
 let settingsWindow: BrowserWindow;
 let instance: number = 0;
