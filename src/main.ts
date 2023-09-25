@@ -13,7 +13,7 @@ import "./tray";
 import {createCustomWindow} from "./window";
 import {checkForUpdate} from "./modules/updateCheck";
 import AutoLaunch from 'auto-launch';
-import {installGoofmod} from "./modules/scriptLoader";
+import {categorizeScripts, installGoofmod} from "./modules/scriptLoader";
 import {unstrictCSP} from "./modules/extensions";
 
 setFlags();
@@ -48,9 +48,12 @@ app.whenReady().then(async () => {
 });
 
 async function load() {
+    await categorizeScripts();
     unstrictCSP()
+
     await createCustomWindow();
 
+    // Install mods after creating custom window for faster start up
     if ((await getConfig("modName")) != "none") {
         await installModLoader();
     }

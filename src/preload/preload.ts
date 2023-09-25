@@ -16,7 +16,9 @@ if (ipcRenderer.sendSync("titlebar")) {
 }
 const version = ipcRenderer.sendSync("displayVersion");
 
-const waitForButton = setInterval(() => {
+(async () => {await loadScripts(false);})(); // I want my top level awaits
+
+const waitForButton = setInterval(async () => {
     // Waiting until settings button appears, also useful for detecting when the splash is over
     let settingsButton = document.querySelector('[aria-label="User Settings"]');
     if (settingsButton) {
@@ -26,14 +28,10 @@ const waitForButton = setInterval(() => {
             injectInSettings();
         });
 
-        injectAfterSplash();
+        await loadScripts(true);
+        await injectAfterSplash();
     }
 }, 1000);
-
-
-window.document.addEventListener("DOMContentLoaded", function() {
-    loadScripts();
-});
 
 function injectInSettings() {
     log("Injecting in settings...");
@@ -48,7 +46,6 @@ function injectInSettings() {
             let header = document.querySelectorAll("div > [class*=header-]")!;
             let button = document.querySelectorAll("div > [class*=item-]")!;
             let separator = document.querySelectorAll("div > [class*=separator-]")!;
-            log(separator);
             // Cloning and modifying parameters
             const headerClone = header[header.length - 1].cloneNode(true) as HTMLElement;
             headerClone.children[0].innerHTML = "GoofCord";
@@ -72,8 +69,8 @@ function injectInSettings() {
     }, 50);
 }
 
-function injectAfterSplash() {
-    console.log("Injecting after splash...");
+async function injectAfterSplash() {
+    log("Injecting after splash...");
     // dirty hack to make clicking notifications focus GoofCord
     addScript(`
         (() => {
@@ -91,9 +88,9 @@ function injectAfterSplash() {
         })();
     `);
 
-    addScript(fs.readFileSync(path.join(__dirname, "../", "/content/js/rpc.js"), "utf8"));
+    addScript(await fs.promises.readFile(path.join(__dirname, "../", "/content/js/rpc.js"), "utf8"));
     const cssPath = path.join(__dirname, "../", "/content/css/discord.css");
-    addStyle(fs.readFileSync(cssPath, "utf8"));
+    addStyle(await fs.promises.readFile(cssPath, "utf8"));
 
     if (document.getElementById("window-controls-container") == null) {
         console.warn("Titlebar didn't inject, retrying...");
