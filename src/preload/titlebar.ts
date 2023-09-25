@@ -54,7 +54,7 @@ function attachTitlebarEvents() {
 }
 
 export function injectTitlebar() {
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
         const titlebar = createTitlebar();
         const appMount = document.getElementById('app-mount');
         if (appMount) {
@@ -64,9 +64,7 @@ export function injectTitlebar() {
         }
 
         const titlebarcssPath = path.join(__dirname, '../', '/content/css/titlebar.css');
-        const wordmarkcssPath = path.join(__dirname, '../', '/content/css/logos.css');
-        addStyle(fs.readFileSync(titlebarcssPath, 'utf8'));
-        addStyle(fs.readFileSync(wordmarkcssPath, 'utf8'));
+        addStyle(await fs.promises.readFile(titlebarcssPath, 'utf8'));
         document.body.setAttribute('customTitlebar', '');
         document.body.setAttribute('goofcord-platform', os.platform());
 

@@ -194,11 +194,11 @@ export async function checkIfFoldersExist() {
     const storagePath = path.join(userDataPath, "/storage/");
     const scriptsPath = path.join(userDataPath, "/scripts/");
 
-    if (!fs.existsSync(storagePath)) {
+    if (!await fs.promises.stat(storagePath)) {
         await fs.promises.mkdir(storagePath);
         console.log("Created missing storage folder");
     }
-    if (!fs.existsSync(scriptsPath)) {
+    if (!await fs.promises.stat(scriptsPath)) {
         await fs.promises.mkdir(scriptsPath);
         console.log("Created missing scripts folder");
     }

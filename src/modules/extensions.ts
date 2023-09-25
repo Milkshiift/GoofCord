@@ -2,23 +2,23 @@ import * as fs from "graceful-fs";
 import {app, session} from "electron";
 import * as electron from "electron";
 
-export function loadExtensions() {
+export async function loadExtensions() {
     const userDataPath = app.getPath("userData");
     const extensionsFolder = userDataPath + "/extensions/";
-    if (!fs.existsSync(extensionsFolder)) {
-        fs.mkdirSync(extensionsFolder);
+    if (!await fs.promises.stat(extensionsFolder)) {
+        await fs.promises.mkdir(extensionsFolder);
         console.log("Created missing extensions folder");
     }
-    fs.readdirSync(extensionsFolder).forEach((file) => {
+    for (const file of (await fs.promises.readdir(extensionsFolder))) {
         try {
-            const manifest = fs.readFileSync(`${userDataPath}/extensions/${file}/manifest.json`, "utf8");
+            const manifest = await fs.promises.readFile(`${userDataPath}/extensions/${file}/manifest.json`, "utf8");
             const extensionFile = JSON.parse(manifest);
-            session.defaultSession.loadExtension(`${userDataPath}/extensions/${file}`);
+            await session.defaultSession.loadExtension(`${userDataPath}/extensions/${file}`);
             console.log(`[Mod loader] Loaded ${extensionFile.name} made by ${extensionFile.author}`);
         } catch (err) {
             console.error(err);
         }
-    });
+    }
 }
 
 export const unstrictCSP = () => {

@@ -64,8 +64,8 @@ export function createSettingsWindow() {
         ipcMain.handle("getSetting", (event, toGet: string) => {
             return getConfig(toGet);
         });
-        ipcMain.on("copyDebugInfo", () => {
-            let settingsFileContent = fs.readFileSync(getConfigLocation(), "utf-8");
+        ipcMain.on("copyDebugInfo", async () => {
+            let settingsFileContent = await fs.promises.readFile(getConfigLocation(), "utf-8");
             clipboard.writeText(
                 "**OS:** " +
                 os.platform() +

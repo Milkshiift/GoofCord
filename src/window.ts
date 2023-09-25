@@ -91,7 +91,7 @@ async function doAfterDefiningTheWindow() {
             "base64"
         );
 
-        fs.writeFileSync(path.join(app.getPath("temp"), "tray.png"), buf, "utf-8");
+        await fs.promises.writeFile(path.join(app.getPath("temp"), "tray.png"), buf, "utf-8");
 
         const trayPath = nativeImage.createFromPath(path.join(app.getPath("temp"), "tray.png"));
 
