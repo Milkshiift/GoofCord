@@ -125,7 +125,7 @@ export function setup() {
     });
 }
 
-export async function checkConfig() {
+export async function checkConfigForMissingParams() {
     const requiredParams: string[] = Object.keys(defaults);
     for (const param of requiredParams) {
         if ((await getConfig(param)) == undefined) {
@@ -186,6 +186,21 @@ export async function checkIfConfigExists() {
     if (!fs.existsSync(settingsFile)) {
         console.log("First run of the GoofCord. Starting setup.");
         setup();
+    }
+}
+
+export async function checkIfConfigIsBroken(): Promise<void> {
+    try {
+        let rawdata = await fs.promises.readFile(getConfigLocation(), "utf-8");
+        JSON.parse(rawdata);
+    } catch (e) {
+        console.error(e);
+        console.log("Detected a corrupted config");
+        setup();
+        dialog.showErrorBox(
+            "Oops, something went wrong.",
+            "GoofCord has detected that your configuration file is corrupted, please restart the app and set your settings again. If this issue persists, report it on the support server/Github issues."
+        );
     }
 }
 

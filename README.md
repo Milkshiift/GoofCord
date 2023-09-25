@@ -49,7 +49,7 @@ GoofCord also does some clever tricks to make Discord think you are just using a
 - You can find our source code on [GitHub](https://github.com/Milkshiift/GoofCord/).
   
 ### What's the difference between ArmCord and GoofCord? 🤷‍♂️
-- GoofCord takes the minimalist approach, intentionally shedding features that most users find non-essential. Our top priority? Guarding your privacy, we are trying our best!
+- GoofCord takes the minimalist approach, intentionally shedding features that most users find non-essential. Our top priority is guarding your privacy, though there may not be much to improve. Additionally, it stands out with its unique philosophy and distinct future plans.
 
 ## Credits 🙌
 

@@ -1,8 +1,9 @@
 import {app, crashReporter, net, session} from "electron";
 import "v8-compile-cache";
 import {
-    checkConfig,
+    checkConfigForMissingParams,
     checkIfConfigExists,
+    checkIfConfigIsBroken,
     checkIfFoldersExist,
     getConfig,
     getConfigSync,
@@ -22,8 +23,12 @@ app.on("render-process-gone", (event, webContents, details) => {
     if (details.reason == "crashed") app.relaunch();
 });
 
-checkIfFoldersExist();
-checkIfConfigExists();
+async function checkConfig() {
+    await checkIfFoldersExist();
+    await checkIfConfigExists();
+    await checkIfConfigIsBroken();
+    await checkConfigForMissingParams();
+}
 checkConfig();
 
 if (!app.requestSingleInstanceLock() && getConfigSync("multiInstance") == (false ?? undefined)) app.quit();
