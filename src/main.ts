@@ -36,12 +36,15 @@ if (!app.requestSingleInstanceLock() && getConfigSync("multiInstance") == (false
 // Your data now belongs to CCP
 crashReporter.start({uploadToServer: false});
 
-const gfAutoLauncher = new AutoLaunch({name: 'GoofCord'});
-if (getConfigSync("launchWithOsBoot")) {
-    gfAutoLauncher.enable();
-} else {
-    gfAutoLauncher.disable();
+async function enableAutoLauncher() {
+    const gfAutoLauncher = new AutoLaunch({name: 'GoofCord'});
+    if (getConfigSync("launchWithOsBoot")) {
+        await gfAutoLauncher.enable();
+    } else {
+        await gfAutoLauncher.disable();
+    }
 }
+enableAutoLauncher();
 
 app.whenReady().then(async () => {
     const retry = setInterval(async () => {

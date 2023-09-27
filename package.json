@@ -1,75 +1,54 @@
 {
-    "name": "GoofCord",
-    "version": "0.8.0",
-    "description": "Take control of your Discord experience with GoofCord – the highly configurable and privacy-first discord client.",
-    "main": "ts-out/main.js",
-    "scripts": {
-        "build": "tsc && copyfiles -u 1 src/**/*.html src/**/**/*.css src/**/**/*.js ts-out/ && copyfiles package.json ts-out/ && copyfiles assets/**/** ts-out/",
-        "start": "pnpm run build && electron ./ts-out/main.js",
-        "packageLinux": "npm run build && electron-builder --linux",
-        "packageWindows64": "npm run build && electron-builder --win --x64",
-        "packageWindows32": "npm run build && electron-builder --win --ia32",
-        "packageWindows": "npm run build && npm run packageWindows64 && npm run packageWindows32"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/Milkshiift/GoofCord"
-    },
-    "author": "MilkShift",
-    "license": "OSL-3.0",
-    "bugs": {
-        "url": "https://github.com/Milkshiift/GoofCord/issues"
-    },
-    "homepage": "https://github.com/Milkshiift/GoofCord",
-    "devDependencies": {
-        "@types/auto-launch": "^5.0.2",
-        "@types/graceful-fs": "^4.1.7",
-        "@types/node": "^20.6.2",
-        "copyfiles": "^2.4.1",
-        "electron": "^26.2.1",
-        "electron-builder": "^24.6.4",
-        "typescript": "^5.2.2"
-    },
-    "dependencies": {
-        "arrpc": "file:src/arrpc",
-        "auto-launch": "^5.0.6",
-        "cross-fetch": "^4.0.0",
-        "electron-context-menu": "^3.6.1",
-        "extract-zip": "^2.0.1",
-        "graceful-fs": "^4.2.11",
-        "v8-compile-cache": "^2.4.0",
-        "ws": "^8.14.1"
-    },
-    "build": {
-        "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
-        "nsis": {
-            "include": "build/installer.nsh"
-        },
-        "appId": "com.milkshift.goofcord",
-        "productName": "GoofCord",
-        "files": [
-            "!*",
-            "assets",
-            "ts-out",
-            "!ts-out/assets",
-            "package.json",
-            "LICENSE"
-        ],
-        "linux": {
-            "icon": "build/icon.icns",
-            "category": "Network",
-            "maintainer": "milkshiftdev@gmail.com",
-            "target": [
-                "tar.gz",
-                "AppImage"
-            ]
-        },
-        "win": {
-            "icon": "build/icon.ico",
-            "target": {
-                "target": "NSIS"
-            }
-        }
-    },
-    "packageManager": "pnpm@8.7.4"
+  "name": "GoofCord",
+  "version": "0.8.0",
+  "description": "Take control of your Discord experience with GoofCord – the highly configurable and privacy-first discord client.",
+  "main": "ts-out/main.js",
+  "scripts": {
+    "build": "tsc && copyfiles -u 1 src/**/*.html src/**/**/*.css src/**/**/*.js ts-out/ && copyfiles package.json ts-out/ && copyfiles assets/**/** ts-out/",
+    "start": "electron-forge start",
+    "packageLinux": "npm run build && electron-builder --linux",
+    "packageWindows64": "npm run build && electron-builder --win --x64",
+    "packageWindows32": "npm run build && electron-builder --win --ia32",
+    "packageWindows": "npm run build && npm run packageWindows64 && npm run packageWindows32",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Milkshiift/GoofCord"
+  },
+  "author": "MilkShift",
+  "license": "OSL-3.0",
+  "bugs": {
+    "url": "https://github.com/Milkshiift/GoofCord/issues"
+  },
+  "homepage": "https://github.com/Milkshiift/GoofCord",
+  "devDependencies": {
+    "@electron-forge/cli": "^6.4.2",
+    "@electron-forge/maker-deb": "^6.4.2",
+    "@electron-forge/maker-squirrel": "^6.4.2",
+    "@electron-forge/maker-zip": "^6.4.2",
+    "@electron-forge/plugin-auto-unpack-natives": "^6.4.2",
+    "@electron-forge/plugin-fuses": "^6.4.2",
+    "@electron/fuses": "^1.6.2",
+    "@reforged/maker-appimage": "^3.3.1",
+    "@types/auto-launch": "^5.0.2",
+    "@types/graceful-fs": "^4.1.7",
+    "@types/node": "^20.6.2",
+    "copyfiles": "^2.4.1",
+    "electron": "^26.2.1",
+    "rimraf": "^5.0.4",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "arrpc": "file:src/arrpc",
+    "auto-launch": "^5.0.6",
+    "cross-fetch": "^4.0.0",
+    "electron-context-menu": "^3.6.1",
+    "extract-zip": "^2.0.1",
+    "graceful-fs": "^4.2.11",
+    "v8-compile-cache": "^2.4.0",
+    "ws": "^8.14.1"
+  },
+  "packageManager": "pnpm@8.7.4"
 }
