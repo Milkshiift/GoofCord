@@ -48,7 +48,8 @@ const config = {
       name: "@electron-forge/maker-squirrel",
       config: {
         setupIcon: iconFile+".ico",
-        noMsi: true
+        noMsi: true,
+        loadingGif: "./assetsDev/gf_install_animation.gif"
       }
     },
     {
