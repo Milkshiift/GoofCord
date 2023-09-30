@@ -7,7 +7,7 @@ const {parse} = require("querystring");
 
 const portRange = [ 6463, 6472 ]; // ports available/possible: 6463-6472
 
-export default class WSServer {
+class WSServer {
     constructor(handlers) { return (async () => {
         this.handlers = handlers;
 

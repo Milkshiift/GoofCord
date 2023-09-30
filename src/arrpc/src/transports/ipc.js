@@ -153,7 +153,7 @@ const getAvailableSocket = async (tries = 0) => {
     return getAvailableSocket(tries + 1);
 };
 
-export default class IPCServer {
+class IPCServer {
     constructor(handers) { return new Promise(async res => {
         this.handlers = handers;
 

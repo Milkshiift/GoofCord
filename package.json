@@ -5,13 +5,12 @@
   "main": "ts-out/main.js",
   "scripts": {
     "build": "tsc && copyfiles -u 1 src/**/*.html src/**/**/*.css src/**/**/*.js ts-out/ && copyfiles package.json ts-out/ && copyfiles assets/**/** ts-out/",
-    "start": "electron-forge start",
-    "packageLinux": "npm run build && electron-builder --linux",
-    "packageWindows64": "npm run build && electron-builder --win --x64",
-    "packageWindows32": "npm run build && electron-builder --win --ia32",
-    "packageWindows": "npm run build && npm run packageWindows64 && npm run packageWindows32",
-    "package": "electron-forge package",
-    "make": "electron-forge make"
+    "start": "npm run build && electron-forge start",
+    "makeLinux": "npm run build && electron-builder make --platform=linux --arch=universal",
+    "makeWindows64": "npm run build && electron-forge make --platform=win32 --arch=x64",
+    "makeWindows32": "npm run build && electron-forge make --platform=win32 --arch=ia32",
+    "makeWindows": "npm run build && npm run packageWindows64 && npm run packageWindows32",
+    "package": "electron-forge package"
   },
   "repository": {
     "type": "git",

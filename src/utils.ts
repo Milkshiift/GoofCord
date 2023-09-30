@@ -209,11 +209,11 @@ export async function checkIfFoldersExist() {
     const storagePath = path.join(userDataPath, "/storage/");
     const scriptsPath = path.join(userDataPath, "/scripts/");
 
-    if (!await fs.promises.stat(storagePath)) {
+    if (!fs.existsSync(storagePath)) {
         await fs.promises.mkdir(storagePath);
         console.log("Created missing storage folder");
     }
-    if (!await fs.promises.stat(scriptsPath)) {
+    if (!fs.existsSync(scriptsPath)) {
         await fs.promises.mkdir(scriptsPath);
         console.log("Created missing scripts folder");
     }
@@ -297,12 +297,12 @@ export async function installModLoader() {
     const distFolder = path.join(loaderFolder, 'dist');
     const bundleCssPath = path.join(distFolder, 'bundle.css');
 
-    if (!await fs.promises.stat(loaderFolder) || !await fs.promises.stat(bundleCssPath)) {
+    if (!fs.existsSync(loaderFolder) || !fs.existsSync(bundleCssPath)) {
         try {
             // Remove the existing loader folder recursively
             await fs.promises.rm(loaderFolder, {recursive: true, force: true});
 
-            if (!await fs.promises.stat(extensionFolder)) {
+            if (!fs.existsSync(extensionFolder)) {
                 await fs.promises.mkdir(extensionFolder);
                 console.log('[Mod loader] Created missing extension folder');
             }

@@ -5,7 +5,7 @@ import * as electron from "electron";
 export async function loadExtensions() {
     const userDataPath = app.getPath("userData");
     const extensionsFolder = userDataPath + "/extensions/";
-    if (!await fs.promises.stat(extensionsFolder)) {
+    if (!fs.existsSync(extensionsFolder)) {
         await fs.promises.mkdir(extensionsFolder);
         console.log("Created missing extensions folder");
     }
