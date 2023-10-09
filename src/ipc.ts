@@ -55,7 +55,7 @@ export function registerIpc() {
         createSettingsWindow();
     });
     ipcMain.on("get-user-data-path", (event) => {
-        event.returnValue = app.getPath("userData")
+        event.returnValue = app.getPath("userData");
     });
     ipcMain.handle("DESKTOP_CAPTURER_GET_SOURCES", (event, opts) => desktopCapturer.getSources(opts));
 }

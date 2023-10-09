@@ -14,12 +14,14 @@ contextBridge.exposeInMainWorld("goofcord", {
     version: ipcRenderer.sendSync("get-app-version", "app-version"),
     packageVersion: ipcRenderer.sendSync("get-package-version", "app-version"),
     userData: ipcRenderer.sendSync("get-user-data-path"),
-    openSettingsWindow: () => ipcRenderer.send("openSettingsWindow")
+    getEncryptionPassword: "TEST",
+    openSettingsWindow: () => ipcRenderer.send("openSettingsWindow"),
+    sendMessage: (message: string, channelId: string) => ipcRenderer.send("encryptMessage", message, channelId),
 });
 
 let windowCallback: (arg0: object) => void;
 contextBridge.exposeInMainWorld("GoofCordRPC", {
-    listen: (callback: any) => {
+    listen: (callback: (arg0: object) => void) => {
         windowCallback = callback;
     }
 });

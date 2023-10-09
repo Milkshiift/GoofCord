@@ -9,12 +9,12 @@ import {
     getConfigSync,
     installModLoader
 } from "./utils";
-import "./modules/mods";
+import "./modules/extensions";
 import "./tray";
 import {createCustomWindow} from "./window";
 import {checkForUpdate} from "./modules/updateCheck";
-import AutoLaunch from 'auto-launch';
-import {categorizeScripts, installGoofmod} from "./modules/scriptLoader";
+import AutoLaunch from "auto-launch";
+import {categorizeScripts} from "./modules/scriptLoader";
 import {unstrictCSP} from "./modules/extensions";
 
 setFlags();
@@ -37,11 +37,11 @@ if (!app.requestSingleInstanceLock() && getConfigSync("multiInstance") == (false
 crashReporter.start({uploadToServer: false});
 
 async function enableAutoLauncher() {
-    const gfAutoLauncher = new AutoLaunch({name: 'GoofCord'});
+    const gfAutoLaunch = new AutoLaunch({name: "GoofCord"});
     if (getConfigSync("launchWithOsBoot")) {
-        await gfAutoLauncher.enable();
+        await gfAutoLaunch.enable();
     } else {
-        await gfAutoLauncher.disable();
+        await gfAutoLaunch.disable();
     }
 }
 enableAutoLauncher();
@@ -57,7 +57,7 @@ app.whenReady().then(async () => {
 
 async function load() {
     await categorizeScripts();
-    unstrictCSP()
+    unstrictCSP();
 
     await createCustomWindow();
 
@@ -65,7 +65,7 @@ async function load() {
     if ((await getConfig("modName")) != "none") {
         await installModLoader();
     }
-    await installGoofmod();
+    //await installGoofmod();
 
     if (await getConfig("updateNotification")) {
         await checkForUpdate();
@@ -98,7 +98,7 @@ async function setFlags() {
     );
     app.commandLine.appendSwitch("enable-features", "WebRTC,VaapiVideoDecoder,VaapiVideoEncoder,WebRtcHideLocalIpsWithMdns");
     app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
-    app.commandLine.appendSwitch('webrtc-max-cpu-consumption-percentage', '100'); // For reducing screenshare stutters
+    app.commandLine.appendSwitch("webrtc-max-cpu-consumption-percentage", "100"); // For reducing screenshare stutters
 
     if (isUnix) {
         if (isWaylandNative) {
@@ -112,19 +112,19 @@ async function setFlags() {
     }
 
     const presets = {
-        performance: `--enable-gpu-rasterization --enable-zero-copy --ignore-gpu-blocklist --enable-hardware-overlays=single-fullscreen,single-on-top,underlay --enable-features=EnableDrDc,CanvasOopRasterization,BackForwardCache:TimeToLiveInBackForwardCacheInSeconds/300/should_ignore_blocklists/true/enable_same_site/true,ThrottleDisplayNoneAndVisibilityHiddenCrossOriginIframes,UseSkiaRenderer,WebAssemblyLazyCompilation --disable-features=Vulkan --force_high_performance_gpu`, // Performance
+        performance: "--enable-gpu-rasterization --enable-zero-copy --ignore-gpu-blocklist --enable-hardware-overlays=single-fullscreen,single-on-top,underlay --enable-features=EnableDrDc,CanvasOopRasterization,BackForwardCache:TimeToLiveInBackForwardCacheInSeconds/300/should_ignore_blocklists/true/enable_same_site/true,ThrottleDisplayNoneAndVisibilityHiddenCrossOriginIframes,UseSkiaRenderer,WebAssemblyLazyCompilation --disable-features=Vulkan --force_high_performance_gpu", // Performance
         battery: "--enable-features=TurnOffStreamingMediaCachingOnBattery --force_low_power_gpu" // Known to have better battery life for Chromium?
     };
     switch (await getConfig("prfmMode")) {
-        case "performance":
-            console.log("Performance mode enabled");
-            app.commandLine.appendSwitch(presets.performance);
-            break;
-        case "battery":
-            console.log("Battery mode enabled");
-            app.commandLine.appendSwitch(presets.battery);
-            break;
-        default:
-            console.log("No performance modes set");
+    case "performance":
+        console.log("Performance mode enabled");
+        app.commandLine.appendSwitch(presets.performance);
+        break;
+    case "battery":
+        console.log("Battery mode enabled");
+        app.commandLine.appendSwitch(presets.battery);
+        break;
+    default:
+        console.log("No performance modes set");
     }
 }

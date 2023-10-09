@@ -2,9 +2,12 @@ import {app, BrowserWindow, clipboard, Menu} from "electron";
 import {mainWindow} from "./window";
 import {createSettingsWindow} from "./settings/main";
 
-function paste(contents: any) {
+interface Pasteable {
+    paste(): void;
+}
+function paste(contents: Pasteable) {
     const contentTypes = clipboard.availableFormats().toString();
-    //Workaround: fix pasting the images.
+    // Workaround: fix pasting the images.
     if (contentTypes.includes("image/") && contentTypes.includes("text/html")) {
         clipboard.writeImage(clipboard.readImage());
     }
@@ -44,7 +47,8 @@ export async function setMenu() {
                     accelerator: "Shift+Ctrl+R",
                     click: async function () {
                         app.relaunch();
-                        app.exit(0);
+                        const EXIT_CODE = 0;
+                        app.exit(EXIT_CODE);
                     }
                 },
                 {

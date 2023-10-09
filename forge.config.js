@@ -5,9 +5,9 @@
 const { FusesPlugin } = require('@electron-forge/plugin-fuses');
 const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 
-const rimraf = require("rimraf");
 const {join} = require("path");
 const {readdirSync, unlinkSync} = require("graceful-fs");
+const fs = require("graceful-fs");
 
 // Global variables in the config:
 const iconFile = "./build/icon";
@@ -104,7 +104,7 @@ const config = {
       readdirSync(buildPath).filter((item) => {
         return appItems.indexOf(item) === -1
       }).forEach((item) => {
-        rimraf.sync(join(buildPath, item));
+        fs.promises.rm(join(buildPath, item), {recursive: true, force: true});
       });
     },
 

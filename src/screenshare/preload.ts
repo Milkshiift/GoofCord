@@ -11,6 +11,7 @@ async function addDisplays() {
         const sources: IPCSources[] = arg;
         console.log(sources);
         const selectionElem = document.createElement("div");
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         selectionElem.classList = ["desktop-capturer-selection"];
         selectionElem.innerHTML = `
@@ -23,8 +24,8 @@ async function addDisplays() {
 <div class="desktop-capturer-selection__scroller">
     <ul class="desktop-capturer-selection__list">
       ${sources
-            .map(
-                ({id, name, thumbnail}) => `
+        .map(
+            ({id, name, thumbnail}) => `
         <li class="desktop-capturer-selection__item">
           <button class="desktop-capturer-selection__btn" data-id="${id}" title="${name}">
             <img class="desktop-capturer-selection__thumbnail" src="${thumbnail.toDataURL()}"  alt="${name}"/>
@@ -32,8 +33,8 @@ async function addDisplays() {
           </button>
         </li>
       `
-            )
-            .join("")}
+        )
+        .join("")}
     </ul>
     </div>
     <div class="checkbox-container">

@@ -4,12 +4,11 @@ import {registerIpc} from "./ipc";
 import {setMenu} from "./menu";
 import * as fs from "graceful-fs";
 import contextMenu from "electron-context-menu";
-import {tray} from "./tray";
+import { tray } from "./tray";
 import {loadExtensions} from "./modules/extensions";
 import {getUserAgent} from "./modules/agent";
 import * as path from "path";
 import {initializeFirewall} from "./modules/firewall";
-import {installGoofmod, loadScripts} from "./modules/scriptLoader";
 
 export let mainWindow: BrowserWindow;
 contextMenu({
@@ -21,16 +20,16 @@ contextMenu({
             label: "Search with Google",
             // Only show it when right-clicking text
             visible: parameters.selectionText.trim().length > 0,
-            click: () => {
-                shell.openExternal(`https://google.com/search?q=${encodeURIComponent(parameters.selectionText)}`);
+            click: async () => {
+                await shell.openExternal(`https://google.com/search?q=${encodeURIComponent(parameters.selectionText)}`);
             }
         },
         {
             label: "Search with DuckDuckGo",
             // Only show it when right-clicking text
             visible: parameters.selectionText.trim().length > 0,
-            click: () => {
-                shell.openExternal(`https://duckduckgo.com/?q=${encodeURIComponent(parameters.selectionText)}`);
+            click: async () => {
+                await shell.openExternal(`https://duckduckgo.com/?q=${encodeURIComponent(parameters.selectionText)}`);
             }
         }
     ]
@@ -71,7 +70,7 @@ async function doAfterDefiningTheWindow() {
     // Handle the "page-favicon-updated" event, which updates the app's tray icon based on the website's favicon.
     mainWindow.webContents.on("page-favicon-updated", async () => {
         // Extract the favicon URL from the web page and update the tray icon.
-        const faviconBase64 = await mainWindow.webContents.executeJavaScript(`
+        const FAVICON_BASE_64 = await mainWindow.webContents.executeJavaScript(`
             var getFavicon = () => {
                 let favicon = undefined;
                 const nodeList = document.getElementsByTagName("link");
@@ -85,22 +84,24 @@ async function doAfterDefiningTheWindow() {
             getFavicon();
         `);
 
-        const buf = Buffer.alloc(
-            Buffer.byteLength(faviconBase64.replace(/^data:image\/\w+;base64,/, ""), "base64"),
-            faviconBase64.replace(/^data:image\/\w+;base64,/, ""),
+        const buffer = Buffer.alloc(
+            Buffer.byteLength(FAVICON_BASE_64.replace(/^data:image\/\w+;base64,/, ""), "base64"),
+            FAVICON_BASE_64.replace(/^data:image\/\w+;base64,/, ""),
             "base64"
         );
 
-        await fs.promises.writeFile(path.join(app.getPath("temp"), "tray.png"), buf, "utf-8");
+        await fs.promises.writeFile(path.join(app.getPath("temp"), "tray.png"), buffer, "utf-8");
 
         const trayPath = nativeImage.createFromPath(path.join(app.getPath("temp"), "tray.png"));
 
         if (await getConfig("dynamicIcon") == true) mainWindow.setIcon(trayPath);
 
         // Additionally, handle icon resizing based on the platform.
-        if (process.platform === "darwin" && trayPath.getSize().height > 22) trayPath.resize({height: 22});
+        const ICON_SIZE_DARWIN = 22;
+        if (process.platform === "darwin" && trayPath.getSize().height > ICON_SIZE_DARWIN) trayPath.resize({height: ICON_SIZE_DARWIN});
 
-        if (process.platform === "win32" && trayPath.getSize().height > 32) trayPath.resize({height: 32});
+        const ICON_SIZE_WINDOWS = 32;
+        if (process.platform === "win32" && trayPath.getSize().height > ICON_SIZE_WINDOWS) trayPath.resize({height: ICON_SIZE_WINDOWS});
 
         // Finally, set the updated tray image.
         tray.setImage(trayPath);
@@ -125,6 +126,7 @@ async function doAfterDefiningTheWindow() {
         mainWindow.webContents.executeJavaScript(`document.body.setAttribute("${attribute}", "${value}");`);
     };
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     if (await getConfig("arrpc")) import("arrpc");
 
@@ -138,10 +140,10 @@ async function doAfterDefiningTheWindow() {
     // Load an initial empty HTML file into the mainWindow.
     // Then, replace the window location with the configured Discord URL.
     await mainWindow.loadURL("data:text/html,");
-    const disUrl = await getConfig("discordUrl");
-    await mainWindow.webContents.executeJavaScript(`window.location.replace("${disUrl}");`).then(async () => {
+    const DISCORD_URL = await getConfig("discordUrl");
+    await mainWindow.webContents.executeJavaScript(`window.location.replace("${DISCORD_URL}");`).then(async () => {
         // If a user chose any mods, load them.
-        if ((await getConfig("modName")) != "none") loadExtensions();
+        if ((await getConfig("modName")) != "none") await loadExtensions();
 
         // Disable logging using Sentry logger. There is a chance that this is useless.
         await mainWindow.webContents.executeJavaScript(`

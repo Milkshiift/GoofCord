@@ -11,7 +11,7 @@ const storagePath = path.join(userDataPath, "/storage/");
 const scriptsPath = path.join(userDataPath, "/scripts/");
 const extensionsPath = path.join(userDataPath, "/extensions/");
 
-export function createSettingsWindow() {
+export async function createSettingsWindow() {
     console.log("Creating a settings window.");
     instance = instance + 1;
     if (instance > 1) {
@@ -38,10 +38,6 @@ export function createSettingsWindow() {
             }
         });
 
-        async function settingsLoadPage() {
-            await settingsWindow.loadURL(`file://${__dirname}/settings.html`);
-        }
-
         ipcMain.on("saveSettings", (event, args: Settings) => {
             console.log(args);
             setConfigBulk(args);
@@ -65,7 +61,7 @@ export function createSettingsWindow() {
             return getConfig(toGet);
         });
         ipcMain.on("copyDebugInfo", async () => {
-            let settingsFileContent = await fs.promises.readFile(getConfigLocation(), "utf-8");
+            const settingsFileContent = await fs.promises.readFile(getConfigLocation(), "utf-8");
             clipboard.writeText(
                 "**OS:** " +
                 os.platform() +
@@ -86,11 +82,15 @@ export function createSettingsWindow() {
             shell.openExternal(url);
             return {action: "deny"};
         });
-        settingsLoadPage();
+        await settingsLoadPage();
         settingsWindow.on("close", () => {
             ipcMain.removeHandler("getSetting");
             ipcMain.removeAllListeners("saveSettings");
             instance = 0;
         });
     }
+}
+
+async function settingsLoadPage() {
+    await settingsWindow.loadURL(`file://${__dirname}/settings.html`);
 }

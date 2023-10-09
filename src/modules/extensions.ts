@@ -21,7 +21,7 @@ export async function loadExtensions() {
     }
 }
 
-export const unstrictCSP = () => {
+export function unstrictCSP() {
     console.log("Setting up CSP unstricter...");
 
     electron.session.defaultSession.webRequest.onHeadersReceived(({responseHeaders, resourceType}, done) => {
@@ -36,4 +36,4 @@ export const unstrictCSP = () => {
         }
         done({responseHeaders});
     });
-};
+}

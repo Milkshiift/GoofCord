@@ -1,6 +1,6 @@
 import path from "path";
 import {app, ipcMain, ipcRenderer} from "electron";
-import {addScript, fetchWithTimeout, streamPipeline} from "../utils";
+import {addScript, fetchWithTimeout, sreamPipeline} from "../utils";
 import {error, log} from "./logger";
 import extract from "extract-zip";
 import fs from "graceful-fs";
@@ -16,7 +16,7 @@ export async function categorizeScripts() {
     const files = await fs.promises.readdir(scriptsPath);
 
     for (const file of files) {
-        if (!file.endsWith('.js')) continue;
+        if (!file.endsWith(".js")) continue;
         try {
             if (file.includes("BL")) {
                 beforeLoadScripts.push(file);
@@ -33,16 +33,16 @@ export async function categorizeScripts() {
 
 // GoofMod installer. Runs from main.ts
 export async function installGoofmod() {
-    const scriptsFolder = path.join(app.getPath('userData'), 'scripts/');
-    const zipPath = path.join(app.getPath('temp'), 'goofmod.zip');
+    const scriptsFolder = path.join(app.getPath("userData"), "scripts/");
+    const zipPath = path.join(app.getPath("temp"), "goofmod.zip");
 
     try {
-        const goofmodZip = await fetchWithTimeout('https://github.com/Milkshiift/GoofMod/releases/download/Build/goofmod.zip');
-        await streamPipeline(goofmodZip.body, fs.createWriteStream(zipPath));
+        const goofmodZip = await fetchWithTimeout("https://github.com/Milkshiift/GoofMod/releases/download/Build/goofmod.zip");
+        await sreamPipeline(goofmodZip.body, fs.createWriteStream(zipPath));
         await extract(zipPath, {dir: scriptsFolder});
         console.log("[Script Loader] Successfully installed GoofMod");
     } catch (error) {
-        console.error('[Script Loader] Failed to install GoofMod');
+        console.error("[Script Loader] Failed to install GoofMod");
         console.error(error);
     }
 }
@@ -81,9 +81,10 @@ export async function loadScripts(scriptType: boolean) { // false: BL true: AL
 function parseScriptInfo(scriptContent: string) {
     const scriptInfo = { name: "", version: "" };
     let linesProcessed = 0;
+    const MAX_LINES = 10;
 
-    for (const line of scriptContent.split('\n')) {
-        if (linesProcessed >= 10) break; // Only parse the first N lines
+    for (const line of scriptContent.split("\n")) {
+        if (linesProcessed >= MAX_LINES) break; // Only parse the first N lines
 
         const match = line.match(/^\s*\*\s*@(\w+)\s+(.*)/);
         if (match) {

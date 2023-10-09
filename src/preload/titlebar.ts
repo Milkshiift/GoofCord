@@ -1,11 +1,11 @@
-import {ipcRenderer} from 'electron';
-import {addStyle} from '../utils';
-import * as fs from 'graceful-fs';
-import * as path from 'path';
-import os from 'os';
+import {ipcRenderer} from "electron";
+import {addStyle} from "../utils";
+import * as fs from "graceful-fs";
+import * as path from "path";
+import os from "os";
 
 function createTitlebar() {
-    const titlebar = document.createElement('div');
+    const titlebar = document.createElement("div");
     titlebar.innerHTML = `
     <nav class="titlebar">
       <div class="window-title" id="window-title"></div>
@@ -17,69 +17,57 @@ function createTitlebar() {
       </div>
     </nav>
   `;
-    titlebar.classList.add('withFrame-haYltI');
+    titlebar.classList.add("withFrame-haYltI");
     return titlebar;
 }
 
 function attachTitlebarEvents() {
-    const titlebar = document.querySelector('.titlebar');
+    const titlebar = document.querySelector(".titlebar");
     if (!titlebar) return;
 
-    const minimize = titlebar.querySelector('#minimize')!;
-    const maximize = titlebar.querySelector('#maximize')!;
-    const quit = titlebar.querySelector('#quit')!;
+    const minimize = titlebar.querySelector("#minimize")!;
+    const maximize = titlebar.querySelector("#maximize")!;
+    const quit = titlebar.querySelector("#quit")!;
 
-    minimize.addEventListener('click', () => {
-        ipcRenderer.send('win-minimize');
+    minimize.addEventListener("click", () => {
+        ipcRenderer.send("win-minimize");
     });
 
-    maximize.addEventListener('click', () => {
-        const isMaximized = ipcRenderer.sendSync('win-isMaximized');
+    maximize.addEventListener("click", () => {
+        const isMaximized = ipcRenderer.sendSync("win-isMaximized");
         if (isMaximized) {
-            ipcRenderer.send('win-unmaximize');
-            document.body.removeAttribute('isMaximized');
+            ipcRenderer.send("win-unmaximize");
+            document.body.removeAttribute("isMaximized");
         } else {
-            ipcRenderer.send('win-maximize');
+            ipcRenderer.send("win-maximize");
         }
     });
 
-    quit.addEventListener('click', () => {
-        const minimizeToTray = ipcRenderer.sendSync('minimizeToTray');
+    quit.addEventListener("click", () => {
+        const minimizeToTray = ipcRenderer.sendSync("minimizeToTray");
         if (minimizeToTray) {
-            ipcRenderer.send('win-hide');
+            ipcRenderer.send("win-hide");
         } else {
-            ipcRenderer.send('win-quit');
+            ipcRenderer.send("win-quit");
         }
     });
 }
 
 export function injectTitlebar() {
-    document.addEventListener('DOMContentLoaded', async () => {
+    document.addEventListener("DOMContentLoaded", async () => {
         const titlebar = createTitlebar();
-        const appMount = document.getElementById('app-mount');
+        const appMount = document.getElementById("app-mount");
         if (appMount) {
             appMount.prepend(titlebar);
         } else {
             document.body.appendChild(titlebar);
         }
 
-        const titlebarcssPath = path.join(__dirname, '../', '/content/css/titlebar.css');
-        addStyle(await fs.promises.readFile(titlebarcssPath, 'utf8'));
-        document.body.setAttribute('customTitlebar', '');
-        document.body.setAttribute('goofcord-platform', os.platform());
+        const titlebarcssPath = path.join(__dirname, "../", "/content/css/titlebar.css");
+        addStyle(await fs.promises.readFile(titlebarcssPath, "utf8"));
+        document.body.setAttribute("customTitlebar", "");
+        document.body.setAttribute("goofcord-platform", os.platform());
 
         attachTitlebarEvents();
     });
-}
-
-export function fixTitlebar() {
-    const titlebar = createTitlebar();
-    const appMount = document.getElementById('app-mount');
-    if (appMount) {
-        appMount.prepend(titlebar);
-    } else {
-        document.body.appendChild(titlebar);
-    }
-
-    attachTitlebarEvents();
 }

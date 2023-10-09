@@ -3,7 +3,7 @@ import {ipcRenderer} from "electron";
 import * as fs from "graceful-fs";
 import * as path from "path";
 import {addScript, addStyle} from "../utils";
-import {fixTitlebar, injectTitlebar} from "./titlebar";
+import {injectTitlebar} from "./titlebar";
 import {loadScripts} from "../modules/scriptLoader";
 import {log} from "../modules/logger";
 
@@ -20,7 +20,7 @@ const version = ipcRenderer.sendSync("displayVersion");
 
 const waitForButton = setInterval(async () => {
     // Waiting until settings button appears, also useful for detecting when the splash is over
-    let settingsButton = document.querySelector('[aria-label="User Settings"]');
+    const settingsButton = document.querySelector("[aria-label=\"User Settings\"]");
     if (settingsButton) {
         clearInterval(waitForButton);
 
@@ -43,9 +43,9 @@ function injectInSettings() {
             clearInterval(waitForSidebar);
 
             // Finding elements to clone
-            let header = document.querySelectorAll("div > [class*=header-]")!;
-            let button = document.querySelectorAll("div > [class*=item-]")!;
-            let separator = document.querySelectorAll("div > [class*=separator-]")!;
+            const header = document.querySelectorAll("div > [class*=header-]")!;
+            const button = document.querySelectorAll("div > [class*=item-]")!;
+            const separator = document.querySelectorAll("div > [class*=separator-]")!;
             // Cloning and modifying parameters
             const headerClone = header[header.length - 1].cloneNode(true) as HTMLElement;
             headerClone.children[0].innerHTML = "GoofCord";
@@ -91,11 +91,4 @@ async function injectAfterSplash() {
     addScript(await fs.promises.readFile(path.join(__dirname, "../", "/content/js/rpc.js"), "utf8"));
     const cssPath = path.join(__dirname, "../", "/content/css/discord.css");
     addStyle(await fs.promises.readFile(cssPath, "utf8"));
-
-    if (document.getElementById("window-controls-container") == null) {
-        console.warn("Titlebar didn't inject, retrying...");
-        if (ipcRenderer.sendSync("titlebar")) {
-            fixTitlebar();
-        }
-    }
 }

@@ -29,7 +29,7 @@ function registerCustomHandler() {
                 }
             });
             capturerWindow.maximize();
-            ipcMain.once("selectScreenshareSource", (event, id, name, audio, close) => {
+            ipcMain.once("selectScreenshareSource", (event, id, name, audio) => {
                 capturerWindow.close();
 
                 const result = {id, name, width: 9999, height: 9999};
