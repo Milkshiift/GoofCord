@@ -73,8 +73,7 @@ html {
 }
 
 .desktop-capturer-selection__btn:hover .desktop-capturer-selection__thumbnail {
-    outline: solid 3px;
-    outline-color: #5865f2;
+    outline: #5865f2 solid 3px;
     transition: outline-color .3s;
 }
 
@@ -153,7 +152,7 @@ input[type="checkbox"]:hover {
     align-items: center;
     justify-content: center;
     gap: 5px;
-    padding: 21px 0px 21px;
+    padding: 21px 0 21px;
     background-color: #2b2d31;
     border-radius: 0 0 4px 4px;
 }

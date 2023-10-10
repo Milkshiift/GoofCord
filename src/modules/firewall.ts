@@ -13,7 +13,7 @@ export async function initializeFirewall() {
     );
 
     /* If request url includes any of those, it is blocked.
-        * By doing so we can match multiple unwanted URLs, making the blocklist cleaner and more efficient */
+        * By doing so, we can match multiple unwanted URLs, making the blocklist cleaner and more efficient */
     const blockedStrings = [
         "sentry",
         "google",
@@ -26,7 +26,7 @@ export async function initializeFirewall() {
     const blockRegex = new RegExp(blockedStrings.join("|"), "i"); // 'i' flag for case-insensitive matching
 
     const allowedStrings = [
-        "googlevideo", // For youtube playback
+        "googlevideo", // For YouTube playback
         "discord-attachments",
         "login", // For discord login
         "googleapis" // For discord activities

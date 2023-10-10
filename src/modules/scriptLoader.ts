@@ -59,7 +59,7 @@ function sendScriptArraysToRenderer() {
 
 // ----------------- RENDERER -----------------
 
-// Function to load scripts from the specified array (either BL or AL). Runs from renderer process (preload.ts)
+// Function to load scripts from the specified array (either BL or AL). Runs from a renderer process (preload.ts)
 export async function loadScripts(scriptType: boolean) { // false: BL true: AL
     // Request script arrays from the main process
     const {afterLoadScripts, beforeLoadScripts } = await ipcRenderer.invoke("get-script-arrays");

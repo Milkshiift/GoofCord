@@ -61,7 +61,7 @@ async function load() {
 
     await createCustomWindow();
 
-    // Install mods after creating custom window for faster start up
+    // Install mods after creating a custom window for faster start-up
     if ((await getConfig("modName")) != "none") {
         await installModLoader();
     }
