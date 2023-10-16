@@ -90,12 +90,14 @@ export interface Settings {
     multiInstance: boolean;
     launchWithOsBoot: boolean;
     arrpc: boolean;
+    scriptLoading: boolean;
+    autoUpdateDefaultScripts: boolean;
     discordUrl: string;
     modName: string;
     prfmMode: string;
+    blocklist: string[];
     customJsBundle: RequestInfo | URL;
     customCssBundle: RequestInfo | URL;
-    blocklist: string[];
 
     [key: string]: unknown;
 }
@@ -109,6 +111,8 @@ const DEFAULTS: Settings = {
     multiInstance: false,
     launchWithOsBoot: false,
     arrpc: false,
+    scriptLoading: true,
+    autoUpdateDefaultScripts: true,
     modName: "vencord",
     prfmMode: "none",
     discordUrl: "https://canary.discord.com/app",

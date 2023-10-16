@@ -1,6 +1,6 @@
 import path from "path";
 import {app, ipcMain, ipcRenderer} from "electron";
-import {addScript, fetchWithTimeout, streamPipeline} from "../utils";
+import {addScript, fetchWithTimeout, getConfig, streamPipeline} from "../utils";
 import {error, log} from "./logger";
 import extract from "extract-zip";
 import fs from "graceful-fs";
@@ -33,6 +33,8 @@ export async function categorizeScripts() {
 
 // GoofMod installer. Runs from main.ts
 export async function installDefaultScripts() {
+    if (await getConfig("autoUpdateDefaultScripts") === false) return;
+
     const scriptsFolder = path.join(app.getPath("userData"), "scripts/");
     const zipPath = path.join(app.getPath("temp"), "defaultScripts.zip");
     try {
@@ -60,6 +62,8 @@ function sendScriptArraysToRenderer() {
 
 // Function to load scripts from the specified array (either BL or AL). Runs from a renderer process (preload.ts)
 export async function loadScripts(scriptType: boolean) { // false: BL true: AL
+    if (await getConfig("scriptLoading") === false) return;
+
     // Request script arrays from the main process
     const { afterLoadScripts, beforeLoadScripts } = await ipcRenderer.invoke("get-script-arrays");
 

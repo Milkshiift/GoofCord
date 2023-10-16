@@ -154,6 +154,28 @@
     </fieldset>
 </form>
 
+<h2>Script loader settings</h2>
+<form class="settingsContainer">
+    <fieldset>
+        <div class="checkbox-container">
+            <input data-setting="scriptLoading" id="scriptLoading" type="checkbox"/>
+            <label for="scriptLoading">Script loading</label>
+        </div>
+        <p class="description">
+            Enables script loader.
+        </p>
+    </fieldset>
+    <fieldset>
+        <div class="checkbox-container">
+            <input data-setting="autoUpdateDefaultScripts" id="autoUpdateDefaultScripts" type="checkbox"/>
+            <label for="autoUpdateDefaultScripts">Auto-update default scripts</label>
+        </div>
+        <p class="description">
+            Enables auto-update for the <a target="_blank" href="https://github.com/Milkshiift/GoofCord-Scripts">default GoofCord scripts</a>.
+        </p>
+    </fieldset>
+</form>
+
 <fieldset>
     <button class="center" data-open="Extensions" data-string="settings-extensionsFolder">Open extensions folder</button>
     <button class="center" data-open="Scripts" data-string="settings-scriptsFolder">Open scripts folder</button>
@@ -177,62 +199,71 @@
 </fieldset>
 </body>
 <script>
-    const elements = document.querySelectorAll("[data-setting]");
-    elements.forEach(async (e) => {
-        const value = await settings.get(e.dataset.setting);
-        console.log(typeof value);
-        let type = typeof value;
-        if (type === "boolean") {
-            if (e.tagName === "SELECT") {
-                e.value = value;
-                if (value === 'custom') {
-                    document.getElementById('customMod').style.display = 'block';
-                }
-            } else e.checked = value;
-        } else if (type === "object") {
-            e.value = value.join(",\n");
-        } else if (type === "string") {
-            e.value = value;
+    async function updateSettings() {
+        const elements = document.querySelectorAll("[data-setting]");
+        for (const e of elements) {
+            try {
+                const value = await settings.get(e.dataset.setting);
+                handleSettingElement(e, value);
+            } catch (error) {
+                console.error(`Error fetching setting for element with dataset setting: ${e.dataset.setting}`, error);
+            }
         }
+    }
+
+    function handleSettingElement(element, value) {
+        const type = typeof value;
+        if (type === "boolean") {
+            if (element.tagName === "SELECT") {
+                element.value = value;
+                toggleCustomModDisplay(value);
+            } else {
+                element.checked = value;
+            }
+        } else if (type === "object") {
+            element.value = value.join(",\n");
+        } else if (type === "string") {
+            element.value = value;
+        }
+    }
+
+    function toggleCustomModDisplay(value) {
+        const customMod = document.getElementById('customMod');
+        customMod.style.display = value === 'custom' ? 'block' : 'none';
+    }
+
+    document.querySelectorAll("[data-open]").forEach((e) => {
+        e.addEventListener("click", settings[`open${e.dataset.open}Folder`]);
     });
 
+    const elements = document.querySelectorAll("[data-setting]");
     elements.forEach((element) => {
         element.addEventListener("change", () => {
             saveSettings();
             if (element.name === "modName") {
-                console.log(element.name)
-                if (element.value === 'custom') {
-                    document.getElementById('customMod').style.display = 'block';
-                } else {
-                    document.getElementById('customMod').style.display = 'none';
-                }
+                toggleCustomModDisplay(element.value);
             }
         });
     });
 
     function saveSettings() {
         const elements = Array.from(document.querySelectorAll("[data-setting]"));
-        let obj = Object.fromEntries(
+        const obj = Object.fromEntries(
             elements.map((e) => [e.dataset.setting, e.tagName === "SELECT" || e.type === "text" ? e.value : e.checked])
         );
-        obj = {
-            ...obj, // Add the other settings to the object
-            blocklist: createUrlArray() // Add the blocklist to the object
-        };
+        obj.blocklist = createUrlArray();
         console.log(obj);
         settings.save(obj);
     }
 
-    function createUrlArray() { // TODO: Make expandable
-        let urlInput = document.querySelectorAll('[data-setting="blocklist"]')[0].value.replace(/\s/g, ''); // Remove all whitespace from input
-        if (urlInput.endsWith(",")) { // Check if input ends with a comma
-            urlInput = urlInput.slice(0, -1); // Remove the comma from the end of the input
+    function createUrlArray() {
+        let urlInput = document.querySelectorAll('[data-setting="blocklist"]')[0].value.replace(/\s/g, '');
+        if (urlInput.endsWith(",")) {
+            urlInput = urlInput.slice(0, -1);
         }
         return urlInput.split(",");
     }
 
-    document.querySelectorAll("[data-open]").forEach((e) => {
-        e.addEventListener("click", settings[`open${e.dataset.open}Folder`]);
-    });
+    updateSettings();
 </script>
 </html>

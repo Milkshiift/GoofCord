@@ -1,6 +1,9 @@
 import {afterLoadScripts, beforeLoadScripts} from "./scriptLoader";
+import {getConfig} from "../utils";
 
 export async function patchVencord(bundle: string) {
+    if (await getConfig("scriptLoading") === false) return bundle;
+
     console.log("[Mod loader] Patching Vencord");
 
     const patches = getPatchesFromScripts();

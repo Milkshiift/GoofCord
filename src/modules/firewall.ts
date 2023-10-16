@@ -29,7 +29,8 @@ export async function initializeFirewall() {
         "googlevideo", // For YouTube playback
         "discord-attachments",
         "login", // For discord login
-        "googleapis" // For discord activities
+        "googleapis", // For discord activities
+        "search",
     ];
     const allowRegex = new RegExp(allowedStrings.join("|"), "i");
 
