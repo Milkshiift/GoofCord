@@ -14,7 +14,7 @@ import "./tray";
 import {createCustomWindow} from "./window";
 import {checkForUpdate} from "./modules/updateCheck";
 import AutoLaunch from "auto-launch";
-import {categorizeScripts} from "./modules/scriptLoader";
+import {categorizeScripts, installDefaultScripts} from "./modules/scriptLoader";
 import {unstrictCSP} from "./modules/extensions";
 
 setFlags();
@@ -59,13 +59,12 @@ async function load() {
     await categorizeScripts();
     unstrictCSP();
 
-    await createCustomWindow();
-
-    // Install mods after creating a custom window for faster start-up
+    await installDefaultScripts();
     if ((await getConfig("modName")) != "none") {
         await installModLoader();
     }
-    //await installGoofmod();
+
+    await createCustomWindow();
 
     if (await getConfig("updateNotification")) {
         await checkForUpdate();

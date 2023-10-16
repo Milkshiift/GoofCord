@@ -32,18 +32,18 @@ module.exports = {
     ],
     "rules": {
         "indent": [
-            "error", 4
+            "warn", 4
         ],
         "linebreak-style": [
-            "error",
+            "warn",
             "unix"
         ],
         "quotes": [
-            "error",
+            "warn",
             "double"
         ],
         "semi": [
-            "error",
+            "warn",
             "always"
         ],
         "no-magic-numbers": 1

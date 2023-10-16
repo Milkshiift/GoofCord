@@ -4,15 +4,16 @@ import path from "path";
 import {fetch} from "cross-fetch";
 import extract from "extract-zip";
 import util from "util";
+import {patchVencord} from "./modules/vencordPatcher";
 
 //Get the version value from the "package.json" file
-import {version as packageVersion} from "../package.json";
-export { packageVersion };
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+export const packageVersion = require("../package.json").version;
 
 // For some reason, using "import" results in error "TS2769: No overload matches this call"
 // I couldn't find a fix, so we are suppressing the eslint error
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-export const sreamPipeline = util.promisify(require("stream").pipeline);
+export const streamPipeline = util.promisify(require("stream").pipeline);
 
 //utility functions that are used all over the codebase or just too obscure to be put in the file used in
 export function addStyle(styleString: string) {
@@ -246,7 +247,13 @@ async function downloadAndWriteBundle(url: string, filePath: string) {
         if (!response.ok) {
             throw new Error(`Unexpected response: ${response.statusText}`);
         }
-        const bundle = await response.text();
+        let bundle = await response.text();
+
+        const modName: keyof typeof MOD_BUNDLE_URLS = await getConfig("modName");
+        if (modName === "vencord" && !url.endsWith(".css")) {
+            bundle = await patchVencord(bundle);
+        }
+
         await fs.promises.writeFile(filePath, bundle, "utf-8");
     } catch (error) {
         console.error(error);
@@ -261,13 +268,11 @@ async function updateModBundle() {
     }
 
     try {
-        console.log("Downloading mod bundle");
+        console.log("[Mod loader] Downloading mod bundle");
         const distFolder = path.join(app.getPath("userData"), "extensions/loader/dist/");
         await fs.promises.mkdir(distFolder, {recursive: true});
 
-        // Provide a type annotation for MOD_NAME
         const modName: keyof typeof MOD_BUNDLE_URLS = await getConfig("modName");
-
         if (modName === "custom") {
             MOD_BUNDLE_URLS.custom = await getConfig("customJsBundle");
             MOD_BUNDLE_CSS_URLS.custom = await getConfig("customCssBundle");
@@ -276,7 +281,7 @@ async function updateModBundle() {
         await downloadAndWriteBundle(MOD_BUNDLE_URLS[modName], path.join(distFolder, "bundle.js"));
         await downloadAndWriteBundle(MOD_BUNDLE_CSS_URLS[modName], path.join(distFolder, "bundle.css"));
 
-        console.log("Mod bundle updated");
+        console.log("[Mod loader] Mod bundle updated");
     } catch (error) {
         console.error("[Mod loader] Failed to install mods");
         console.error(error);
@@ -308,7 +313,7 @@ export async function installModLoader() {
 
             if (!loaderZip.ok) throw new Error(`Unexpected response: ${loaderZip.statusText}`);
 
-            await sreamPipeline(loaderZip.body, fs.createWriteStream(zipPath));
+            await streamPipeline(loaderZip.body, fs.createWriteStream(zipPath));
             await extract(zipPath, {dir: path.join(app.getPath("userData"), "extensions")});
             await updateModBundle();
             import("./modules/extensions");

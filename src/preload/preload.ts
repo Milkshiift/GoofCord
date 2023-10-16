@@ -16,7 +16,15 @@ if (ipcRenderer.sendSync("titlebar")) {
 }
 const version = ipcRenderer.sendSync("displayVersion");
 
-(async () => {await loadScripts(false);})(); // I want my top level awaits
+async function loadScriptsWithCheck() {
+    // For some AWFUL reason, preload is called before document.body is accessible
+    // So we wait until it's not null
+    while (document.body === null) {
+        await new Promise(resolve => setTimeout(resolve, 10));
+    }
+    await loadScripts(false);
+}
+loadScriptsWithCheck();
 
 const waitForButton = setInterval(async () => {
     // Waiting until settings button appears, also useful for detecting when the splash is over
