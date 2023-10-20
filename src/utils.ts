@@ -1,5 +1,5 @@
 import * as fs from "graceful-fs";
-import {app, dialog} from "electron";
+import {app, dialog, ipcMain, ipcRenderer} from "electron";
 import path from "path";
 import {fetch} from "cross-fetch";
 import extract from "extract-zip";
@@ -149,7 +149,13 @@ export async function checkConfigForMissingParams() {
 }
 
 export function getConfigLocation(): string {
-    const userDataPath = app.getPath("userData");
+    let userDataPath;
+    if (process.type === "renderer") {
+        userDataPath = ipcRenderer.sendSync("get-user-data-path");
+    }
+    else {
+        userDataPath = app.getPath("userData");
+    }
     const storagePath = path.join(userDataPath, "/storage/");
     return `${storagePath}settings.json`;
 }

@@ -85,8 +85,6 @@ async function setFlags() {
             process.argv.includes("--ozone-hint=auto") ||
             process.argv.includes("--ozone-hint=wayland"));
 
-    // WinRetrieveSuggestionsOnlyOnDemand:
-    // HardwareMediaKeyHandling,MediaSessionService:
     app.commandLine.appendSwitch("disable-features", "" +
         "OutOfBlinkCors," +
         "UseChromeOSDirectVideoDecoder," +

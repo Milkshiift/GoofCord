@@ -6,24 +6,34 @@ import extract from "extract-zip";
 import fs from "graceful-fs";
 
 // ----------------- MAIN -----------------
-export const beforeLoadScripts: string[][] = [];
-export const afterLoadScripts: string[][] = [];
+export const scriptCategories = {
+    beforeLoadScripts: [] as [string, string][],
+    afterLoadScripts: [] as [string, string][],
+    scriptsCombined: [] as [string, string][],
+    disabledScripts: [] as string[]
+};
 
 export async function categorizeScripts() {
     const scriptsPath = path.join(app.getPath("userData"), "/scripts/");
     const files = await fs.promises.readdir(scriptsPath);
 
     for (const file of files) {
-        if (!file.endsWith(".js")) continue;
+        if (!file.endsWith(".js")) {
+            if (file.endsWith(".disabled")) {
+                scriptCategories.disabledScripts.push(file);
+            }
+            continue;
+        }
         try {
             const filePath = path.join(scriptsPath, file);
             const scriptContent = await fs.promises.readFile(filePath, "utf-8");
 
             if (file.includes("BL")) {
-                beforeLoadScripts.push([file, scriptContent]);
-            } else { // Assume that scripts without specification are AL
-                afterLoadScripts.push([file, scriptContent]);
+                scriptCategories.beforeLoadScripts.push([file, scriptContent]);
+            } else {
+                scriptCategories.afterLoadScripts.push([file, scriptContent]);
             }
+            scriptCategories.scriptsCombined.push([file, scriptContent]);
         } catch (err) {
             error("An error occurred during script categorizing: " + err);
         }
@@ -40,7 +50,24 @@ export async function installDefaultScripts() {
     try {
         const defaultScriptsZip = await fetchWithTimeout("https://github.com/Milkshiift/GoofCord-Scripts/releases/download/Main/patches.zip");
         await streamPipeline(defaultScriptsZip.body, fs.createWriteStream(zipPath));
-        await extract(zipPath, {dir: scriptsFolder});
+
+        const updatedScripts: string[] = [];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const onEntry = function (entry: any) {
+            updatedScripts.push(entry.fileName);
+        };
+
+        await extract(zipPath, { dir: scriptsFolder, onEntry: onEntry });
+
+        // A not so very smart way of ignoring disabled scripts
+        for (const disabledScriptIndex in scriptCategories.disabledScripts) {
+            for (const updatedScriptIndex in updatedScripts) {
+                if (scriptCategories.disabledScripts[disabledScriptIndex].includes(updatedScripts[updatedScriptIndex])) {
+                    await fs.promises.unlink(path.join(scriptsFolder, updatedScripts[updatedScriptIndex]));
+                }
+            }
+        }
+
         console.log("[Script Loader] Successfully installed default scripts");
     } catch (error) {
         console.error("[Script Loader] Failed to install default scripts");
@@ -50,27 +77,23 @@ export async function installDefaultScripts() {
 
 // Function to send script arrays to the renderer process
 function sendScriptArraysToRenderer() {
-    ipcMain.handle("get-script-arrays", () => {
-        return {
-            beforeLoadScripts,
-            afterLoadScripts
-        };
+    ipcMain.handle("get-script-objects", () => {
+        return scriptCategories;
     });
 }
 
 // ----------------- RENDERER -----------------
 
 // Function to load scripts from the specified array (either BL or AL). Runs from a renderer process (preload.ts)
-export async function loadScripts(scriptType: boolean) { // false: BL true: AL
+export async function loadScripts(scriptType: boolean) {
     if (await getConfig("scriptLoading") === false) return;
 
-    // Request script arrays from the main process
-    const { afterLoadScripts, beforeLoadScripts } = await ipcRenderer.invoke("get-script-arrays");
+    // Request scripts object from the main process
+    const { afterLoadScripts, beforeLoadScripts } = await ipcRenderer.invoke("get-script-objects");
 
     const scriptsToLoad = scriptType ? afterLoadScripts : beforeLoadScripts;
 
     for (const [scriptName, scriptContent] of scriptsToLoad) {
-        // `scriptName` contains the file name, and `scriptContent` contains the content of the script.
         addScript(scriptContent);
 
         const scriptInfo = parseScriptInfo(scriptContent);

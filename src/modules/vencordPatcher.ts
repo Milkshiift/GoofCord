@@ -1,4 +1,4 @@
-import {afterLoadScripts, beforeLoadScripts} from "./scriptLoader";
+import {scriptCategories} from "./scriptLoader";
 import {getConfig} from "../utils";
 
 export async function patchVencord(bundle: string) {
@@ -34,10 +34,9 @@ export async function patchVencord(bundle: string) {
 }
 
 function getPatchesFromScripts() {
-    const combinedScripts = beforeLoadScripts.concat(afterLoadScripts);
     const regex = /const\s+patches\s+=\s+(\[[\s\S]+?]);/;
 
-    let allPatches = combinedScripts
+    let allPatches = scriptCategories.scriptsCombined
         .map(([, scriptContent]) => {
             const patchesMatch = scriptContent.match(regex);
             return patchesMatch ? patchesMatch[1].replace(/\s+/g, "").slice(1, -1) + "," : "";
