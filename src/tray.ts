@@ -4,7 +4,6 @@ import {getDisplayVersion} from "./utils";
 import * as path from "path";
 import {createSettingsWindow} from "./settings/main";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export let tray: any = null;
 app.whenReady().then(async () => {
     const trayIcon = "default";

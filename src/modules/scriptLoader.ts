@@ -52,7 +52,6 @@ export async function installDefaultScripts() {
         await streamPipeline(defaultScriptsZip.body, fs.createWriteStream(zipPath));
 
         const updatedScripts: string[] = [];
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const onEntry = function (entry: any) {
             updatedScripts.push(entry.fileName);
         };

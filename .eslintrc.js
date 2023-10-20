@@ -46,6 +46,7 @@ module.exports = {
             "warn",
             "always"
         ],
-        "no-magic-numbers": 1
+        "no-magic-numbers": 1,
+        "@typescript-eslint/no-explicit-any": 0
     }
 };

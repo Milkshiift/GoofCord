@@ -2,7 +2,7 @@ import "./bridge";
 import {ipcRenderer} from "electron";
 import * as fs from "graceful-fs";
 import * as path from "path";
-import {addScript, addStyle} from "../utils";
+import {addScript, addStyle, getConfig} from "../utils";
 import {injectTitlebar} from "./titlebar";
 import {loadScripts} from "../modules/scriptLoader";
 import {log} from "../modules/logger";
@@ -23,6 +23,9 @@ async function loadScriptsWithCheck() {
         await new Promise(resolve => setTimeout(resolve, 10));
     }
     await loadScripts(false);
+    if (await getConfig("disableAutogain")) {
+        addScript(await fs.promises.readFile(path.join(__dirname, "../", "/content/js/disableAutogain.js"), "utf8"));
+    }
 }
 loadScriptsWithCheck();
 

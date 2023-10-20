@@ -92,6 +92,7 @@ export interface Settings {
     arrpc: boolean;
     scriptLoading: boolean;
     autoUpdateDefaultScripts: boolean;
+    disableAutogain: boolean;
     discordUrl: string;
     modName: string;
     prfmMode: string;
@@ -113,6 +114,7 @@ const DEFAULTS: Settings = {
     arrpc: false,
     scriptLoading: true,
     autoUpdateDefaultScripts: true,
+    disableAutogain: false,
     modName: "vencord",
     prfmMode: "none",
     discordUrl: "https://canary.discord.com/app",

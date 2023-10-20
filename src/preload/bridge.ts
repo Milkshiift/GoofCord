@@ -21,7 +21,7 @@ contextBridge.exposeInMainWorld("goofcord", {
 
 let windowCallback: (arg0: object) => void;
 contextBridge.exposeInMainWorld("GoofCordRPC", {
-    listen: (callback: (arg0: object) => void) => {
+    listen: (callback: any) => {
         windowCallback = callback;
     }
 });

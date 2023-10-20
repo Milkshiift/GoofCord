@@ -118,6 +118,15 @@
     </fieldset>
     <fieldset>
         <div class="checkbox-container">
+            <input data-setting="disableAutogain" id="disableAutogain" type="checkbox"/>
+            <label for="disableAutogain">Disable auto-gain</label>
+        </div>
+        <p class="description">
+            Disable microphone auto-gain. It can be useful when your mic is quieter than it should be.
+        </p>
+    </fieldset>
+    <fieldset>
+        <div class="checkbox-container">
             <select class="left dropdown" data-setting="prfmMode" name="prfmMode">
                 <option selected value="none">None</option>
                 <option value="performance">Performance</option>
@@ -127,7 +136,7 @@
         </div>
         <p class="description">
             Performance mode is an experimental feature that may either increase responsiveness and performance
-            of GoofCord or… decrease it. Please try every option and see which fits you the best.
+            of GoofCord or… decrease it. Try every option and see which fits you the best.
         </p>
     </fieldset>
     <fieldset>
