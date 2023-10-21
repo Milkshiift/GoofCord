@@ -8,6 +8,7 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 const {join} = require("path");
 const {readdirSync, unlinkSync} = require("graceful-fs");
 const fs = require("graceful-fs");
+const {platform} = require("os");
 
 // Global variables in the config:
 const iconFile = "./build/icon";
@@ -114,6 +115,8 @@ const config = {
 
     // remove unused locales
     postPackage: async (config, packageResult) => {
+      if (platform() === "darwin") return;
+      
       const dirPath = join(packageResult.outputPaths[0], "locales");
       const files = readdirSync(dirPath);
 
