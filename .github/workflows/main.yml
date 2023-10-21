@@ -3,19 +3,26 @@ name: Release app
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     strategy:
       matrix:
-        os:
-          [
-            { name: 'linux', image: 'ubuntu-latest' },
-            { name: 'windows', image: 'windows-latest' },
-            { name: 'macos', image: 'macos-latest' },
-          ]
+        include:
+          - name: Windows
+            runner: windows-latest
+            arch: x64,ia32
+          - name: Linux
+            runner: ubuntu-latest
+            arch: x64,arm64,armv7l
+          - name: macOS
+            runner: macos-latest
+            arch: x64,arm64
 
-    runs-on: ${{ matrix.os.image }}
-
+    name: ${{ matrix.name }} (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
     steps:
       - name: Github checkout
         uses: actions/checkout@v3
@@ -36,4 +43,4 @@ jobs:
       - name: Publish app
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npm run publish
+        run: npm run publish --arch=${{ matrix.arch }}
