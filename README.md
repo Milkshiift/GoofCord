@@ -10,7 +10,7 @@
 - **:white_circle: Elegance in Simplicity**: We've kept it simple and sleek, delivering only the features you truly need.
 - **:bookmark: Standalone**: GoofCord is a standalone client, not reliant on the original Discord client in any way.
 - **:electric_plug: Plugins & Themes support**: Embrace other client mods like [Vencord](https://github.com/Vendicated/Vencord) or [Shelter](https://github.com/uwu/shelter) for a world of plugins and themes.
-- **:iphone: Cross the Platform**: Find GoofCord on **Windows** and **Linux**. <sup>Don't hesitate to request ARM support in our issues tab.</sup>
+- **:iphone: Cross the Platform**: Find GoofCord on **Windows** and **Linux**. Sadly we don't support Windows versions lower then 10.
 
 ## Ready to Dive In?
 
@@ -22,7 +22,7 @@ Look for the topmost button, which opens the GoofCord settings window.
 To explore the enchanting world of plugins and themes, head over to the Vencord category within your Discord settings. Have fun!
     
 For the brave souls who want to compile it themselves, here's how:
-1. Install [NodeJS](https://nodejs.dev) and [pnpm](https://pnpm.io/installation#using-npm)
+1. Install [Node.js](https://nodejs.dev) and [pnpm](https://pnpm.io/installation#using-npm)
 2. Grab the source code from the latest release. Getting it from the main branch is not recommended for stable experience.
 3. Open the command line in the directory of the source code
 4. Install the dependencies with `pnpm install`

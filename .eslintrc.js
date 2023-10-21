@@ -47,6 +47,7 @@ module.exports = {
             "always"
         ],
         "no-magic-numbers": 1,
-        "@typescript-eslint/no-explicit-any": 0
+        "@typescript-eslint/no-explicit-any": 0,
+        "@typescript-eslint/ban-ts-comment": 0
     }
 };

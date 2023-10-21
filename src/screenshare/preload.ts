@@ -11,7 +11,6 @@ async function addDisplays() {
         const sources: IPCSources[] = arg;
         console.log(sources);
         const selectionElem = document.createElement("div");
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         selectionElem.classList = ["desktop-capturer-selection"];
         selectionElem.innerHTML = `

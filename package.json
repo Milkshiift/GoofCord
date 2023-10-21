@@ -9,8 +9,10 @@
     "makeLinux": "npm run build && electron-builder make --platform=linux --arch=universal",
     "makeWindows64": "npm run build && electron-forge make --platform=win32 --arch=x64",
     "makeWindows32": "npm run build && electron-forge make --platform=win32 --arch=ia32",
-    "makeWindows": "npm run build && npm run packageWindows64 && npm run packageWindows32",
-    "package": "electron-forge package"
+    "makeWindows": "npm run build && npm run makeWindows64 && npm run makeWindows32",
+    "makeDarwin": "npm run build && electron-forge make --platform=darwin",
+    "package": "electron-forge package",
+    "publish": "electron-forge publish"
   },
   "repository": {
     "type": "git",
@@ -25,10 +27,12 @@
   "devDependencies": {
     "@electron-forge/cli": "^6.4.2",
     "@electron-forge/maker-deb": "^6.4.2",
+    "@electron-forge/maker-dmg": "^6.4.2",
     "@electron-forge/maker-squirrel": "^6.4.2",
     "@electron-forge/maker-zip": "^6.4.2",
     "@electron-forge/plugin-auto-unpack-natives": "^6.4.2",
     "@electron-forge/plugin-fuses": "^6.4.2",
+    "@electron-forge/publisher-github": "^6.4.2",
     "@electron/fuses": "^1.6.2",
     "@reforged/maker-appimage": "^3.3.1",
     "@types/auto-launch": "^5.0.3",
@@ -50,6 +54,7 @@
     "auto-launch": "^5.0.6",
     "cross-fetch": "^4.0.0",
     "electron-context-menu": "^3.6.1",
+    "electron-squirrel-startup": "^1.0.0",
     "extract-zip": "^2.0.1",
     "graceful-fs": "^4.2.11",
     "v8-compile-cache": "^2.4.0",

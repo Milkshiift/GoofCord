@@ -11,6 +11,7 @@ import * as path from "path";
 import {initializeFirewall} from "./modules/firewall";
 
 export let mainWindow: BrowserWindow;
+let forceQuit = false;
 contextMenu({
     showSaveImageAs: true,
     showCopyImageAddress: true,
@@ -108,25 +109,37 @@ async function doAfterDefiningTheWindow() {
     });
 
     mainWindow.on("close", async (e) => {
-        // Save window state, so it will be the same when the user opens GF again.
-        const [width, height] = mainWindow.getSize();
-        await setWindowState({
-            width,
-            height,
-            isMaximized: mainWindow.isMaximized(),
-            x: mainWindow.getPosition()[0],
-            y: mainWindow.getPosition()[1],
-        });
+        if (process.platform === "darwin" && forceQuit) {
+            mainWindow.close();
+        } else {
+            // Save window state, so it will be the same when the user opens GF again.
+            const [width, height] = mainWindow.getSize();
+            await setWindowState({
+                width,
+                height,
+                isMaximized: mainWindow.isMaximized(),
+                x: mainWindow.getPosition()[0],
+                y: mainWindow.getPosition()[1],
+            });
 
-        e.preventDefault();
-        await getConfig("minimizeToTray") ? mainWindow.hide() : app.quit();
+            e.preventDefault();
+            await getConfig("minimizeToTray") ? mainWindow.hide() : app.quit();
+        }
     });
+    if (process.platform === "darwin") {
+        app.on("before-quit", function (event) {
+            if (!forceQuit) {
+                event.preventDefault();
+                forceQuit = true;
+                app.quit();
+            }
+        });
+    }
 
     const setBodyAttribute = (attribute: string, value: string = "") => {
         mainWindow.webContents.executeJavaScript(`document.body.setAttribute("${attribute}", "${value}");`);
     };
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     if (await getConfig("arrpc")) import("arrpc");
 

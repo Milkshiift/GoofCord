@@ -17,6 +17,8 @@ import AutoLaunch from "auto-launch";
 import {categorizeScripts, installDefaultScripts} from "./modules/scriptLoader";
 import {unstrictCSP} from "./modules/extensions";
 
+if (require("electron-squirrel-startup") === true) app.quit(); // Prevent squirrel installer from restarting GoofCord multiple times
+
 setFlags();
 
 app.on("render-process-gone", (event, webContents, details) => {

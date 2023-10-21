@@ -73,6 +73,9 @@ const config = {
           homepage: 'https://github.com/Milkshiift/GoofCord'
         }
       }
+    },
+    {
+      name: '@electron-forge/maker-dmg'
     }
   ],
   plugins: [
@@ -121,7 +124,20 @@ const config = {
         }
       }
     }
-  }
+  },
+  publishers: [
+    {
+      name: '@electron-forge/publisher-github',
+      config: {
+        repository: {
+          owner: 'Milkshiift',
+          name: 'GoofCord'
+        },
+        prerelease: false,
+        draft: true
+      }
+    }
+  ]
 };
 
 module.exports = config;
