@@ -116,7 +116,7 @@ const config = {
     // remove unused locales
     postPackage: async (config, packageResult) => {
       if (platform() === "darwin") return;
-      
+
       const dirPath = join(packageResult.outputPaths[0], "locales");
       const files = readdirSync(dirPath);
 
