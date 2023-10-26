@@ -4,8 +4,9 @@ import * as fs from "graceful-fs";
 import * as path from "path";
 import os from "os";
 
+let titlebar: HTMLDivElement;
 function createTitlebar() {
-    const titlebar = document.createElement("div");
+    titlebar = document.createElement("div");
     titlebar.innerHTML = `
         <nav class="titlebar">
           <div class="window-title" id="window-title"></div>
@@ -68,4 +69,13 @@ export async function injectTitlebar() {
     document.body.setAttribute("goofcord-platform", os.platform());
 
     attachTitlebarEvents();
+}
+
+export function flashTitlebar(color: string) {
+    const realTitlebar = titlebar.getElementsByTagName("nav")[0];
+    realTitlebar.style.backgroundColor = color;
+    realTitlebar.addEventListener("transitionend", function handler() {
+        realTitlebar.style.backgroundColor = "transparent";
+        realTitlebar.removeEventListener("transitionend", handler);
+    });
 }

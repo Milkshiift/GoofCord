@@ -22,6 +22,8 @@
     -webkit-user-select: none;
     position: fixed;
     z-index: 99999;
+    background-color: transparent;
+    transition: background-color 0.25s ease-in-out;
 }
 
 .container-2RRFHK {

@@ -4,6 +4,7 @@ import {mainWindow} from "./window";
 import {getConfig, getDisplayVersion, getVersion, packageVersion, setConfigBulk} from "./utils";
 import {createSettingsWindow} from "./settings/main";
 import {decryptMessage, encryptMessage} from "./modules/messageEncryption";
+import {flashTitlebar} from "./preload/titlebar";
 
 export function registerIpc() {
     ipcMain.on("win-maximize", () => {
@@ -52,6 +53,9 @@ export function registerIpc() {
     ipcMain.on("titlebar", (event) => {
         event.returnValue = true;
     });
+    ipcMain.on("flashTitlebar", (_event, color: string) => {
+        flashTitlebar(color);
+    });
     ipcMain.on("openSettingsWindow", async () => {
         await createSettingsWindow();
     });
@@ -64,5 +68,5 @@ export function registerIpc() {
     ipcMain.on("get-user-data-path", (event) => {
         event.returnValue = app.getPath("userData");
     });
-    ipcMain.handle("DESKTOP_CAPTURER_GET_SOURCES", (event, opts) => desktopCapturer.getSources(opts));
+    ipcMain.handle("DESKTOP_CAPTURER_GET_SOURCES", (_event, opts) => desktopCapturer.getSources(opts));
 }

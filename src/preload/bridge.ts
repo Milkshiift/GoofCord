@@ -1,4 +1,5 @@
 import {contextBridge, ipcRenderer} from "electron";
+import {flashTitlebar} from "./titlebar";
 
 let windowCallback: (arg0: object) => void;
 contextBridge.exposeInMainWorld("goofcord", {
@@ -9,7 +10,8 @@ contextBridge.exposeInMainWorld("goofcord", {
         maximize: () => ipcRenderer.send("win-maximize")
     },
     titlebar: {
-        isTitlebar: ipcRenderer.sendSync("titlebar")
+        isTitlebar: ipcRenderer.sendSync("titlebar"),
+        flashTitlebar: (color: string) => flashTitlebar(color),
     },
     electron: process.versions.electron,
     version: ipcRenderer.sendSync("get-app-version", "app-version"),

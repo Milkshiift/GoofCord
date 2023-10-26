@@ -17,5 +17,5 @@ export function decryptMessage(message: string) {
     // Character \u200c is present in every stegcloaked message
     if (!message.includes("\u200c")) return message;
     const password = "TEST";
-    return stegcloak.reveal(message, password)+" 🔒";
+    return stegcloak.reveal(message, password);
 }
