@@ -1,5 +1,5 @@
 import * as fs from "graceful-fs";
-import {app, dialog, ipcMain, ipcRenderer} from "electron";
+import {app, dialog, ipcRenderer} from "electron";
 import path from "path";
 import {fetch} from "cross-fetch";
 import extract from "extract-zip";
@@ -93,6 +93,7 @@ export interface Settings {
     scriptLoading: boolean;
     autoUpdateDefaultScripts: boolean;
     disableAutogain: boolean;
+    encryptionCover: string;
     discordUrl: string;
     modName: string;
     prfmMode: string;
@@ -115,6 +116,7 @@ const DEFAULTS: Settings = {
     scriptLoading: true,
     autoUpdateDefaultScripts: true,
     disableAutogain: false,
+    encryptionCover: "",
     modName: "vencord",
     prfmMode: "none",
     discordUrl: "https://canary.discord.com/app",
@@ -230,10 +232,10 @@ export async function checkIfFoldersExist() {
 
 export async function fetchWithTimeout(url: string, options: RequestInit = {}, timeout = 10000): Promise<Response> {
     const controller = new AbortController();
-    const timeout_id = setTimeout(() => controller.abort(), timeout);
-    const response = await fetch(url, {signal: controller.signal, ...options});
-    clearTimeout(timeout_id);
-    return response;
+    const timeoutPromise = new Promise<Response>((_, reject) => {
+        setTimeout(() => reject(new Error("Timeout reached while fetching from "+url+". Check your internet connection")), timeout);
+    });
+    return await Promise.race([fetch(url, {signal: controller.signal, ...options}), timeoutPromise]);
 }
 
 // Mods

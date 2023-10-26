@@ -51,7 +51,7 @@ const config = {
         setupIcon: iconFile+".ico",
         noMsi: true,
         loadingGif: "./assetsDev/gf_install_animation.gif",
-        setupExe: `GoofCord-Setup-${process.argv[5]}.exe`,
+        setupExe: `GoofCord-Setup-${process.argv[4]}.exe`,
       }
     },
     {

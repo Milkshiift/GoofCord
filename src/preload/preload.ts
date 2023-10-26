@@ -8,32 +8,26 @@ import {loadScripts} from "../modules/scriptLoader";
 import {log} from "../modules/logger";
 
 window.localStorage.setItem("hideNag", "true");
-ipcRenderer.on("themeLoader", (event, message) => {
-    addStyle(message);
-});
-if (ipcRenderer.sendSync("titlebar")) {
-    injectTitlebar();
-}
 const version = ipcRenderer.sendSync("displayVersion");
 
-async function loadScriptsWithCheck() {
+(async function loadScriptsWithCheck() {
     // For some AWFUL reason, preload is called before document.body is accessible
     // So we wait until it's not null
     while (document.body === null) {
         await new Promise(resolve => setTimeout(resolve, 10));
     }
+
     await loadScripts(false);
     if (await getConfig("disableAutogain")) {
         addScript(await fs.promises.readFile(path.join(__dirname, "../", "/content/js/disableAutogain.js"), "utf8"));
     }
-}
-loadScriptsWithCheck();
+})();
 
-const waitForButton = setInterval(async () => {
+const waitUntilSplashEnds = setInterval(async () => {
     // Waiting until settings button appears, also useful for detecting when the splash is over
     const settingsButton = document.querySelector("[aria-label=\"User Settings\"]");
     if (settingsButton) {
-        clearInterval(waitForButton);
+        clearInterval(waitUntilSplashEnds);
 
         settingsButton.addEventListener("click", () => {
             injectInSettings();
@@ -47,16 +41,16 @@ const waitForButton = setInterval(async () => {
 function injectInSettings() {
     log("Injecting in settings...");
     const waitForSidebar = setInterval(() => {
-        // Wait until sidebar appears
-        const host = document.querySelector<HTMLDivElement>("nav > [class|=side]");
+        // Wait until the sidebar appears
+        const host = document.querySelector<HTMLDivElement>("div[class^='side_']");
         if (host != null) {
             // if the element is found
             clearInterval(waitForSidebar);
 
             // Finding elements to clone
-            const header = document.querySelectorAll("div > [class*=header-]")!;
-            const button = document.querySelectorAll("div > [class*=item-]")!;
-            const separator = document.querySelectorAll("div > [class*=separator-]")!;
+            const header = host.querySelectorAll("div > [class*=header_]")!;
+            const button = host.querySelectorAll("div > [class*=item_]")!;
+            const separator = host.querySelectorAll("div > [class*=separator_]")!;
             // Cloning and modifying parameters
             const headerClone = header[header.length - 1].cloneNode(true) as HTMLElement;
             headerClone.children[0].innerHTML = "GoofCord";
@@ -71,9 +65,8 @@ function injectInSettings() {
             gcSettings.insertAdjacentElement("afterend", separatorClone);
 
             // Inject goofcord version in the settings info element
-            const hostInfo = document.querySelector<HTMLDivElement>("nav > [class|=side] [class|=info]")!;
+            const hostInfo = host.querySelector<HTMLDivElement>("div[class^='info_']")!;
             const el = hostInfo.firstElementChild!.cloneNode() as HTMLSpanElement;
-            el.id = "ac-ver";
             el.textContent = `GoofCord ${version}`;
             hostInfo.insertBefore(el, hostInfo.firstElementChild!);
         }
@@ -99,6 +92,7 @@ async function injectAfterSplash() {
         })();
     `);
 
+    await injectTitlebar();
     addScript(await fs.promises.readFile(path.join(__dirname, "../", "/content/js/rpc.js"), "utf8"));
     const cssPath = path.join(__dirname, "../", "/content/css/discord.css");
     addStyle(await fs.promises.readFile(cssPath, "utf8"));

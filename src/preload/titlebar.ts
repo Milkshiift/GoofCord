@@ -7,16 +7,16 @@ import os from "os";
 function createTitlebar() {
     const titlebar = document.createElement("div");
     titlebar.innerHTML = `
-    <nav class="titlebar">
-      <div class="window-title" id="window-title"></div>
-      <div id="window-controls-container">
-        <div id="spacer"></div>
-        <div id="minimize"><div id="minimize-icon"></div></div>
-        <div id="maximize"><div id="maximize-icon"></div></div>
-        <div id="quit"><div id="quit-icon"></div></div>
-      </div>
-    </nav>
-  `;
+        <nav class="titlebar">
+          <div class="window-title" id="window-title"></div>
+          <div id="window-controls-container">
+            <div id="spacer"></div>
+            <div id="minimize"><div id="minimize-icon"></div></div>
+            <div id="maximize"><div id="maximize-icon"></div></div>
+            <div id="quit"><div id="quit-icon"></div></div>
+          </div>
+        </nav>
+    `;
     titlebar.classList.add("withFrame-haYltI");
     return titlebar;
 }
@@ -53,21 +53,19 @@ function attachTitlebarEvents() {
     });
 }
 
-export function injectTitlebar() {
-    document.addEventListener("DOMContentLoaded", async () => {
-        const titlebar = createTitlebar();
-        const appMount = document.getElementById("app-mount");
-        if (appMount) {
-            appMount.prepend(titlebar);
-        } else {
-            document.body.appendChild(titlebar);
-        }
+export async function injectTitlebar() {
+    const titlebar = createTitlebar();
+    const appMount = document.getElementById("app-mount");
+    if (appMount) {
+        appMount.prepend(titlebar);
+    } else {
+        document.body.appendChild(titlebar);
+    }
 
-        const titlebarcssPath = path.join(__dirname, "../", "/content/css/titlebar.css");
-        addStyle(await fs.promises.readFile(titlebarcssPath, "utf8"));
-        document.body.setAttribute("customTitlebar", "");
-        document.body.setAttribute("goofcord-platform", os.platform());
+    const titlebarcssPath = path.join(__dirname, "../", "/content/css/titlebar.css");
+    addStyle(await fs.promises.readFile(titlebarcssPath, "utf8"));
+    document.body.setAttribute("customTitlebar", "");
+    document.body.setAttribute("goofcord-platform", os.platform());
 
-        attachTitlebarEvents();
-    });
+    attachTitlebarEvents();
 }

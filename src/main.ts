@@ -17,36 +17,32 @@ import AutoLaunch from "auto-launch";
 import {categorizeScripts, installDefaultScripts} from "./modules/scriptLoader";
 import {unstrictCSP} from "./modules/extensions";
 
-if (require("electron-squirrel-startup") === true) app.quit(); // Prevent squirrel installer from restarting GoofCord multiple times
-
 setFlags();
 
 app.on("render-process-gone", (event, webContents, details) => {
     if (details.reason == "crashed") app.relaunch();
 });
 
-async function checkConfig() {
-    await checkIfFoldersExist();
-    await checkIfConfigExists();
-    await checkIfConfigIsBroken();
-    await checkConfigForMissingParams();
-}
-checkConfig();
-
 if (!app.requestSingleInstanceLock() && getConfigSync("multiInstance") == (false ?? undefined)) app.quit();
 
 // Your data now belongs to CCP
 crashReporter.start({uploadToServer: false});
 
-async function enableAutoLauncher() {
+(async function checkConfig() {
+    await checkIfFoldersExist();
+    await checkIfConfigExists();
+    await checkIfConfigIsBroken();
+    await checkConfigForMissingParams();
+})();
+
+(async function enableAutoLauncher() {
     const gfAutoLaunch = new AutoLaunch({name: "GoofCord"});
     if (getConfigSync("launchWithOsBoot")) {
         await gfAutoLaunch.enable();
     } else {
         await gfAutoLaunch.disable();
     }
-}
-enableAutoLauncher();
+})();
 
 app.whenReady().then(async () => {
     const retry = setInterval(async () => {
@@ -59,25 +55,22 @@ app.whenReady().then(async () => {
 
 async function load() {
     await categorizeScripts();
-    unstrictCSP();
-
     await installDefaultScripts();
-    if ((await getConfig("modName")) != "none") {
-        await installModLoader();
-    }
+
+    unstrictCSP();
+    if ((await getConfig("modName")) != "none") await installModLoader();
 
     await createCustomWindow();
 
-    if (await getConfig("updateNotification")) {
-        await checkForUpdate();
-    }
+    if (await getConfig("updateNotification")) await checkForUpdate();
 
-    session.fromPartition("some-partition").setPermissionRequestHandler((webContents, permission, callback) => {
+    session.fromPartition("some-partition").setPermissionRequestHandler((_webContents, permission, callback) => {
         if (permission === "notifications") callback(true);
         if (permission === "media") callback(true);
     });
 }
 
+// Flag setting is pretty broken, like, 20% works as intended
 async function setFlags() {
     const isUnix = process.platform !== "win32" && process.platform !== "darwin";
     const isWayland = process.env.XDG_SESSION_TYPE?.toLowerCase() === "wayland" || process.env["WAYLAND_DISPLAY"] !== undefined;

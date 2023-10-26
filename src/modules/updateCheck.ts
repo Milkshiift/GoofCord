@@ -1,18 +1,14 @@
-import fetch from "cross-fetch";
-import {getVersion} from "../utils";
+import {fetchWithTimeout, packageVersion} from "../utils";
 import {Notification, shell} from "electron";
 
-const currentVersion = getVersion();
-
 async function getLatestVersion(): Promise<string> {
-    const response = await fetch("https://api.github.com/repos/Milkshiift/GoofCord/releases/latest");
+    const response = await fetchWithTimeout("https://api.github.com/repos/Milkshiift/GoofCord/releases/latest");
     const data = await response.json();
     return data.tag_name.replace("v", "");
 }
 
 export async function checkForUpdate() {
-    const latestVersion = await getLatestVersion();
-    const isLower = isSemverLower(currentVersion, latestVersion);
+    const isLower = isSemverLower(packageVersion, await getLatestVersion());
 
     if (isLower) {
         const notification = new Notification({
@@ -29,7 +25,7 @@ export async function checkForUpdate() {
     }
 }
 
-function isSemverLower(version1: string, version2: string): boolean {
+export function isSemverLower(version1: string, version2: string): boolean {
     const v1Parts = version1.split(".");
     const v2Parts = version2.split(".");
 

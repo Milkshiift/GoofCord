@@ -3,6 +3,7 @@ import {app, desktopCapturer, ipcMain} from "electron";
 import {mainWindow} from "./window";
 import {getConfig, getDisplayVersion, getVersion, packageVersion, setConfigBulk} from "./utils";
 import {createSettingsWindow} from "./settings/main";
+import {decryptMessage, encryptMessage} from "./modules/messageEncryption";
 
 export function registerIpc() {
     ipcMain.on("win-maximize", () => {
@@ -51,8 +52,14 @@ export function registerIpc() {
     ipcMain.on("titlebar", (event) => {
         event.returnValue = true;
     });
-    ipcMain.on("openSettingsWindow", () => {
-        createSettingsWindow();
+    ipcMain.on("openSettingsWindow", async () => {
+        await createSettingsWindow();
+    });
+    ipcMain.handle("encryptMessage", async (event, message: string) => {
+        return encryptMessage(message);
+    });
+    ipcMain.on("decryptMessage", async (event, message: string) => {
+        event.returnValue = decryptMessage(message);
     });
     ipcMain.on("get-user-data-path", (event) => {
         event.returnValue = app.getPath("userData");

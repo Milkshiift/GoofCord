@@ -1,5 +1,5 @@
 import {mainWindow} from "../window";
-import {session} from "electron";
+import {session, protocol} from "electron";
 import {getConfig} from "../utils";
 
 export async function initializeFirewall() {

@@ -40,7 +40,10 @@ jobs:
       - name: Install Node dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build TypeScript
+        run: pnpm run build
+
       - name: Publish app
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run publish --arch=${{ matrix.arch }}
+        run: electron-forge publish --arch=${{ matrix.arch }}

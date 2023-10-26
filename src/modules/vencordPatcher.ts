@@ -39,7 +39,13 @@ function getPatchesFromScripts() {
     let allPatches = scriptCategories.scriptsCombined
         .map(([, scriptContent]) => {
             const patchesMatch = scriptContent.match(regex);
-            return patchesMatch ? patchesMatch[1].replace(/\s+/g, "").slice(1, -1) + "," : "";
+            return patchesMatch ? patchesMatch[1].replace(/(".*?")|\s+/g, (match, capture) => {
+                // If the match is inside double quotes, return it unchanged
+                if (capture) {
+                    return capture;
+                }
+                return "";
+            }).slice(1, -1) + "," : "";
         })
         .join("");
 

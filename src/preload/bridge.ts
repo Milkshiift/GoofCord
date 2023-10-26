@@ -14,7 +14,8 @@ contextBridge.exposeInMainWorld("goofcord", {
     version: ipcRenderer.sendSync("get-app-version", "app-version"),
     packageVersion: ipcRenderer.sendSync("get-package-version", "app-version"),
     userData: ipcRenderer.sendSync("get-user-data-path"),
-    getEncryptionPassword: "TEST",
+    encryptMessage: (message: string) => ipcRenderer.invoke("encryptMessage", message),
+    decryptMessage: (message: string) => ipcRenderer.sendSync("decryptMessage", message),
     openSettingsWindow: () => ipcRenderer.send("openSettingsWindow"),
     sendMessage: (message: string, channelId: string) => ipcRenderer.send("encryptMessage", message, channelId),
 });
