@@ -88,6 +88,50 @@
     </fieldset>
 </form>
 
+<h2>Privacy settings</h2>
+<form class="settingsContainer">
+    <fieldset>
+        <div class="checkbox-container">
+            <textarea data-setting="blocklist"></textarea>
+        </div>
+        <p class="description">
+            A list of URLs to block. Each entry must be separated by a comma.
+        </p>
+    </fieldset>
+</form>
+
+<h2><a target="_blank" href="https://github.com/Milkshiift/GoofCord/wiki/Script-Loader">Script loader</a> and scripts settings</h2>
+<form class="settingsContainer">
+    <fieldset>
+        <div class="checkbox-container">
+            <input data-setting="scriptLoading" id="scriptLoading" type="checkbox"/>
+            <label for="scriptLoading">Script loading</label>
+        </div>
+        <p class="description">
+            Enables script loader.
+        </p>
+    </fieldset>
+    <fieldset>
+        <div class="checkbox-container">
+            <input data-setting="autoUpdateDefaultScripts" id="autoUpdateDefaultScripts" type="checkbox"/>
+            <label for="autoUpdateDefaultScripts">Auto-update default scripts</label>
+        </div>
+        <p class="description">
+            Enables auto-update for the <a target="_blank" href="https://github.com/Milkshiift/GoofCord-Scripts">default GoofCord scripts</a>.
+        </p>
+    </fieldset>
+    <h2>Encryption settings</h2>
+    <fieldset>
+        <div class="checkbox-container">
+            <input class="text" data-setting="encryptionCover" type="text"/>
+            <label>Encryption Cover</label>
+        </div>
+        <p class="description">
+            A message that a user without the password will see. Minimum two words or empty.
+        </p>
+    </fieldset>
+</form>
+
 <h2>Other settings</h2>
 <form class="settingsContainer">
     <fieldset>
@@ -147,40 +191,6 @@
         <p class="description">
             URL of the discord. Variations: https://canary.discord.com/app, https://ptb.discord.com/app or
             https://discord.com/app
-        </p>
-    </fieldset>
-</form>
-
-<h2>Privacy settings</h2>
-<form class="settingsContainer">
-    <fieldset>
-        <div class="checkbox-container">
-            <textarea data-setting="blocklist"></textarea>
-        </div>
-        <p class="description">
-            A list of URLs to block. Each entry must be separated by a comma.
-        </p>
-    </fieldset>
-</form>
-
-<h2><a target="_blank" href="https://github.com/Milkshiift/GoofCord/wiki/Script-Loader">Script loader</a> settings</h2>
-<form class="settingsContainer">
-    <fieldset>
-        <div class="checkbox-container">
-            <input data-setting="scriptLoading" id="scriptLoading" type="checkbox"/>
-            <label for="scriptLoading">Script loading</label>
-        </div>
-        <p class="description">
-            Enables script loader.
-        </p>
-    </fieldset>
-    <fieldset>
-        <div class="checkbox-container">
-            <input data-setting="autoUpdateDefaultScripts" id="autoUpdateDefaultScripts" type="checkbox"/>
-            <label for="autoUpdateDefaultScripts">Auto-update default scripts</label>
-        </div>
-        <p class="description">
-            Enables auto-update for the <a target="_blank" href="https://github.com/Milkshiift/GoofCord-Scripts">default GoofCord scripts</a>.
         </p>
     </fieldset>
 </form>

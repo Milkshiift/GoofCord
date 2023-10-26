@@ -93,7 +93,6 @@ async function injectAfterSplash() {
     `);
 
     await injectTitlebar();
-    addScript(await fs.promises.readFile(path.join(__dirname, "../", "/content/js/rpc.js"), "utf8"));
     const cssPath = path.join(__dirname, "../", "/content/css/discord.css");
     addStyle(await fs.promises.readFile(cssPath, "utf8"));
 }
