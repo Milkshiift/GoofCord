@@ -158,12 +158,6 @@ async function doAfterDefiningTheWindow() {
         // If a user chose any mods, load them.
         if ((await getConfig("modName")) != "none") await loadExtensions();
 
-        // Disable logging using Sentry logger. There is a chance that this is useless.
-        await mainWindow.webContents.executeJavaScript(`
-                const Logger = window.__SENTRY__.logger
-                Logger.disable()
-        `);
-
         await initializeFirewall();
     });
 }

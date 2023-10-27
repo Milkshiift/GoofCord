@@ -48,15 +48,15 @@ async function addDisplays() {
                     const title = button.getAttribute("title");
                     const audio = document.getElementById("audio-checkbox") as HTMLInputElement;
 
-                    ipcRenderer.sendSync("selectScreenshareSource", id, title, audio.checked);
+                    ipcRenderer.send("selectScreenshareSource", id, title, audio.checked);
+                    ipcRenderer.send("flashTitlebar", "#5865F2");
                 } catch (err) {
                     console.error(err);
                 }
             });
         });
-
         document.querySelectorAll(".closeIcon")[0].addEventListener("click", () => {
-            ipcRenderer.sendSync("selectScreenshareSource", "window:000000:0", "Close", false, true);
+            ipcRenderer.send("selectScreenshareSource", "window:000000:0", "Close", false, true);
         });
     });
 }

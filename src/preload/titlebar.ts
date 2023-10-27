@@ -76,6 +76,7 @@ export function flashTitlebar(color: string) {
     realTitlebar.style.backgroundColor = color;
     realTitlebar.addEventListener("transitionend", function handler() {
         realTitlebar.style.backgroundColor = "transparent";
+
         realTitlebar.removeEventListener("transitionend", handler);
     });
 }

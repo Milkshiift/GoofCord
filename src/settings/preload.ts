@@ -13,4 +13,5 @@ contextBridge.exposeInMainWorld("settings", {
     openCrashesFolder: () => ipcRenderer.send("openCrashesFolder"),
     copyDebugInfo: () => ipcRenderer.send("copyDebugInfo"),
     crash: () => ipcRenderer.send("crash"),
+    flashTitlebar: (color: string) => ipcRenderer.send("flashTitlebar", color),
 });

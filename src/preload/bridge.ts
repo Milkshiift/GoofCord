@@ -10,7 +10,6 @@ contextBridge.exposeInMainWorld("goofcord", {
         maximize: () => ipcRenderer.send("win-maximize")
     },
     titlebar: {
-        isTitlebar: ipcRenderer.sendSync("titlebar"),
         flashTitlebar: (color: string) => flashTitlebar(color),
     },
     electron: process.versions.electron,

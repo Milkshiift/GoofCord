@@ -44,17 +44,14 @@ export function registerIpc() {
         app.relaunch();
         app.exit();
     });
-    ipcMain.on("saveSettings", (event, args) => {
-        setConfigBulk(args);
+    ipcMain.on("saveSettings", async (_event, args) => {
+        await setConfigBulk(args);
     });
     ipcMain.on("minimizeToTray", async (event) => {
         event.returnValue = await getConfig("minimizeToTray");
     });
-    ipcMain.on("titlebar", (event) => {
-        event.returnValue = true;
-    });
-    ipcMain.on("flashTitlebar", (_event, color: string) => {
-        flashTitlebar(color);
+    ipcMain.on("flashTitlebar", async (_event, color: string) => {
+        await mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebar("${color}")`);
     });
     ipcMain.on("openSettingsWindow", async () => {
         await createSettingsWindow();
