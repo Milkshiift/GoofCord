@@ -1,15 +1,14 @@
 import {BrowserWindow, desktopCapturer, ipcMain, session} from "electron";
 import path from "path";
+import {mainWindow} from "../window";
 
 let capturerWindow: BrowserWindow;
 
 function registerCustomHandler() {
-    session.defaultSession.setDisplayMediaRequestHandler(async (request, callback) => {
-        console.log(request);
+    session.defaultSession.setDisplayMediaRequestHandler(async (_request, callback) => {
         const sources = await desktopCapturer.getSources({
             types: ["screen", "window"]
         });
-        //console.log(sources);
         if (process.platform === "linux" && process.env.XDG_SESSION_TYPE?.toLowerCase() === "wayland") {
             console.log("WebRTC Capturer detected, skipping window creation."); //assume webrtc capturer is used
             console.log({video: {id: sources[0].id, name: sources[0].name}});
@@ -29,8 +28,12 @@ function registerCustomHandler() {
                 }
             });
             capturerWindow.maximize();
-            ipcMain.once("selectScreenshareSource", (event, id, name, audio) => {
+            ipcMain.once("selectScreenshareSource", async (_event, id, name, audio, resolution, framerate) => {
                 capturerWindow.close();
+                await mainWindow.webContents.executeJavaScript(`if (window.ScreenshareQuality != null) {window.ScreenshareQuality.patchScreenshareQuality({
+                    framerate: ${framerate},
+                    height: ${resolution}
+                })}`);
 
                 const result = {id, name, width: 9999, height: 9999};
                 if (audio) {

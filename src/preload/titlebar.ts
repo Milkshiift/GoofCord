@@ -72,16 +72,26 @@ export async function injectTitlebar() {
     attachTitlebarEvents();
 }
 
+let animFinished = true;
 export function flashTitlebar(color: string) {
     const realTitlebar = titlebar.getElementsByTagName("nav")[0];
-    realTitlebar.style.backgroundColor = color;
-    realTitlebar.addEventListener("transitionend", function handler() {
-        realTitlebar.style.backgroundColor = "transparent";
 
+    if (!animFinished) {
+        realTitlebar.style.backgroundColor = "transparent";
         realTitlebar.removeEventListener("transitionend", handler);
-    });
+    }
+    animFinished = false;
+
+    realTitlebar.style.backgroundColor = color;
+    realTitlebar.addEventListener("transitionend", handler);
+    function handler() {
+        realTitlebar.style.backgroundColor = "transparent";
+        animFinished = true;
+        realTitlebar.removeEventListener("transitionend", handler);
+    }
 }
 
+let titlebarTimeout: NodeJS.Timeout | null = null;
 export function flashTitlebarWithText(color: string, text: string) {
     flashTitlebar(color);
 
@@ -89,8 +99,14 @@ export function flashTitlebarWithText(color: string, text: string) {
     titlebarText.innerHTML = text;
     titlebarText.style.transition = "opacity 0.2s ease-out";
     titlebarText.style.opacity = "1";
-    setTimeout(() => {
+
+    // Clear the previous timeout if it exists
+    if (titlebarTimeout) {
+        clearTimeout(titlebarTimeout);
+    }
+
+    titlebarTimeout = setTimeout(() => {
         titlebarText.style.transition = "opacity 2s ease-out";
         titlebarText.style.opacity = "0";
-    }, 2000);
+    }, 3000);
 }

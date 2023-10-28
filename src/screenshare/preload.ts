@@ -10,16 +10,12 @@ async function addDisplays() {
     ipcRenderer.once("getSources", (event, arg) => {
         const sources: IPCSources[] = arg;
         console.log(sources);
+        document.body.innerHTML = "<button class='closeIcon' title='Cancel'></button>";
         const selectionElem = document.createElement("div");
         //@ts-ignore
         selectionElem.classList = ["desktop-capturer-selection"];
         selectionElem.innerHTML = `
 <h1 style="margin-bottom: 0">Screen Share</h1>
-<button class="closeIcon" title="Cancel">
-    <svg width="24" height="24" viewBox="0 0 24 24">
-        <path fill="#73777c" d="M18.4 4L12 10.4L5.6 4L4 5.6L10.4 12L4 18.4L5.6 20L12 13.6L18.4 20L20 18.4L13.6 12L20 5.6L18.4 4Z"></path>
-    </svg>
-</button>
 <div class="desktop-capturer-selection__scroller">
     <ul class="desktop-capturer-selection__list">
       ${sources
@@ -37,8 +33,18 @@ async function addDisplays() {
     </ul>
     </div>
     <div class="checkbox-container">
-        <input id="audio-checkbox" type="checkbox" />
-        <label for="audio-checkbox">Stream audio</label>
+        <div class="subcontainer">
+            <input id="resolution-textbox" type="text" value="720" />
+            <label for="resolution-textbox">Resolution</label>
+        </div>
+        <div class="subcontainer">
+            <input id="audio-checkbox" type="checkbox" />
+            <label for="audio-checkbox">Stream audio</label>
+        </div>
+        <div class="subcontainer">
+            <input id="framerate-textbox" type="text" value="30"/>
+            <label for="framerate-textbox">Framerate</label>
+        </div>
     </div>`;
         document.body.appendChild(selectionElem);
         document.querySelectorAll(".desktop-capturer-selection__btn").forEach((button) => {
@@ -47,9 +53,18 @@ async function addDisplays() {
                     const id = button.getAttribute("data-id");
                     const title = button.getAttribute("title");
                     const audio = document.getElementById("audio-checkbox") as HTMLInputElement;
+                    const resolution = document.getElementById("resolution-textbox") as HTMLInputElement;
+                    const framerate = document.getElementById("framerate-textbox") as HTMLInputElement;
 
-                    ipcRenderer.send("selectScreenshareSource", id, title, audio.checked);
-                    ipcRenderer.send("flashTitlebar", "#5865F2");
+                    ipcRenderer.send("selectScreenshareSource", id, title, audio.checked, resolution.value, framerate.value);
+
+                    // @ts-ignore
+                    if (window.Vencord != null || (resolution.value === "720" && framerate.value === "30")) {
+                        ipcRenderer.send("flashTitlebar", "#5865F2");
+                    }
+                    else {
+                        ipcRenderer.send("flashTitlebarWithText", "#f8312f", "Custom resolution & framerate are only available with Vencord");
+                    }
                 } catch (err) {
                     console.error(err);
                 }
