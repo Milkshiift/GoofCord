@@ -1,10 +1,9 @@
 //ipc stuff
-import {app, desktopCapturer, ipcMain} from "electron";
+import {app, desktopCapturer, ipcMain, safeStorage} from "electron";
 import {mainWindow} from "./window";
 import {getConfig, getDisplayVersion, getVersion, packageVersion, setConfigBulk} from "./utils";
 import {createSettingsWindow} from "./settings/main";
 import {decryptMessage, encryptMessage} from "./modules/messageEncryption";
-import {flashTitlebar} from "./preload/titlebar";
 
 export function registerIpc() {
     ipcMain.on("win-maximize", () => {
@@ -53,6 +52,9 @@ export function registerIpc() {
     ipcMain.on("flashTitlebar", async (_event, color: string) => {
         await mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebar("${color}")`);
     });
+    ipcMain.on("flashTitlebarWithText", async (_event, color: string, text: string) => {
+        await mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebarWithText("${color}", "${text}")`);
+    });
     ipcMain.on("openSettingsWindow", async () => {
         await createSettingsWindow();
     });
@@ -61,6 +63,12 @@ export function registerIpc() {
     });
     ipcMain.on("decryptMessage", async (event, message: string) => {
         event.returnValue = decryptMessage(message);
+    });
+    ipcMain.handle("encryptSafeStorage", async (event, plaintextPassword: string) => {
+        return safeStorage.encryptString(plaintextPassword).toString("latin1");
+    });
+    ipcMain.handle("decryptSafeStorage", async (event, encryptedPassword: string) => {
+        return safeStorage.decryptString(Buffer.from(encryptedPassword, "latin1"));
     });
     ipcMain.on("get-user-data-path", (event) => {
         event.returnValue = app.getPath("userData");

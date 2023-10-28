@@ -1,6 +1,7 @@
-import {app, BrowserWindow, clipboard, Menu} from "electron";
+import {app, BrowserWindow, clipboard, ipcRenderer, Menu} from "electron";
 import {mainWindow} from "./window";
 import {createSettingsWindow} from "./settings/main";
+import {cycleThroughPasswords} from "./modules/messageEncryption";
 
 interface Pasteable {
     paste(): void;
@@ -33,6 +34,13 @@ export async function setMenu() {
                     accelerator: "CmdOrCtrl+Shift+'",
                     click: function () {
                         createSettingsWindow();
+                    }
+                },
+                {
+                    label: "Cycle through passwords",
+                    accelerator: "F9",
+                    click: async function () {
+                        await cycleThroughPasswords();
                     }
                 },
                 {

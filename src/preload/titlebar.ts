@@ -10,6 +10,7 @@ function createTitlebar() {
     titlebar.innerHTML = `
         <nav class="titlebar">
           <div class="window-title" id="window-title"></div>
+          <p class="titlebar-text"></p>
           <div id="window-controls-container">
             <div id="spacer"></div>
             <div id="minimize"><div id="minimize-icon"></div></div>
@@ -79,4 +80,17 @@ export function flashTitlebar(color: string) {
 
         realTitlebar.removeEventListener("transitionend", handler);
     });
+}
+
+export function flashTitlebarWithText(color: string, text: string) {
+    flashTitlebar(color);
+
+    const titlebarText = titlebar.getElementsByTagName("p")[0];
+    titlebarText.innerHTML = text;
+    titlebarText.style.transition = "opacity 0.2s ease-out";
+    titlebarText.style.opacity = "1";
+    setTimeout(() => {
+        titlebarText.style.transition = "opacity 2s ease-out";
+        titlebarText.style.opacity = "0";
+    }, 2000);
 }

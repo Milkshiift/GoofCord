@@ -123,6 +123,16 @@
     <h2>Encryption settings</h2>
     <fieldset>
         <div class="checkbox-container">
+            <textarea data-setting="encryptionPasswords"></textarea>
+        </div>
+        <p class="description">
+            Securely stored, encrypted list of your passwords.
+            A backup in some warm, safe place is recommended.
+            Separate entries with commas.
+        </p>
+    </fieldset>
+    <fieldset>
+        <div class="checkbox-container">
             <input class="text" data-setting="encryptionCover" type="text"/>
             <label>Encryption Cover</label>
         </div>
@@ -218,11 +228,20 @@
 </fieldset>
 </body>
 <script>
+    // WARNING ⚠️ All code below may cause intense headaches. I won't fix it 😊.
+
     async function updateSettings() {
         const elements = document.querySelectorAll("[data-setting]");
         for (const e of elements) {
             try {
-                const value = await settings.get(e.dataset.setting);
+                let value = await settings.get(e.dataset.setting);
+                if (e.dataset.setting === "encryptionPasswords") {
+                    let decryptedPasswords = [];
+                    for (const password in value) {
+                        decryptedPasswords.push(await settings.decryptSafeStorage(value[password]));
+                    }
+                    value = decryptedPasswords;
+                }
                 handleSettingElement(e, value);
             } catch (error) {
                 console.error(`Error fetching setting for element with dataset setting: ${e.dataset.setting}`, error);
@@ -257,31 +276,53 @@
 
     const elements = document.querySelectorAll("[data-setting]");
     elements.forEach((element) => {
-        element.addEventListener("change", () => {
-            saveSettings();
+        element.addEventListener("change", async () => {
+            await saveSettings();
             if (element.name === "modName") {
                 toggleCustomModDisplay(element.value);
             }
         });
     });
 
-    function saveSettings() {
+    async function saveSettings() {
         const elements = Array.from(document.querySelectorAll("[data-setting]"));
         const obj = Object.fromEntries(
             elements.map((e) => [e.dataset.setting, e.tagName === "SELECT" || e.type === "text" ? e.value : e.checked])
         );
-        obj.blocklist = createUrlArray();
+        for (const textarea of document.getElementsByTagName('textarea')) {
+            const dataSetting = textarea.getAttribute('data-setting');
+            let arrayFromTextArea = [];
+            if (dataSetting === "encryptionPasswords") {
+                arrayFromTextArea = await createArrayFromTextareaEncrypted(textarea);
+            } else {
+                arrayFromTextArea = createArrayFromTextarea(textarea);
+            }
+            obj[dataSetting] = arrayFromTextArea;
+        }
         console.log(obj);
         settings.save(obj);
         settings.flashTitlebar("#5865F2");
     }
 
-    function createUrlArray() {
-        let urlInput = document.querySelectorAll('[data-setting="blocklist"]')[0].value.replace(/\s/g, '');
-        if (urlInput.endsWith(",")) {
-            urlInput = urlInput.slice(0, -1);
+    function createArrayFromTextarea(input) {
+        let inputValue = input.value.replace(/(\r\n|\n|\r|\s+)/gm, "");
+        if (inputValue.endsWith(",")) {
+            inputValue = inputValue.slice(0, -1);
         }
-        return urlInput.split(",");
+        return inputValue.split(",");
+    }
+
+    async function createArrayFromTextareaEncrypted(input) {
+        let inputValue = input.value.replace(/(\r\n|\n|\r|\s+)/gm, "");
+        if (inputValue.endsWith(",")) {
+            inputValue = inputValue.slice(0, -1);
+        }
+        let encryptedPasswords = [];
+        const arrayFromTextArea = inputValue.split(",");
+        for (const password in arrayFromTextArea) {
+            encryptedPasswords.push(await settings.encryptSafeStorage(arrayFromTextArea[password]));
+        }
+        return encryptedPasswords;
     }
 
     updateSettings();

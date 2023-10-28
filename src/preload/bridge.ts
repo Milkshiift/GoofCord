@@ -1,5 +1,5 @@
 import {contextBridge, ipcRenderer} from "electron";
-import {flashTitlebar} from "./titlebar";
+import {flashTitlebar, flashTitlebarWithText} from "./titlebar";
 
 let windowCallback: (arg0: object) => void;
 contextBridge.exposeInMainWorld("goofcord", {
@@ -11,6 +11,7 @@ contextBridge.exposeInMainWorld("goofcord", {
     },
     titlebar: {
         flashTitlebar: (color: string) => flashTitlebar(color),
+        flashTitlebarWithText: (color: string, text: string) => flashTitlebarWithText(color, text),
     },
     electron: process.versions.electron,
     version: ipcRenderer.sendSync("get-app-version", "app-version"),

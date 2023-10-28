@@ -1,9 +1,8 @@
 import {mainWindow} from "../window";
-import {session, protocol} from "electron";
+import {session} from "electron";
 import {getConfig} from "../utils";
 
 export async function initializeFirewall() {
-
     // Blocking URLs. This list works in tandem with "blockedStrings" list.
     session.defaultSession.webRequest.onBeforeRequest(
         {

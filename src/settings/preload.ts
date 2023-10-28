@@ -14,4 +14,6 @@ contextBridge.exposeInMainWorld("settings", {
     copyDebugInfo: () => ipcRenderer.send("copyDebugInfo"),
     crash: () => ipcRenderer.send("crash"),
     flashTitlebar: (color: string) => ipcRenderer.send("flashTitlebar", color),
+    encryptSafeStorage: (string: string) => ipcRenderer.invoke("encryptSafeStorage", string),
+    decryptSafeStorage: (string: string) => ipcRenderer.invoke("decryptSafeStorage", string),
 });

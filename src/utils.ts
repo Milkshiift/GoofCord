@@ -98,6 +98,7 @@ export interface Settings {
     modName: string;
     prfmMode: string;
     blocklist: string[];
+    encryptionPasswords: string[];
     customJsBundle: RequestInfo | URL;
     customCssBundle: RequestInfo | URL;
 
@@ -133,6 +134,7 @@ const DEFAULTS: Settings = {
         "https://www.youtube.com/youtubei/v*/next?*",
         "https://www.youtube.com/s/desktop/*"
     ],
+    encryptionPasswords: []
 };
 
 export async function setup() {
