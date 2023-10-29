@@ -52,6 +52,9 @@ jobs:
       - name: Install Node dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install electron-forge globally
+        run: pnpm add electron-forge
+
       - name: Build TypeScript
         run: pnpm run build
 
