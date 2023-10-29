@@ -5,8 +5,7 @@
 const { FusesPlugin } = require('@electron-forge/plugin-fuses');
 const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 
-const {join} = require("path");
-const {readdirSync, unlinkSync} = require("graceful-fs");
+const {join, extname} = require("path");
 const fs = require("graceful-fs");
 const {platform} = require("os");
 
@@ -96,8 +95,29 @@ const config = {
     }
   ],
   hooks: {
-    // remove folders & files not to be included in the app
     packageAfterCopy: async (config, buildPath, electronVersion, platform, arch) => {
+      async function cleanUpNodeModules(directory) {
+        const files = await fs.promises.readdir(directory);
+        for (const file of files) {
+          const filePath = join(directory, file);
+          const stats = await fs.promises.stat(filePath);
+
+          if (file.includes("esm") === true || file.includes("bundle") === true || extname(file) === '.ts' || extname(file) === '.map') {
+            if (stats.isDirectory()) {
+              await fs.promises.rm(filePath, {recursive: true, force: true});
+            }
+            else {
+              await fs.promises.unlink(filePath);
+            }
+
+          }
+          else if (stats.isDirectory()) {
+            await cleanUpNodeModules(filePath);
+          }
+        }
+      }
+      await cleanUpNodeModules(buildPath)
+
       // folders & files to be included in the app
       const appItems = [
         'assets',
@@ -106,11 +126,14 @@ const config = {
         'node_modules'
       ];
 
-      readdirSync(buildPath).filter((item) => {
-        return appItems.indexOf(item) === -1
-      }).forEach((item) => {
-        fs.promises.rm(join(buildPath, item), {recursive: true, force: true});
-      });
+      // remove root folders & files not to be included in the app
+      const files = await fs.promises.readdir(buildPath);
+      for (const file of files) {
+        const filePath = join(buildPath, file);
+        if (appItems.includes(file) === false) {
+          await fs.promises.rm(filePath, {recursive: true, force: true});
+        }
+      }
     },
 
     // remove unused locales
@@ -118,13 +141,13 @@ const config = {
       if (platform() === "darwin") return;
 
       const dirPath = join(packageResult.outputPaths[0], "locales");
-      const files = readdirSync(dirPath);
+      const files = await fs.promises.readdir(dirPath);
 
       for (const file of files) {
         const filePath = join(dirPath, file);
 
         if (file !== "en-US.pak") {
-          unlinkSync(filePath);
+          await fs.promises.unlink(filePath);
         }
       }
     }

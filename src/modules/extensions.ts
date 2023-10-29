@@ -28,6 +28,9 @@ export function unstrictCSP() {
         if (!responseHeaders) return done({});
 
         if (resourceType === "mainFrame") {
+            // This behaves very strangely. For some, everything works without deleting CSP,
+            // For some "CSP" works, for some "csp"
+            delete responseHeaders["Content-Security-Policy"];
             delete responseHeaders["content-security-policy"];
         } else if (resourceType === "stylesheet") {
             // Fix hosts that don't properly set the css content type, such as
