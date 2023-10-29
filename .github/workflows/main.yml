@@ -55,10 +55,7 @@ jobs:
       - name: Install electron-forge globally
         run: pnpm add electron-forge -g
 
-      - name: Build TypeScript
-        run: pnpm run build
-
       - name: Publish app
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: electron-forge publish --arch=${{ matrix.arch }}
+        run: pnpm run publish -- --arch=${{ matrix.arch }}
