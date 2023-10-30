@@ -34,7 +34,8 @@ export async function createSettingsWindow() {
                 preload: path.join(__dirname, "preload.js"),
                 nodeIntegrationInSubFrames: false,
                 webSecurity: true,
-                plugins: false
+                plugins: false,
+                contextIsolation: true
             }
         });
 
