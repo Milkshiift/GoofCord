@@ -55,7 +55,13 @@ jobs:
       - name: Install electron-forge globally
         run: pnpm add electron-forge -g
 
-      - name: Publish app
+      - name: Make app
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: pnpm run publish -- --arch=${{ matrix.arch }}
+        run: pnpm run make -- --arch=${{ matrix.arch }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Artifacts
+          path: ./out/make/

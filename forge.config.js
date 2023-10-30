@@ -21,7 +21,7 @@ const config = {
     onlyModules: []
   },
   packagerConfig: {
-    executableName: "GoofCord-"+process.argv[4],
+    executableName: "GoofCord",
     asar: true,
     icon: iconFile,
     extraResource: [

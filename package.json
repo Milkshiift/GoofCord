@@ -12,7 +12,7 @@
     "makeWindows": "npm run build && npm run makeWindows64 && npm run makeWindows32",
     "makeDarwin": "npm run build && electron-forge make --platform=darwin",
     "package": "electron-forge package",
-    "publish": "npm run build && electron-forge publish"
+    "make": "npm run build && electron-forge make"
   },
   "repository": {
     "type": "git",
