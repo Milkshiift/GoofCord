@@ -1,5 +1,5 @@
 {
-  "name": "goofcord",
+  "name": "GoofCord",
   "version": "1.0.0",
   "description": "Take control of your Discord experience with GoofCord – the highly configurable and privacy-first discord client.",
   "main": "ts-out/main.js",
