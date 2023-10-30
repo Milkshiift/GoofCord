@@ -6,14 +6,15 @@ import {mainWindow} from "../window";
 const stegcloak = new StegCloak(true, false);
 
 const encryptionPasswords: string[] = [];
+let chosenPassword: string;
+
 (async function loadPasswords() {
     const encryptedPasswords = await getConfig("encryptionPasswords");
     for (const password in encryptedPasswords) {
         encryptionPasswords.push(safeStorage.decryptString(Buffer.from(encryptedPasswords[password], "latin1")));
     }
+    chosenPassword = encryptionPasswords[0];
 })();
-
-let chosenPassword = encryptionPasswords[0];
 
 export function encryptMessage(message: string) {
     let cover = getConfigSync("encryptionCover");

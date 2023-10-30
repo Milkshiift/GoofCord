@@ -30,7 +30,7 @@ function registerCustomHandler() {
             capturerWindow.maximize();
             ipcMain.once("selectScreenshareSource", async (_event, id, name, audio, resolution, framerate) => {
                 capturerWindow.close();
-                await mainWindow.webContents.executeJavaScript(`if (window.ScreenshareQuality != null) {window.ScreenshareQuality.patchScreenshareQuality({
+                await mainWindow.webContents.executeJavaScript(`if (window.Vencord !== undefined) {window.ScreenshareQuality.patchScreenshareQuality({
                     framerate: ${framerate},
                     height: ${resolution}
                 })}`);

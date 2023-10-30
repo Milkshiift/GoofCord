@@ -70,6 +70,9 @@ export function registerIpc() {
     ipcMain.handle("decryptSafeStorage", async (event, encryptedPassword: string) => {
         return safeStorage.decryptString(Buffer.from(encryptedPassword, "latin1"));
     });
+    ipcMain.handle("isVencordPresent", async () => {
+        return await mainWindow.webContents.executeJavaScript("window.Vencord !== undefined");
+    });
     ipcMain.on("get-user-data-path", (event) => {
         event.returnValue = app.getPath("userData");
     });

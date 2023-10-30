@@ -58,15 +58,24 @@ function attachTitlebarEvents() {
 export async function injectTitlebar() {
     const titlebar = createTitlebar();
     const appMount = document.getElementById("app-mount");
-    if (appMount) {
-        appMount.prepend(titlebar);
-    } else {
-        document.body.appendChild(titlebar);
-    }
+    if (appMount) appMount.prepend(titlebar);
+
+    // MutationObserver to check if the title bar gets destroyed
+    const observer = new MutationObserver(function(mutations) {
+        for (let i = 0; i < mutations.length; i++) {
+            const removedNodes = Array.from(mutations[i].removedNodes);
+            if (removedNodes.includes(titlebar)) {
+                // Titlebar has been removed, reinject it
+                injectTitlebar();
+                break;
+            }
+        }
+    });
+
+    if (appMount) observer.observe(appMount, { childList: true, subtree: false });
 
     const titlebarcssPath = path.join(__dirname, "../", "/content/css/titlebar.css");
     addStyle(await fs.promises.readFile(titlebarcssPath, "utf8"));
-    document.body.setAttribute("customTitlebar", "");
     document.body.setAttribute("goofcord-platform", os.platform());
 
     attachTitlebarEvents();
@@ -74,7 +83,7 @@ export async function injectTitlebar() {
 
 let animFinished = true;
 export function flashTitlebar(color: string) {
-    const realTitlebar = titlebar.getElementsByTagName("nav")[0];
+    const realTitlebar = titlebar.children[0] as HTMLElement;
 
     if (!animFinished) {
         realTitlebar.style.backgroundColor = "transparent";
@@ -108,5 +117,5 @@ export function flashTitlebarWithText(color: string, text: string) {
     titlebarTimeout = setTimeout(() => {
         titlebarText.style.transition = "opacity 2s ease-out";
         titlebarText.style.opacity = "0";
-    }, 3000);
+    }, 4000);
 }

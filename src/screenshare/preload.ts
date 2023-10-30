@@ -1,4 +1,5 @@
 import {ipcRenderer} from "electron";
+import {log} from "../modules/logger";
 
 interface IPCSources {
     id: string;
@@ -56,15 +57,15 @@ async function addDisplays() {
                     const resolution = document.getElementById("resolution-textbox") as HTMLInputElement;
                     const framerate = document.getElementById("framerate-textbox") as HTMLInputElement;
 
-                    ipcRenderer.send("selectScreenshareSource", id, title, audio.checked, resolution.value, framerate.value);
-
                     // @ts-ignore
-                    if (window.Vencord != null || (resolution.value === "720" && framerate.value === "30")) {
+                    if (await ipcRenderer.invoke("isVencordPresent") || (resolution.value === "720" && framerate.value === "30")) {
                         ipcRenderer.send("flashTitlebar", "#5865F2");
                     }
                     else {
                         ipcRenderer.send("flashTitlebarWithText", "#f8312f", "Custom resolution & framerate are only available with Vencord");
                     }
+
+                    ipcRenderer.send("selectScreenshareSource", id, title, audio.checked, resolution.value, framerate.value);
                 } catch (err) {
                     console.error(err);
                 }

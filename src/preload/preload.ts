@@ -11,21 +11,24 @@ window.localStorage.setItem("hideNag", "true");
 const version = ipcRenderer.sendSync("displayVersion");
 
 (async function loadScriptsWithCheck() {
-    // For some AWFUL reason, preload is called before document.body is accessible
+    // For some AWFUL reason, preload is called before the document.body is accessible
     // So we wait until it's not null
     while (document.body === null) {
-        await new Promise(resolve => setTimeout(resolve, 10));
+        await new Promise(resolve => setTimeout(resolve, 50));
     }
 
     await loadScripts(false);
     if (await getConfig("disableAutogain")) {
         addScript(await fs.promises.readFile(path.join(__dirname, "../", "/content/js/disableAutogain.js"), "utf8"));
     }
+    setTimeout(async () => {
+        await injectTitlebar();
+    }, 1000);
 })();
 
 const waitUntilSplashEnds = setInterval(async () => {
     // Waiting until settings button appears, also useful for detecting when the splash is over
-    const settingsButton = document.querySelector("[aria-label=\"User Settings\"]");
+    const settingsButton = document.querySelector("path[d^='M19.738']")?.parentNode?.parentNode;
     if (settingsButton) {
         clearInterval(waitUntilSplashEnds);
 
@@ -70,7 +73,7 @@ function injectInSettings() {
             el.textContent = `GoofCord ${version}`;
             hostInfo.insertBefore(el, hostInfo.firstElementChild!);
         }
-    }, 50);
+    }, 100);
 }
 
 async function injectAfterSplash() {
@@ -92,7 +95,6 @@ async function injectAfterSplash() {
         })();
     `);
 
-    await injectTitlebar();
     const cssPath = path.join(__dirname, "../", "/content/css/discord.css");
     addStyle(await fs.promises.readFile(cssPath, "utf8"));
 }
