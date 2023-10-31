@@ -13,13 +13,10 @@ jobs:
         include:
           - name: linux
             runner: ubuntu-latest
-            arch: x64 arm64 armv7l
           - name: win
             runner: windows-latest
-            arch: x64 arm64 ia32
           - name: mac
             runner: macos-latest
-            arch: x64 arm64
 
     name: ${{ matrix.name }} (${{ matrix.arch }})
     runs-on: ${{ matrix.runner }}
@@ -47,7 +44,7 @@ jobs:
         run: pnpm run build
 
       - name: Package GoofCord
-        run: electron-builder --${{ matrix.name }} ${{ matrix.arch }}
+        run: electron-builder --${{ matrix.name }}
 
       - name: Upload to a draft release
         uses: marvinpinto/action-automatic-releases@latest
