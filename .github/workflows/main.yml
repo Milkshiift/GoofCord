@@ -11,27 +11,15 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: Windows64
+          - name: Linux
+            runner: ubuntu-20.04
+            arch: x64,arm64,armv7l
+          - name: Windows
             runner: windows-latest
-            arch: x64
-          - name: Windows32
-            runner: windows-latest
-            arch: ia32
-          - name: Linux64
-            runner: ubuntu-latest
-            arch: x64
-          - name: LinuxArm64
-            runner: ubuntu-latest
-            arch: arm64
-          - name: LinuxArmV7
-            runner: ubuntu-latest
-            arch: armv7l
-          - name: macOSIntel
+            arch: x64,arm64,ia32
+          - name: macOS
             runner: macos-latest
-            arch: x64
-          - name: macOSArm
-            runner: macos-latest
-            arch: arm64
+            arch: x64,arm64
 
     name: ${{ matrix.name }} (${{ matrix.arch }})
     runs-on: ${{ matrix.runner }}
@@ -55,13 +43,7 @@ jobs:
       - name: Install electron-forge globally
         run: pnpm add electron-forge -g
 
-      - name: Make app
+      - name: Publish app
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: pnpm run make -- --arch=${{ matrix.arch }}
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: Artifacts
-          path: GoofCord/out/release/make
+        run: pnpm run publish -- --arch=${{ matrix.arch }}
