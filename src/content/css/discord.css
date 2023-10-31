@@ -6,6 +6,11 @@
     padding-right: 0;
 }
 
+[class^="listItem_"]:has([data-list-item-id="guildsnav___app-download-button"]),
+[class^="listItem_"]:has(+ [class^="listItem_"] [data-list-item-id="guildsnav___app-download-button"]) {
+    display: none;
+}
+
 /* Could improve scrolling performance? Probably outdated. https://stackoverflow.com/questions/18529381/what-does-webkit-transform-translate3d0-0-0-exactly-do-apply-to-body */
 .scroller-kQBbkU {
     transform: translateZ(0);

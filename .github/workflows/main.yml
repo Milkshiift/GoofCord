@@ -11,13 +11,13 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: Linux
-            runner: ubuntu-20.04
+          - name: linux
+            runner: ubuntu-latest
             arch: x64,arm64,armv7l
-          - name: Windows
+          - name: win
             runner: windows-latest
             arch: x64,arm64,ia32
-          - name: macOS
+          - name: mac
             runner: macos-latest
             arch: x64,arm64
 
@@ -40,10 +40,19 @@ jobs:
       - name: Install Node dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install electron-forge globally
-        run: pnpm add electron-forge -g
+      - name: Install electron-builder globally
+        run: pnpm add electron-builder -g
 
-      - name: Publish app
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: pnpm run publish -- --arch=${{ matrix.arch }}
+      - name: Build GoofCord
+        run: pnpm run build
+
+      - name: Package GoofCord
+        run: electron-builder --${{ matrix.name }} --${{ matrix.arch }}
+
+      - name: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          draft: true
+          title: "Development Build"
+          files: ./dist
