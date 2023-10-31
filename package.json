@@ -9,7 +9,7 @@
     "packageLinux": "npm run build && electron-builder --linux",
     "packageWindows64": "npm run build && electron-builder --win --x64",
     "packageWindows32": "npm run build && electron-builder --win --ia32",
-    "packageWindows": "npm run build && npm run packageWindows64 && npm run packageWindows32",
+    "packageWindows": "npm run build && npm run packageWindows64 && npm run packageWindows32"
   },
   "repository": {
     "type": "git",
