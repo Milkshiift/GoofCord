@@ -49,7 +49,8 @@ jobs:
       - name: Package GoofCord
         run: electron-builder --${{ matrix.name }} --${{ matrix.arch }}
 
-      - name: marvinpinto/action-automatic-releases@latest
+      - name: Upload to a draft release
+        uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
