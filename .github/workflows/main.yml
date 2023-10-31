@@ -61,7 +61,7 @@ jobs:
         run: pnpm run make -- --arch=${{ matrix.arch }}
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Artifacts
-          path: ./out/make/
+          path: /out/release/make/
