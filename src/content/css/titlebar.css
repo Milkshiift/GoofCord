@@ -67,20 +67,6 @@
 }
 
 /* GoofCord on Linux */
-[goofcord-platform="linux"] .container-2RRFHK {
-    padding-top: 45px;
-    top: -45px;
-}
-
-[goofcord-platform="linux"] .titlebar {
-    height: 45px;
-    line-height: 45px;
-}
-
-[goofcord-platform="linux"] .titlebar #window-controls-container {
-    line-height: 45px;
-    transform: translateY(-8px);
-}
 
 [goofcord-platform="linux"] .titlebar #window-controls-container #minimize:hover {
     background-color: var(--background-modifier-hover);
@@ -250,37 +236,7 @@
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30' width='11' height='11'%3E%3Cstyle%3E%3C/style%3E%3Cpath fill-rule='evenodd' d='m6 0h24v24h-6v6h-24v-24h6zm3 6h15v15h3v-18h-18zm-6 21h18v-18h-18z'/%3E%3C/svg%3E") no-repeat 50% 50%;
 }
 
-/* GoofCord on MacOS (Why would you do this?) */
-[goofcord-platform="darwin"] .withFrame-haYltI {
-    height: 0 !important;
-}
-
-[goofcord-platform="darwin"] .sidebar-1tnWFu {
-    border-top-left-radius: 0 !important;
-}
-
-[goofcord-platform="darwin"] .scroller-3X7KbA {
-    padding-top: 35px !important;
-}
-
-[goofcord-platform="darwin"] .container-2RRFHK {
-    padding-top: 48px;
-    top: -48px;
-}
-
-[goofcord-platform="darwin"] .titlebar {
-    height: 48px;
-    line-height: 48px;
-}
-
-[goofcord-platform="darwin"] .titlebar #window-controls-container {
-    float: left;
-    width: 150px;
-    height: 60%;
-    line-height: 45px;
-    -webkit-app-region: no-drag;
-    transform: translate(-82px, 4px);
-}
+/* GoofCord on MacOS */
 
 [goofcord-platform="darwin"] .titlebar #window-controls-container:hover #minimize #minimize-icon,
 [goofcord-platform="darwin"] .titlebar #window-controls-container:hover #maximize #maximize-icon,
@@ -359,9 +315,6 @@
 [goofcord-platform="darwin"] .titlebar #window-controls-container #minimize,
 [goofcord-platform="darwin"] .titlebar #window-controls-container #maximize,
 [goofcord-platform="darwin"] .titlebar #window-controls-container #quit {
-    float: right;
-    height: 80%;
-    width: 13%;
     text-align: center;
     color: transparent;
     cursor: default;
