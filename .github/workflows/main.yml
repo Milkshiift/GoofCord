@@ -19,12 +19,15 @@ jobs:
           - name: linux
             runner: ubuntu-latest
             targets: "tar.gz AppImage deb"
+            acrh: "--x64 --arm64 --armv7l"
           - name: win
             runner: windows-latest
             targets: "NSIS zip"
+            acrh: "--x64 --ia32 --arm64"
           - name: mac
             runner: macos-latest
             targets: "dmg"
+            acrh: "--x64 --arm64"
 
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.runner }}
@@ -52,7 +55,9 @@ jobs:
         run: pnpm run build
 
       - name: Package GoofCord
-        run: electron-builder --${{ matrix.name }} ${{ matrix.targets }} --publish=never
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: electron-builder ${{ matrix.arch }} --${{ matrix.name }} ${{ matrix.targets }} --publish=always
 
       - name: Upload to a draft release
         uses: marvinpinto/action-automatic-releases@latest
