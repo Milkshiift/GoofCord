@@ -58,12 +58,3 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: electron-builder ${{ matrix.arch }} --${{ matrix.name }} ${{ matrix.targets }} --publish=always
-
-      - name: Upload to a draft release
-        uses: marvinpinto/action-automatic-releases@latest
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          draft: true
-          title: "Development Build"
-          automatic_release_tag: ${{ inputs.releaseTag }}
-          files: ./dist
