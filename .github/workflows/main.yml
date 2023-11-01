@@ -19,15 +19,15 @@ jobs:
           - name: linux
             runner: ubuntu-latest
             targets: "tar.gz AppImage deb"
-            acrh: "--x64 --arm64 --armv7l"
+            arch: "--x64 --arm64 --armv7l"
           - name: win
             runner: windows-latest
             targets: "NSIS zip"
-            acrh: "--x64 --ia32 --arm64"
+            arch: "--x64 --ia32 --arm64"
           - name: mac
             runner: macos-latest
             targets: "dmg"
-            acrh: "--x64 --arm64"
+            arch: "--x64 --arm64"
 
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.runner }}

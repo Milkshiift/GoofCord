@@ -67,6 +67,7 @@
     "linux": {
       "icon": "build/icon.icns",
       "category": "Network",
+      "maintainer": "MilkShift",
       "target": [
         {
           "target": "AppImage",
