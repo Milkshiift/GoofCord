@@ -43,7 +43,6 @@
     "auto-launch": "^5.0.6",
     "cross-fetch": "^4.0.0",
     "electron-context-menu": "^3.6.1",
-    "electron-squirrel-startup": "^1.0.0",
     "extract-zip": "^2.0.1",
     "graceful-fs": "^4.2.11",
     "stegcloak": "^1.1.1",
@@ -68,31 +67,41 @@
     "linux": {
       "icon": "build/icon.icns",
       "category": "Network",
-      "maintainer": "milkshiftdev@gmail.com",
       "target": [
         {
-          "target": [
-            "tar.gz",
-            "AppImage",
-            "deb"
-          ],
-          "arch": ["x64", "arm64", "armv7l"]
+          "target": "AppImage",
+          "arch": [
+            "x64",
+            "arm64",
+            "armv7l"
+          ]
         }
       ]
     },
     "win": {
       "icon": "build/icon.ico",
-      "target": {
-        "target": "NSIS",
-        "arch": ["x64", "ia32", "arm64"]
-      }
+      "target": [
+        {
+          "target": "NSIS",
+          "arch": [
+            "x64",
+            "ia32",
+            "arm64"
+          ]
+        }
+      ]
     },
     "mac": {
       "category": "public.app-category.social-networking",
-      "target": {
-        "target": "dmg",
-        "arch": ["x64", "arm64"]
-      },
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
       "icon": "build/icon.icns"
     }
   },

@@ -13,10 +13,13 @@ jobs:
         include:
           - name: linux
             runner: ubuntu-latest
+            targets: "tar.gz AppImage deb"
           - name: win
             runner: windows-latest
+            targets: "NSIS zip"
           - name: mac
             runner: macos-latest
+            targets: "dmg"
 
     name: ${{ matrix.name }} (${{ matrix.arch }})
     runs-on: ${{ matrix.runner }}
@@ -44,7 +47,7 @@ jobs:
         run: pnpm run build
 
       - name: Package GoofCord
-        run: electron-builder --${{ matrix.name }}
+        run: electron-builder --${{ matrix.name }} ${{ matrix.targets }}
 
       - name: Upload to a draft release
         uses: marvinpinto/action-automatic-releases@latest
