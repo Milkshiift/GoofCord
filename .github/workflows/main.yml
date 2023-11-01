@@ -2,6 +2,11 @@ name: Release app
 
 on:
   workflow_dispatch:
+    inputs:
+      releaseTag:
+        description: 'Tag name for the release'
+        required: true
+        default: 'v1.0.0'
 
 permissions:
   contents: write
@@ -21,7 +26,7 @@ jobs:
             runner: macos-latest
             targets: "dmg"
 
-    name: ${{ matrix.name }} (${{ matrix.arch }})
+    name: ${{ matrix.name }}
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Github checkout
@@ -55,4 +60,5 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           draft: true
           title: "Development Build"
+          automatic_release_tag: ${{ inputs.releaseTag }}
           files: ./dist
