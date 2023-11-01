@@ -52,7 +52,8 @@
   "build": {
     "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
     "nsis": {
-      "include": "build/installer.nsh"
+      "include": "build/installer.nsh",
+      "artifactName": "${productName} Setup ${arch}.${ext}"
     },
     "appId": "com.milkshift.goofcord",
     "productName": "GoofCord",
