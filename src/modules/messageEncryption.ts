@@ -7,6 +7,7 @@ const stegcloak = new StegCloak(true, false);
 
 const encryptionPasswords: string[] = [];
 let chosenPassword: string;
+const encryptionMark = getConfigSync("encryptionMark");
 
 (async function loadPasswords() {
     const encryptedPasswords = await getConfig("encryptionPasswords");
@@ -33,13 +34,14 @@ export function decryptMessage(message: string) {
         try {
             const decryptedMessage = stegcloak.reveal(message, encryptionPasswords[password]);
             if (decryptedMessage.endsWith("\u200b")) {
-                return decryptedMessage;
+                return encryptionMark+decryptedMessage;
             }
         }
         catch (e) {
             continue;
         }
     }
+    return message;
 }
 
 let currentIndex = 0;

@@ -94,6 +94,7 @@ export interface Settings {
     autoUpdateDefaultScripts: boolean;
     disableAutogain: boolean;
     encryptionCover: string;
+    encryptionMark: string;
     discordUrl: string;
     modName: string;
     prfmMode: string;
@@ -118,6 +119,7 @@ const DEFAULTS: Settings = {
     autoUpdateDefaultScripts: true,
     disableAutogain: false,
     encryptionCover: "",
+    encryptionMark: "🔒| ",
     modName: "vencord",
     prfmMode: "none",
     discordUrl: "https://canary.discord.com/app",

@@ -127,7 +127,7 @@
         </div>
         <p class="description">
             Securely stored, encrypted list of your passwords.
-            A backup in some warm, safe place is recommended.
+            A backup in a warm, safe place is recommended.
             Separate entries with commas.
         </p>
     </fieldset>
@@ -138,6 +138,16 @@
         </div>
         <p class="description">
             A message that a user without the password will see. Minimum two words or empty.
+        </p>
+    </fieldset>
+    <fieldset>
+        <div class="checkbox-container">
+            <input class="text" data-setting="encryptionMark" type="text"/>
+            <label>Encryption Mark</label>
+        </div>
+        <p class="description">
+            A string that will be prepended to each decrypted message,
+            so it's easier to differentiate what messages are encrypted.
         </p>
     </fieldset>
 </form>
