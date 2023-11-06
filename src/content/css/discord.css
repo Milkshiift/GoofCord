@@ -23,12 +23,3 @@
     -webkit-backface-visibility: hidden;
     -webkit-perspective: 1000px;
 }
-
-/* Invidious embed improvements */
-.vjs-button.watch-on-invidious,
-.vjs-icon-share,
-.vjs-remaining-time,
-.vjs-overlay
-{
-    display: none;
-}
