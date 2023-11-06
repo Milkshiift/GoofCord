@@ -6,8 +6,14 @@
     padding-right: 0;
 }
 
+/* Hide download discord button */
 [class^="listItem_"]:has([data-list-item-id="guildsnav___app-download-button"]),
 [class^="listItem_"]:has(+ [class^="listItem_"] [data-list-item-id="guildsnav___app-download-button"]) {
+    display: none;
+}
+
+/* Hide avatar decoration ad */
+.containerWrapper_fa6aa6.animation_fb8933.withoutAvatar__0549d {
     display: none;
 }
 
@@ -16,4 +22,13 @@
     transform: translateZ(0);
     -webkit-backface-visibility: hidden;
     -webkit-perspective: 1000px;
+}
+
+/* Invidious embed improvements */
+.vjs-button.watch-on-invidious,
+.vjs-icon-share,
+.vjs-remaining-time,
+.vjs-overlay
+{
+    display: none;
 }

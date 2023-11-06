@@ -119,7 +119,7 @@ const DEFAULTS: Settings = {
     autoUpdateDefaultScripts: true,
     disableAutogain: false,
     encryptionCover: "",
-    encryptionMark: "🔒| ",
+    encryptionMark: "| ",
     modName: "vencord",
     prfmMode: "none",
     discordUrl: "https://canary.discord.com/app",

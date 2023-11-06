@@ -1,15 +1,14 @@
 {
   "name": "goofcord",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Take control of your Discord experience with GoofCord – the highly configurable and privacy-first discord client.",
   "main": "ts-out/main.js",
   "scripts": {
     "build": "tsc && copyfiles -u 1 src/**/*.html src/**/**/*.css src/**/**/*.js ts-out/ && copyfiles package.json ts-out/ && copyfiles assets/**/** ts-out/",
     "start": "pnpm run build && electron ./ts-out/main.js",
     "packageLinux": "npm run build && electron-builder --linux",
-    "packageWindows64": "npm run build && electron-builder --win --x64",
-    "packageWindows32": "npm run build && electron-builder --win --ia32",
-    "packageWindows": "npm run build && npm run packageWindows64 && npm run packageWindows32"
+    "packageWindows": "npm run build && electron-builder --win",
+    "packageMac": "npm run build && electron-builder --mac"
   },
   "repository": {
     "type": "git",

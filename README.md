@@ -40,7 +40,7 @@ GoofCord also does some clever tricks to make Discord think you are just using a
 ### How can I access the settings? ⚙️
 - Multiple ways:
   - Right-click on the tray icon and click `Open Settings`
-  - Open Discord settings, and you should see the top most button in the category "GoofCord," click it, and the settings will pop out for you. 
+  - Open Discord settings, and you should see the top most button in the category "GoofCord", click it, and the settings will pop out for you. 
   - Press `Ctrl+Shift+'` shortcut.
 
 ### Seeking the Source Code? 🕵️‍♂️

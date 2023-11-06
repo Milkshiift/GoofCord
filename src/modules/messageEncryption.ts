@@ -7,7 +7,8 @@ const stegcloak = new StegCloak(true, false);
 
 const encryptionPasswords: string[] = [];
 let chosenPassword: string;
-const encryptionMark = getConfigSync("encryptionMark");
+let encryptionMark = getConfigSync("encryptionMark");
+if (encryptionMark === undefined) encryptionMark = "| ";
 
 (async function loadPasswords() {
     const encryptedPasswords = await getConfig("encryptionPasswords");
