@@ -4,13 +4,13 @@
 </div>
 
 ## Features That Spark Joy! :sparkles:
-- **:lock: Privacy at Its Best**: GoofCord blocks all tracking and uses multiple techniques to improve your privacy and security. [Learn more](https://github.com/Milkshiift/GoofCord/wiki/Privacy-FAQ)
+- **:lock: Privacy at Its Best**: GoofCord blocks all tracking and uses multiple techniques like message encryption to improve your privacy and security. [Learn more](https://github.com/Milkshiift/GoofCord/wiki/Privacy-FAQ)
 - **:gear: Your Way, Your Client**: Personalize GoofCord to match your vibe with an array of customization options.
 - **:chart_with_upwards_trend: Fast and Performant**: Glide through your chats with GoofCord's superior speed and responsiveness. [Check the Benchmarks!](https://github.com/Milkshiift/GoofCord/wiki/Placeholder)
 - **:white_circle: Elegance in Simplicity**: We've kept it simple and sleek, delivering only the features you truly need.
 - **:bookmark: Standalone**: GoofCord is a standalone client, not reliant on the original Discord client in any way.
-- **:electric_plug: Plugins & Themes support**: Embrace other client mods like [Vencord](https://github.com/Vendicated/Vencord) or [Shelter](https://github.com/uwu/shelter) for a world of plugins and themes.
-- **:iphone: Cross the Platform**: Find GoofCord on **Windows** and **Linux**. Sadly we don't support Windows versions lower then 10.
+- **:electric_plug: Plugins & Themes support**: Embrace client mods like [Vencord](https://github.com/Vendicated/Vencord) or [Shelter](https://github.com/uwu/shelter) for a world of plugins and themes.
+- **:iphone: Cross the Platform**: Find GoofCord on **Windows** and **Linux**. Sadly we don't support Windows versions lower than 10.
 
 ## Ready to Dive In?
 
