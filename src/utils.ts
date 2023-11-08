@@ -169,15 +169,35 @@ export function getConfigLocation(): string {
 }
 
 export async function getConfig(object: string) {
-    const rawData = await fs.promises.readFile(getConfigLocation(), "utf-8");
-    const returnData = JSON.parse(rawData);
-    return returnData[object];
+    try {
+        const rawData = await fs.promises.readFile(getConfigLocation(), "utf-8");
+        const returnData = JSON.parse(rawData);
+        return returnData[object];
+    } catch (e) {
+        await checkConfig();
+        const returnData: any = await getConfig(object);
+        return returnData;
+    }
 }
 
 export function getConfigSync(object: string) {
-    const rawData = fs.readFileSync(getConfigLocation(), "utf-8");
-    const returnData = JSON.parse(rawData);
-    return returnData[object];
+    try {
+        const rawData = fs.readFileSync(getConfigLocation(), "utf-8");
+        const returnData = JSON.parse(rawData);
+        return returnData[object];
+    } catch (e) {
+        checkConfig().then(() => {
+            const returnData: any = getConfigSync(object);
+            return returnData;
+        });
+    }
+}
+
+async function checkConfig() {
+    await checkIfFoldersExist();
+    await checkIfConfigExists();
+    await checkIfConfigIsBroken();
+    await checkConfigForMissingParams();
 }
 
 export async function setConfig(object: string, toSet: unknown) {
@@ -199,7 +219,7 @@ export async function checkIfConfigExists() {
     const settingsFile = storagePath + "settings.json";
 
     if (!fs.existsSync(settingsFile)) {
-        console.log("First run of the GoofCord. Starting setup.");
+        console.log("First run of GoofCord. Starting setup.");
         await setup();
     }
 }

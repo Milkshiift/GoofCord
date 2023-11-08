@@ -1,10 +1,6 @@
 import {app, crashReporter, net, session} from "electron";
 import "v8-compile-cache";
 import {
-    checkConfigForMissingParams,
-    checkIfConfigExists,
-    checkIfConfigIsBroken,
-    checkIfFoldersExist,
     getConfig,
     getConfigSync,
     installModLoader
@@ -17,23 +13,16 @@ import AutoLaunch from "auto-launch";
 import {categorizeScripts, installDefaultScripts} from "./modules/scriptLoader";
 import {unstrictCSP} from "./modules/extensions";
 
+// Your data now belongs to CCP
+crashReporter.start({uploadToServer: false});
+
 setFlags();
+
+if (!app.requestSingleInstanceLock() && getConfigSync("multiInstance") == (false ?? undefined)) app.quit();
 
 app.on("render-process-gone", (event, webContents, details) => {
     if (details.reason == "crashed") app.relaunch();
 });
-
-if (!app.requestSingleInstanceLock() && getConfigSync("multiInstance") == (false ?? undefined)) app.quit();
-
-// Your data now belongs to CCP
-crashReporter.start({uploadToServer: false});
-
-(async function checkConfig() {
-    await checkIfFoldersExist();
-    await checkIfConfigExists();
-    await checkIfConfigIsBroken();
-    await checkConfigForMissingParams();
-})();
 
 (async function enableAutoLauncher() {
     const gfAutoLaunch = new AutoLaunch({name: "GoofCord"});
