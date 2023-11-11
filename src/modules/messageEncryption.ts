@@ -29,20 +29,24 @@ export function encryptMessage(message: string) {
 export function decryptMessage(message: string) {
     // A quick way to check if the message was encrypted.
     // Character \u200c is present in every stegcloaked message
-    if (!message.includes("\u200c")) return message;
-    for (const password in encryptionPasswords) {
-        // If the password is correct, return a decrypted message. Otherwise, try the next password.
-        try {
-            const decryptedMessage = stegcloak.reveal(message, encryptionPasswords[password]);
-            if (decryptedMessage.endsWith("\u200b")) {
-                return encryptionMark+decryptedMessage;
+    try {
+        if (!message.includes("\u200c")) return message;
+        for (const password in encryptionPasswords) {
+            // If the password is correct, return a decrypted message. Otherwise, try the next password.
+            try {
+                const decryptedMessage = stegcloak.reveal(message, encryptionPasswords[password]);
+                if (decryptedMessage.endsWith("\u200b")) {
+                    return encryptionMark+decryptedMessage;
+                }
+            }
+            catch (e) {
+                continue;
             }
         }
-        catch (e) {
-            continue;
-        }
+        return message;
+    }   catch (e) {
+        return message;
     }
-    return message;
 }
 
 let currentIndex = 0;
