@@ -61,6 +61,10 @@ async function doAfterDefiningTheWindow() {
         if (url === "about:blank") {
             return {action: "allow"};
         }
+        // Allow Discord stream popout
+        if ((url === "https://discord.com/popout")
+            || (url === "https://canary.discord.com/popout")
+            || (url === "https://ptb.discord.com/popout")) return {action: "allow"};
         if (url.startsWith("http") || url.startsWith("mailto:")) {
             // Open external URLs using the system's default browser.
             shell.openExternal(url);
