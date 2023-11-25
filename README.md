@@ -13,12 +13,22 @@
 - **:iphone: Cross the Platform**: Find GoofCord on **Windows** and **Linux**. Sadly we don't support Windows versions lower than 10.
 
 ## Ready to Dive In?
+### Windows 🪟
 
-Windows: Download the .exe installer and run it.    
-Linux: Grab the .AppImage for your architecture and fire it up.   
+* Install with prebuilt binaries from the [releases](https://github.com/Milkshiift/GoofCord/releases/latest) page.    
+Choose `GoofCord-Setup-<YOUR ARCHITECTURE>.exe`, or    
+`GoofCord-<VERSION>-win-<YOUR ARCHITECTURE>.zip` and unpack into a directory of your choice.
+
+### Linux 🐧
+
+* Install with prebuilt binaries from the [releases](https://github.com/Milkshiift/GoofCord/releases/latest) page.
+* Install from [AUR](https://aur.archlinux.org/packages/goofcord-bin) if you run an Arch-based OS (e.g., Arch Linux, Manjaro). Here's an example using yay:    
+`yay -S goofcord-bin`
+
+  
 
 Everything you'll need can be found in the Discords settings.    
-Look for the topmost button, which opens the GoofCord settings window.    
+To open GoofCord settings, look for the topmost button.  
 To explore the enchanting world of plugins and themes, head over to the Vencord category within your Discord settings. Have fun!
     
 For the brave souls who want to compile it themselves, here's how:

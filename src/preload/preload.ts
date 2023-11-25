@@ -28,7 +28,7 @@ const version = ipcRenderer.sendSync("displayVersion");
 
 const waitUntilSplashEnds = setInterval(async () => {
     // Waiting until settings button appears, also useful for detecting when the splash is over
-    const settingsButton = document.querySelector("path[d^='M19.738']")?.closest("button");
+    const settingsButton = document.querySelector("path[d^='M19.73']")?.closest("button");
     if (settingsButton) {
         clearInterval(waitUntilSplashEnds);
 
