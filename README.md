@@ -10,7 +10,7 @@
 - **:white_circle: Elegance in Simplicity**: We've kept it simple and sleek, delivering only the features you truly need.
 - **:bookmark: Standalone**: GoofCord is a standalone client, not reliant on the original Discord client in any way.
 - **:electric_plug: Plugins & Themes support**: Embrace client mods like [Vencord](https://github.com/Vendicated/Vencord) or [Shelter](https://github.com/uwu/shelter) for a world of plugins and themes.
-- **:iphone: Cross the Platform**: Find GoofCord on **Windows** and **Linux**. Sadly we don't support Windows versions lower than 10.
+- **:iphone: Cross-Platform**: Find GoofCord on **Windows**, **Linux** and **macOS**. Sadly we don't support Windows versions lower than 10.
 
 ## Ready to Dive In?
 ### Windows 🪟
@@ -25,7 +25,12 @@ Choose `GoofCord-Setup-<YOUR ARCHITECTURE>.exe`, or
 * Install from [AUR](https://aur.archlinux.org/packages/goofcord-bin) if you run an Arch-based OS (e.g., Arch Linux, Manjaro). Here's an example using yay:    
 `yay -S goofcord-bin`
 
-  
+### macOS 🍏
+
+* Install with prebuilt binaries from the [releases](https://github.com/Milkshiift/GoofCord/releases/latest) page.    
+Choose the file ending with `mac-arm64.dmg` if your computer uses Apple Silicon processor. [Mac computers with Apple Silicon](https://support.apple.com/en-us/HT211814)      
+Choose the file that ends with `mac-x64.dmg` if your computer uses Intel processor.
+
 
 Everything you'll need can be found in the Discords settings.    
 To open GoofCord settings, look for the topmost button.  
