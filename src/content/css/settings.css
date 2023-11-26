@@ -111,13 +111,14 @@ fieldset {
 
 .checkbox-container {
     display: flex;
+    margin: 0 1em;
 }
 
 label {
-    margin-left: -0.5em;
     font-size: 1em;
     display: flex;
     align-items: center;
+    margin-left: 0.5em;
 }
 
 label.disabled {
@@ -137,7 +138,6 @@ label.disabled {
 input[type="checkbox"],
 input[type="radio"] {
     flex-shrink: 0;
-    margin: 0 1em;
     height: 1.5em;
     width: 1.5em;
     border-radius: 5px;
@@ -145,6 +145,7 @@ input[type="radio"] {
     background-color: var(--input-bg);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: solid #0000 4px;
+    margin: 0;
 }
 
 input[type="radio"] {
@@ -207,7 +208,6 @@ input[type="radio"]:checked {
 }
 
 textarea {
-    margin: 0 1em;
     height: 9em;
     width: 22em;
     border-radius: 5px;
@@ -220,7 +220,6 @@ textarea {
 
 .text {
     flex-shrink: 0;
-    margin: 0 1em;
     border-radius: 5px;
     width: 190px;
     appearance: none;
@@ -250,7 +249,6 @@ button:hover {
 }
 
 select {
-    margin: 0 1em;
     border-radius: 5px;
     width: fit-content;
     background-color: var(--input-bg);
@@ -264,4 +262,22 @@ select {
 p.center {
     text-align: center;
     margin: 0;
+}
+
+.spoiler {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    border-radius: 5px;
+    background-color: var(--input-bg);
+}
+
+.spoiler textarea {
+    filter: blur(5px); /* Adjust the blur amount as needed */
+    transition: filter 0.3s ease; /* Add a smooth transition effect */
+    box-sizing: border-box;
+}
+
+.spoiler:hover textarea {
+    filter: none; /* Remove the blur effect on hover */
 }
