@@ -61,10 +61,22 @@ async function doAfterDefiningTheWindow() {
         if (url === "about:blank") {
             return {action: "allow"};
         }
-        // Allow Discord stream popout
-        if ((url === "https://discord.com/popout")
-            || (url === "https://canary.discord.com/popout")
-            || (url === "https://ptb.discord.com/popout")) return {action: "allow"};
+        // Allow Discord voice chat popout
+        if (url.includes("discord.com/popout")) {
+            return {
+                action: "allow",
+                overrideBrowserWindowOptions: {
+                    frame: false,
+                    autoHideMenuBar: true,
+                    icon: path.join(__dirname, "../", "/assets/gf_icon.png"),
+                    backgroundColor: "#313338",
+                    alwaysOnTop: true,
+                    webPreferences: {
+                        preload: path.join(__dirname, "preload/popoutPreload.js"),
+                    }
+                }
+            };
+        }
         if (url.startsWith("http") || url.startsWith("mailto:")) {
             // Open external URLs using the system's default browser.
             shell.openExternal(url);
@@ -166,7 +178,7 @@ async function doAfterDefiningTheWindow() {
     });
 }
 
-export async function createCustomWindow() {
+export async function createMainWindow() {
     mainWindow = new BrowserWindow({
         width: (await getWindowState("width")) ?? 835,
         height: (await getWindowState("height")) ?? 600,

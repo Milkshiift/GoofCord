@@ -7,7 +7,7 @@ import {
 } from "./utils";
 import "./modules/extensions";
 import "./tray";
-import {createCustomWindow} from "./window";
+import {createMainWindow} from "./window";
 import {checkForUpdate} from "./modules/updateCheck";
 import AutoLaunch from "auto-launch";
 import {categorizeScripts, installDefaultScripts} from "./modules/scriptLoader";
@@ -49,7 +49,7 @@ async function load() {
     unstrictCSP();
     if ((await getConfig("modName")) != "none") await installModLoader();
 
-    await createCustomWindow();
+    await createMainWindow();
 
     if (await getConfig("updateNotification")) await checkForUpdate();
 
