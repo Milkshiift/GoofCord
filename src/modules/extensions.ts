@@ -29,7 +29,7 @@ export function unstrictCSP() {
 
         if (resourceType === "mainFrame") {
             // This behaves very strangely. For some, everything works without deleting CSP,
-            // For some "CSP" works, for some "csp"
+            // for some "CSP" works, for some "csp"
             delete responseHeaders["Content-Security-Policy"];
             delete responseHeaders["content-security-policy"];
         } else if (resourceType === "stylesheet") {
