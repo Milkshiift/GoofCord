@@ -179,6 +179,15 @@ async function doAfterDefiningTheWindow() {
 }
 
 export async function createMainWindow() {
+    const customIconPath = await getConfig("customIconPath");
+    let icon: string;
+    console.log(customIconPath);
+    if (customIconPath === "" || customIconPath === undefined) {
+        icon = path.join(__dirname, "../", "/assets/gf_icon.png");
+    } else {
+        icon = await getConfig("customIconPath");
+    }
+    console.log(icon);
     mainWindow = new BrowserWindow({
         width: (await getWindowState("width")) ?? 835,
         height: (await getWindowState("height")) ?? 600,
@@ -187,7 +196,7 @@ export async function createMainWindow() {
         title: "GoofCord",
         show: false,
         darkTheme: true,
-        icon: path.join(__dirname, "../", "/assets/gf_icon.png"),
+        icon: icon,
         frame: false,
         autoHideMenuBar: true,
         backgroundColor: "#313338",

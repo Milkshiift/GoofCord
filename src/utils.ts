@@ -98,6 +98,7 @@ export interface Settings {
     discordUrl: string;
     modName: string;
     prfmMode: string;
+    customIconPath: string;
     blocklist: string[];
     encryptionPasswords: string[];
     customJsBundle: RequestInfo | URL;
@@ -122,9 +123,10 @@ const DEFAULTS: Settings = {
     encryptionMark: "| ",
     modName: "vencord",
     prfmMode: "none",
-    discordUrl: "https://canary.discord.com/app",
+    discordUrl: "https://discord.com/app",
     customJsBundle: "https://armcord.xyz/placeholder.js",
     customCssBundle: "https://armcord.xyz/placeholder.css",
+    customIconPath: "",
     blocklist: [ // This list works in tandem with the "blockedStrings" list located in window.ts
         // Discord. Blocking tracking and some URLs that just eat bandwidth.
         "https://*/api/v*/science", // General telemetry

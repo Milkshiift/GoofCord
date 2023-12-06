@@ -1,4 +1,4 @@
-import {app, BrowserWindow, clipboard, ipcRenderer, Menu} from "electron";
+import {app, BrowserWindow, clipboard, Menu, MenuItem} from "electron";
 import {mainWindow} from "./window";
 import {createSettingsWindow} from "./settings/main";
 import {cycleThroughPasswords} from "./modules/messageEncryption";
@@ -69,7 +69,7 @@ export async function setMenu() {
                     click: function () {
                         app.quit();
                     }
-                }
+                },
             ]
         },
         {
