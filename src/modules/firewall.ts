@@ -27,7 +27,7 @@ export async function initializeFirewall() {
     const allowedStrings = [
         "googlevideo", // For YouTube playback
         "discord-attachments",
-        "login", // For discord login
+        "/login", // For discord login
         "googleapis", // For discord activities
         "search",
     ];
