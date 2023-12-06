@@ -23,22 +23,27 @@ function registerCustomHandler() {
                 autoHideMenuBar: true,
                 webPreferences: {
                     sandbox: false,
-                    spellcheck: false,
                     preload: path.join(__dirname, "preload.js")
                 }
             });
             capturerWindow.maximize();
             ipcMain.once("selectScreenshareSource", async (_event, id, name, audio, resolution, framerate) => {
                 capturerWindow.close();
-                await mainWindow.webContents.executeJavaScript(`if (window.Vencord !== undefined) {window.ScreenshareQuality.patchScreenshareQuality({
-                    framerate: ${framerate},
-                    height: ${resolution}
-                })}`);
+                await mainWindow.webContents.executeJavaScript(`
+                    try{
+                        window.ScreenshareQuality.patchScreenshareQuality({
+                            framerate: ${framerate},
+                            height: ${resolution}
+                        })
+                    } catch(e) {}
+                `);
 
                 const result = {id, name, width: 9999, height: 9999};
                 if (audio) {
                     if (process.platform === "win32") {
                         callback({video: result, audio: "loopback"});
+                    } else {
+                        callback({video: result});
                     }
                 } else {
                     callback({video: result});

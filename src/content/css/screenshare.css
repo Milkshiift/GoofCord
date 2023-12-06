@@ -32,6 +32,7 @@ html {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .desktop-capturer-selection__scroller {
@@ -167,9 +168,10 @@ input[type="text"]:hover {
     width: 100%;
     align-items: center;
     justify-content: space-evenly;
-    padding: 21px 0 21px;
+    padding: 21px;
     background-color: #2b2d31;
     border-radius: 0 0 4px 4px;
+    column-gap: 10px;
 }
 
 .subcontainer {
