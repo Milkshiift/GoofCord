@@ -3,11 +3,10 @@
 <h2>Take control of your Discord experience with GoofCord – the highly configurable and privacy-focused Discord client.<br>Based on <a href="https://github.com/ArmCord/ArmCord">ArmCord</a>.</h2>
 </div>
 
-## Features That Spark Joy! :sparkles:
-- **:lock: Privacy at Its Best**: GoofCord blocks all tracking and uses multiple techniques like message encryption to improve your privacy and security. [Learn more](https://github.com/Milkshiift/GoofCord/wiki/Privacy-FAQ)
+## Features :sparkles:
+- **:lock: With Privacy in mind**: GoofCord blocks all tracking and uses multiple techniques like message encryption to improve your privacy and security. [Learn more](https://github.com/Milkshiift/GoofCord/wiki/Privacy-FAQ)
 - **:gear: Your Way, Your Client**: Personalize GoofCord to match your vibe with an array of customization options.
-- **:chart_with_upwards_trend: Fast and Performant**: Glide through your chats with GoofCord's superior speed and responsiveness. [Check the Benchmarks!](https://github.com/Milkshiift/GoofCord/wiki/Placeholder)
-- **:white_circle: Elegance in Simplicity**: We've kept it simple and sleek, delivering only the features you truly need.
+- **:chart_with_upwards_trend: Fast and Performant**: Glide through your chats with GoofCord's superior speed and responsiveness compared to the official client. [Check the Benchmarks!](https://github.com/Milkshiift/GoofCord/wiki/Placeholder)
 - **:bookmark: Standalone**: GoofCord is a standalone client, not reliant on the original Discord client in any way.
 - **:electric_plug: Plugins & Themes support**: Embrace client mods like [Vencord](https://github.com/Vendicated/Vencord) or [Shelter](https://github.com/uwu/shelter) for a world of plugins and themes.
 - **:iphone: Cross-Platform**: Find GoofCord on **Windows**, **Linux** and **macOS**. Sadly we don't support Windows versions lower than 10.
@@ -36,7 +35,7 @@ Everything you'll need can be found in the Discords settings.
 To open GoofCord settings, look for the topmost button.  
 To explore the enchanting world of plugins and themes, head over to the Vencord category within your Discord settings. Have fun!
     
-For the brave souls who want to compile it themselves, here's how:
+And if you want to compile it yourself, here's how:
 1. Install [Node.js](https://nodejs.dev) and [pnpm](https://pnpm.io/installation#using-npm)
 2. Grab the source code from the latest release. Getting it from the main branch is not recommended for stable experience.
 3. Open the command line in the directory of the source code
@@ -63,6 +62,8 @@ GoofCord also does some clever tricks to make Discord think you are just using a
   
 ### What's the difference between ArmCord and GoofCord? 🤷‍♂️
 - ArmCord and GoofCord share an origin, but now, GoofCord has evolved into a distinct client. It has its own unique philosophy, plans, and features, setting it apart as a separate client. You may have expected a comparison list, but it would be really, really pointless.
+
+### Check out our [wiki](https://github.com/Milkshiift/GoofCord/wiki) if you've got questions left
 
 ## Credits 🙌
 
