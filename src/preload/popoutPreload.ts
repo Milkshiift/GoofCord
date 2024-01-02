@@ -1,17 +1,16 @@
-import {ipcRenderer} from "electron";
 import path from "path";
 import {addStyle} from "../utils";
-import * as fs from "graceful-fs";
+import * as fs from "fs-extra";
 
 (async function waitForBody() {
     while (document.body === null) {
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 2));
     }
-    await load();
+    load();
 })();
 
 async function load() {
-    await injectTitlebar();
+    injectTitlebar();
 }
 
 let titlebar: HTMLDivElement;

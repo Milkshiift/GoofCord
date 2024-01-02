@@ -40,7 +40,7 @@ export function getUserAgent(chromeVersion: string): string {
                 wow64 +
                 ") AppleWebKit/537.36 (KHTML, like Gecko) Chrome/" +
                 chromeVersion +
-                " Safari/537.36";
+                " Safari/537.3";
         break;
     default:
         fakeUserAgent =

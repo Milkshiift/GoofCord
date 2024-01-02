@@ -73,8 +73,8 @@ export function registerIpc() {
     ipcMain.handle("isVencordPresent", async () => {
         return await mainWindow.webContents.executeJavaScript("window.Vencord !== undefined");
     });
-    ipcMain.on("get-user-data-path", (event) => {
+    ipcMain.handle("DESKTOP_CAPTURER_GET_SOURCES", (_event, opts) => desktopCapturer.getSources(opts));
+    ipcMain.on("getUserData", (event) => {
         event.returnValue = app.getPath("userData");
     });
-    ipcMain.handle("DESKTOP_CAPTURER_GET_SOURCES", (_event, opts) => desktopCapturer.getSources(opts));
 }

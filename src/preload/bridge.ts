@@ -16,7 +16,7 @@ contextBridge.exposeInMainWorld("goofcord", {
     electron: process.versions.electron,
     version: ipcRenderer.sendSync("get-app-version", "app-version"),
     packageVersion: ipcRenderer.sendSync("get-package-version", "app-version"),
-    userData: ipcRenderer.sendSync("get-user-data-path"),
+    userData: ipcRenderer.sendSync("getUserData"),
     encryptMessage: (message: string) => ipcRenderer.invoke("encryptMessage", message),
     decryptMessage: (message: string) => ipcRenderer.sendSync("decryptMessage", message),
     openSettingsWindow: () => ipcRenderer.send("openSettingsWindow"),

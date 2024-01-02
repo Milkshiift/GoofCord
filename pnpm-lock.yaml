@@ -20,9 +20,9 @@ dependencies:
   extract-zip:
     specifier: ^2.0.1
     version: 2.0.1
-  graceful-fs:
-    specifier: ^4.2.11
-    version: 4.2.11
+  fs-extra:
+    specifier: ^11.2.0
+    version: 11.2.0
   stegcloak:
     specifier: ^1.1.1
     version: 1.1.1
@@ -2013,6 +2013,15 @@ packages:
       jsonfile: 6.1.0
       universalify: 2.0.1
     dev: true
+
+  /fs-extra@11.2.0:
+    resolution: {integrity: sha512-PmDi3uwK5nFuXh7XDTlVnS17xJS7vW36is2+w3xcv8SVxiB4NyATf4ctkVY5bkSjX0Y4nbvZCq1/EjtEyr9ktw==}
+    engines: {node: '>=14.14'}
+    dependencies:
+      graceful-fs: 4.2.11
+      jsonfile: 6.1.0
+      universalify: 2.0.1
+    dev: false
 
   /fs-extra@8.1.0:
     resolution: {integrity: sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g==}

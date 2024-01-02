@@ -2,7 +2,7 @@ const {EventEmitter} = require("events");
 
 const IPCServer = require("./transports/ipc.js");
 const WSServer = require("./transports/websocket.js");
-const ProcessServer = require("./process/index.js");
+const ProcessServer = require("./process");
 
 let socketId = 0;
 

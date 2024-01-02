@@ -12,9 +12,9 @@ export async function checkForUpdate() {
 
     if (isLower) {
         const notification = new Notification({
-            title: "New update is available ✨",
+            title: "A new update is available ✨",
             body: "Click on the notification to download",
-            timeoutType: "never"
+            timeoutType: "default"
         });
 
         notification.on("click", () => {

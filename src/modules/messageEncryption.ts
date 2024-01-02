@@ -50,10 +50,10 @@ export function decryptMessage(message: string) {
 }
 
 let currentIndex = 0;
-export async function cycleThroughPasswords() {
+export function cycleThroughPasswords() {
     currentIndex = (currentIndex + 1) % encryptionPasswords.length;
     chosenPassword = encryptionPasswords[currentIndex];
-    await mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebarWithText("#f9c23c", "${"Chosen password: "+truncateString(chosenPassword)}")`);
+    mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebarWithText("#f9c23c", "${"Chosen password: "+truncateString(chosenPassword)}")`);
 }
 
 // Show only N percent of the password for security

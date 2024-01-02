@@ -40,7 +40,7 @@ export async function setMenu() {
                     label: "Cycle through passwords",
                     accelerator: "F9",
                     click: async function () {
-                        await cycleThroughPasswords();
+                        cycleThroughPasswords();
                     }
                 },
                 {

@@ -3,7 +3,7 @@ const log = (...args) => console.log(`[${rgb(88, 101, 242, 'arRPC')} > ${rgb(237
 
 const DetectableDB = require('./detectable.json');
 
-const Natives = require("./native/index.js");
+const Natives = require("./native");
 const Native = Natives[process.platform];
 
 

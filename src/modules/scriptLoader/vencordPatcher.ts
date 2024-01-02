@@ -1,5 +1,7 @@
-import {scriptCategories} from "./scriptLoader";
-import {getConfig} from "../utils";
+import {scriptCategories} from "./scriptPreparer";
+import {getConfig} from "../../utils";
+
+// For patches in custom scripts to work, we inject them into Vencord's code
 
 export async function patchVencord(bundle: string) {
     if (await getConfig("scriptLoading") === false) return bundle;
@@ -37,9 +39,9 @@ function getPatchesFromScripts() {
     const regex = /const\s+patches\s+=\s+(\[[\s\S]+?]);/;
 
     let allPatches = scriptCategories.scriptsCombined
-        .map(([, scriptContent]) => {
+        .map(([scriptContent]) => {
             const patchesMatch = scriptContent.match(regex);
-            return patchesMatch ? patchesMatch[1].replace(/(".*?")|\s+/g, (match, capture) => {
+            return patchesMatch ? patchesMatch[1].replace(/(".*?")|\s+/g, (_match, capture) => {
                 // If the match is inside double quotes, return it unchanged
                 if (capture) {
                     return capture;

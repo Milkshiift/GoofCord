@@ -1,14 +1,14 @@
 import {app, BrowserWindow, nativeImage, shell} from "electron";
-import {getConfig, getWindowState, setWindowState} from "./utils";
+import {getConfig, getCustomIcon, getWindowState, setWindowState} from "./utils";
 import {registerIpc} from "./ipc";
 import {setMenu} from "./menu";
-import * as fs from "graceful-fs";
+import * as fs from "fs-extra";
 import contextMenu from "electron-context-menu";
 import { tray } from "./tray";
-import {loadExtensions} from "./modules/extensions";
 import {getUserAgent} from "./modules/agent";
 import * as path from "path";
 import {initializeFirewall} from "./modules/firewall";
+import {loadExtensions} from "./modules/extensions";
 
 export let mainWindow: BrowserWindow;
 let forceQuit = false;
@@ -21,22 +21,22 @@ contextMenu({
             label: "Search with Google",
             // Only show it when right-clicking text
             visible: parameters.selectionText.trim().length > 0,
-            click: async () => {
-                await shell.openExternal(`https://google.com/search?q=${encodeURIComponent(parameters.selectionText)}`);
+            click: () => {
+                shell.openExternal(`https://google.com/search?q=${encodeURIComponent(parameters.selectionText)}`);
             }
         },
         {
             label: "Search with DuckDuckGo",
             // Only show it when right-clicking text
             visible: parameters.selectionText.trim().length > 0,
-            click: async () => {
-                await shell.openExternal(`https://duckduckgo.com/?q=${encodeURIComponent(parameters.selectionText)}`);
+            click: () => {
+                shell.openExternal(`https://duckduckgo.com/?q=${encodeURIComponent(parameters.selectionText)}`);
             }
         }
     ]
 });
 
-// This function is asynchronous and runs after defining the window.
+// This function runs after defining the window.
 async function doAfterDefiningTheWindow() {
     // Check if the "startMinimized" config is true, and hide or show the mainWindow accordingly.
     (await getConfig("startMinimized")) ? mainWindow.hide() : mainWindow.show();
@@ -45,7 +45,7 @@ async function doAfterDefiningTheWindow() {
     import("./screenshare/main");
 
     registerIpc();
-    await setMenu();
+    setMenu();
 
     // Set the user agent for the web contents based on the Chrome version.
     mainWindow.webContents.userAgent = getUserAgent(process.versions.chrome);
@@ -130,7 +130,7 @@ async function doAfterDefiningTheWindow() {
         } else {
             // Save window state, so it will be the same when the user opens GF again.
             const [width, height] = mainWindow.getSize();
-            await setWindowState({
+            setWindowState({
                 width,
                 height,
                 isMaximized: mainWindow.isMaximized(),
@@ -152,12 +152,12 @@ async function doAfterDefiningTheWindow() {
         });
     }
 
+    // @ts-ignore
+    if (await getConfig("arrpc")) import("arrpc");
+
     const setBodyAttribute = (attribute: string, value: string = "") => {
         mainWindow.webContents.executeJavaScript(`document.body.setAttribute("${attribute}", "${value}");`);
     };
-
-    // @ts-ignore
-    if (await getConfig("arrpc")) import("arrpc");
 
     // Attach event listeners to the mainWindow for focus, blur, maximize, and unmaximize events.
     // These events trigger setting body attributes in the web contents.
@@ -171,23 +171,12 @@ async function doAfterDefiningTheWindow() {
     await mainWindow.loadFile(path.join(__dirname, "./", "/content/empty.html"));
     const DISCORD_URL = await getConfig("discordUrl");
     await mainWindow.webContents.executeJavaScript(`window.location.replace("${DISCORD_URL}");`).then(async () => {
-        // If a user chose any mods, load them.
         if ((await getConfig("modName")) != "none") await loadExtensions();
-
-        await initializeFirewall();
+        initializeFirewall();
     });
 }
 
 export async function createMainWindow() {
-    const customIconPath = await getConfig("customIconPath");
-    let icon: string;
-    console.log(customIconPath);
-    if (customIconPath === "" || customIconPath === undefined) {
-        icon = path.join(__dirname, "../", "/assets/gf_icon.png");
-    } else {
-        icon = await getConfig("customIconPath");
-    }
-    console.log(icon);
     mainWindow = new BrowserWindow({
         width: (await getWindowState("width")) ?? 835,
         height: (await getWindowState("height")) ?? 600,
@@ -196,7 +185,7 @@ export async function createMainWindow() {
         title: "GoofCord",
         show: false,
         darkTheme: true,
-        icon: icon,
+        icon: await getCustomIcon(),
         frame: false,
         autoHideMenuBar: true,
         backgroundColor: "#313338",

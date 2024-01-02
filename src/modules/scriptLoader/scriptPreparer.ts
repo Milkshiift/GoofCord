@@ -1,16 +1,21 @@
 import path from "path";
-import {app, ipcMain, ipcRenderer} from "electron";
-import {addScript, fetchWithTimeout, getConfig, packageVersion, streamPipeline} from "../utils";
-import {error, log} from "./logger";
+import {app, ipcMain} from "electron";
+import fs from "fs-extra";
+import {isSemverLower} from "../updateCheck";
+import {fetchWithTimeout, getConfig, packageVersion, streamPipeline} from "../../utils";
+import {error} from "../logger";
 import extract from "extract-zip";
-import fs from "graceful-fs";
-import {isSemverLower} from "./updateCheck";
 
-// ----------------- MAIN -----------------
+type ScriptInfo = {
+    name: string;
+    version: string;
+    minGCVer: string;
+};
+
 export const scriptCategories = {
-    beforeLoadScripts: [] as [string, string][],
-    afterLoadScripts: [] as [string, string][],
-    scriptsCombined: [] as [string, string][],
+    beforeLoadScripts: [] as [string, string, ScriptInfo][],
+    afterLoadScripts: [] as [string, string, ScriptInfo][],
+    scriptsCombined: [] as string[],
     disabledScripts: [] as string[]
 };
 
@@ -28,26 +33,29 @@ export async function categorizeScripts() {
             }
 
             const filePath = path.join(scriptsPath, file);
-            const scriptContent = await fs.promises.readFile(filePath, "utf-8");
+            const scriptContent = modifyScriptContent(await fs.promises.readFile(filePath, "utf-8"));
 
             // Don't load scripts if this GoofCord version is lower than specified
             const scriptInfo = parseScriptInfo(scriptContent);
             if (scriptInfo.minGCVer !== "" && isSemverLower(packageVersion, scriptInfo.minGCVer)) continue;
 
             if (file.includes("BL")) {
-                scriptCategories.beforeLoadScripts.push([file, scriptContent]);
+                scriptCategories.beforeLoadScripts.push([file, scriptContent, scriptInfo]);
             } else {
-                scriptCategories.afterLoadScripts.push([file, scriptContent]);
+                scriptCategories.afterLoadScripts.push([file, scriptContent, scriptInfo]);
             }
-            scriptCategories.scriptsCombined.push([file, scriptContent]);
+            scriptCategories.scriptsCombined.push(scriptContent);
         } catch (err) {
             error("An error occurred during script categorizing: " + err);
         }
     }
-    sendScriptArraysToRenderer();
+
+    ipcMain.handle("getScriptCategories", () => {
+        return scriptCategories;
+    });
 }
 
-// GoofMod installer. Runs from main.ts
+// Runs from main.ts
 export async function installDefaultScripts() {
     if (await getConfig("autoUpdateDefaultScripts") === false) return;
 
@@ -68,7 +76,7 @@ export async function installDefaultScripts() {
         for (const disabledScriptIndex in scriptCategories.disabledScripts) {
             for (const updatedScriptIndex in updatedScripts) {
                 if (scriptCategories.disabledScripts[disabledScriptIndex].includes(updatedScripts[updatedScriptIndex])) {
-                    await fs.promises.unlink(path.join(scriptsFolder, updatedScripts[updatedScriptIndex]));
+                    fs.promises.unlink(path.join(scriptsFolder, updatedScripts[updatedScriptIndex]));
                 }
             }
         }
@@ -80,39 +88,13 @@ export async function installDefaultScripts() {
     }
 }
 
-// Function to send script arrays to the renderer process
-function sendScriptArraysToRenderer() {
-    ipcMain.handle("get-script-objects", () => {
-        return scriptCategories;
-    });
-}
-
-// ----------------- RENDERER -----------------
-
-// Function to load scripts from the specified array (either BL or AL). Runs from a renderer process (preload.ts)
-export async function loadScripts(scriptType: boolean) {
-    if (await getConfig("scriptLoading") === false) return;
-
-    // Request scripts object from the main process
-    const { afterLoadScripts, beforeLoadScripts } = await ipcRenderer.invoke("get-script-objects");
-
-    const scriptsToLoad = scriptType ? afterLoadScripts : beforeLoadScripts;
-
-    for (const [scriptName, scriptContent] of scriptsToLoad) {
-        const scriptInfo = parseScriptInfo(scriptContent);
-
-        addScript(modifyScriptContent(scriptContent));
-
-        if (scriptInfo.name === "") {
-            log(`Loaded ${scriptName} script. Version: Unknown`);
-        } else {
-            log(`Loaded "${scriptInfo.name}" script. Version: ${scriptInfo.version}`);
-        }
-    }
+function modifyScriptContent(content: string) {
+    content = "(function(){" + content + "})();"; // Turning the script into an IIFE so variable names don't overlap
+    return content;
 }
 
 function parseScriptInfo(scriptContent: string) {
-    const scriptInfo = { name: "", version: "", minGCVer: ""};
+    const scriptInfo: ScriptInfo = { name: "", version: "", minGCVer: ""};
     let linesProcessed = 0;
     const MAX_LINES = 10;
 
@@ -124,21 +106,14 @@ function parseScriptInfo(scriptContent: string) {
             const [, key, value] = match;
             if (key === "name" && !scriptInfo.name) {
                 scriptInfo.name = value.trim();
-                linesProcessed++;
             } else if (key === "version" && !scriptInfo.version) {
                 scriptInfo.version = value.trim();
-                linesProcessed++;
             } else if (key === "minGCVer" && !scriptInfo.minGCVer) {
                 scriptInfo.minGCVer = value.trim();
-                linesProcessed++;
             }
         }
+        linesProcessed++;
     }
 
     return scriptInfo;
-}
-
-function modifyScriptContent(content: string) {
-    content = "(function(){" + content + "})();"; // Turning a script into an IIFE so variable names don't overlap
-    return content;
 }

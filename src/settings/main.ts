@@ -2,7 +2,7 @@ import {app, BrowserWindow, clipboard, ipcMain, shell} from "electron";
 import {getConfig, getConfigLocation, getDisplayVersion, getVersion, setConfigBulk, Settings} from "../utils";
 import path from "path";
 import os from "os";
-import fs from "graceful-fs";
+import fs from "fs-extra";
 
 let settingsWindow: BrowserWindow;
 let instance: number = 0;
@@ -44,16 +44,16 @@ export async function createSettingsWindow() {
             setConfigBulk(args);
         });
         ipcMain.on("openStorageFolder", async () => {
-            await shell.openPath(storagePath);
+            shell.openPath(storagePath);
         });
         ipcMain.on("openScriptsFolder", async () => {
-            await shell.openPath(scriptsPath);
+            shell.openPath(scriptsPath);
         });
         ipcMain.on("openExtensionsFolder", async () => {
-            await shell.openPath(extensionsPath);
+            shell.openPath(extensionsPath);
         });
         ipcMain.on("openCrashesFolder", async () => {
-            await shell.openPath(path.join(app.getPath("temp"), app.getName() + " Crashes"));
+            shell.openPath(path.join(app.getPath("temp"), app.getName() + " Crashes"));
         });
         ipcMain.on("crash", async () => {
             process.crash();
@@ -83,7 +83,7 @@ export async function createSettingsWindow() {
             shell.openExternal(url);
             return {action: "deny"};
         });
-        await settingsLoadPage();
+        settingsLoadPage();
         settingsWindow.on("close", () => {
             ipcMain.removeHandler("getSetting");
             ipcMain.removeAllListeners("saveSettings");
@@ -93,5 +93,5 @@ export async function createSettingsWindow() {
 }
 
 async function settingsLoadPage() {
-    await settingsWindow.loadURL(`file://${__dirname}/settings.html`);
+    settingsWindow.loadURL(`file://${__dirname}/settings.html`);
 }

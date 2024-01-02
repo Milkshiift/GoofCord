@@ -1,6 +1,8 @@
+// This file contains everything that uses session.defaultSession.webRequest
 import {mainWindow} from "../window";
 import {session} from "electron";
 import {getConfig} from "../utils";
+import electron from "electron";
 
 export async function initializeFirewall() {
     // Blocking URLs. This list works in tandem with "blockedStrings" list.
@@ -50,5 +52,25 @@ export async function initializeFirewall() {
                 }
             });
         }
+    });
+}
+
+export function unstrictCSP() {
+    console.log("Setting up CSP unstricter...");
+
+    electron.session.defaultSession.webRequest.onHeadersReceived(({responseHeaders, resourceType}, done) => {
+        if (!responseHeaders) return done({});
+
+        if (resourceType === "mainFrame") {
+            // This behaves very strangely. For some, everything works without deleting CSP,
+            // for some "CSP" works, for some "csp"
+            delete responseHeaders["Content-Security-Policy"];
+            delete responseHeaders["content-security-policy"];
+        } else if (resourceType === "stylesheet") {
+            // Fix hosts that don't properly set the css content type, such as
+            // raw.githubusercontent.com
+            responseHeaders["content-type"] = ["text/css"];
+        }
+        done({responseHeaders});
     });
 }
