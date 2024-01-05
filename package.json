@@ -21,21 +21,21 @@
   },
   "homepage": "https://github.com/Milkshiift/GoofCord",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.17.0",
+    "@typescript-eslint/parser": "^6.17.0",
+    "eslint": "^8.56.0",
+    "eslint-config-standard-with-typescript": "^43.0.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^16.6.1",
+    "eslint-plugin-promise": "^6.1.1",
     "@types/auto-launch": "^5.0.5",
     "@types/graceful-fs": "^4.1.9",
-    "@types/node": "^20.10.3",
+    "@types/node": "^20.10.6",
     "@types/stegcloak": "^1.0.2",
-    "@typescript-eslint/eslint-plugin": "^6.13.2",
-    "@typescript-eslint/parser": "^6.13.2",
     "copyfiles": "^2.4.1",
-    "electron": "^28.0.0",
+    "electron": "^28.1.1",
     "electron-builder": "^24.9.1",
-    "eslint": "^8.55.0",
-    "eslint-config-standard-with-typescript": "^40.0.0",
-    "eslint-plugin-import": "^2.29.0",
-    "eslint-plugin-n": "^16.3.1",
-    "eslint-plugin-promise": "^6.1.1",
-    "typescript": "^5.3.2"
+    "typescript": "^5.3.3"
   },
   "dependencies": {
     "arrpc": "file:src\\arrpc",
@@ -46,7 +46,7 @@
     "fs-extra": "^11.2.0",
     "stegcloak": "^1.1.1",
     "v8-compile-cache": "^2.4.0",
-    "ws": "^8.14.2"
+    "ws": "^8.16.0"
   },
   "build": {
     "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
@@ -106,5 +106,5 @@
       "icon": "build/icon.icns"
     }
   },
-  "packageManager": "pnpm@8.7.4"
+  "packageManager": "pnpm@8.13.1"
 }
