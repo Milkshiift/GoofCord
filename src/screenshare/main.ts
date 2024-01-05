@@ -1,4 +1,4 @@
-import {BrowserWindow, desktopCapturer, ipcMain, session} from "electron";
+import {BrowserWindow, desktopCapturer, ipcMain, session, screen} from "electron";
 import path from "path";
 import {mainWindow} from "../window";
 
@@ -14,9 +14,12 @@ function registerCustomHandler() {
             console.log({video: {id: sources[0].id, name: sources[0].name}});
             callback({video: {id: sources[0].id, name: sources[0].name}});
         } else {
+            // Maximizing for some reason doesn't work in linux, so we manually set the window dimensions to match the screen's width and height
+            const primaryDisplay = screen.getPrimaryDisplay();
+            const { width, height } = primaryDisplay.workAreaSize;
             capturerWindow = new BrowserWindow({
-                width: 800,
-                height: 600,
+                width: width,
+                height: height,
                 transparent: true,
                 resizable: false,
                 frame: false,
