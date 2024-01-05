@@ -10,7 +10,6 @@
 
 body,
 html {
-    background: #00000052;
     overflow: hidden;
 }
 
@@ -33,6 +32,17 @@ html {
     justify-content: center;
     flex-direction: column;
     overflow: hidden;
+    box-shadow: 0 0 2rem 7px black;
+    animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .desktop-capturer-selection__scroller {
