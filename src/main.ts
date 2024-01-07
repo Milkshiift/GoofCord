@@ -9,7 +9,6 @@ import {createMainWindow} from "./window";
 import {checkForUpdate} from "./modules/updateCheck";
 import AutoLaunch from "auto-launch";
 import {categorizeScripts, installDefaultScripts} from "./modules/scriptLoader/scriptPreparer";
-import {installMods} from "./modules/scriptLoader/mods";
 import {unstrictCSP} from "./modules/firewall";
 import {installModLoader} from "./modules/extensions";
 

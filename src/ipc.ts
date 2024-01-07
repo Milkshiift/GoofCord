@@ -70,8 +70,8 @@ export function registerIpc() {
     ipcMain.handle("decryptSafeStorage", async (event, encryptedPassword: string) => {
         return safeStorage.decryptString(Buffer.from(encryptedPassword, "latin1"));
     });
-    ipcMain.handle("isVencordPresent", async () => {
-        return await mainWindow.webContents.executeJavaScript("window.Vencord !== undefined");
+    ipcMain.on("isVencordPresent", async (event) => {
+        event.returnValue = await mainWindow.webContents.executeJavaScript("window.Vencord !== undefined");
     });
     ipcMain.handle("DESKTOP_CAPTURER_GET_SOURCES", (_event, opts) => desktopCapturer.getSources(opts));
     ipcMain.on("getUserData", (event) => {

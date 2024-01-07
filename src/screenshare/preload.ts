@@ -1,5 +1,4 @@
-import {ipcRenderer} from "electron";
-import {log} from "../modules/logger";
+import {contextBridge, ipcRenderer} from "electron";
 
 interface IPCSources {
     id: string;
@@ -13,40 +12,36 @@ async function addDisplays() {
         console.log(sources);
         document.body.innerHTML = "<button class='closeIcon' title='Cancel'></button>";
         const selectionElem = document.createElement("div");
-        //@ts-ignore
-        selectionElem.classList = ["desktop-capturer-selection"];
+        selectionElem.classList.add("desktop-capturer-selection");
         selectionElem.innerHTML = `
-<h1 style="margin-bottom: 0">Screen Share</h1>
-<div class="desktop-capturer-selection__scroller">
-    <ul class="desktop-capturer-selection__list">
-      ${sources
-        .map(
-            ({id, name, thumbnail}) => `
-        <li class="desktop-capturer-selection__item">
-          <button class="desktop-capturer-selection__btn" data-id="${id}" title="${name}">
-            <img class="desktop-capturer-selection__thumbnail" src="${thumbnail.toDataURL()}"  alt="${name}"/>
-            <span class="desktop-capturer-selection__name">${name}</span>
-          </button>
-        </li>
-      `
-        )
-        .join("")}
-    </ul>
-    </div>
-    <div class="checkbox-container">
-        <div class="subcontainer">
-            <input id="resolution-textbox" type="text" value="720" />
-            <label for="resolution-textbox">Resolution</label>
-        </div>
-        <div class="subcontainer">
-            <input id="audio-checkbox" type="checkbox" />
-            <label for="audio-checkbox">Stream audio</label>
-        </div>
-        <div class="subcontainer">
-            <input id="framerate-textbox" type="text" value="30"/>
-            <label for="framerate-textbox">Framerate</label>
-        </div>
-    </div>`;
+            <h1 style="margin-bottom: 0">Screen Share</h1>
+            <div class="desktop-capturer-selection__scroller">
+                <ul class="desktop-capturer-selection__list">
+                    ${sources.map(({id, name, thumbnail}) => `
+                        <li class="desktop-capturer-selection__item">
+                          <button class="desktop-capturer-selection__btn" data-id="${id}" title="${name}" onclick="selectSource(this)">
+                            <img class="desktop-capturer-selection__thumbnail" src="${thumbnail.toDataURL()}"  alt="${name}"/>
+                            <span class="desktop-capturer-selection__name">${name}</span>
+                          </button>
+                        </li>
+                    `).join("")}
+                </ul>
+            </div>
+            <div class="checkbox-container">
+                <div class="subcontainer">
+                    <input id="resolution-textbox" type="text" value="720" />
+                    <label for="resolution-textbox">Resolution</label>
+                </div>
+                <div class="subcontainer">
+                    <input id="audio-checkbox" type="checkbox" />
+                    <label for="audio-checkbox">Stream audio</label>
+                </div>
+                <div class="subcontainer">
+                    <input id="framerate-textbox" type="text" value="30"/>
+                    <label for="framerate-textbox">Framerate</label>
+                </div>
+            </div>
+        `;
         document.body.appendChild(selectionElem);
         document.querySelectorAll(".desktop-capturer-selection__btn").forEach((button) => {
             button.addEventListener("click", async () => {
@@ -58,7 +53,7 @@ async function addDisplays() {
                     const framerate = document.getElementById("framerate-textbox") as HTMLInputElement;
 
                     // @ts-ignore
-                    if (await ipcRenderer.invoke("isVencordPresent") || (resolution.value === "720" && framerate.value === "30")) {
+                    if (ipcRenderer.sendSync("isVencordPresent") || (resolution.value === "720" && framerate.value === "30")) {
                         ipcRenderer.send("flashTitlebar", "#5865F2");
                     }
                     else {
@@ -71,10 +66,9 @@ async function addDisplays() {
                 }
             });
         });
-        document.querySelectorAll(".closeIcon")[0].addEventListener("click", () => {
+        document.getElementsByClassName(".closeIcon")[0].addEventListener("click", () => {
             ipcRenderer.send("selectScreenshareSource", "window:000000:0", "Close", false, true);
         });
     });
 }
-
 addDisplays();
