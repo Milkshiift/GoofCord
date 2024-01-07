@@ -1,3 +1,2 @@
-const win32 = require("./win32");
-const linux = require("./linux");
-module.exports = {win32, linux};
+export * as win32 from './win32.js';
+export * as linux from './linux.js';
