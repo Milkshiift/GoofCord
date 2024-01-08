@@ -11,7 +11,6 @@ import {initializeFirewall} from "./modules/firewall";
 import {loadExtensions} from "./modules/extensions";
 
 export let mainWindow: BrowserWindow;
-let forceQuit = false;
 contextMenu({
     showSaveImageAs: true,
     showCopyImageAddress: true,
@@ -125,32 +124,19 @@ async function doAfterDefiningTheWindow() {
     });
 
     mainWindow.on("close", async (e) => {
-        if (process.platform === "darwin" && forceQuit) {
-            mainWindow.close();
-        } else {
-            // Save window state, so it will be the same when the user opens GF again.
-            const [width, height] = mainWindow.getSize();
-            setWindowState({
-                width,
-                height,
-                isMaximized: mainWindow.isMaximized(),
-                x: mainWindow.getPosition()[0],
-                y: mainWindow.getPosition()[1],
-            });
-
-            e.preventDefault();
-            await getConfig("minimizeToTray") ? mainWindow.hide() : app.quit();
-        }
-    });
-    if (process.platform === "darwin") {
-        app.on("before-quit", function (event) {
-            if (!forceQuit) {
-                event.preventDefault();
-                forceQuit = true;
-                app.quit();
-            }
+        // Save window state, so it will be the same when the user opens GF again.
+        const [width, height] = mainWindow.getSize();
+        await setWindowState({
+            width,
+            height,
+            isMaximized: mainWindow.isMaximized(),
+            x: mainWindow.getPosition()[0],
+            y: mainWindow.getPosition()[1],
         });
-    }
+
+        e.preventDefault();
+        await getConfig("minimizeToTray") ? mainWindow.hide() : app.quit();
+    });
 
     // @ts-ignore
     if (await getConfig("arrpc")) import("arrpc");
