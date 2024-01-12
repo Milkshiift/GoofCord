@@ -51,15 +51,11 @@ async function load() {
     });
 }
 
-// Flag setting is pretty broken, 20% works as intended.
+// Flag setting is pretty broken because some need to be command line arguments and can't be set with appendSwitch. 20% works as intended.
 async function setFlags() {
     const isUnix = process.platform !== "win32" && process.platform !== "darwin";
     const isWayland = process.env.XDG_SESSION_TYPE?.toLowerCase() === "wayland" || process.env["WAYLAND_DISPLAY"] !== undefined;
-    const isWaylandNative =
-        isWayland &&
-        (process.argv.includes("--ozone-platform=wayland") ||
-            process.argv.includes("--ozone-hint=auto") ||
-            process.argv.includes("--ozone-hint=wayland"));
+    const isWaylandNative = isWayland && (process.argv.includes("--ozone-platform=wayland"));
     if (isUnix) {
         if (isWaylandNative) {
             app.commandLine.appendSwitch(
@@ -82,6 +78,10 @@ async function setFlags() {
     app.commandLine.appendSwitch("enable-features", "WebRTC,VaapiVideoDecoder,VaapiVideoEncoder,WebRtcHideLocalIpsWithMdns");
     app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
     app.commandLine.appendSwitch("webrtc-max-cpu-consumption-percentage", "100"); // For reducing screenshare stutters
+
+    if (await getConfig("autoscroll")) {
+        app.commandLine.appendSwitch("enable-blink-features", "MiddleClickAutoscroll");
+    }
 
     const presets = {
         performance: "--enable-gpu-rasterization --enable-zero-copy --ignore-gpu-blocklist --enable-hardware-overlays=single-fullscreen,single-on-top,underlay --enable-features=EnableDrDc,CanvasOopRasterization,BackForwardCache:TimeToLiveInBackForwardCacheInSeconds/300/should_ignore_blocklists/true/enable_same_site/true,ThrottleDisplayNoneAndVisibilityHiddenCrossOriginIframes,UseSkiaRenderer,WebAssemblyLazyCompilation --disable-features=Vulkan --force_high_performance_gpu", // Performance

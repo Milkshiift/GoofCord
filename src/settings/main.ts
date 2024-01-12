@@ -93,5 +93,5 @@ export async function createSettingsWindow() {
 }
 
 async function settingsLoadPage() {
-    settingsWindow.loadURL(`file://${__dirname}/settings.html`);
+    settingsWindow.loadURL(`file://${path.join(__dirname, "../", "/content/html/settings.html")}`);
 }

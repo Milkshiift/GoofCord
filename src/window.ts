@@ -156,7 +156,7 @@ async function doAfterDefiningTheWindow() {
 
     // Load an initial empty HTML file into the mainWindow.
     // Then, replace the window location with the configured Discord URL.
-    await mainWindow.loadFile(path.join(__dirname, "./", "/content/empty.html"));
+    await mainWindow.loadFile(path.join(__dirname, "./", "/content/html/empty.html"));
     const DISCORD_URL = await getConfig("discordUrl");
     await mainWindow.webContents.executeJavaScript(`window.location.replace("${DISCORD_URL}");`).then(async () => {
         if ((await getConfig("modName")) != "none") await loadExtensions();
