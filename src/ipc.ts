@@ -1,5 +1,4 @@
-//ipc stuff
-import {app, desktopCapturer, ipcMain, safeStorage} from "electron";
+import {app, ipcMain, safeStorage} from "electron";
 import {mainWindow} from "./window";
 import {getDisplayVersion, getVersion, packageVersion} from "./utils";
 import {createSettingsWindow} from "./settings/main";
@@ -7,37 +6,34 @@ import {decryptMessage, encryptMessage} from "./modules/messageEncryption";
 import {getConfig, setConfigBulk} from "./config/config";
 
 export function registerIpc() {
-    ipcMain.on("win-maximize", () => {
+    ipcMain.on("window:Maximize", () => {
         mainWindow.maximize();
     });
-    ipcMain.on("win-isMaximized", (event) => {
+    ipcMain.on("window:IsMaximized", (event) => {
         event.returnValue = mainWindow.isMaximized();
     });
-    ipcMain.on("win-isNormal", (event) => {
-        event.returnValue = mainWindow.isNormal();
-    });
-    ipcMain.on("win-minimize", () => {
+    ipcMain.on("window:Minimize", () => {
         mainWindow.minimize();
     });
-    ipcMain.on("win-unmaximize", () => {
+    ipcMain.on("window:Unmaximize", () => {
         mainWindow.unmaximize();
     });
-    ipcMain.on("win-show", () => {
+    ipcMain.on("window:Show", () => {
         mainWindow.show();
     });
-    ipcMain.on("win-hide", () => {
+    ipcMain.on("window:Hide", () => {
         mainWindow.hide();
     });
-    ipcMain.on("win-quit", () => {
+    ipcMain.on("window:Quit", () => {
         app.exit();
     });
-    ipcMain.on("get-app-version", (event) => {
+    ipcMain.on("getAppVersion", (event) => {
         event.returnValue = getVersion();
     });
     ipcMain.on("displayVersion", (event) => {
         event.returnValue = getDisplayVersion();
     });
-    ipcMain.on("get-package-version", (event) => {
+    ipcMain.on("getPackageVersion", (event) => {
         event.returnValue = packageVersion;
     });
     ipcMain.on("restart", () => {
@@ -74,8 +70,7 @@ export function registerIpc() {
     ipcMain.on("isVencordPresent", async (event) => {
         event.returnValue = await mainWindow.webContents.executeJavaScript("window.Vencord !== undefined");
     });
-    ipcMain.handle("DESKTOP_CAPTURER_GET_SOURCES", (_event, opts) => desktopCapturer.getSources(opts));
-    ipcMain.on("getUserData", (event) => {
+    ipcMain.on("getUserDataPath", (event) => {
         event.returnValue = app.getPath("userData");
     });
 }

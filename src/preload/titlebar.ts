@@ -36,12 +36,12 @@ function attachTitlebarEvents() {
     });
 
     maximize.addEventListener("click", () => {
-        const isMaximized = ipcRenderer.sendSync("win-isMaximized");
+        const isMaximized = ipcRenderer.sendSync("window:IsMaximized");
         if (isMaximized) {
-            ipcRenderer.send("win-unmaximize");
+            ipcRenderer.send("window:Unmaximize");
             document.body.removeAttribute("isMaximized");
         } else {
-            ipcRenderer.send("win-maximize");
+            ipcRenderer.send("window:Maximize");
         }
     });
 

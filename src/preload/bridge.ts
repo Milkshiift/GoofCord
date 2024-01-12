@@ -4,19 +4,18 @@ import {flashTitlebar, flashTitlebarWithText} from "./titlebar";
 let windowCallback: (arg0: object) => void;
 contextBridge.exposeInMainWorld("goofcord", {
     window: {
-        show: () => ipcRenderer.send("win-show"),
-        hide: () => ipcRenderer.send("win-hide"),
-        minimize: () => ipcRenderer.send("win-minimize"),
-        maximize: () => ipcRenderer.send("win-maximize")
+        show: () => ipcRenderer.send("window:Show"),
+        hide: () => ipcRenderer.send("window:Hide"),
+        minimize: () => ipcRenderer.send("window:Minimize"),
+        maximize: () => ipcRenderer.send("window:Maximize")
     },
     titlebar: {
         flashTitlebar: (color: string) => flashTitlebar(color),
         flashTitlebarWithText: (color: string, text: string) => flashTitlebarWithText(color, text),
     },
     electron: process.versions.electron,
-    version: ipcRenderer.sendSync("get-app-version", "app-version"),
-    packageVersion: ipcRenderer.sendSync("get-package-version", "app-version"),
-    userData: ipcRenderer.sendSync("getUserData"),
+    version: ipcRenderer.sendSync("getAppVersion", "app-version"),
+    packageVersion: ipcRenderer.sendSync("getPackageVersion", "app-version"),
     encryptMessage: (message: string) => ipcRenderer.invoke("encryptMessage", message),
     decryptMessage: (message: string) => ipcRenderer.sendSync("decryptMessage", message),
     openSettingsWindow: () => ipcRenderer.send("openSettingsWindow"),

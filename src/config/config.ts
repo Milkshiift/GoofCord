@@ -74,7 +74,7 @@ export async function setup() {
 export function getConfigLocation(): string {
     let userDataPath;
     if (process.type === "renderer") {
-        userDataPath = ipcRenderer.sendSync("getUserData");
+        userDataPath = ipcRenderer.sendSync("getUserDataPath");
     }
     else {
         userDataPath = app.getPath("userData");
