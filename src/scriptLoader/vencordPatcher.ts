@@ -39,7 +39,7 @@ function getPatchesFromScripts() {
     const regex = /const\s+patches\s+=\s+(\[[\s\S]+?]);/;
 
     let allPatches = scriptCategories.scriptsCombined
-        .map(([scriptContent]) => {
+        .map((scriptContent) => {
             const patchesMatch = scriptContent.match(regex);
             return patchesMatch ? patchesMatch[1].replace(/(".*?")|\s+/g, (_match, capture) => {
                 // If the match is inside double quotes, return it unchanged

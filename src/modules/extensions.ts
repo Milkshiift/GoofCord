@@ -39,26 +39,32 @@ const MOD_BUNDLE_CSS_URLS = {
     custom: "", // Initialize with an empty string and populate it later
 };
 
-const TIMEOUT = 10000;
+const EXTENSION_DOWNLOAD_TIMEOUT = 10000;
 
 async function downloadAndWriteBundle(url: string, filePath: string) {
     try {
-        const response = await fetchWithTimeout(url, {method: "GET"}, TIMEOUT);
+        const response = await fetchWithTimeout(url, {method: "GET"}, EXTENSION_DOWNLOAD_TIMEOUT);
         if (!response.ok) {
             throw new Error(`Unexpected response: ${response.statusText}`);
         }
         let bundle = await response.text();
 
-        const modName: keyof typeof MOD_BUNDLE_URLS = await getConfig("modName");
-        if (modName === "vencord" && !url.endsWith(".css")) {
+        if (containsVencord(bundle) && !url.endsWith(".css")) {
             bundle = await patchVencord(bundle);
         }
 
-        await fs.promises.writeFile(filePath, bundle, "utf-8");
+        fs.promises.writeFile(filePath, bundle, "utf-8");
     } catch (error) {
         console.error(error);
         throw new Error("Failed to download and write bundle");
     }
+}
+
+function containsVencord(str: string) {
+    // Get the first 150 characters of the string
+    const substring = str.slice(0, 150);
+    // Check if "Vencord" is present in the substring
+    return substring.indexOf("Vencord") !== -1;
 }
 
 async function updateModBundle() {
