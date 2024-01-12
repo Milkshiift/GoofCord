@@ -1,9 +1,10 @@
 //ipc stuff
 import {app, desktopCapturer, ipcMain, safeStorage} from "electron";
 import {mainWindow} from "./window";
-import {getConfig, getDisplayVersion, getVersion, packageVersion, setConfigBulk} from "./utils";
+import {getDisplayVersion, getVersion, packageVersion} from "./utils";
 import {createSettingsWindow} from "./settings/main";
 import {decryptMessage, encryptMessage} from "./modules/messageEncryption";
+import {getConfig, setConfigBulk} from "./config/config";
 
 export function registerIpc() {
     ipcMain.on("win-maximize", () => {

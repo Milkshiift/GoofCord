@@ -1,9 +1,10 @@
 import * as fs from "fs-extra";
 import {app, dialog, session} from "electron";
-import {fetchWithTimeout, getConfig, streamPipeline} from "../utils";
-import {patchVencord} from "./scriptLoader/vencordPatcher";
+import {fetchWithTimeout, streamPipeline} from "../utils";
+import {patchVencord} from "../scriptLoader/vencordPatcher";
 import path from "path";
 import extract from "extract-zip";
+import {getConfig} from "../config/config";
 
 export async function loadExtensions() {
     const userDataPath = app.getPath("userData");

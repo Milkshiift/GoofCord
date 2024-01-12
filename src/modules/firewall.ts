@@ -1,8 +1,8 @@
 // This file contains everything that uses session.defaultSession.webRequest
 import {mainWindow} from "../window";
 import {session} from "electron";
-import {getConfig} from "../utils";
 import electron from "electron";
+import {getConfig} from "../config/config";
 
 export async function initializeFirewall() {
     // Blocking URLs. This list works in tandem with "blockedStrings" list.

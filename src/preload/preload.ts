@@ -2,11 +2,12 @@ import "./bridge";
 import {ipcRenderer} from "electron";
 import * as fs from "fs-extra";
 import * as path from "path";
-import {addScript, addStyle, getConfig} from "../utils";
+import {addScript, addStyle} from "../utils";
 import {injectTitlebar} from "./titlebar";
-import "../modules/scriptLoader/scriptLoader";
+import "../scriptLoader/scriptLoader";
 import {log} from "../modules/logger";
-import {loadScripts} from "../modules/scriptLoader/scriptLoader";
+import {loadScripts} from "../scriptLoader/scriptLoader";
+import {getConfig} from "../config/config";
 
 window.localStorage.setItem("hideNag", "true");
 

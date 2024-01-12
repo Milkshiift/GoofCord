@@ -1,16 +1,14 @@
 import {app, crashReporter, net, session} from "electron";
 import "v8-compile-cache";
-import {
-    checkConfig,
-    getConfig
-} from "./utils";
 import "./tray";
 import {createMainWindow} from "./window";
 import {checkForUpdate} from "./modules/updateCheck";
 import AutoLaunch from "auto-launch";
-import {categorizeScripts, installDefaultScripts} from "./modules/scriptLoader/scriptPreparer";
+import {categorizeScripts, installDefaultScripts} from "./scriptLoader/scriptPreparer";
 import {unstrictCSP} from "./modules/firewall";
 import {installModLoader} from "./modules/extensions";
+import {checkConfig} from "./config/configChecker";
+import {getConfig} from "./config/config";
 
 crashReporter.start({uploadToServer: false});
 

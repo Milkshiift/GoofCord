@@ -1,8 +1,9 @@
 import * as fs from "fs-extra";
 import {app, dialog} from "electron";
 import path from "path";
-import {fetchWithTimeout, getConfig} from "../../utils";
-import {patchVencord} from "./vencordPatcher";
+import {fetchWithTimeout} from "../utils";
+import {patchVencord} from "../scriptLoader/vencordPatcher";
+import {getConfig} from "../config/config";
 
 const MOD_BUNDLE_URLS = {
     none: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",

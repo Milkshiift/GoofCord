@@ -1,9 +1,9 @@
 import {app, BrowserWindow, clipboard, ipcMain, shell} from "electron";
-import {getConfig, getConfigLocation, getDisplayVersion, getVersion, setConfigBulk, Settings} from "../utils";
+import {getDisplayVersion, getVersion} from "../utils";
 import path from "path";
 import os from "os";
 import fs from "fs-extra";
-
+import {getConfig, getConfigLocation, setConfigBulk, Settings} from "../config/config";
 let settingsWindow: BrowserWindow;
 let instance: number = 0;
 const userDataPath = app.getPath("userData");
@@ -44,16 +44,16 @@ export async function createSettingsWindow() {
             setConfigBulk(args);
         });
         ipcMain.on("openStorageFolder", async () => {
-            shell.openPath(storagePath);
+            await shell.openPath(storagePath);
         });
         ipcMain.on("openScriptsFolder", async () => {
-            shell.openPath(scriptsPath);
+            await shell.openPath(scriptsPath);
         });
         ipcMain.on("openExtensionsFolder", async () => {
-            shell.openPath(extensionsPath);
+            await shell.openPath(extensionsPath);
         });
         ipcMain.on("openCrashesFolder", async () => {
-            shell.openPath(path.join(app.getPath("temp"), app.getName() + " Crashes"));
+            await shell.openPath(path.join(app.getPath("temp"), app.getName() + " Crashes"));
         });
         ipcMain.on("crash", async () => {
             process.crash();

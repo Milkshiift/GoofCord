@@ -1,5 +1,5 @@
 import {app, BrowserWindow, nativeImage, shell} from "electron";
-import {getConfig, getCustomIcon, getWindowState, setWindowState} from "./utils";
+import {getCustomIcon} from "./utils";
 import {registerIpc} from "./ipc";
 import {setMenu} from "./menu";
 import * as fs from "fs-extra";
@@ -9,6 +9,8 @@ import {getUserAgent} from "./modules/agent";
 import * as path from "path";
 import {initializeFirewall} from "./modules/firewall";
 import {loadExtensions} from "./modules/extensions";
+import {getConfig} from "./config/config";
+import {getWindowState, setWindowState} from "./config/windowStateManager";
 
 export let mainWindow: BrowserWindow;
 contextMenu({

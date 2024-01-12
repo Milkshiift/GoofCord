@@ -1,5 +1,5 @@
 import {scriptCategories} from "./scriptPreparer";
-import {getConfig} from "../../utils";
+import {getConfig} from "../config/config";
 
 // For patches in custom scripts to work, we inject them into Vencord's code
 

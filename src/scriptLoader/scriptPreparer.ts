@@ -1,10 +1,11 @@
 import path from "path";
 import {app, ipcMain} from "electron";
 import fs from "fs-extra";
-import {isSemverLower} from "../updateCheck";
-import {fetchWithTimeout, getConfig, packageVersion, streamPipeline} from "../../utils";
-import {error} from "../logger";
+import {isSemverLower} from "../modules/updateCheck";
+import {fetchWithTimeout, packageVersion, streamPipeline} from "../utils";
+import {error} from "../modules/logger";
 import extract from "extract-zip";
+import {getConfig} from "../config/config";
 
 type ScriptInfo = {
     name: string;

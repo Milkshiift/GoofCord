@@ -1,7 +1,7 @@
 import StegCloak from "stegcloak";
-import {getConfig, getConfigSync} from "../utils";
 import {safeStorage} from "electron";
 import {mainWindow} from "../window";
+import {getConfig, getConfigSync} from "../config/config";
 
 const stegcloak = new StegCloak(true, false);
 
