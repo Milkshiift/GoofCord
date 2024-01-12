@@ -5,10 +5,22 @@ import {mainWindow} from "../window";
 let capturerWindow: BrowserWindow;
 
 function registerCustomHandler() {
+    const isLinuxWayland = process.env["XDG_SESSION_TYPE"] === "wayland";
+    console.log("Is wayland: ", isLinuxWayland);
+
+    const primaryDisplay = screen.getPrimaryDisplay();
+    const { width, height } = primaryDisplay.workAreaSize;
+
     session.defaultSession.setDisplayMediaRequestHandler(async (_request, callback) => {
-        // Maximizing for some reason doesn't work in linux, so we manually set the window dimensions to match the screen's width and height
-        const primaryDisplay = screen.getPrimaryDisplay();
-        const { width, height } = primaryDisplay.workAreaSize;
+        const sources = await desktopCapturer.getSources({
+            types: ["screen", "window"]
+        });
+
+        if (isLinuxWayland) {
+            callback({video: {id: sources[0]?.id, name: sources[0]?.name}});
+            return;
+        }
+
         capturerWindow = new BrowserWindow({
             width: width,
             height: height,
@@ -24,9 +36,6 @@ function registerCustomHandler() {
         capturerWindow.maximize();
 
         await capturerWindow.loadURL(`file://${__dirname}/picker.html`);
-        const sources = await desktopCapturer.getSources({
-            types: ["screen", "window"]
-        });
         capturerWindow.webContents.send("getSources", sources);
 
         ipcMain.once("selectScreenshareSource", async (_event, id, name, audio, resolution, framerate) => {

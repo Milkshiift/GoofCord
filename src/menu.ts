@@ -1,4 +1,4 @@
-import {app, BrowserWindow, clipboard, Menu, MenuItem} from "electron";
+import {app, BrowserWindow, clipboard, Menu} from "electron";
 import {mainWindow} from "./window";
 import {createSettingsWindow} from "./settings/main";
 import {cycleThroughPasswords} from "./modules/messageEncryption";
