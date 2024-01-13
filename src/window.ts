@@ -11,6 +11,7 @@ import {initializeFirewall} from "./modules/firewall";
 import {loadExtensions} from "./modules/extensions";
 import {getConfig} from "./config/config";
 import {getWindowState, setWindowState} from "./config/windowStateManager";
+import {registerCustomHandler} from "./screenshare/main";
 
 export let mainWindow: BrowserWindow;
 contextMenu({
@@ -37,16 +38,12 @@ contextMenu({
     ]
 });
 
-// This function runs after defining the window.
 async function doAfterDefiningTheWindow() {
-    // Check if the "startMinimized" config is true, and hide or show the mainWindow accordingly.
     (await getConfig("startMinimized")) ? mainWindow.hide() : mainWindow.show();
-
-    // Dynamically import a module for screen sharing.
-    import("./screenshare/main");
 
     registerIpc();
     setMenu();
+    registerCustomHandler();
 
     // Set the user agent for the web contents based on the Chrome version.
     mainWindow.webContents.userAgent = getUserAgent(process.versions.chrome);
@@ -59,6 +56,7 @@ async function doAfterDefiningTheWindow() {
 
     // Define a handler for opening new windows.
     mainWindow.webContents.setWindowOpenHandler(({url}) => {
+        // For Vencord's quick css
         if (url === "about:blank") {
             return {action: "allow"};
         }

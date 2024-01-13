@@ -4,7 +4,7 @@ import {mainWindow} from "../window";
 
 let capturerWindow: BrowserWindow;
 
-function registerCustomHandler() {
+export function registerCustomHandler() {
     const isLinuxWayland = process.env["XDG_SESSION_TYPE"] === "wayland";
     console.log("Is wayland: ", isLinuxWayland);
 
@@ -59,4 +59,3 @@ function registerCustomHandler() {
         });
     });
 }
-registerCustomHandler();
