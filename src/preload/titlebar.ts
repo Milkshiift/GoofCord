@@ -32,7 +32,7 @@ function attachTitlebarEvents() {
     const quit = titlebar.querySelector("#quit")!;
 
     minimize.addEventListener("click", () => {
-        ipcRenderer.send("win-minimize");
+        ipcRenderer.send("window:Minimize");
     });
 
     maximize.addEventListener("click", () => {
