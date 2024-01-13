@@ -41,7 +41,7 @@ export async function injectTitlebar() {
     const titlebar = createTitlebar();
     const appMount = document.getElementById("app-mount");
     if (appMount) appMount.prepend(titlebar);
-    const titlebarcssPath = path.join(__dirname, "../", "/content/css/titlebarSlim.css");
+    const titlebarcssPath = path.join(__dirname, "../", "/assets/css/titlebarSlim.css");
     addStyle(await fs.promises.readFile(titlebarcssPath, "utf8"));
     attachTitlebarEvents();
 }

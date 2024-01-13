@@ -48,9 +48,9 @@ function attachTitlebarEvents() {
     quit.addEventListener("click", () => {
         const minimizeToTray = ipcRenderer.sendSync("minimizeToTray");
         if (minimizeToTray) {
-            ipcRenderer.send("win-hide");
+            ipcRenderer.send("window:Hide");
         } else {
-            ipcRenderer.send("win-quit");
+            ipcRenderer.send("window:Quit");
         }
     });
 }
@@ -74,7 +74,7 @@ export async function injectTitlebar() {
 
     if (appMount) observer.observe(appMount, { childList: true, subtree: false });
 
-    const titlebarcssPath = path.join(__dirname, "../", "/content/css/titlebar.css");
+    const titlebarcssPath = path.join(__dirname, "../", "/assets/css/titlebar.css");
     addStyle(await fs.promises.readFile(titlebarcssPath, "utf8"));
     document.body.setAttribute("goofcord-platform", os.platform());
 
@@ -87,16 +87,16 @@ export function flashTitlebar(color: string) {
 
     if (!animFinished) {
         realTitlebar.style.backgroundColor = "transparent";
-        realTitlebar.removeEventListener("transitionend", handler);
+        realTitlebar.removeEventListener("transitioned", handler);
     }
     animFinished = false;
 
     realTitlebar.style.backgroundColor = color;
-    realTitlebar.addEventListener("transitionend", handler);
+    realTitlebar.addEventListener("transitioned", handler);
     function handler() {
         realTitlebar.style.backgroundColor = "transparent";
         animFinished = true;
-        realTitlebar.removeEventListener("transitionend", handler);
+        realTitlebar.removeEventListener("transitioned", handler);
     }
 }
 

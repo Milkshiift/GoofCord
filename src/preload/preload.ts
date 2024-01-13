@@ -95,9 +95,9 @@ async function injectAfterSplash() {
         })();
     `);
     if (await getConfig("disableAutogain")) {
-        addScript(await fs.promises.readFile(path.join(__dirname, "../", "/content/js/disableAutogain.js"), "utf8"));
+        addScript(await fs.promises.readFile(path.join(__dirname, "../", "/assets/js/disableAutogain.js"), "utf8"));
     }
 
-    const cssPath = path.join(__dirname, "../", "/content/css/discord.css");
+    const cssPath = path.join(__dirname, "../", "/assets/css/discord.css");
     addStyle(await fs.promises.readFile(cssPath, "utf8"));
 }

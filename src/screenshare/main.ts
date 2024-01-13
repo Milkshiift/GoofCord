@@ -35,7 +35,7 @@ function registerCustomHandler() {
         });
         capturerWindow.maximize();
 
-        await capturerWindow.loadURL(`file://${path.join(__dirname, "../", "/content/html/picker.html")}`);
+        await capturerWindow.loadURL(`file://${path.join(__dirname, "../", "/assets/html/picker.html")}`);
         capturerWindow.webContents.send("getSources", sources);
 
         ipcMain.once("selectScreenshareSource", async (_event, id, name, audio, resolution, framerate) => {

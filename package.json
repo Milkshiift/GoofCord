@@ -4,7 +4,7 @@
   "description": "Take control of your Discord experience with GoofCord – the highly configurable and privacy-first discord client.",
   "main": "ts-out/main.js",
   "scripts": {
-    "build": "tsc && copyfiles -u 1 src/**/*.html src/**/**/*.css src/**/**/*.js ts-out/ && copyfiles package.json ts-out/ && copyfiles assets/**/** ts-out/",
+    "build": "tsc && shx cp -r ./assets/ ./ts-out/",
     "start": "pnpm run build && electron ./ts-out/main.js",
     "packageLinux": "npm run build && electron-builder --linux",
     "packageWindows": "npm run build && electron-builder --win",
@@ -21,6 +21,10 @@
   },
   "homepage": "https://github.com/Milkshiift/GoofCord",
   "devDependencies": {
+    "@types/auto-launch": "^5.0.5",
+    "@types/graceful-fs": "^4.1.9",
+    "@types/node": "^20.10.6",
+    "@types/stegcloak": "^1.0.2",
     "@typescript-eslint/eslint-plugin": "^6.17.0",
     "@typescript-eslint/parser": "^6.17.0",
     "eslint": "^8.56.0",
@@ -28,14 +32,10 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-n": "^16.6.1",
     "eslint-plugin-promise": "^6.1.1",
-    "@types/auto-launch": "^5.0.5",
-    "@types/graceful-fs": "^4.1.9",
-    "@types/node": "^20.10.6",
-    "@types/stegcloak": "^1.0.2",
-    "copyfiles": "^2.4.1",
     "electron": "^28.1.1",
     "electron-builder": "^24.9.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "shx": "^0.3.4"
   },
   "dependencies": {
     "arrpc": "file:src\\arrpc",

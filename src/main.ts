@@ -39,9 +39,9 @@ async function load() {
     installDefaultScripts();
     unstrictCSP();
 
-    if ((await getConfig("modName")) != "none") installModLoader();
-
     await createMainWindow();
+
+    if ((await getConfig("modName")) != "none") installModLoader();
 
     if (await getConfig("updateNotification")) checkForUpdate();
 

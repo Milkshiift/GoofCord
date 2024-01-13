@@ -38,7 +38,7 @@ export async function checkIfConfigIsBroken(): Promise<void> {
 
 export async function checkIfFoldersExist() {
     const userDataPath = app.getPath("userData");
-    const foldersToCheck = ["storage", "scripts", "styles"];
+    const foldersToCheck = ["storage", "scripts", "styles", "extensions"];
 
     for (const folderName of foldersToCheck) {
         const folderPath = path.join(userDataPath, folderName);

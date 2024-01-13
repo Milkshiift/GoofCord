@@ -1,18 +1,13 @@
 import * as fs from "fs-extra";
 import {app, dialog, session} from "electron";
-import {fetchWithTimeout, streamPipeline} from "../utils";
+import {fetchWithTimeout} from "../utils";
 import {patchVencord} from "../scriptLoader/vencordPatcher";
 import path from "path";
-import extract from "extract-zip";
 import {getConfig} from "../config/config";
 
 export async function loadExtensions() {
     const userDataPath = app.getPath("userData");
-    const extensionsFolder = userDataPath + "/extensions/";
-    if (!fs.existsSync(extensionsFolder)) {
-        await fs.promises.mkdir(extensionsFolder);
-        console.log("Created missing extensions folder");
-    }
+    const extensionsFolder = path.join(userDataPath, "extensions/");
     for (const file of (await fs.promises.readdir(extensionsFolder))) {
         try {
             const manifest = await fs.promises.readFile(`${userDataPath}/extensions/${file}/manifest.json`, "utf8");
@@ -35,7 +30,7 @@ const MOD_BUNDLE_URLS = {
 const MOD_BUNDLE_CSS_URLS = {
     none: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
     vencord: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
-    shelter: "https://armcord.xyz/placeholder.css",
+    shelter: "https://raw.githubusercontent.com/Milkshiift/GoofCord/main/src/content/css/empty.css",
     custom: "", // Initialize with an empty string and populate it later
 };
 
@@ -56,7 +51,7 @@ async function downloadAndWriteBundle(url: string, filePath: string) {
         fs.promises.writeFile(filePath, bundle, "utf-8");
     } catch (error) {
         console.error(error);
-        throw new Error("Failed to download and write bundle");
+        throw new Error(error?.toString());
     }
 }
 
@@ -76,7 +71,6 @@ async function updateModBundle() {
     try {
         console.log("[Mod loader] Downloading mod bundle");
         const distFolder = path.join(app.getPath("userData"), "extensions/loader/dist/");
-        await fs.promises.mkdir(distFolder, {recursive: true});
 
         const modName: keyof typeof MOD_BUNDLE_URLS = await getConfig("modName");
         if (modName === "custom") {
@@ -93,7 +87,7 @@ async function updateModBundle() {
         console.error(error);
         dialog.showErrorBox(
             "Oops, something went wrong.",
-            "GoofCord couldn't install mods, please check if you have a stable internet connection and restart the app. If this issue persists, report it on the support server/Github issues."
+            `GoofCord couldn't install mods, please check if you have a stable internet connection and restart the app.\n\n${error}`
         );
     }
 }
@@ -101,33 +95,21 @@ async function updateModBundle() {
 export async function installModLoader() {
     const extensionFolder = path.join(app.getPath("userData"), "extensions/");
     const loaderFolder = path.join(extensionFolder, "loader");
-    const distFolder = path.join(loaderFolder, "dist");
-    const bundleCssPath = path.join(distFolder, "bundle.css");
 
-    if (!fs.existsSync(loaderFolder) || !fs.existsSync(bundleCssPath)) {
+    if (!fs.existsSync(loaderFolder)) {
         try {
-            // Remove the existing loader folder recursively
-            await fs.promises.rm(loaderFolder, {recursive: true, force: true});
+            const loaderFolderPath = path.join(__dirname, "../", "/assets/js/modLoader");
+            await fs.copy(loaderFolderPath, extensionFolder);
 
-            if (!fs.existsSync(extensionFolder)) {
-                await fs.promises.mkdir(extensionFolder);
-                console.log("[Mod loader] Created missing extension folder");
-            }
+            console.log("[Mod loader] Mod loader installed");
 
-            const zipPath = path.join(app.getPath("temp"), "loader.zip");
-            const loaderZip = await fetchWithTimeout("https://armcord.xyz/loader.zip");
-
-            if (!loaderZip.ok) throw new Error(`Unexpected response: ${loaderZip.statusText}`);
-
-            await streamPipeline(loaderZip.body, fs.createWriteStream(zipPath));
-            await extract(zipPath, {dir: path.join(app.getPath("userData"), "extensions")});
             await updateModBundle();
         } catch (error) {
-            console.error("[Mod loader] Failed to install modloader");
+            console.error("[Mod loader] Failed to install the mod loader");
             console.error(error);
             dialog.showErrorBox(
                 "Oops, something went wrong.",
-                "GoofCord couldn't install the internal mod loader, please check if you have a stable internet connection and restart the app. If this issue persists, report it on the support server/Github issues."
+                `GoofCord couldn't install the internal mod loader.\n\n${error}`
             );
         }
     } else {
