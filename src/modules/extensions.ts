@@ -1,9 +1,12 @@
 import * as fs from "fs-extra";
 import {app, dialog, session} from "electron";
-import {fetchWithTimeout} from "../utils";
+import {fetchWithTimeout, streamPipeline} from "../utils";
 import {patchVencord} from "../scriptLoader/vencordPatcher";
 import path from "path";
 import {getConfig} from "../config/config";
+import os from "os";
+import sudo from "sudo-prompt";
+import extract from "extract-zip";
 
 export async function loadExtensions() {
     const userDataPath = app.getPath("userData");
@@ -95,11 +98,17 @@ async function updateModBundle() {
 export async function installModLoader() {
     const extensionFolder = path.join(app.getPath("userData"), "extensions/");
     const loaderFolder = path.join(extensionFolder, "loader");
-
     if (!fs.existsSync(loaderFolder)) {
         try {
-            const loaderFolderPath = path.join(__dirname, "../", "/assets/js/modLoader");
-            await fs.copy(loaderFolderPath, extensionFolder);
+            // It would be better to copy the loader from assets to extensions folder,
+            // but if the user has GoofCord installed in a folder owned by root (for example when installing from .deb)
+            // the copied loader would be owned by root too, so we don't have read/write access.
+
+            const zipPath = path.join(app.getPath("temp"), "loader.zip");
+            const loaderZip = await fetchWithTimeout("https://github.com/Milkshiift/GoofCord/raw/main/assets/js/loader.zip");
+
+            await streamPipeline(loaderZip.body, fs.createWriteStream(zipPath));
+            await extract(zipPath, {dir: path.join(app.getPath("userData"), "extensions")});
 
             console.log("[Mod loader] Mod loader installed");
 
