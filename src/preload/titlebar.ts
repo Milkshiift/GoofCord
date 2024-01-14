@@ -87,16 +87,16 @@ export function flashTitlebar(color: string) {
 
     if (!animFinished) {
         realTitlebar.style.backgroundColor = "transparent";
-        realTitlebar.removeEventListener("transitioned", handler);
+        realTitlebar.removeEventListener("transitionend", handler);
     }
     animFinished = false;
 
     realTitlebar.style.backgroundColor = color;
-    realTitlebar.addEventListener("transitioned", handler);
+    realTitlebar.addEventListener("transitionend", handler);
     function handler() {
         realTitlebar.style.backgroundColor = "transparent";
         animFinished = true;
-        realTitlebar.removeEventListener("transitioned", handler);
+        realTitlebar.removeEventListener("transitionend", handler);
     }
 }
 
