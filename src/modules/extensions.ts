@@ -4,8 +4,6 @@ import {fetchWithTimeout, streamPipeline} from "../utils";
 import {patchVencord} from "../scriptLoader/vencordPatcher";
 import path from "path";
 import {getConfig} from "../config/config";
-import os from "os";
-import sudo from "sudo-prompt";
 import extract from "extract-zip";
 
 export async function loadExtensions() {
