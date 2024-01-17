@@ -3,6 +3,7 @@ import {addStyle} from "../utils";
 import * as fs from "fs-extra";
 import * as path from "path";
 import os from "os";
+import {getConfig} from "../config/config";
 
 let titlebar: HTMLDivElement;
 function createTitlebar() {
@@ -23,10 +24,7 @@ function createTitlebar() {
     return titlebar;
 }
 
-function attachTitlebarEvents() {
-    const titlebar = document.querySelector(".titlebar");
-    if (!titlebar) return;
-
+function attachTitlebarEvents(titlebar: HTMLDivElement) {
     const minimize = titlebar.querySelector("#minimize")!;
     const maximize = titlebar.querySelector("#maximize")!;
     const quit = titlebar.querySelector("#quit")!;
@@ -46,8 +44,8 @@ function attachTitlebarEvents() {
     });
 
     quit.addEventListener("click", () => {
-        const minimizeToTray = ipcRenderer.sendSync("minimizeToTray");
-        if (minimizeToTray) {
+        const minimizeToTraySetting = ipcRenderer.sendSync("minimizeToTraySetting");
+        if (minimizeToTraySetting) {
             ipcRenderer.send("window:Hide");
         } else {
             ipcRenderer.send("window:Quit");
@@ -57,8 +55,8 @@ function attachTitlebarEvents() {
 
 export async function injectTitlebar() {
     const titlebar = createTitlebar();
-    const appMount = document.getElementById("app-mount");
-    if (appMount) appMount.prepend(titlebar);
+    const appMount = document.getElementById("app-mount")!;
+    appMount.prepend(titlebar);
 
     // MutationObserver to check if the title bar gets destroyed
     const observer = new MutationObserver(function(mutations) {
@@ -72,13 +70,18 @@ export async function injectTitlebar() {
         }
     });
 
-    if (appMount) observer.observe(appMount, { childList: true, subtree: false });
+    observer.observe(appMount, { childList: true, subtree: false });
 
-    const titlebarcssPath = path.join(__dirname, "../", "/assets/css/titlebar.css");
-    addStyle(await fs.promises.readFile(titlebarcssPath, "utf8"));
+    if (!await getConfig("framelessWindow")) {
+        const minimalTitlebarCssPath = path.join(__dirname, "../", "/assets/css/minimalTitlebar.css");
+        addStyle(await fs.promises.readFile(minimalTitlebarCssPath, "utf8"));
+    }
+    const titlebarCssPath = path.join(__dirname, "../", "/assets/css/titlebar.css");
+    addStyle(await fs.promises.readFile(titlebarCssPath, "utf8"));
+
     document.body.setAttribute("goofcord-platform", os.platform());
 
-    attachTitlebarEvents();
+    attachTitlebarEvents(titlebar);
 }
 
 let animFinished = true;

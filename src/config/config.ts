@@ -17,6 +17,7 @@ export interface Settings {
     autoUpdateDefaultScripts: boolean;
     disableAutogain: boolean;
     autoscroll: boolean;
+    framelessWindow: boolean;
     encryptionCover: string;
     encryptionMark: string;
     discordUrl: string;
@@ -44,6 +45,7 @@ export const DEFAULTS: Settings = {
     autoUpdateDefaultScripts: true,
     disableAutogain: false,
     autoscroll: false,
+    framelessWindow: true,
     encryptionCover: "",
     encryptionMark: "| ",
     modName: "vencord",

@@ -85,7 +85,7 @@ async function doAfterDefiningTheWindow() {
 
     // Handle the "page-favicon-updated" event, which updates the app's tray icon based on the website's favicon.
     mainWindow.webContents.on("page-favicon-updated", async () => {
-        // Extract the favicon URL from the web page and update the tray icon.
+        // Extract the favicon from the web page and update the tray icon.
         const FAVICON_BASE_64 = await mainWindow.webContents.executeJavaScript(`
             var getFavicon = () => {
                 let favicon = undefined;
@@ -106,20 +106,21 @@ async function doAfterDefiningTheWindow() {
             "base64"
         );
 
-        await fs.promises.writeFile(path.join(app.getPath("temp"), "tray.png"), buffer, "utf-8");
+        const trayPath = nativeImage.createFromBuffer(buffer);
 
-        const trayPath = nativeImage.createFromPath(path.join(app.getPath("temp"), "tray.png"));
+        if (await getConfig("dynamicIcon") == true) {
+            if (process.platform === "darwin") {
+                app.dock.setIcon(trayPath);
+            }
+            else {
+                mainWindow.setIcon(trayPath);
+            }
+        }
 
-        if (await getConfig("dynamicIcon") == true) mainWindow.setIcon(trayPath);
+        // Handle icon resizing based on the platform.
+        if (process.platform === "darwin") trayPath.resize({height: 22});
+        if (process.platform === "win32") trayPath.resize({height: 32});
 
-        // Additionally, handle icon resizing based on the platform.
-        const ICON_SIZE_DARWIN = 22;
-        if (process.platform === "darwin" && trayPath.getSize().height > ICON_SIZE_DARWIN) trayPath.resize({height: ICON_SIZE_DARWIN});
-
-        const ICON_SIZE_WINDOWS = 32;
-        if (process.platform === "win32" && trayPath.getSize().height > ICON_SIZE_WINDOWS) trayPath.resize({height: ICON_SIZE_WINDOWS});
-
-        // Finally, set the updated tray image.
         tray.setImage(trayPath);
     });
 
@@ -172,7 +173,7 @@ export async function createMainWindow() {
         show: false,
         darkTheme: true,
         icon: await getCustomIcon(),
-        frame: false,
+        frame: !await getConfig("framelessWindow"),
         autoHideMenuBar: true,
         backgroundColor: "#313338",
         webPreferences: {

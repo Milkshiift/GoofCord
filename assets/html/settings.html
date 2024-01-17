@@ -1,3 +1,4 @@
+<!-- This whole file is a mess. JS needs to be fully rewritten and html could be dynamically generated  -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,6 +12,15 @@
 <p class="center">Some changes may require the app to restart before taking effect</p>
 <h2>General settings</h2>
 <form class="settingsContainer">
+    <fieldset>
+        <div class="checkbox-container">
+            <input data-setting="framelessWindow" id="framelessWindow" type="checkbox"/>
+            <label for="framelessWindow">Custom titlebar</label>
+        </div>
+        <p class="description">
+            Disable to use the native titlebar.
+        </p>
+    </fieldset>
     <fieldset>
         <div class="checkbox-container">
             <input data-setting="minimizeToTray" id="minimizeToTray" type="checkbox"/>
@@ -45,15 +55,6 @@
         </div>
         <p class="description">
             Leave empty for the default icon. The path should conform to your OS's format. A Windows example: "D:/Downloads/icon.png". A Linux and macOS example: "/home/Downloads/icon.png".
-        </p>
-    </fieldset>
-    <fieldset>
-        <div class="checkbox-container">
-            <input data-setting="launchWithOsBoot" id="launchWithOsBoot" type="checkbox"/>
-            <label for="launchWithOsBoot">Launch GoofCord on startup</label>
-        </div>
-        <p class="description">
-            When enabled starts GoofCord on OS boot automatically.
         </p>
     </fieldset>
     <fieldset>
@@ -171,6 +172,15 @@
         </div>
         <p class="description">Enables the use of an <b>open source</b> reimplementation of Discord's
             rich presence called <a target="_blank" href="https://github.com/OpenAsar/arrpc">arRPC</a>.</p>
+    </fieldset>
+    <fieldset>
+        <div class="checkbox-container">
+            <input data-setting="launchWithOsBoot" id="launchWithOsBoot" type="checkbox"/>
+            <label for="launchWithOsBoot">Launch GoofCord on startup</label>
+        </div>
+        <p class="description">
+            When enabled starts GoofCord on OS boot automatically.
+        </p>
     </fieldset>
     <fieldset>
         <div class="checkbox-container">

@@ -43,7 +43,7 @@ export function registerIpc() {
     ipcMain.on("saveSettings", async (_event, args) => {
         await setConfigBulk(args);
     });
-    ipcMain.on("minimizeToTray", async (event) => {
+    ipcMain.on("minimizeToTraySetting", async (event) => {
         event.returnValue = await getConfig("minimizeToTray");
     });
     ipcMain.on("flashTitlebar", async (_event, color: string) => {

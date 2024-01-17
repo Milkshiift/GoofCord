@@ -1,0 +1,15 @@
+.withFrame-haYltI {
+    position: absolute !important;
+}
+
+.window-title {
+    content: none !important;
+}
+
+.titlebar #window-controls-container {
+    display: none !important;
+}
+
+.titlebar {
+    mask-image: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+}
