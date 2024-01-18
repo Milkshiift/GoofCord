@@ -17,6 +17,7 @@ export interface Settings {
     disableAutogain: boolean;
     autoscroll: boolean;
     framelessWindow: boolean;
+    transparency: boolean;
     encryptionCover: string;
     encryptionMark: string;
     discordUrl: string;
@@ -44,6 +45,7 @@ export const DEFAULTS: Settings = {
     disableAutogain: false,
     autoscroll: false,
     framelessWindow: true,
+    transparency: false,
     encryptionCover: "",
     encryptionMark: "| ",
     modName: "vencord",

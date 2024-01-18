@@ -164,6 +164,7 @@ async function doAfterDefiningTheWindow() {
 }
 
 export async function createMainWindow() {
+    const transparency = await getConfig("transparency");
     mainWindow = new BrowserWindow({
         width: (await getWindowState("width")) ?? 835,
         height: (await getWindowState("height")) ?? 600,
@@ -175,7 +176,9 @@ export async function createMainWindow() {
         icon: await getCustomIcon(),
         frame: !await getConfig("framelessWindow"),
         autoHideMenuBar: true,
-        backgroundColor: "#313338",
+        backgroundColor: transparency ? undefined : "#313338",
+        transparent: transparency,
+        backgroundMaterial: "acrylic",
         webPreferences: {
             sandbox: false,
             preload: path.join(__dirname, "preload/preload.js"),
