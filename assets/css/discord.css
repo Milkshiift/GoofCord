@@ -23,7 +23,3 @@
     -webkit-backface-visibility: hidden;
     -webkit-perspective: 1000px;
 }
-
-[class^="scrollableContainer"] {
-    overflow-y: hidden !important;
-}
