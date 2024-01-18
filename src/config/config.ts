@@ -10,7 +10,6 @@ export interface Settings {
     startMinimized: boolean;
     spellcheck: boolean;
     updateNotification: boolean;
-    multiInstance: boolean;
     launchWithOsBoot: boolean;
     arrpc: boolean;
     scriptLoading: boolean;
@@ -38,7 +37,6 @@ export const DEFAULTS: Settings = {
     dynamicIcon: false,
     spellcheck: true,
     updateNotification: true,
-    multiInstance: false,
     launchWithOsBoot: false,
     arrpc: false,
     scriptLoading: true,
