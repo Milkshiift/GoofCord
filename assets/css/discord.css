@@ -16,10 +16,3 @@
 .containerWrapper_fa6aa6.animation_fb8933.withoutAvatar__0549d {
     display: none;
 }
-
-/* Could improve scrolling performance? Probably outdated. https://stackoverflow.com/questions/18529381/what-does-webkit-transform-translate3d0-0-0-exactly-do-apply-to-body */
-[class^="scroller"] {
-    transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-    -webkit-perspective: 1000px;
-}
