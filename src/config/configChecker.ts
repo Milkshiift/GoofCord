@@ -10,6 +10,21 @@ export async function checkConfig() {
     await checkConfigForMissingParams();
 }
 
+export async function checkIfFoldersExist() {
+    const userDataPath = app.getPath("userData");
+    const foldersToCheck = ["storage", "scripts", "extensions"];
+
+    for (const folderName of foldersToCheck) {
+        const folderPath = path.join(userDataPath, folderName);
+        const exists = await fs.pathExists(folderPath);
+
+        if (!exists) {
+            await fs.promises.mkdir(folderPath);
+            console.log(`Created missing ${folderName} folder`);
+        }
+    }
+}
+
 export async function checkIfConfigExists() {
     const userDataPath = app.getPath("userData");
     const storagePath = path.join(userDataPath, "/storage/");
@@ -33,21 +48,6 @@ export async function checkIfConfigIsBroken(): Promise<void> {
             "Oops, something went wrong.",
             "GoofCord has detected that your configuration file is corrupted, please restart the app and set your settings again. If this issue persists, report it on the support server/Github issues."
         );
-    }
-}
-
-export async function checkIfFoldersExist() {
-    const userDataPath = app.getPath("userData");
-    const foldersToCheck = ["storage", "scripts", "styles", "extensions"];
-
-    for (const folderName of foldersToCheck) {
-        const folderPath = path.join(userDataPath, folderName);
-        const exists = await fs.pathExists(folderPath);
-
-        if (!exists) {
-            await fs.promises.mkdir(folderPath);
-            console.log(`Created missing ${folderName} folder`);
-        }
     }
 }
 

@@ -18,18 +18,17 @@ export async function initializeFirewall() {
     const blockedStrings = [
         "sentry",
         "google",
-        "log",
         "tracking",
         "stats",
         "\\.spotify", // Turns out spotify embeds don't need xhr requests to function
-        "pagead"
+        "pagead",
+        "analytics"
     ];
     const blockRegex = new RegExp(blockedStrings.join("|"), "i"); // 'i' flag for case-insensitive matching
 
     const allowedStrings = [
         "googlevideo", // For YouTube playback
         "discord-attachments",
-        "/login", // For discord login
         "googleapis", // For discord activities
         "search",
         "api.spotify"
