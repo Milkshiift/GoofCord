@@ -1,3 +1,4 @@
+// RENDERER
 import { ipcRenderer } from "electron";
 
 interface IPCSources {

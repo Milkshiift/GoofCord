@@ -1,3 +1,4 @@
+// RENDERER
 import {contextBridge, ipcRenderer} from "electron";
 
 console.log("GoofCord Settings");

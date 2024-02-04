@@ -12,6 +12,7 @@ import {loadExtensions} from "./modules/extensions";
 import {getConfig} from "./config/config";
 import {getWindowState, setWindowState} from "./config/windowStateManager";
 import {registerCustomHandler} from "./screenshare/main";
+import {initArrpc} from "./modules/arrpc";
 
 export let mainWindow: BrowserWindow;
 contextMenu({
@@ -139,8 +140,7 @@ async function doAfterDefiningTheWindow() {
         await getConfig("minimizeToTray") ? mainWindow.hide() : app.quit();
     });
 
-    // @ts-ignore
-    if (await getConfig("arrpc")) import("arrpc");
+    initArrpc();
 
     const setBodyAttribute = (attribute: string, value: string = "") => {
         mainWindow.webContents.executeJavaScript(`document.body.setAttribute("${attribute}", "${value}");`);

@@ -30,7 +30,7 @@ export function registerCustomHandler() {
             autoHideMenuBar: true,
             webPreferences: {
                 sandbox: false,
-                preload: path.join(__dirname, "preload.js")
+                preload: path.join(__dirname, "screenshare/preload.js")
             }
         });
         capturerWindow.maximize();

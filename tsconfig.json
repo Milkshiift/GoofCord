@@ -19,7 +19,7 @@
 
         // Output //
         "module": "commonjs", // Compiles ES6 imports to require() syntax.
-        "removeComments": false,
+        "removeComments": true,
         "sourceMap": true, // Used for displaying the original source when debugging in webpack. Allows you to set breakpoints directly on TypeScript code for VSCode's debugger.
 
         // Library Building //

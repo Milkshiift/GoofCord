@@ -72,4 +72,5 @@ GoofCord also does some clever tricks to make Discord think you are just using a
 [ArmCord](https://github.com/ArmCord/ArmCord)  
 [Discord Sandboxed](https://github.com/khlam/discord-sandboxed)  
 [Vencord](https://github.com/Vendicated/Vencord)     
+[Vesktop](https://github.com/Vencord/Vesktop)    
 [WebCord](https://github.com/SpacingBat3/WebCord)

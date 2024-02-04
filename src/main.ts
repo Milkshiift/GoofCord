@@ -27,7 +27,10 @@ app.whenReady().then(async () => {
     }
 
     const retry = setInterval(async () => {
-        if (net.isOnline()) { // Wait until the user is online
+        // Wait until the user is online
+        // Right now if the user is offline, GoofCord doesn't give any feedback, it's just hanging in the background
+        // TODO: Add some kind of feedback
+        if (net.isOnline()) {
             clearInterval(retry);
             load();
         }
