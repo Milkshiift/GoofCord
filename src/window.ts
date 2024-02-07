@@ -176,9 +176,9 @@ export async function createMainWindow() {
         icon: await getCustomIcon(),
         frame: !await getConfig("framelessWindow"),
         autoHideMenuBar: true,
-        backgroundColor: transparency ? undefined : "#313338",
+        backgroundColor: transparency ? "#00000000" : "#313338",
         transparent: transparency,
-        backgroundMaterial: "acrylic",
+        backgroundMaterial: transparency ? "acrylic" : "none",
         webPreferences: {
             sandbox: false,
             preload: path.join(__dirname, "preload/preload.js"),
