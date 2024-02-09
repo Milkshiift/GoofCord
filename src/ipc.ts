@@ -3,7 +3,7 @@ import {mainWindow} from "./window";
 import {getDisplayVersion, getVersion, packageVersion} from "./utils";
 import {createSettingsWindow} from "./settings/main";
 import {decryptMessage, encryptMessage} from "./modules/messageEncryption";
-import {getConfig, setConfigBulk} from "./config/config";
+import {cachedConfig, getConfig, loadConfig, setConfig, setConfigBulk} from "./config/config";
 
 export function registerIpc() {
     ipcMain.on("window:Maximize", () => {
@@ -27,6 +27,21 @@ export function registerIpc() {
     ipcMain.on("window:Quit", () => {
         app.exit();
     });
+    ipcMain.on("config:getConfig", (event, toGet) => {
+        event.returnValue = getConfig(toGet);
+    });
+    ipcMain.on("config:setConfig", (event, entry, value) => {
+        event.returnValue = setConfig(entry, value);
+    });
+    ipcMain.on("config:setConfigBulk", (event, object) => {
+        event.returnValue = setConfigBulk(object);
+    });
+    ipcMain.on("config:setConfigBulk", (event, args) => {
+        event.returnValue = setConfigBulk(args);
+    });
+    ipcMain.on("config:setConfig", (event, object, toSet) => {
+        event.returnValue = setConfig(object, toSet);
+    });
     ipcMain.on("getAppVersion", (event) => {
         event.returnValue = getVersion();
     });
@@ -40,11 +55,8 @@ export function registerIpc() {
         app.relaunch();
         app.exit();
     });
-    ipcMain.on("saveSettings", async (_event, args) => {
-        await setConfigBulk(args);
-    });
     ipcMain.on("minimizeToTraySetting", async (event) => {
-        event.returnValue = await getConfig("minimizeToTray");
+        event.returnValue = getConfig("minimizeToTray");
     });
     ipcMain.on("flashTitlebar", async (_event, color: string) => {
         await mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebar("${color}")`);
@@ -55,16 +67,16 @@ export function registerIpc() {
     ipcMain.on("openSettingsWindow", async () => {
         await createSettingsWindow();
     });
-    ipcMain.handle("encryptMessage", async (event, message: string) => {
+    ipcMain.handle("encryptMessage", async (_event, message: string) => {
         return encryptMessage(message);
     });
     ipcMain.on("decryptMessage", async (event, message: string) => {
         event.returnValue = decryptMessage(message);
     });
-    ipcMain.handle("encryptSafeStorage", async (event, plaintextPassword: string) => {
+    ipcMain.handle("encryptSafeStorage", async (_event, plaintextPassword: string) => {
         return safeStorage.encryptString(plaintextPassword).toString("latin1");
     });
-    ipcMain.handle("decryptSafeStorage", async (event, encryptedPassword: string) => {
+    ipcMain.handle("decryptSafeStorage", async (_event, encryptedPassword: string) => {
         return safeStorage.decryptString(Buffer.from(encryptedPassword, "latin1"));
     });
     ipcMain.on("isVencordPresent", async (event) => {

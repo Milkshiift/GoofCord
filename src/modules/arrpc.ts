@@ -4,7 +4,7 @@ import {getConfig} from "../config/config";
 import {mainWindow} from "../window";
 
 export async function initArrpc() {
-    if (!await getConfig("arrpc")) return;
+    if (!getConfig("arrpc")) return;
 
     try {
         const server = await new Server();

@@ -26,12 +26,12 @@ export async function createSettingsWindow() {
             title: `GoofCord Settings | Version: ${getDisplayVersion()}`,
             darkTheme: true,
             frame: true,
-            icon: path.join(__dirname, "../", "/assets/gf_icon.png"),
+            icon: path.join(__dirname, "/assets/gf_icon.png"),
             backgroundColor: "#2f3136",
             autoHideMenuBar: true,
             webPreferences: {
                 sandbox: false,
-                preload: path.join(__dirname, "settings/preload.js"),
+                preload: path.join(__dirname, "/settings/preload.js"),
                 nodeIntegrationInSubFrames: false,
                 webSecurity: true,
                 plugins: false,
@@ -39,10 +39,6 @@ export async function createSettingsWindow() {
             }
         });
 
-        ipcMain.on("saveSettings", (event, args: Settings) => {
-            console.log(args);
-            setConfigBulk(args);
-        });
         ipcMain.on("openStorageFolder", async () => {
             await shell.openPath(storagePath);
         });
@@ -57,9 +53,6 @@ export async function createSettingsWindow() {
         });
         ipcMain.on("crash", async () => {
             process.crash();
-        });
-        ipcMain.handle("getSetting", (event, toGet: string) => {
-            return getConfig(toGet);
         });
         ipcMain.on("copyDebugInfo", async () => {
             const settingsFileContent = await fs.promises.readFile(getConfigLocation(), "utf-8");

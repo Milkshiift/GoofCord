@@ -58,7 +58,7 @@ export async function categorizeScripts() {
 
 // Runs from main.ts
 export async function installDefaultScripts() {
-    if (await getConfig("autoUpdateDefaultScripts") === false) return;
+    if (getConfig("autoUpdateDefaultScripts") === false) return;
 
     const scriptsFolder = path.join(app.getPath("userData"), "scripts/");
     const zipPath = path.join(app.getPath("temp"), "defaultScripts.zip");

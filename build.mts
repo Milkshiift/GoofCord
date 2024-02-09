@@ -2,15 +2,11 @@ import { BuildContext, BuildOptions, context } from "esbuild";
 import fs from "fs-extra";
 import path from "path";
 
-const CommonOpts: BuildOptions = {
+const NodeCommonOpts: BuildOptions = {
     minify: true,
     bundle: true,
     sourcemap: "linked",
-    logLevel: "info"
-};
-
-const NodeCommonOpts: BuildOptions = {
-    ...CommonOpts,
+    logLevel: "info",
     format: "cjs",
     platform: "node",
     external: ["electron"],

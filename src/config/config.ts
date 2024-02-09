@@ -2,7 +2,7 @@ import {app, ipcRenderer} from "electron";
 import path from "path";
 import * as fs from "fs-extra";
 import {jsonStringify} from "../utils";
-import {checkConfig} from "./configChecker";
+import {checkConfig, checkConfigForMissingParams} from "./configChecker";
 
 export interface Settings {
     minimizeToTray: boolean;
@@ -68,57 +68,58 @@ export const DEFAULTS: Settings = {
     encryptionPasswords: []
 };
 
+export let cachedConfig: Settings;
+
+export async function loadConfig() {
+    try {
+        const rawData = await fs.promises.readFile(getConfigLocation(), "utf-8");
+        cachedConfig = JSON.parse(rawData);
+    } catch (e) {
+        console.log("Couldn't load the config:", e);
+        await checkConfig();
+        loadConfig();
+    }
+}
+
+export function getConfig(toGet: string): any {
+    try {
+        if (process.type !== "browser") {
+            return ipcRenderer.sendSync("config:getConfig", toGet);
+        }
+        return cachedConfig[toGet];
+    } catch (e) {
+        console.log("getConfig function errored:", e);
+        return checkConfigForMissingParams().then(() => {return getConfig(toGet);});
+    }
+}
+
+export async function setConfig(entry: string, value: unknown) {
+    if (process.type !== "browser") {
+        return ipcRenderer.sendSync("config:setConfig", entry, value);
+    }
+    cachedConfig[entry] = value;
+    const toSave = jsonStringify(cachedConfig);
+    await fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
+}
+
+export async function setConfigBulk(object: Settings) {
+    if (process.type !== "browser") {
+        return ipcRenderer.sendSync("config:setConfigBulk", object);
+    }
+    cachedConfig = object;
+    const toSave = jsonStringify(object);
+    await fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
+}
+
 export async function setup() {
-    console.log("Setting up temporary GoofCord settings.");
+    console.log("Setting up default GoofCord settings.");
     await setConfigBulk({
         ...DEFAULTS
     });
 }
 
 export function getConfigLocation(): string {
-    let userDataPath;
-    if (process.type === "renderer") {
-        userDataPath = ipcRenderer.sendSync("getUserDataPath");
-    }
-    else {
-        userDataPath = app.getPath("userData");
-    }
+    const userDataPath = app.getPath("userData");
     const storagePath = path.join(userDataPath, "/storage/");
     return `${storagePath}settings.json`;
-}
-
-export async function getConfig(object: string) {
-    try {
-        const rawData = await fs.promises.readFile(getConfigLocation(), "utf-8");
-        const returnData = JSON.parse(rawData);
-        return returnData[object];
-    } catch (e) {
-        await checkConfig();
-        return await getConfig(object);
-    }
-}
-
-export function getConfigSync(object: string) {
-    try {
-        const rawData = fs.readFileSync(getConfigLocation(), "utf-8");
-        const returnData = JSON.parse(rawData);
-        return returnData[object];
-    } catch (e) {
-        checkConfig().then(() => {
-            return getConfigSync(object);
-        });
-    }
-}
-
-export async function setConfig(object: string, toSet: unknown) {
-    const rawData = await fs.promises.readFile(getConfigLocation(), "utf-8");
-    const parsed = JSON.parse(rawData);
-    parsed[object] = toSet;
-    const toSave = jsonStringify(parsed);
-    await fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
-}
-
-export async function setConfigBulk(object: Settings) {
-    const toSave = jsonStringify(object);
-    await fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
 }

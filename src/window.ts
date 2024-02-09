@@ -2,7 +2,6 @@ import {app, BrowserWindow, nativeImage, shell} from "electron";
 import {getCustomIcon} from "./utils";
 import {registerIpc} from "./ipc";
 import {setMenu} from "./menu";
-import * as fs from "fs-extra";
 import contextMenu from "electron-context-menu";
 import { tray } from "./tray";
 import {getUserAgent} from "./modules/agent";
@@ -40,11 +39,12 @@ contextMenu({
 });
 
 async function doAfterDefiningTheWindow() {
-    (await getConfig("startMinimized")) ? mainWindow.hide() : mainWindow.show();
+    (getConfig("startMinimized")) ? mainWindow.hide() : mainWindow.show();
 
     registerIpc();
     setMenu();
     registerCustomHandler();
+    initArrpc();
 
     // Set the user agent for the web contents based on the Chrome version.
     mainWindow.webContents.userAgent = getUserAgent(process.versions.chrome);
@@ -68,7 +68,7 @@ async function doAfterDefiningTheWindow() {
                 overrideBrowserWindowOptions: {
                     frame: false,
                     autoHideMenuBar: true,
-                    icon: path.join(__dirname, "../", "/assets/gf_icon.png"),
+                    icon: path.join(__dirname, "/ts-out/assets/gf_icon.png"),
                     backgroundColor: "#313338",
                     alwaysOnTop: true,
                     webPreferences: {
@@ -109,7 +109,7 @@ async function doAfterDefiningTheWindow() {
 
         const trayPath = nativeImage.createFromBuffer(buffer);
 
-        if (await getConfig("dynamicIcon") == true) {
+        if (getConfig("dynamicIcon") == true) {
             if (process.platform === "darwin") {
                 app.dock.setIcon(trayPath);
             }
@@ -137,10 +137,8 @@ async function doAfterDefiningTheWindow() {
         });
 
         e.preventDefault();
-        await getConfig("minimizeToTray") ? mainWindow.hide() : app.quit();
+        getConfig("minimizeToTray") ? mainWindow.hide() : app.quit();
     });
-
-    initArrpc();
 
     const setBodyAttribute = (attribute: string, value: string = "") => {
         mainWindow.webContents.executeJavaScript(`document.body.setAttribute("${attribute}", "${value}");`);
@@ -156,15 +154,14 @@ async function doAfterDefiningTheWindow() {
     // Load an initial empty HTML file into the mainWindow.
     // Then, replace the window location with the configured Discord URL.
     await mainWindow.loadFile(path.join(__dirname, "./", "/assets/html/empty.html"));
-    const DISCORD_URL = await getConfig("discordUrl");
+    const DISCORD_URL = getConfig("discordUrl");
     await mainWindow.webContents.executeJavaScript(`window.location.replace("${DISCORD_URL}");`).then(async () => {
-        if ((await getConfig("modName")) != "none") await loadExtensions();
         initializeFirewall();
     });
 }
 
 export async function createMainWindow() {
-    const transparency = await getConfig("transparency");
+    const transparency: boolean = getConfig("transparency");
     mainWindow = new BrowserWindow({
         width: (await getWindowState("width")) ?? 835,
         height: (await getWindowState("height")) ?? 600,
@@ -174,7 +171,7 @@ export async function createMainWindow() {
         show: false,
         darkTheme: true,
         icon: await getCustomIcon(),
-        frame: !await getConfig("framelessWindow"),
+        frame: !getConfig("framelessWindow"),
         autoHideMenuBar: true,
         backgroundColor: transparency ? "#00000000" : "#313338",
         transparent: transparency,
@@ -186,7 +183,7 @@ export async function createMainWindow() {
             nodeIntegrationInSubFrames: false,
             enableWebSQL: false,
             plugins: true,
-            spellcheck: await getConfig("spellcheck"),
+            spellcheck: getConfig("spellcheck"),
         }
     });
 

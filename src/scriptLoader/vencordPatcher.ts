@@ -4,7 +4,7 @@ import {getConfig} from "../config/config";
 // For patches in custom scripts to work, we inject them into Vencord's code
 
 export async function patchVencord(bundle: string) {
-    if (await getConfig("scriptLoading") === false) return bundle;
+    if (getConfig("scriptLoading") === false) return bundle;
 
     console.log("[Mod loader] Patching Vencord");
 

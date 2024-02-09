@@ -6,8 +6,8 @@ import {addScript, addStyle} from "../utils";
 import {injectTitlebar} from "./titlebar";
 import {log} from "../modules/logger";
 import {loadScripts} from "../scriptLoader/scriptLoader";
-import {getConfig} from "../config/config";
 import fs from "fs-extra";
+import {getConfig} from "../config/config";
 
 // Hide "Download Discord Desktop now!" banner
 window.localStorage.setItem("hideNag", "true");
@@ -97,7 +97,7 @@ async function injectAfterSplash() {
         })();
     `);
 
-    if (await getConfig("disableAutogain")) {
+    if (getConfig("disableAutogain")) {
         addScript(await fs.readFile(path.join(__dirname, "../", "/assets/js/disableAutogain.js"), "utf8"));
     }
 

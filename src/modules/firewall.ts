@@ -8,7 +8,7 @@ export async function initializeFirewall() {
     // Blocking URLs. This list works in tandem with "blockedStrings" list.
     session.defaultSession.webRequest.onBeforeRequest(
         {
-            urls: await getConfig("blocklist")
+            urls: getConfig("blocklist")
         },
         (_, callback) => callback({cancel: true})
     );

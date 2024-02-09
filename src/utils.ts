@@ -40,10 +40,10 @@ export function getDisplayVersion() {
     }
 }
 
-export async function getCustomIcon() {
-    const customIconPath = await getConfig("customIconPath");
+export async function getCustomIcon(): Promise<string> {
+    const customIconPath = getConfig("customIconPath");
     if (customIconPath === "" || customIconPath === undefined) {
-        return path.join(__dirname, "../", "/assets/gf_icon.png");
+        return path.join(__dirname, "/assets/gf_icon.png");
     } else {
         return customIconPath;
     }

@@ -11,10 +11,8 @@ export async function loadExtensions() {
     const extensionsFolder = path.join(userDataPath, "extensions/");
     for (const file of (await fs.promises.readdir(extensionsFolder))) {
         try {
-            const manifest = await fs.promises.readFile(`${userDataPath}/extensions/${file}/manifest.json`, "utf8");
-            const extensionFile = JSON.parse(manifest);
             await session.defaultSession.loadExtension(`${userDataPath}/extensions/${file}`);
-            console.log(`[Mod loader] Loaded ${extensionFile.name} made by ${extensionFile.author}`);
+            console.log(`[Mod loader] Loaded extension: ${file}`);
         } catch (err) {
             console.error(err);
         }
@@ -31,7 +29,7 @@ const MOD_BUNDLE_URLS = {
 const MOD_BUNDLE_CSS_URLS = {
     none: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
     vencord: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
-    shelter: "https://raw.githubusercontent.com/Milkshiift/GoofCord/main/src/content/css/empty.css",
+    shelter: "https://raw.githubusercontent.com/Milkshiift/empty/main/empty.txt",
     custom: "", // Initialize with an empty string and populate it later
 };
 
@@ -64,7 +62,7 @@ function containsVencord(str: string) {
 }
 
 async function updateModBundle() {
-    if (await getConfig("noBundleUpdates")) {
+    if (getConfig("noBundleUpdates")) {
         console.log("[Mod loader] Skipping mod bundle update");
         return;
     }
@@ -73,10 +71,10 @@ async function updateModBundle() {
         console.log("[Mod loader] Downloading mod bundle");
         const distFolder = path.join(app.getPath("userData"), "extensions/loader/dist/");
 
-        const modName: keyof typeof MOD_BUNDLE_URLS = await getConfig("modName");
+        const modName: keyof typeof MOD_BUNDLE_URLS = getConfig("modName");
         if (modName === "custom") {
-            MOD_BUNDLE_URLS.custom = await getConfig("customJsBundle");
-            MOD_BUNDLE_CSS_URLS.custom = await getConfig("customCssBundle");
+            MOD_BUNDLE_URLS.custom = getConfig("customJsBundle");
+            MOD_BUNDLE_CSS_URLS.custom = getConfig("customCssBundle");
         }
 
         await downloadAndWriteBundle(MOD_BUNDLE_URLS[modName], path.join(distFolder, "bundle.js"));

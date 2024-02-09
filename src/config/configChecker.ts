@@ -1,7 +1,7 @@
 import {app, dialog} from "electron";
 import path from "path";
 import * as fs from "fs-extra";
-import {DEFAULTS, getConfig, getConfigLocation, setConfig, setup} from "./config";
+import {cachedConfig, DEFAULTS, getConfigLocation, setConfig, setup} from "./config";
 
 export async function checkConfig() {
     await checkIfFoldersExist();
@@ -54,7 +54,9 @@ export async function checkIfConfigIsBroken(): Promise<void> {
 export async function checkConfigForMissingParams() {
     const REQUIRED_PARAMETERS: string[] = Object.keys(DEFAULTS);
     for (const PARAMETER of REQUIRED_PARAMETERS) {
-        if ((await getConfig(PARAMETER)) == undefined) {
+        try {
+            cachedConfig[PARAMETER];
+        } catch (e) {
             console.error(`Missing parameter: ${PARAMETER}`);
             await setConfig(PARAMETER, DEFAULTS[PARAMETER]);
         }

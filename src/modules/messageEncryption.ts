@@ -1,17 +1,17 @@
 import StegCloak from "stegcloak";
 import {safeStorage} from "electron";
 import {mainWindow} from "../window";
-import {getConfig, getConfigSync} from "../config/config";
+import {getConfig} from "../config/config";
 
 const stegcloak = new StegCloak(true, false);
-
 const encryptionPasswords: string[] = [];
 let chosenPassword: string;
-let encryptionMark = getConfigSync("encryptionMark");
+
+let encryptionMark = getConfig("encryptionMark");
 if (encryptionMark === undefined) encryptionMark = "| ";
 
 (async function loadPasswords() {
-    const encryptedPasswords = await getConfig("encryptionPasswords");
+    const encryptedPasswords = getConfig("encryptionPasswords");
     for (const password in encryptedPasswords) {
         encryptionPasswords.push(safeStorage.decryptString(Buffer.from(encryptedPasswords[password], "latin1")));
     }
@@ -19,7 +19,7 @@ if (encryptionMark === undefined) encryptionMark = "| ";
 })();
 
 export function encryptMessage(message: string) {
-    let cover = getConfigSync("encryptionCover");
+    let cover = getConfig("encryptionCover");
     if (cover === "" || cover.split(" ").length < 2) {
         cover = "\u200c \u200c"; // Stegcloak requires a two-word cover, so we use two invisible characters for the cover
     }
