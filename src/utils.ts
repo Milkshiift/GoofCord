@@ -28,6 +28,10 @@ export function getVersion() {
     return packageVersion;
 }
 
+export function isDev() {
+    return process.argv.some(arg => arg === "--dev" || arg === "-d");
+}
+
 export function getDisplayVersion() {
     if (!(app.getVersion() == packageVersion)) {
         if (app.getVersion() == process.versions.electron) {

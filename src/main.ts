@@ -2,7 +2,12 @@ import {app, crashReporter, net, session} from "electron";
 import "v8-compile-cache";
 import AutoLaunch from "auto-launch";
 import {getConfig, loadConfig} from "./config/config";
-//import "source-map-support/register";
+import {isDev} from "./utils";
+
+if (isDev()) {
+    // @ts-ignore
+    import("source-map-support/register");
+}
 
 if (!app.requestSingleInstanceLock()) app.quit();
 

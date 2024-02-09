@@ -2,10 +2,12 @@ import { BuildContext, BuildOptions, context } from "esbuild";
 import fs from "fs-extra";
 import path from "path";
 
+const isDev = process.argv.some(arg => arg === "--dev" || arg === "-d");
+
 const NodeCommonOpts: BuildOptions = {
     minify: true,
     bundle: true,
-    sourcemap: "linked",
+    sourcemap: isDev ? "linked" : undefined,
     logLevel: "info",
     format: "cjs",
     platform: "node",

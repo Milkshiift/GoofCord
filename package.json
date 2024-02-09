@@ -5,7 +5,7 @@
   "main": "ts-out/main.js",
   "scripts": {
     "build": "tsx build.mts",
-    "start": "pnpm run build && electron ./ts-out/main.js",
+    "start": "pnpm run build --dev && electron ./ts-out/main.js --dev",
     "packageLinux": "npm run build && electron-builder --linux",
     "packageWindows": "npm run build && electron-builder --win",
     "packageMac": "npm run build && electron-builder --mac"
@@ -59,6 +59,7 @@
     "productName": "GoofCord",
     "files": [
       "!*",
+      "!node_modules/**/*",
       "ts-out",
       "package.json",
       "LICENSE"
