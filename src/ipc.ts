@@ -3,7 +3,7 @@ import {mainWindow} from "./window";
 import {getDisplayVersion, getVersion, packageVersion} from "./utils";
 import {createSettingsWindow} from "./settings/main";
 import {decryptMessage, encryptMessage} from "./modules/messageEncryption";
-import {cachedConfig, getConfig, loadConfig, setConfig, setConfigBulk} from "./config/config";
+import {getConfig, setConfig, setConfigBulk} from "./config/config";
 
 export function registerIpc() {
     ipcMain.on("window:Maximize", () => {

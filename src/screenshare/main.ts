@@ -1,4 +1,4 @@
-import {BrowserWindow, desktopCapturer, ipcMain, session, screen} from "electron";
+import {BrowserWindow, desktopCapturer, ipcMain, screen, session} from "electron";
 import path from "path";
 import {mainWindow} from "../window";
 

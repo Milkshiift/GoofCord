@@ -1,7 +1,6 @@
 // This file contains everything that uses session.defaultSession.webRequest
 import {mainWindow} from "../window";
-import {session} from "electron";
-import electron from "electron";
+import electron, {session} from "electron";
 import {getConfig} from "../config/config";
 
 export async function initializeFirewall() {

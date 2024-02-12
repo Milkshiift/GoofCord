@@ -3,7 +3,8 @@ import {getDisplayVersion, getVersion} from "../utils";
 import path from "path";
 import os from "os";
 import fs from "fs-extra";
-import {getConfig, getConfigLocation, setConfigBulk, Settings} from "../config/config";
+import {getConfigLocation} from "../config/config";
+
 let settingsWindow: BrowserWindow;
 let instance: number = 0;
 const userDataPath = app.getPath("userData");

@@ -1,5 +1,5 @@
 // RENDERER
-import { ipcRenderer } from "electron";
+import {ipcRenderer} from "electron";
 
 interface IPCSources {
     id: string;

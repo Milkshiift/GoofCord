@@ -13,7 +13,7 @@ async function load() {
     installDefaultScripts();
     unstrictCSP();
 
-    if ((getConfig("modName")) != "none") await loadExtensions();
+    if ((getConfig("modName")) != "none") loadExtensions();
 
     await createMainWindow();
 

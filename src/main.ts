@@ -1,5 +1,6 @@
 import {app, crashReporter, net, session} from "electron";
 import "v8-compile-cache";
+// @ts-ignore
 import AutoLaunch from "auto-launch";
 import {getConfig, loadConfig} from "./config/config";
 import {isDev} from "./utils";
@@ -52,7 +53,7 @@ async function setFlags() {
         "MediaSessionService," + //         ⤴
         "WidgetLayering" // Fix dev tools layers
     );
-    app.commandLine.appendSwitch("enable-features", "WebRTC,VaapiVideoDecoder,VaapiVideoEncoder,WebRtcHideLocalIpsWithMdns");
+    app.commandLine.appendSwitch("enable-features", "WebRTC,VaapiVideoDecoder,VaapiVideoEncoder,WebRtcHideLocalIpsWithMdns,PlatformHEVCEncoderSupport");
     app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 
     if (getConfig("autoscroll")) {

@@ -1,4 +1,4 @@
-import { BuildContext, BuildOptions, context } from "esbuild";
+import { BuildOptions, context } from "esbuild";
 import fs from "fs-extra";
 import path from "path";
 
@@ -12,21 +12,12 @@ const NodeCommonOpts: BuildOptions = {
     format: "cjs",
     platform: "node",
     external: ["electron"],
-    target: ["esnext"]
+    target: ["esnext"],
+    // @ts-ignore
+    entryPoints: await searchPreloadFiles("src", ["src/main.ts"]),
+    outdir: "ts-out"
 };
 
-const contexts = [] as BuildContext[];
-async function createContext(options: BuildOptions) {
-    contexts.push(await context(options));
-}
-
-// @ts-ignore
-await createContext({
-        ...NodeCommonOpts,
-        // @ts-ignore
-        entryPoints: await searchPreloadFiles("src", ["src/main.ts"]),
-        outdir: "ts-out"
-});
 
 // Every preload file should be marked with "// RENDERER" on the first line so it's included
 async function searchPreloadFiles(directory: string, result: string[] = []) {
@@ -52,10 +43,11 @@ async function searchPreloadFiles(directory: string, result: string[] = []) {
     return result;
 }
 
-contexts.map(async ctx => {
-    await ctx.rebuild();
-    await ctx.dispose();
-})
+(async () => {
+    const ctx = await context(NodeCommonOpts)
+    await ctx.rebuild()
+    await ctx.dispose()
+})()
 
 // @ts-ignore
 await fs.copy('./assets/', './ts-out/assets');
