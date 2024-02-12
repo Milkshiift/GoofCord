@@ -4,6 +4,9 @@ import path from "path";
 
 const isDev = process.argv.some(arg => arg === "--dev" || arg === "-d");
 
+// @ts-ignore
+await fs.rm("ts-out", { recursive: true, force: true });
+
 const NodeCommonOpts: BuildOptions = {
     minify: true,
     bundle: true,
