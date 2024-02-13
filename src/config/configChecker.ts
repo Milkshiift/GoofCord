@@ -1,13 +1,12 @@
 import {app, dialog} from "electron";
 import path from "path";
 import * as fs from "fs-extra";
-import {cachedConfig, DEFAULTS, getConfigLocation, setConfig, setup} from "./config";
+import {getConfigLocation, setup} from "./config";
 
 export async function checkConfig() {
     await checkIfFoldersExist();
     await checkIfConfigExists();
     await checkIfConfigIsBroken();
-    await checkConfigForMissingParams();
 }
 
 export async function checkIfFoldersExist() {
@@ -48,17 +47,5 @@ export async function checkIfConfigIsBroken(): Promise<void> {
             "Oops, something went wrong.",
             "GoofCord has detected that your configuration file is corrupted, please restart the app and set your settings again. If this issue persists, report it on the support server/Github issues."
         );
-    }
-}
-
-export async function checkConfigForMissingParams() {
-    const REQUIRED_PARAMETERS: string[] = Object.keys(DEFAULTS);
-    for (const PARAMETER of REQUIRED_PARAMETERS) {
-        try {
-            cachedConfig[PARAMETER];
-        } catch (e) {
-            console.error(`Missing parameter: ${PARAMETER}`);
-            await setConfig(PARAMETER, DEFAULTS[PARAMETER]);
-        }
     }
 }

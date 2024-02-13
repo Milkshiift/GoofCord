@@ -30,17 +30,11 @@ export function registerIpc() {
     ipcMain.on("config:getConfig", (event, toGet) => {
         event.returnValue = getConfig(toGet);
     });
-    ipcMain.on("config:setConfig", (event, entry, value) => {
-        event.returnValue = setConfig(entry, value);
+    ipcMain.on("config:setConfig", (_event, entry, value) => {
+        setConfig(entry, value);
     });
-    ipcMain.on("config:setConfigBulk", (event, object) => {
-        event.returnValue = setConfigBulk(object);
-    });
-    ipcMain.on("config:setConfigBulk", (event, args) => {
-        event.returnValue = setConfigBulk(args);
-    });
-    ipcMain.on("config:setConfig", (event, object, toSet) => {
-        event.returnValue = setConfig(object, toSet);
+    ipcMain.on("config:setConfigBulk", (_event, object) => {
+        setConfigBulk(object);
     });
     ipcMain.on("getAppVersion", (event) => {
         event.returnValue = getVersion();

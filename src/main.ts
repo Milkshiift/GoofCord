@@ -32,15 +32,20 @@ async function load() {
             if (permission === "media") callback(true);
         });
 
-        const retry = setInterval(async () => {
-            // Wait until the user is online
-            // Right now if the user is offline, GoofCord doesn't give any feedback, it's just hanging in the background
-            // TODO: Add some kind of feedback
-            if (net.isOnline()) {
-                clearInterval(retry);
-                import("./loader");
-            }
-        }, 1000);
+        if (net.isOnline()) {
+            import("./loader");
+        }
+        else {
+            const retry = setInterval(async () => {
+                // Wait until the user is online
+                // Right now if the user is offline, GoofCord doesn't give any feedback, it's just hanging in the background
+                // TODO: Add some kind of feedback
+                if (net.isOnline()) {
+                    clearInterval(retry);
+                    import("./loader");
+                }
+            }, 1000);
+        }
     });
 }
 

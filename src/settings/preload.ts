@@ -1,20 +1,80 @@
 // RENDERER
 import {contextBridge, ipcRenderer} from "electron";
-import {Settings} from "../config/config";
+import {renderSettings} from "./settingsRenderer";
 
 console.log("GoofCord Settings");
 
 contextBridge.exposeInMainWorld("settings", {
-    save: (object: Settings) => ipcRenderer.send("config:setConfigBulk", object),
-    restart: () => ipcRenderer.send("restart"),
-    get: (toGet: string) => ipcRenderer.sendSync("config:getConfig", toGet),
     openScriptsFolder: () => ipcRenderer.send("openScriptsFolder"),
     openExtensionsFolder: () => ipcRenderer.send("openExtensionsFolder"),
     openStorageFolder: () => ipcRenderer.send("openStorageFolder"),
     openCrashesFolder: () => ipcRenderer.send("openCrashesFolder"),
     copyDebugInfo: () => ipcRenderer.send("copyDebugInfo"),
     crash: () => ipcRenderer.send("crash"),
-    flashTitlebar: (color: string) => ipcRenderer.send("flashTitlebar", color),
-    encryptSafeStorage: (string: string) => ipcRenderer.invoke("encryptSafeStorage", string),
     decryptSafeStorage: (string: string) => ipcRenderer.invoke("decryptSafeStorage", string),
 });
+
+(async () => {
+    while (document.body === null) {
+        await new Promise(resolve => setTimeout(resolve, 2));
+    }
+    await renderSettings();
+
+    const elements = document.querySelectorAll("[data-setting]");
+    elements.forEach((element) => {
+        element.addEventListener("change", async () => {
+            saveSettings();
+        });
+    });
+})();
+
+async function saveSettings() {
+    const elements = Array.from(document.querySelectorAll("[data-setting]")) as HTMLInputElement[];
+    const settingsObj: { [key: string]: string | boolean | string[] } = {};
+
+    for (const element of elements) {
+        const settingName = element.getAttribute("data-setting");
+        let settingValue;
+
+        if (element.tagName === "SELECT" || element.type === "text") {
+            settingValue = element.value;
+        } else if (element.type === "checkbox") {
+            settingValue = element.checked;
+        } else if (element.tagName === "TEXTAREA") {
+            if (settingName === "encryptionPasswords") {
+                settingValue = await createArrayFromTextareaEncrypted(element.value);
+            } else {
+                settingValue = createArrayFromTextarea(element.value);
+            }
+        }
+
+        if (settingName && settingValue) {
+            settingsObj[settingName] = settingValue;
+        }
+    }
+
+    console.log(settingsObj);
+    ipcRenderer.send("config:setConfigBulk", settingsObj);
+    ipcRenderer.send("flashTitlebar", "#5865F2");
+}
+
+function createArrayFromTextarea(input: string) {
+    let inputValue = input.replace(/(\r\n|\n|\r|\s+)/gm, "");
+    if (inputValue.endsWith(",")) {
+        inputValue = inputValue.slice(0, -1);
+    }
+    return inputValue.split(",");
+}
+
+async function createArrayFromTextareaEncrypted(input: string) {
+    let inputValue = input.replace(/(\r\n|\n|\r|\s+)/gm, "");
+    if (inputValue.endsWith(",")) {
+        inputValue = inputValue.slice(0, -1);
+    }
+    const encryptedPasswords: string[] = [];
+    const arrayFromTextArea = inputValue.split(",");
+    for (const password in arrayFromTextArea) {
+        encryptedPasswords.push(await ipcRenderer.invoke("encryptSafeStorage", arrayFromTextArea[password]));
+    }
+    return encryptedPasswords;
+}
