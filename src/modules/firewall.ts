@@ -6,13 +6,16 @@ import {getConfig} from "../config/config";
 export async function initializeFirewall() {
     if (!getConfig("enableFirewall")) return;
 
-    // Blocking URLs. This list works in tandem with "blockedStrings" list.
-    session.defaultSession.webRequest.onBeforeRequest(
-        {
-            urls: getConfig("blocklist")
-        },
-        (_, callback) => callback({cancel: true})
-    );
+    const blocklist = getConfig("blocklist");
+    if (blocklist[0] !== "") {
+        // Blocking URLs. This list works in tandem with "blockedStrings" list.
+        session.defaultSession.webRequest.onBeforeRequest(
+            {
+                urls: getConfig("blocklist")
+            },
+            (_, callback) => callback({cancel: true})
+        );
+    }
 
     /* If the request url includes any of those, it is blocked.
         * By doing so, we can match multiple unwanted URLs, making the blocklist cleaner and more efficient */
@@ -31,16 +34,16 @@ export async function initializeFirewall() {
         if (blockRegex.test(details.url)) {
             if (!allowRegex.test(details.url)) {
                 callback({cancel: true});
+                return;
             }
-        } else {
-            callback({
-                cancel: false,
-                requestHeaders: {
-                    ...details.requestHeaders,
-                    "User-Agent": mainWindow.webContents.userAgent
-                }
-            });
         }
+        callback({
+            cancel: false,
+            requestHeaders: {
+                ...details.requestHeaders,
+                "User-Agent": mainWindow.webContents.userAgent
+            }
+        });
     });
 }
 

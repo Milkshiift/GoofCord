@@ -30,11 +30,11 @@ contextBridge.exposeInMainWorld("settings", {
 
 async function saveSettings() {
     const elements = Array.from(document.querySelectorAll("[data-setting]")) as HTMLInputElement[];
-    const settingsObj: { [key: string]: string | boolean | string[] } = {};
+    const settingsObj = {};
 
     for (const element of elements) {
         const settingName = element.getAttribute("data-setting");
-        let settingValue;
+        let settingValue: string | boolean | string[] | undefined;
 
         if (element.tagName === "SELECT" || element.type === "text") {
             settingValue = element.value;
@@ -46,11 +46,10 @@ async function saveSettings() {
             } else {
                 settingValue = createArrayFromTextarea(element.value);
             }
+        } else {
+            settingValue = undefined;
         }
-
-        if (settingName && settingValue) {
-            settingsObj[settingName] = settingValue;
-        }
+        settingsObj[settingName!] = settingValue;
     }
 
     console.log(settingsObj);

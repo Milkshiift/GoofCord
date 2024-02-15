@@ -10,7 +10,6 @@ export async function loadConfig() {
     try {
         const rawData = await fs.promises.readFile(getConfigLocation(), "utf-8");
         cachedConfig = JSON.parse(rawData);
-        console.log(cachedConfig);
     } catch (e) {
         console.log("Couldn't load the config:", e);
         await checkConfig();

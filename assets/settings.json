@@ -111,7 +111,7 @@
     "allowedStrings": {
       "name": "Allowed strings",
       "defaultValue": [
-        "googlevideo",
+        "videoplayback",
         "discord-attachments",
         "googleapis",
         "search",
