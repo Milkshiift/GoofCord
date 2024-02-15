@@ -44,9 +44,6 @@ export async function createSettingsWindow() {
         ipcMain.on("openExtensionsFolder", async () => {
             await shell.openPath(path.join(userDataPath, "/extensions/"));
         });
-        ipcMain.on("openCrashesFolder", async () => {
-            await shell.openPath(path.join(app.getPath("temp"), app.getName() + " Crashes"));
-        });
         ipcMain.on("crash", async () => {
             process.crash();
         });

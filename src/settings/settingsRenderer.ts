@@ -28,9 +28,11 @@ function fillCategory(categoryName: string) {
     let html = "";
     const category = settings[categoryName];
     Object.keys(category).forEach(setting => {
-        const entry = category[setting];
-        if (entry.inputType === "checkbox") {
-            html += `
+        try {
+            const entry = category[setting];
+            if (entry.name === undefined) return;
+            if (entry.inputType === "checkbox") {
+                html += `
             <fieldset>
                 <div class='checkbox-container'>
                     <input data-setting="${setting}" id="${setting}" type="checkbox" ${getConfig(setting) ? "checked" : ""}/>
@@ -39,8 +41,8 @@ function fillCategory(categoryName: string) {
                 <p class="description">${entry.description}</p>
             </fieldset>
             `;
-        } else if (entry.inputType === "textfield") {
-            html += `
+            } else if (entry.inputType === "textfield") {
+                html += `
             <fieldset>
                 <div class='checkbox-container'>
                     <input class="text" data-setting="${setting}" id="${setting}" type="text" value="${getConfig(setting)}"/>
@@ -49,8 +51,8 @@ function fillCategory(categoryName: string) {
                 <p class="description">${entry.description}</p>
             </fieldset>
             `;
-        } else if (entry.inputType === "textarea") {
-            html += `
+            } else if (entry.inputType === "textarea") {
+                html += `
             <fieldset>
                 <div class='checkbox-container'>
                     <textarea data-setting="${setting}">${getConfig(setting).join(",\n")}</textarea>
@@ -58,8 +60,8 @@ function fillCategory(categoryName: string) {
                 <p class="description">${entry.description}</p>
             </fieldset>
             `;
-        } else if (entry.inputType === "dropdown") {
-            html += `
+            } else if (entry.inputType === "dropdown") {
+                html += `
             <fieldset>
                 <div class='checkbox-container'>
                     <select class="left dropdown" data-setting="${setting}" id="${setting}" name="${setting}">
@@ -70,7 +72,8 @@ function fillCategory(categoryName: string) {
                 <p class="description">${entry.description}</p>
             </fieldset>
             `;
-        }
+            }
+        } catch (e) {console.error(e);}
     });
     return html;
 }

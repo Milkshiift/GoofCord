@@ -10,6 +10,7 @@ export async function loadConfig() {
     try {
         const rawData = await fs.promises.readFile(getConfigLocation(), "utf-8");
         cachedConfig = JSON.parse(rawData);
+        console.log(cachedConfig);
     } catch (e) {
         console.log("Couldn't load the config:", e);
         await checkConfig();
@@ -22,12 +23,16 @@ export function getConfig(toGet: string): any {
         if (process.type !== "browser") {
             return ipcRenderer.sendSync("config:getConfig", toGet);
         }
-        return cachedConfig[toGet];
+        let result = cachedConfig[toGet];
+        if (result === undefined) {
+            console.log("Missing config parameter: ", toGet);
+            setConfig(toGet, getDefaults()[toGet]);
+            result = cachedConfig[toGet];
+        }
+        return result;
     } catch (e) {
         console.log("getConfig function errored:", e);
-        // Assume that the error was caused by a missing parameter, so we set it to default
-        setConfig(toGet, getDefaults()[toGet]);
-        return getConfig(toGet);
+        return undefined;
     }
 }
 

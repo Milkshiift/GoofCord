@@ -67,9 +67,18 @@
       "defaultValue": "https://raw.githubusercontent.com/Milkshiift/empty/main/empty.txt",
       "description": "A raw link to the JS bundle and CSS bundle of a client mod you want to use. Placeholder css: \"https://raw.githubusercontent.com/Milkshiift/empty/main/empty.txt\"",
       "inputType": "textfield"
+    },
+    "noBundleUpdates": {
+      "defaultValue": false
     }
   },
-  "Privacy settings": {
+  "Firewall settings": {
+    "enableFirewall": {
+      "name": "Enable firewall",
+      "defaultValue": true,
+      "description": "Never disable unless for debugging.",
+      "inputType": "checkbox"
+    },
     "blocklist": {
       "name": "Blocklist",
       "defaultValue": [
@@ -79,9 +88,36 @@
         "https://*/api/v*/auth/location-metadata",
         "https://cdn.discordapp.com/bad-domains/*",
         "https://www.youtube.com/youtubei/v*/next?*",
-        "https://www.youtube.com/s/desktop/*"
+        "https://www.youtube.com/s/desktop/*",
+        "https://www.youtube.com/youtubei/v*/log_event?*"
       ],
       "description": "A list of URLs to block. Each entry must be separated by a comma.",
+      "inputType": "textarea"
+    },
+    "blockedStrings": {
+      "name": "Blocked strings",
+      "defaultValue": [
+        "sentry",
+        "google",
+        "tracking",
+        "stats",
+        "\\.spotify",
+        "pagead",
+        "analytics"
+      ],
+      "description": "If any of those strings are in the URL, it will be blocked.",
+      "inputType": "textarea"
+    },
+    "allowedStrings": {
+      "name": "Allowed strings",
+      "defaultValue": [
+        "googlevideo",
+        "discord-attachments",
+        "googleapis",
+        "search",
+        "api.spotify"
+      ],
+      "description": "If any of those strings are in the URL, it will NOT be blocked.",
       "inputType": "textarea"
     }
   },
