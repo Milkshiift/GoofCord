@@ -33,7 +33,7 @@
     transform: translate(-50%);
     color: white;
     background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
-    padding: 0 100px;
+    padding: 0 120px;
     max-width: 1000px;
     opacity: 0;
 }
