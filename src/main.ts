@@ -1,51 +1,46 @@
 import {app, crashReporter, net, session} from "electron";
 import "v8-compile-cache";
-// @ts-ignore
 import AutoLaunch from "auto-launch";
 import {getConfig, loadConfig} from "./config/config";
 import {isDev} from "./utils";
 
-if (isDev()) {
-    // @ts-ignore
-    import("source-map-support/register");
-}
-
-if (!app.requestSingleInstanceLock()) app.quit();
-
+// @ts-ignore
+if (isDev()) import("source-map-support/register");
+if (!app.requestSingleInstanceLock()) app.exit();
 crashReporter.start({uploadToServer: false});
 
 loadConfig().then(load);
 
 async function load() {
     setFlags();
+    setAutoLaunchState();
 
+    await app.whenReady();
+
+    setPermissions();
+    checkForConnectivity();
+}
+
+async function checkForConnectivity() {
+    while (!net.isOnline()) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+    import("./loader");
+}
+
+async function setAutoLaunchState() {
     const gfAutoLaunch = new AutoLaunch({name: "GoofCord"});
     if (getConfig("launchWithOsBoot")) {
         gfAutoLaunch.enable();
     } else {
         gfAutoLaunch.disable();
     }
+}
 
-    app.whenReady().then(async () => {
-        session.fromPartition("some-partition").setPermissionRequestHandler((_webContents, permission, callback) => {
-            if (permission === "notifications") callback(true);
-            if (permission === "media") callback(true);
-        });
-
-        if (net.isOnline()) {
-            import("./loader");
-        }
-        else {
-            const retry = setInterval(async () => {
-                // Wait until the user is online
-                // Right now if the user is offline, GoofCord doesn't give any feedback, it's just hanging in the background
-                // TODO: Add some kind of feedback
-                if (net.isOnline()) {
-                    clearInterval(retry);
-                    import("./loader");
-                }
-            }, 1000);
-        }
+async function setPermissions() {
+    session.fromPartition("some-partition").setPermissionRequestHandler((_webContents, permission, callback) => {
+        if (permission === "notifications") callback(true);
+        if (permission === "media") callback(true);
     });
 }
 

@@ -1,7 +1,8 @@
-import {app, BrowserWindow, clipboard, Menu} from "electron";
+import {app, BrowserWindow, clipboard, Menu, shell} from "electron";
 import {mainWindow} from "./window";
 import {createSettingsWindow} from "./settings/main";
 import {cycleThroughPasswords} from "./modules/messageEncryption";
+import contextMenu from "electron-context-menu";
 
 interface Pasteable {
     paste(): void;
@@ -16,6 +17,11 @@ function paste(contents: Pasteable) {
 }
 
 export async function setMenu() {
+    setApplicationMenu();
+    setContextMenu();
+}
+
+export async function setApplicationMenu() {
     const template: Electron.MenuItemConstructorOptions[] = [
         {
             label: "GoofCord",
@@ -103,4 +109,30 @@ export async function setMenu() {
     ];
 
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+}
+
+export function setContextMenu() {
+    contextMenu({
+        showSaveImageAs: true,
+        showCopyImageAddress: true,
+        showSearchWithGoogle: false,
+        prepend: (_defaultActions, parameters) => [
+            {
+                label: "Search with Google",
+                // Only show it when right-clicking text
+                visible: parameters.selectionText.trim().length > 0,
+                click: () => {
+                    shell.openExternal(`https://google.com/search?q=${encodeURIComponent(parameters.selectionText)}`);
+                }
+            },
+            {
+                label: "Search with DuckDuckGo",
+                // Only show it when right-clicking text
+                visible: parameters.selectionText.trim().length > 0,
+                click: () => {
+                    shell.openExternal(`https://duckduckgo.com/?q=${encodeURIComponent(parameters.selectionText)}`);
+                }
+            }
+        ]
+    });
 }

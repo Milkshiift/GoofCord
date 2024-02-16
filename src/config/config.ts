@@ -19,16 +19,14 @@ export async function loadConfig() {
 
 export function getConfig(toGet: string): any {
     try {
-        if (process.type !== "browser") {
-            return ipcRenderer.sendSync("config:getConfig", toGet);
-        }
-        let result = cachedConfig[toGet];
-        if (result === undefined) {
-            console.log("Missing config parameter: ", toGet);
-            setConfig(toGet, getDefaults()[toGet]);
-            result = cachedConfig[toGet];
-        }
-        return result;
+        if (process.type !== "browser") return ipcRenderer.sendSync("config:getConfig", toGet);
+
+        const result = cachedConfig[toGet];
+        if (result !== undefined) return result;
+
+        console.log("Missing config parameter:", toGet);
+        setConfig(toGet, getDefaults()[toGet]);
+        return cachedConfig[toGet];
     } catch (e) {
         console.log("getConfig function errored:", e);
         return undefined;

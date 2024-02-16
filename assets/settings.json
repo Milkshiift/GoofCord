@@ -1,6 +1,6 @@
 {
   "General settings": {
-    "framelessWindow": {
+    "customTitlebar": {
       "name": "Custom titlebar",
       "defaultValue": true,
       "description": "Disable to use the native titlebar.",

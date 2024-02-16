@@ -44,7 +44,7 @@ export function getDisplayVersion() {
     }
 }
 
-export async function getCustomIcon(): Promise<string> {
+export function getCustomIcon() {
     const customIconPath = getConfig("customIconPath");
     if (customIconPath === "" || customIconPath === undefined) {
         return path.join(__dirname, "/assets/gf_icon.png");

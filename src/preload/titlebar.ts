@@ -72,7 +72,7 @@ export async function injectTitlebar() {
 
     observer.observe(appMount, { childList: true, subtree: false });
 
-    if (!getConfig("framelessWindow")) {
+    if (!getConfig("customTitlebar")) {
         const minimalTitlebarCssPath = path.join(__dirname, "../", "/assets/css/minimalTitlebar.css");
         addStyle(await fs.promises.readFile(minimalTitlebarCssPath, "utf8"));
     }

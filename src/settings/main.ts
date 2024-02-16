@@ -22,7 +22,7 @@ export async function createSettingsWindow() {
             title: `GoofCord Settings | Version: ${getDisplayVersion()}`,
             darkTheme: true,
             frame: true,
-            icon: await getCustomIcon(),
+            icon: getCustomIcon(),
             backgroundColor: "#2f3136",
             autoHideMenuBar: true,
             webPreferences: {

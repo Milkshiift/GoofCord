@@ -21,6 +21,9 @@ function createTitlebar() {
 }
 
 export async function injectTitlebar() {
+    while (document.body === null) {
+        await new Promise(resolve => setTimeout(resolve, 2));
+    }
     const titlebar = createTitlebar();
     const appMount = document.getElementById("app-mount");
     const titlebarcssPath = path.join(__dirname, "../", "/assets/css/titlebarSlim.css");
