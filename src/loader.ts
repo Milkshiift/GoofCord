@@ -4,14 +4,15 @@ import {createMainWindow} from "./window";
 import {getConfig} from "./config/config";
 import {installModLoader, loadExtensions} from "./modules/extensions";
 import {checkForUpdate} from "./modules/updateCheck";
-import "./tray";
 import {checkIfFoldersExist} from "./config/configChecker";
+import {createTray} from "./tray";
 
 async function load() {
     await checkIfFoldersExist();
     categorizeScripts();
     installDefaultScripts();
     unstrictCSP();
+    createTray();
 
     if ((getConfig("modName")) != "none") loadExtensions();
 

@@ -4,28 +4,27 @@ import {getDisplayVersion} from "./utils";
 import * as path from "path";
 import {createSettingsWindow} from "./settings/main";
 
-export let tray: any = null;
-app.whenReady().then(async () => {
-    const trayIcon = "default";
-    let trayPath = nativeImage.createFromPath(path.join(__dirname, "../", `/assets/${trayIcon}.png`));
+export async function createTray() {
+    const trayPath = nativeImage.createFromPath(path.join(__dirname, "../", "/assets/gf_icon.png"));
 
-    const getTrayIcon = function () {
+    // This is maybe unnecessary, but I can't test it so it stays
+    const getTrayMenuIcon = () => {
         if (process.platform == "win32") {
             return trayPath.resize({height: 16});
         } else if (process.platform == "darwin") {
             return trayPath.resize({height: 18});
-        } else if (process.platform == "linux") {
-            return trayPath.resize({height: 24});
         }
+        return trayPath;
     };
 
-    const ICON_SIZE_DARWIN = 22;
-    if (process.platform == "darwin" && trayPath.getSize().height > ICON_SIZE_DARWIN) trayPath = trayPath.resize({height: ICON_SIZE_DARWIN});
-    tray = new Tray(trayPath);
-    const CONTEXT_MENU = Menu.buildFromTemplate([
+    if (process.platform === "darwin") trayPath.resize({height: 22});
+
+    const tray = new Tray(trayPath);
+
+    const contextMenu = Menu.buildFromTemplate([
         {
             label: "GoofCord " + getDisplayVersion(),
-            icon: getTrayIcon(),
+            icon: getTrayMenuIcon(),
             enabled: false
         },
         {
@@ -53,9 +52,10 @@ app.whenReady().then(async () => {
             }
         }
     ]);
-    tray.setContextMenu(CONTEXT_MENU);
+
+    tray.setContextMenu(contextMenu);
     tray.setToolTip("GoofCord");
     tray.on("click", function () {
         mainWindow.show();
     });
-});
+}
