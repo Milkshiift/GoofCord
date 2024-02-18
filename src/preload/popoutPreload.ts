@@ -1,7 +1,7 @@
 // RENDERER
 import path from "path";
 import {addStyle} from "../utils";
-import * as fs from "fs-extra";
+import * as fs from "fs";
 
 addEventListener("DOMContentLoaded", () => {injectTitlebar();});
 

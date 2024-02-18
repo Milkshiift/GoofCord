@@ -1,4 +1,4 @@
-import * as fs from "fs-extra";
+import fs from "fs";
 import {app, dialog, session} from "electron";
 import {fetchWithTimeout, streamPipeline} from "../utils";
 import {patchVencord} from "../scriptLoader/vencordPatcher";

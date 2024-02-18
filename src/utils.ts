@@ -1,6 +1,5 @@
 import {app} from "electron";
 import path from "path";
-import {fetch} from "cross-fetch";
 import util from "util";
 import {getConfig} from "./config/config";
 

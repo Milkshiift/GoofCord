@@ -1,6 +1,6 @@
 import {app, dialog} from "electron";
 import path from "path";
-import * as fs from "fs-extra";
+import fs from "fs";
 import {getConfigLocation, setup} from "./config";
 
 export async function checkConfig() {
@@ -15,7 +15,7 @@ export async function checkIfFoldersExist() {
 
     for (const folderName of foldersToCheck) {
         const folderPath = path.join(userDataPath, folderName);
-        const exists = await fs.pathExists(folderPath);
+        const exists = fs.existsSync(folderPath);
 
         if (!exists) {
             await fs.promises.mkdir(folderPath);

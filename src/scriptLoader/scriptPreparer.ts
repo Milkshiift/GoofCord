@@ -1,6 +1,6 @@
 import path from "path";
 import {app, ipcMain} from "electron";
-import fs from "fs-extra";
+import fs from "fs";
 import {isSemverLower} from "../modules/updateCheck";
 import {fetchWithTimeout, packageVersion, streamPipeline} from "../utils";
 import {error} from "../modules/logger";

@@ -2,8 +2,7 @@ import {app, BrowserWindow, clipboard, ipcMain, shell} from "electron";
 import {getCustomIcon, getDisplayVersion, getVersion} from "../utils";
 import path from "path";
 import os from "os";
-import fs from "fs-extra";
-import {getConfigLocation} from "../config/config";
+import {cachedConfig} from "../config/config";
 
 let settingsWindow: BrowserWindow;
 let instance: number = 0;
@@ -48,7 +47,6 @@ export async function createSettingsWindow() {
             process.crash();
         });
         ipcMain.on("copyDebugInfo", async () => {
-            const settingsFileContent = await fs.promises.readFile(getConfigLocation(), "utf-8");
             clipboard.writeText(
                 "**OS:** " +
                 os.platform() +
@@ -61,7 +59,7 @@ export async function createSettingsWindow() {
                 "\n**Electron version:** " +
                 process.versions.electron +
                 "\n`" +
-                settingsFileContent +
+                JSON.stringify(cachedConfig) +
                 "`"
             );
         });

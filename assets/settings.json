@@ -69,7 +69,10 @@
       "inputType": "textfield"
     },
     "noBundleUpdates": {
-      "defaultValue": false
+      "name": "No bundle updates",
+      "defaultValue": false,
+      "description": "Disable automatic client mod updates.",
+      "inputType": "checkbox"
     }
   },
   "Firewall settings": {

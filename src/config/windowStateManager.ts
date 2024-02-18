@@ -1,6 +1,6 @@
 import {app} from "electron";
 import path from "path";
-import * as fs from "fs-extra";
+import fs from "fs";
 import {jsonStringify} from "../utils";
 
 export interface WindowState {

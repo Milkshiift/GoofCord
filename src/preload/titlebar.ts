@@ -1,6 +1,6 @@
 import {ipcRenderer} from "electron";
 import {addStyle} from "../utils";
-import * as fs from "fs-extra";
+import * as fs from "fs";
 import * as path from "path";
 import os from "os";
 import {getConfig} from "../config/config";

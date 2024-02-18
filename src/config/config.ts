@@ -1,6 +1,6 @@
 import {app, ipcRenderer} from "electron";
 import path from "path";
-import * as fs from "fs-extra";
+import * as fs from "fs";
 import {jsonStringify} from "../utils";
 import {checkConfig} from "./configChecker";
 
