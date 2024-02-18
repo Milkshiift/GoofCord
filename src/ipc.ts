@@ -68,10 +68,10 @@ export function registerIpc() {
         event.returnValue = decryptMessage(message);
     });
     ipcMain.handle("encryptSafeStorage", async (_event, plaintextPassword: string) => {
-        return safeStorage.encryptString(plaintextPassword).toString("latin1");
+        return safeStorage.encryptString(plaintextPassword).toString("base64");
     });
     ipcMain.handle("decryptSafeStorage", async (_event, encryptedPassword: string) => {
-        return safeStorage.decryptString(Buffer.from(encryptedPassword, "latin1"));
+        return safeStorage.decryptString(Buffer.from(encryptedPassword, "base64"));
     });
     ipcMain.on("isVencordPresent", async (event) => {
         event.returnValue = await mainWindow.webContents.executeJavaScript("window.Vencord !== undefined");

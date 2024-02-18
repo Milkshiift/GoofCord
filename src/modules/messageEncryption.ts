@@ -1,5 +1,5 @@
 import StegCloak from "stegcloak";
-import {safeStorage} from "electron";
+import {dialog, safeStorage} from "electron";
 import {mainWindow} from "../window";
 import {getConfig} from "../config/config";
 
@@ -7,23 +7,32 @@ const stegcloak = new StegCloak(true, false);
 const encryptionPasswords: string[] = [];
 let chosenPassword: string;
 
-let encryptionMark = getConfig("encryptionMark");
-if (encryptionMark === undefined) encryptionMark = "| ";
+const encryptionMark = getConfig("encryptionMark");
 
-(async function loadPasswords() {
+async function loadPasswords() {
     const encryptedPasswords = getConfig("encryptionPasswords");
     for (const password in encryptedPasswords) {
-        encryptionPasswords.push(safeStorage.decryptString(Buffer.from(encryptedPasswords[password], "latin1")));
+        encryptionPasswords.push(safeStorage.decryptString(Buffer.from(encryptedPasswords[password], "base64")));
     }
     chosenPassword = encryptionPasswords[0];
-})();
+}
+loadPasswords();
 
 export function encryptMessage(message: string) {
-    let cover = getConfig("encryptionCover");
-    if (cover === "" || cover.split(" ").length < 2) {
-        cover = "\u200c \u200c"; // Stegcloak requires a two-word cover, so we use two invisible characters for the cover
+    try {
+        let cover = getConfig("encryptionCover");
+        if (cover === "" || cover.split(" ").length < 2) {
+            cover = "\u200c \u200c"; // Stegcloak requires a two-word cover, so we use two invisible characters for the cover
+        }
+        return stegcloak.hide(message + "\u200b", chosenPassword, cover);
+    } catch (e: any) {
+        console.error(e);
+        dialog.showErrorBox(
+            "GoofCord was unable to encrypt your message",
+            e.toString()
+        );
+        return "";
     }
-    return stegcloak.hide(message + "\u200b", chosenPassword, cover);
 }
 
 export function decryptMessage(message: string) {
