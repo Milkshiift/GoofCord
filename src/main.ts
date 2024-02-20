@@ -4,9 +4,14 @@ import AutoLaunch from "auto-launch";
 import {getConfig, loadConfig} from "./config/config";
 import {isDev} from "./utils";
 
-// @ts-ignore
-if (isDev()) import("source-map-support/register");
+if (isDev()) {
+    try {
+        import("source-map-support/register");
+    } catch (e) {}
+}
+
 if (!app.requestSingleInstanceLock()) app.exit();
+
 crashReporter.start({uploadToServer: false});
 
 loadConfig().then(load);
@@ -65,15 +70,15 @@ async function setFlags() {
         battery: "--enable-features=TurnOffStreamingMediaCachingOnBattery --force_low_power_gpu" // Known to have better battery life for Chromium?
     };
     switch (getConfig("prfmMode")) {
-    case "performance":
-        console.log("Performance mode enabled");
-        app.commandLine.appendSwitch(presets.performance);
-        break;
-    case "battery":
-        console.log("Battery mode enabled");
-        app.commandLine.appendSwitch(presets.battery);
-        break;
-    default:
-        console.log("No performance modes set");
+        case "performance":
+            console.log("Performance mode enabled");
+            app.commandLine.appendSwitch(presets.performance);
+            break;
+        case "battery":
+            console.log("Battery mode enabled");
+            app.commandLine.appendSwitch(presets.battery);
+            break;
+        default:
+            console.log("No performance modes set");
     }
 }
