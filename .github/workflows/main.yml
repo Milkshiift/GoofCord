@@ -1,12 +1,7 @@
 name: Release app
 
 on:
-  workflow_dispatch:
-    inputs:
-      releaseTag:
-        description: 'Tag name for the release'
-        required: true
-        default: 'v1.0.0'
+  workflow_dispatch
 
 permissions:
   contents: write
@@ -33,16 +28,16 @@ jobs:
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Github checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v2 # Install pnpm using packageManager key in package.json
+      - uses: pnpm/action-setup@v3
         with:
           version: latest
 
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: latest
           cache: "pnpm"
 
       - name: Install Node dependencies
