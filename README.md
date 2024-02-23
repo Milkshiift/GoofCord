@@ -1,6 +1,8 @@
 <div align="center">
 <img src="assetsDev/gf_logo_full.png" width="520" alt="GoofCord logo">
 <h2>Take control of your Discord experience with GoofCord – the highly configurable and privacy-focused Discord client.<br>Based on <a href="https://github.com/ArmCord/ArmCord">ArmCord</a>.</h2>
+<img src="https://img.shields.io/github/downloads/Milkshiift/GoofCord/total">
+<img src="https://img.shields.io/github/license/Milkshiift/GoofCord">
 </div>
 
 ## Features :sparkles:
