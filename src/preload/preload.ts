@@ -9,9 +9,6 @@ import {loadScripts} from "../scriptLoader/scriptLoader";
 import fs from "fs";
 import {getConfig} from "../config/config";
 
-// Hide "Download Discord Desktop now!" banner
-window.localStorage.setItem("hideNag", "true");
-
 (async function loadWithCheck() {
     // For some reason, preload is called before the document.body is accessible
     // So we wait until it's not null
@@ -80,6 +77,9 @@ function injectInSettings() {
 async function injectAfterSplash() {
     log("Injecting after splash...");
 
+    // Hide "Download Discord Desktop now!" banner
+    window.localStorage.setItem("hideNag", "true");
+
     // dirty hack to make clicking notifications focus GoofCord
     addScript(`
         (() => {
@@ -99,6 +99,9 @@ async function injectAfterSplash() {
 
     if (getConfig("disableAutogain")) {
         addScript(await fs.promises.readFile(path.join(__dirname, "../", "/assets/js/disableAutogain.js"), "utf8"));
+    }
+    if (getConfig("arrpc")) {
+        addScript(await fs.promises.readFile(path.join(__dirname, "../", "/assets/js/rpc.js"), "utf8"));
     }
 
     const cssPath = path.join(__dirname, "../", "/assets/css/discord.css");

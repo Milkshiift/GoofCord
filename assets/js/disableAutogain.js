@@ -19,6 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+(() => {
 function setLegacyChromeConstraint(constraint, name, value) {
     if (constraint.mandatory && name in constraint.mandatory) {
         constraint.mandatory[name] = value;
@@ -92,3 +93,4 @@ patchFunction(MediaStreamTrack.prototype, "applyConstraints", function (original
     };
 });
 console.log("Disable Autogain by Joey Watts!", navigator.mediaDevices.getUserMedia);
+})();
