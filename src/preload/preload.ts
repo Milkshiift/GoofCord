@@ -9,7 +9,7 @@ import {loadScripts} from "../scriptLoader/scriptLoader";
 import fs from "fs";
 import {getConfig} from "../config/config";
 
-(async function loadWithCheck() {
+(async () => {
     // For some reason, preload is called before the document.body is accessible
     // So we wait until it's not null
     while (document.body === null) {
@@ -24,10 +24,11 @@ setTimeout(() => {
 
 const waitUntilSplashEnds = setInterval(async () => {
     // Waiting until settings button appears, also useful for detecting when the splash is over
-    const settingsButtonSvg = document.querySelectorAll("path[d^='M10.56']");
-    const settingsButton = settingsButtonSvg[settingsButtonSvg.length-1]?.parentElement?.parentElement?.parentElement;
-    if (settingsButton?.tagName === "BUTTON") {
+    const settingsButtonSvg = document.querySelectorAll("path[d^='M10.56']")[0];
+    if (settingsButtonSvg !== undefined) {
         clearInterval(waitUntilSplashEnds);
+
+        const settingsButton = settingsButtonSvg.parentElement!.parentElement!.parentElement!;
 
         settingsButton.addEventListener("click", () => {
             injectInSettings();
@@ -48,22 +49,22 @@ function injectInSettings() {
             // if the element is found
             clearInterval(waitForSidebar);
 
-            // Finding elements to clone
             const header = host.querySelectorAll("div > [class*=header_]")!;
             const button = host.querySelectorAll("div > [class*=item_]")!;
             const separator = host.querySelectorAll("div > [class*=separator_]")!;
-            // Cloning and modifying parameters
+
             const headerClone = header[header.length - 1].cloneNode(true) as HTMLElement;
-            headerClone.children[0].innerHTML = "GoofCord";
-            const gcSettings = button[button.length - 1].cloneNode(true) as HTMLElement;
-            gcSettings.textContent = "Settings";
-            gcSettings.id = "goofcord";
-            gcSettings.onclick = () => ipcRenderer.send("openSettingsWindow");
+            const buttonClone = button[button.length - 1].cloneNode(true) as HTMLElement;
             const separatorClone = separator[separator.length - 1].cloneNode(true) as HTMLElement;
-            // Inserting cloned elements
+
+            headerClone.children[0].innerHTML = "GoofCord";
+            buttonClone.textContent = "Settings";
+            buttonClone.id = "goofcord";
+            buttonClone.onclick = () => ipcRenderer.send("openSettingsWindow");
+
             host.insertAdjacentElement("afterbegin", headerClone);
-            headerClone.insertAdjacentElement("afterend", gcSettings);
-            gcSettings.insertAdjacentElement("afterend", separatorClone);
+            headerClone.insertAdjacentElement("afterend", buttonClone);
+            buttonClone.insertAdjacentElement("afterend", separatorClone);
 
             // Inject goofcord version in the settings info element
             const hostInfo = host.querySelector<HTMLDivElement>("div[class^='info_']")!;
@@ -104,6 +105,5 @@ async function injectAfterSplash() {
         addScript(await fs.promises.readFile(path.join(__dirname, "../", "/assets/js/rpc.js"), "utf8"));
     }
 
-    const cssPath = path.join(__dirname, "../", "/assets/css/discord.css");
-    addStyle(await fs.promises.readFile(cssPath, "utf8"));
+    addStyle(await fs.promises.readFile(path.join(__dirname, "../", "/assets/css/discord.css"), "utf8"));
 }

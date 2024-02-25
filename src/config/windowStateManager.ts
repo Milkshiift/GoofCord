@@ -1,7 +1,6 @@
 import {app} from "electron";
 import path from "path";
 import fs from "fs";
-import {jsonStringify} from "../utils";
 
 export interface WindowState {
     width: number;
@@ -18,7 +17,7 @@ function getWindowSettingsFile() {
 }
 
 export async function setWindowState(object: WindowState) {
-    const toSave = jsonStringify(object);
+    const toSave = JSON.stringify(object);
     await fs.promises.writeFile(getWindowSettingsFile(), toSave, "utf-8");
 }
 

@@ -64,6 +64,7 @@ export async function injectTitlebar() {
             const removedNodes = Array.from(mutations[i].removedNodes);
             if (removedNodes.includes(titlebar)) {
                 // Titlebar has been removed, reinject it
+                console.log("Reinjecting titlebar");
                 injectTitlebar();
                 break;
             }

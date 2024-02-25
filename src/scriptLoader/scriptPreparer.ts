@@ -1,16 +1,15 @@
 import path from "path";
-import {app, ipcMain} from "electron";
+import {app, dialog, ipcMain} from "electron";
 import fs from "fs";
-import {isSemverLower} from "../modules/updateCheck";
-import {fetchWithTimeout, packageVersion, streamPipeline} from "../utils";
+import {extractZipFromUrl, isSemverLower, packageVersion, readOrCreateFolder} from "../utils";
 import {error} from "../modules/logger";
-import extract from "extract-zip";
 import {getConfig} from "../config/config";
 
 type ScriptInfo = {
     name: string;
     version: string;
     minGCVer: string;
+    maxGCVer: string;
 };
 
 export const scriptCategories = {
@@ -20,9 +19,10 @@ export const scriptCategories = {
     disabledScripts: [] as string[]
 };
 
+const scriptsFolder = path.join(app.getPath("userData"), "/scripts/");
+
 export async function categorizeScripts() {
-    const scriptsPath = path.join(app.getPath("userData"), "/scripts/");
-    const files = await fs.promises.readdir(scriptsPath);
+    const files = await readOrCreateFolder(scriptsFolder);
 
     for (const file of files) {
         try {
@@ -33,12 +33,13 @@ export async function categorizeScripts() {
                 continue;
             }
 
-            const filePath = path.join(scriptsPath, file);
+            const filePath = path.join(scriptsFolder, file);
             const scriptContent = modifyScriptContent(await fs.promises.readFile(filePath, "utf-8"));
 
-            // Don't load scripts if this GoofCord version is lower than specified
+            // Don't load the script if this GoofCord version is lower than minGCVer or higher than maxGCVer
             const scriptInfo = parseScriptInfo(scriptContent);
             if (scriptInfo.minGCVer !== "" && isSemverLower(packageVersion, scriptInfo.minGCVer)) continue;
+            if (scriptInfo.maxGCVer !== "" && !isSemverLower(packageVersion, scriptInfo.maxGCVer)) continue;
 
             if (file.includes("BL")) {
                 scriptCategories.beforeLoadScripts.push([file, scriptContent, scriptInfo]);
@@ -56,36 +57,19 @@ export async function categorizeScripts() {
     });
 }
 
-// Runs from main.ts
 export async function installDefaultScripts() {
     if (getConfig("autoUpdateDefaultScripts") === false) return;
 
-    const scriptsFolder = path.join(app.getPath("userData"), "scripts/");
-    const zipPath = path.join(app.getPath("temp"), "defaultScripts.zip");
     try {
-        const defaultScriptsZip = await fetchWithTimeout("https://github.com/Milkshiift/GoofCord-Scripts/releases/download/Main/patches.zip");
-        await streamPipeline(defaultScriptsZip.body, fs.createWriteStream(zipPath));
-
-        const updatedScripts: string[] = [];
-        const onEntry = function (entry: any) {
-            updatedScripts.push(entry.fileName);
-        };
-
-        await extract(zipPath, { dir: scriptsFolder, onEntry: onEntry });
-
-        // A not so very smart way of ignoring disabled scripts
-        for (const disabledScriptIndex in scriptCategories.disabledScripts) {
-            for (const updatedScriptIndex in updatedScripts) {
-                if (scriptCategories.disabledScripts[disabledScriptIndex].includes(updatedScripts[updatedScriptIndex])) {
-                    fs.promises.unlink(path.join(scriptsFolder, updatedScripts[updatedScriptIndex]));
-                }
-            }
-        }
+        await extractZipFromUrl("https://github.com/Milkshiift/GoofCord-Scripts/releases/download/Main/patches.zip", scriptsFolder, scriptCategories.disabledScripts);
 
         console.log("[Script Loader] Successfully installed default scripts");
-    } catch (error) {
-        console.error("[Script Loader] Failed to install default scripts");
-        console.error(error);
+    } catch (error: any) {
+        console.error("[Script Loader] Failed to install default scripts", error);
+        dialog.showErrorBox(
+            "GoofCord was unable to install the default scripts",
+            error.toString()
+        );
     }
 }
 
@@ -95,23 +79,17 @@ function modifyScriptContent(content: string) {
 }
 
 function parseScriptInfo(scriptContent: string) {
-    const scriptInfo: ScriptInfo = { name: "", version: "", minGCVer: ""};
+    const scriptInfo: ScriptInfo = { name: "", version: "", minGCVer: "", maxGCVer: "" };
     let linesProcessed = 0;
-    const MAX_LINES = 10;
+    const MAX_LINES = 7;
 
     for (const line of scriptContent.split("\n")) {
         if (linesProcessed >= MAX_LINES) break; // Only parse the first N lines
 
-        const match = line.match(/^\s*\*\s*@(\w+)\s+(.*)/);
+        const match = line.match(/^.\*.@(\w+)\s(.*)/);
         if (match) {
             const [, key, value] = match;
-            if (key === "name" && !scriptInfo.name) {
-                scriptInfo.name = value.trim();
-            } else if (key === "version" && !scriptInfo.version) {
-                scriptInfo.version = value.trim();
-            } else if (key === "minGCVer" && !scriptInfo.minGCVer) {
-                scriptInfo.minGCVer = value.trim();
-            }
+            scriptInfo[key as keyof ScriptInfo] = value.trim(); // Use keyof to ensure type safety
         }
         linesProcessed++;
     }
