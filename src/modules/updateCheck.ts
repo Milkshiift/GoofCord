@@ -3,9 +3,14 @@ import {Notification, shell} from "electron";
 import {getConfig} from "../config/config";
 
 async function getLatestVersion(): Promise<string> {
-    const response = await fetchWithTimeout("https://api.github.com/repos/Milkshiift/GoofCord/releases/latest");
-    const data = await response.json();
-    return data.tag_name.replace("v", "");
+    try {
+        const response = await fetchWithTimeout("https://api.github.com/repos/Milkshiift/GoofCord/releases/latest");
+        const data = await response.json();
+        return data.tag_name.replace("v", "");
+    } catch (e) {
+        console.error("Failed to fetch the latest GitHub release information. Possibly API rate limit exceeded or timeout reached");
+        return packageVersion;
+    }
 }
 
 export async function checkForUpdate() {
