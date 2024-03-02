@@ -1,7 +1,7 @@
 import {app, dialog, ipcRenderer} from "electron";
 import path from "path";
 import * as fs from "fs";
-import {getCustomIcon, tryWithFix} from "../utils";
+import {getCustomIcon, tryReturnWithFixSync, tryWithFix} from "../utils";
 
 export let cachedConfig: object;
 
@@ -30,21 +30,17 @@ async function createStorageFolder() {
 }
 
 export function getConfig(toGet: string): any {
-    try {
-        if (process.type !== "browser") return ipcRenderer.sendSync("config:getConfig", toGet);
-
-        const result = cachedConfig[toGet];
-        if (result !== undefined) {
-            return result;
-        } else {
-            console.log("Missing config parameter:", toGet);
-            setConfig(toGet, getDefaults()[toGet]);
+    if (process.type !== "browser") return ipcRenderer.sendSync("config:getConfig", toGet);
+    return tryReturnWithFixSync(
+        () => {
             return cachedConfig[toGet];
-        }
-    } catch (e) {
-        console.log("getConfig function errored:", e);
-        return undefined;
-    }
+        },
+        () => {
+            // Assume that the error is a missing parameter
+            setConfig(toGet, getDefaults()[toGet]);
+        },
+        "getConfig function errored:"
+    );
 }
 
 export function setConfig(entry: string, value: unknown) {
@@ -58,6 +54,17 @@ export function setConfig(entry: string, value: unknown) {
     } catch (e: any) {
         console.error("setConfig function errored:", e);
         dialog.showErrorBox("GoofCord was unable to save the settings", e.toString());
+    }
+}
+
+export function setTemporaryConfig(entry: string, value: unknown) {
+    try {
+        if (process.type !== "browser") {
+            return ipcRenderer.sendSync("config:setTemporaryConfig", entry, value);
+        }
+        cachedConfig[entry] = value;
+    } catch (e: any) {
+        console.error("setTemporaryConfig function errored:", e);
     }
 }
 

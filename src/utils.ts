@@ -41,10 +41,10 @@ export function getDisplayVersion() {
 
 export function getCustomIcon() {
     const customIconPath = getConfig("customIconPath");
-    if (customIconPath === "" || customIconPath === undefined) {
-        return path.join(__dirname, "/assets/gf_icon.png");
-    } else {
+    if (typeof customIconPath === "string" && customIconPath !== "") {
         return customIconPath;
+    } else {
+        return path.join(__dirname, "/assets/gf_icon.png");
     }
 }
 
@@ -94,6 +94,38 @@ export async function tryWithFix(toDo: () => any, attemptFix: () => any, message
         } catch (error: any) {
             console.error(message, error);
             dialog.showErrorBox(message, error.toString());
+        }
+    }
+}
+
+export async function tryReturnWithFix(toDo: () => any, attemptFix: () => any, message: string) {
+    try {
+        return await toDo();
+    } catch (error) {
+        console.error(message, error);
+        await attemptFix();
+        try {
+            return await toDo();
+        } catch (error: any) {
+            console.error(message, error);
+            dialog.showErrorBox(message, error.toString());
+            return undefined;
+        }
+    }
+}
+
+export function tryReturnWithFixSync(toDo: () => any, attemptFix: () => any, message: string) {
+    try {
+        return toDo();
+    } catch (error) {
+        console.error(message, error);
+        attemptFix();
+        try {
+            return toDo();
+        } catch (error: any) {
+            console.error(message, error);
+            dialog.showErrorBox(message, error.toString());
+            return undefined;
         }
     }
 }

@@ -19,7 +19,6 @@ contextBridge.exposeInMainWorld("goofcord", {
     encryptMessage: (message: string) => ipcRenderer.invoke("encryptMessage", message),
     decryptMessage: (message: string) => ipcRenderer.sendSync("decryptMessage", message),
     openSettingsWindow: () => ipcRenderer.send("openSettingsWindow"),
-    sendMessage: (message: string, channelId: string) => ipcRenderer.send("encryptMessage", message, channelId),
     rpcListen: (callback: any) => { windowCallback = callback; } // https://github.com/Milkshiift/GoofCord-Scripts/blob/main/patches/AL11_richPresence.js
 });
 

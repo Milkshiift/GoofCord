@@ -54,7 +54,8 @@ async function setFlags() {
         "WinRetrieveSuggestionsOnlyOnDemand," + // Work around electron 13 bug w/ async spellchecking on Windows.
         "HardwareMediaKeyHandling," + // Prevent Discord from registering as a media service.
         "MediaSessionService," + //         ⤴
-        "WidgetLayering" // Fix dev tools layers
+        "WidgetLayering," + // Fix dev tools layers
+        "WebRtcAllowInputVolumeAdjustment"
     );
     app.commandLine.appendSwitch("enable-features", "WebRTC,VaapiVideoDecoder,VaapiVideoEncoder,WebRtcHideLocalIpsWithMdns,PlatformHEVCEncoderSupport");
     app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");

@@ -3,7 +3,7 @@ import {mainWindow} from "./window";
 import {getDisplayVersion, getVersion, packageVersion} from "./utils";
 import {createSettingsWindow} from "./settings/main";
 import {decryptMessage, encryptMessage} from "./modules/messageEncryption";
-import {cachedConfig, getConfig, setConfig, setConfigBulk} from "./config/config";
+import {cachedConfig, getConfig, setConfig, setConfigBulk, setTemporaryConfig} from "./config/config";
 
 export function registerIpc() {
     ipcMain.on("window:Maximize", () => {
@@ -35,6 +35,9 @@ export function registerIpc() {
     });
     ipcMain.on("config:setConfig", (_event, entry, value) => {
         setConfig(entry, value);
+    });
+    ipcMain.on("config:setTemporaryConfig", (_event, entry, value) => {
+        setTemporaryConfig(entry, value);
     });
     ipcMain.on("config:setConfigBulk", (_event, object) => {
         setConfigBulk(object);

@@ -4,6 +4,7 @@ import {createMainWindow} from "./window";
 import {loadExtensions, updateModBundle} from "./modules/extensions";
 import {checkForUpdate} from "./modules/updateCheck";
 import {createTray} from "./tray";
+import {initEncryption} from "./modules/messageEncryption";
 
 async function load() {
     installDefaultScripts();
@@ -11,6 +12,7 @@ async function load() {
     createTray();
     loadExtensions();
     categorizeScripts();
+    initEncryption();
 
     await createMainWindow();
 

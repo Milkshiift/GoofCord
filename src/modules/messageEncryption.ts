@@ -1,29 +1,55 @@
 import StegCloak from "stegcloak";
 import {dialog, safeStorage} from "electron";
 import {mainWindow} from "../window";
-import {getConfig} from "../config/config";
+import {getConfig, setTemporaryConfig} from "../config/config";
 
-const stegcloak = new StegCloak(true, false);
+let stegcloak: StegCloak;
 const encryptionPasswords: string[] = [];
 let chosenPassword: string;
+let encryptionMark: string;
+let cover: string;
 
-const encryptionMark = getConfig("encryptionMark");
+export async function initEncryption() {
+    try {
+        loadPasswords();
+        loadCover();
+        stegcloak = new StegCloak(true, false);
+        encryptionMark = getConfig("encryptionMark");
+    } catch (error) {
+        console.error("Encryption initialization error:", error);
+    }
+}
 
+// This function loads encrypted encryption passwords from the configuration, decrypts them, and stores them in memory.
+// Although storing passwords in memory is not secure due to potential memory inspection, it's considered acceptable
+// since the application code (.asar) can be replaced by malicious actors, providing alternate ways for password retrieval.
 async function loadPasswords() {
     const encryptedPasswords = getConfig("encryptionPasswords");
-    for (const password in encryptedPasswords) {
-        encryptionPasswords.push(safeStorage.decryptString(Buffer.from(encryptedPasswords[password], "base64")));
+    try {
+        for (const password of encryptedPasswords) {
+            encryptionPasswords.push(await decryptString(password));
+        }
+    } catch (error) {
+        console.error("Failed to load encryption passwords:", error);
     }
+    setTemporaryConfig("encryptionPasswords", encryptionPasswords);
     chosenPassword = encryptionPasswords[0];
+    console.log("Loaded encryption passwords");
 }
-loadPasswords();
+
+async function decryptString(encryptedString: string): Promise<string> {
+    return safeStorage.decryptString(Buffer.from(encryptedString, "base64"));
+}
+
+async function loadCover() {
+    cover = getConfig("encryptionCover");
+    if (cover === "" || cover.split(" ").length < 2) {
+        cover = "\u200c \u200c"; // Stegcloak requires a two-word cover, so we use two invisible characters for the cover
+    }
+}
 
 export function encryptMessage(message: string) {
     try {
-        let cover = getConfig("encryptionCover");
-        if (cover === "" || cover.split(" ").length < 2) {
-            cover = "\u200c \u200c"; // Stegcloak requires a two-word cover, so we use two invisible characters for the cover
-        }
         return stegcloak.hide(message + "\u200b", chosenPassword, cover);
     } catch (e: any) {
         console.error(e);
@@ -40,22 +66,22 @@ export function decryptMessage(message: string) {
     // Character \u200c is present in every stegcloaked message
     try {
         if (!message.includes("\u200c")) return message;
-        for (const password in encryptionPasswords) {
-            // If the password is correct, return a decrypted message. Otherwise, try the next password.
-            try {
-                const decryptedMessage = stegcloak.reveal(message, encryptionPasswords[password]);
-                if (decryptedMessage.endsWith("\u200b")) {
-                    return encryptionMark+decryptedMessage;
-                }
-            }
-            catch (e) {
-                continue;
-            }
-        }
-        return message;
-    }   catch (e) {
+    } catch (e) {
         return message;
     }
+
+    for (const password in encryptionPasswords) {
+        // If the password is correct, return a decrypted message. Otherwise, try the next password.
+        try {
+            const decryptedMessage = stegcloak.reveal(message, encryptionPasswords[password]);
+            if (decryptedMessage.endsWith("\u200b")) {
+                return encryptionMark+decryptedMessage;
+            }
+        } catch (e) {
+            continue;
+        }
+    }
+    return message;
 }
 
 let currentIndex = 0;
