@@ -30,26 +30,29 @@ contextBridge.exposeInMainWorld("settings", {
 
 async function saveSettings() {
     const elements = Array.from(document.querySelectorAll("[data-setting]")) as HTMLInputElement[];
-    const settingsObj = {};
-
+    const settingsObj = ipcRenderer.sendSync("config:getConfigBulk");
     for (const element of elements) {
         const settingName = element.getAttribute("data-setting");
-        let settingValue: string | boolean | string[] | undefined;
+        try {
+            let settingValue: string | boolean | string[] | undefined;
 
-        if (element.tagName === "SELECT" || element.type === "text") {
-            settingValue = element.value;
-        } else if (element.type === "checkbox") {
-            settingValue = element.checked;
-        } else if (element.tagName === "TEXTAREA") {
-            if (settingName === "encryptionPasswords") {
-                settingValue = await createArrayFromTextareaEncrypted(element.value);
+            if (element.tagName === "SELECT" || element.type === "text") {
+                settingValue = element.value;
+            } else if (element.type === "checkbox") {
+                settingValue = element.checked;
+            } else if (element.tagName === "TEXTAREA") {
+                if (settingName === "encryptionPasswords") {
+                    settingValue = await createArrayFromTextareaEncrypted(element.value);
+                } else {
+                    settingValue = createArrayFromTextarea(element.value);
+                }
             } else {
-                settingValue = createArrayFromTextarea(element.value);
+                settingValue = undefined;
             }
-        } else {
-            settingValue = undefined;
+            settingsObj[settingName!] = settingValue;
+        } catch (e) {
+            console.error(`Failed to write "${settingName}" value to the config:`, e);
         }
-        settingsObj[settingName!] = settingValue;
     }
 
     console.log(settingsObj);

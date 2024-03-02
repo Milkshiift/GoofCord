@@ -3,7 +3,7 @@ import {mainWindow} from "./window";
 import {getDisplayVersion, getVersion, packageVersion} from "./utils";
 import {createSettingsWindow} from "./settings/main";
 import {decryptMessage, encryptMessage} from "./modules/messageEncryption";
-import {getConfig, setConfig, setConfigBulk} from "./config/config";
+import {cachedConfig, getConfig, setConfig, setConfigBulk} from "./config/config";
 
 export function registerIpc() {
     ipcMain.on("window:Maximize", () => {
@@ -29,6 +29,9 @@ export function registerIpc() {
     });
     ipcMain.on("config:getConfig", (event, toGet) => {
         event.returnValue = getConfig(toGet);
+    });
+    ipcMain.on("config:getConfigBulk", (event) => {
+        event.returnValue = cachedConfig;
     });
     ipcMain.on("config:setConfig", (_event, entry, value) => {
         setConfig(entry, value);
