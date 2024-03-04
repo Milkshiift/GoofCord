@@ -22,7 +22,7 @@ export async function initEncryption() {
 
 // This function loads encrypted encryption passwords from the configuration, decrypts them, and stores them in memory.
 // Although storing passwords in memory is not secure due to potential memory inspection, it's considered acceptable
-// since the application code (.asar) can be replaced by malicious actors, providing alternate ways for password retrieval.
+// since the application code (.asar) can be replaced by malicious actors, providing alternate and easier ways for password retrieval.
 async function loadPasswords() {
     const encryptedPasswords = getConfig("encryptionPasswords");
     try {

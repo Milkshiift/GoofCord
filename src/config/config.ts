@@ -97,7 +97,9 @@ export async function setup() {
 
 export function getDefaults() {
     const defaults = {};
-    const settings = require(path.join(__dirname, "../", "/assets/settings.json"));
+    const settingsPath = path.join(__dirname, "/assets/settings.json");
+    const settingsFile = fs.readFileSync(settingsPath, "utf-8");
+    const settings = JSON.parse(settingsFile);
     for (const category in settings) {
         const categorySettings = settings[category];
         for (const setting in categorySettings) {

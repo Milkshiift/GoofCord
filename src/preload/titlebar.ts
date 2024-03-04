@@ -74,11 +74,11 @@ export async function injectTitlebar() {
     observer.observe(appMount, { childList: true, subtree: false });
 
     if (!getConfig("customTitlebar")) {
-        const infoOnlyTitlebarCssPath = path.join(__dirname, "../", "/assets/css/infoOnlyTitlebar.css");
-        addStyle(await fs.promises.readFile(infoOnlyTitlebarCssPath, "utf8"));
+        const infoOnlyTitlebarCss = await fs.promises.readFile(path.join(__dirname, "../", "/assets/css/infoOnlyTitlebar.css"), "utf8");
+        addStyle(infoOnlyTitlebarCss);
     }
-    const titlebarCssPath = path.join(__dirname, "../", "/assets/css/titlebar.css");
-    addStyle(await fs.promises.readFile(titlebarCssPath, "utf8"));
+    const titlebarCss = await fs.promises.readFile(path.join(__dirname, "../", "/assets/css/titlebar.css"), "utf8");
+    addStyle(titlebarCss);
 
     document.body.setAttribute("goofcord-platform", os.platform());
 

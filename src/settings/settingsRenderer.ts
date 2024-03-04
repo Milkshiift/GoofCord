@@ -1,7 +1,10 @@
 import {getConfig} from "../config/config";
 import path from "path";
+import fs from "fs";
 
-const settings = require(path.join(__dirname, "../", "/assets/settings.json"));
+const settingsPath = path.join(__dirname, "../", "/assets/settings.json");
+const settingsFile = fs.readFileSync(settingsPath, "utf-8");
+const settings = JSON.parse(settingsFile);
 
 export async function renderSettings() {
     let html = "";
