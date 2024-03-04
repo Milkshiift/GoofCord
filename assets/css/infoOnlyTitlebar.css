@@ -27,4 +27,5 @@
         hsla(0, 0%, 0%, 0.002) 98.2%,
         hsla(0, 0%, 0%, 0) 100%
     );
+    pointer-events: none;
 }
