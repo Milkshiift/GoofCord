@@ -98,38 +98,6 @@ export async function tryWithFix(toDo: () => any, attemptFix: () => any, message
     }
 }
 
-export async function tryReturnWithFix(toDo: () => any, attemptFix: () => any, message: string) {
-    try {
-        return await toDo();
-    } catch (error) {
-        console.error(message, error);
-        await attemptFix();
-        try {
-            return await toDo();
-        } catch (error: any) {
-            console.error(message, error);
-            dialog.showErrorBox(message, error.toString());
-            return undefined;
-        }
-    }
-}
-
-export function tryReturnWithFixSync(toDo: () => any, attemptFix: () => any, message: string) {
-    try {
-        return toDo();
-    } catch (error) {
-        console.error(message, error);
-        attemptFix();
-        try {
-            return toDo();
-        } catch (error: any) {
-            console.error(message, error);
-            dialog.showErrorBox(message, error.toString());
-            return undefined;
-        }
-    }
-}
-
 export async function readOrCreateFolder(path: string) {
     try {
         return await fs.promises.readdir(path);

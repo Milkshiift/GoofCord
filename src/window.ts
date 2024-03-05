@@ -43,7 +43,11 @@ export async function createMainWindow() {
 }
 
 async function doAfterDefiningTheWindow() {
-    (getConfig("startMinimized")) ? mainWindow.hide() : mainWindow.show();
+    if (getConfig("startMinimized")) {
+        mainWindow.hide();
+    } else {
+        mainWindow.show();
+    }
 
     // Set the user agent for the web contents based on the Chrome version.
     mainWindow.webContents.userAgent = getUserAgent(process.versions.chrome);

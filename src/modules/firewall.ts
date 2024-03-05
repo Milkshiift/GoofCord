@@ -45,6 +45,8 @@ export async function initializeFirewall() {
             }
         });
     });
+
+    console.log("Firewall initialized");
 }
 
 export function unstrictCSP() {

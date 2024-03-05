@@ -1,9 +1,9 @@
 import {app, dialog, ipcRenderer} from "electron";
 import path from "path";
 import * as fs from "fs";
-import {getCustomIcon, tryReturnWithFixSync, tryWithFix} from "../utils";
+import {getCustomIcon, tryWithFix} from "../utils";
 
-export let cachedConfig: object;
+export let cachedConfig: object = {};
 
 export async function loadConfig() {
     await tryWithFix(async () => {
@@ -31,16 +31,15 @@ async function createStorageFolder() {
 
 export function getConfig(toGet: string): any {
     if (process.type !== "browser") return ipcRenderer.sendSync("config:getConfig", toGet);
-    return tryReturnWithFixSync(
-        () => {
-            return cachedConfig[toGet];
-        },
-        () => {
-            // Assume that the error is a missing parameter
-            setConfig(toGet, getDefaults()[toGet]);
-        },
-        "getConfig function errored:"
-    );
+
+    const result = cachedConfig[toGet];
+    if (result !== undefined) {
+        return result;
+    } else {
+        console.log("Missing config parameter:", toGet);
+        setConfig(toGet, getDefaults()[toGet]);
+        return cachedConfig[toGet];
+    }
 }
 
 export function setConfig(entry: string, value: unknown) {
