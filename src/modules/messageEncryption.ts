@@ -43,8 +43,9 @@ async function decryptString(encryptedString: string): Promise<string> {
 
 async function loadCover() {
     cover = getConfig("encryptionCover");
+    // Stegcloak requires a two-word cover, so we add two invisible characters to the cover if the user wants to use an empty cover or one word cover
     if (cover === "" || cover.split(" ").length < 2) {
-        cover = "\u200c \u200c"; // Stegcloak requires a two-word cover, so we use two invisible characters for the cover
+        cover = cover + "\u200c \u200c";
     }
 }
 
