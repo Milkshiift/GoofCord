@@ -7,11 +7,13 @@ import {createTray} from "./tray";
 import {initEncryption} from "./modules/messageEncryption";
 
 async function load() {
-    unstrictCSP();
-    createTray();
-    loadExtensions();
-    categorizeScripts();
-    initEncryption();
+    await Promise.all([
+        unstrictCSP(),
+        createTray(),
+        loadExtensions(),
+        categorizeScripts(),
+        initEncryption()
+    ]);
 
     await createMainWindow();
 

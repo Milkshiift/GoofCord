@@ -49,7 +49,7 @@ export async function initializeFirewall() {
     console.log("Firewall initialized");
 }
 
-export function unstrictCSP() {
+export async function unstrictCSP() {
     console.log("Setting up CSP unstricter...");
 
     electron.session.defaultSession.webRequest.onHeadersReceived(({responseHeaders, resourceType}, done) => {
