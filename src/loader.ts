@@ -7,7 +7,6 @@ import {createTray} from "./tray";
 import {initEncryption} from "./modules/messageEncryption";
 
 async function load() {
-    installDefaultScripts();
     unstrictCSP();
     createTray();
     loadExtensions();
@@ -16,6 +15,7 @@ async function load() {
 
     await createMainWindow();
 
+    installDefaultScripts();
     updateModBundle();
     checkForUpdate();
 }

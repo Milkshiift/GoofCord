@@ -1,7 +1,6 @@
 import {app, dialog} from "electron";
 import path from "path";
 import {getConfig} from "./config/config";
-import extract from "extract-zip";
 import fs from "fs";
 
 //Get the version value from the "package.json" file
@@ -56,22 +55,13 @@ export async function fetchWithTimeout(url: string, options: RequestInit = {}, t
     return await Promise.race([fetch(url, {signal: controller.signal, ...options}), timeoutPromise]);
 }
 
-export async function extractZipFromUrl(url: string, path: string, excludedFiles: string[] = []) {
-    try {
-        await fs.promises.mkdir(path, { recursive: true });
-    } catch (e) {}
-    const zip = await fetchWithTimeout(url);
-    const zipBuffer = Buffer.from(await zip.arrayBuffer());
-    await extract.extractBuffer(zipBuffer, { dir: path, excludedFiles: excludedFiles });
-}
-
 export function isSemverLower(version1: string, version2: string): boolean {
-    const v1Parts = version1.split(".");
-    const v2Parts = version2.split(".");
+    const v1Parts = version1.split(".").map(Number);
+    const v2Parts = version2.split(".").map(Number);
 
     for (let i = 0; i < v1Parts.length; i++) {
-        const v1Part = parseInt(v1Parts[i]);
-        const v2Part = parseInt(v2Parts[i]);
+        const v1Part = v1Parts[i];
+        const v2Part = v2Parts[i];
 
         if (v1Part < v2Part) {
             return true;

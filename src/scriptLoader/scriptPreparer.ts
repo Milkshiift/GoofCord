@@ -1,9 +1,10 @@
 import path from "path";
 import {app, dialog, ipcMain} from "electron";
 import fs from "fs";
-import {extractZipFromUrl, isSemverLower, packageVersion, readOrCreateFolder} from "../utils";
+import {getVersion, isSemverLower, packageVersion, readOrCreateFolder} from "../utils";
 import {error} from "../modules/logger";
 import {getConfig} from "../config/config";
+import download from "github-directory-downloader";
 
 type ScriptInfo = {
     name: string;
@@ -28,7 +29,7 @@ export async function categorizeScripts() {
         try {
             if (!file.endsWith(".js")) {
                 if (file.endsWith(".disabled")) {
-                    scriptCategories.disabledScripts.push(file);
+                    scriptCategories.disabledScripts.push(file.replace(".disabled", ""));
                 }
                 continue;
             }
@@ -61,7 +62,8 @@ export async function installDefaultScripts() {
     if (getConfig("autoUpdateDefaultScripts") === false) return;
 
     try {
-        await extractZipFromUrl("https://github.com/Milkshiift/GoofCord-Scripts/releases/download/Main/patches.zip", scriptsFolder, scriptCategories.disabledScripts);
+        console.log(scriptCategories.disabledScripts);
+        await download(`https://github.com/Milkshiift/GoofCord-Scripts/tree/${getVersion()}/patches`, scriptsFolder, scriptCategories.disabledScripts);
 
         console.log("[Script Loader] Successfully installed default scripts");
     } catch (error: any) {
