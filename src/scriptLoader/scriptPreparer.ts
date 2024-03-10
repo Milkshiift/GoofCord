@@ -1,7 +1,7 @@
 import path from "path";
 import {app, dialog, ipcMain} from "electron";
 import fs from "fs";
-import {getVersion, isSemverLower, packageVersion, readOrCreateFolder} from "../utils";
+import {getVersion, readOrCreateFolder} from "../utils";
 import {error} from "../modules/logger";
 import {getConfig} from "../config/config";
 import download from "github-directory-downloader";
@@ -9,8 +9,6 @@ import download from "github-directory-downloader";
 type ScriptInfo = {
     name: string;
     version: string;
-    minGCVer: string;
-    maxGCVer: string;
 };
 
 export const scriptCategories = {
@@ -37,10 +35,7 @@ export async function categorizeScripts() {
             const filePath = path.join(scriptsFolder, file);
             const scriptContent = modifyScriptContent(await fs.promises.readFile(filePath, "utf-8"));
 
-            // Don't load the script if this GoofCord version is lower than minGCVer or higher than maxGCVer
             const scriptInfo = parseScriptInfo(scriptContent);
-            if (scriptInfo.minGCVer !== "" && isSemverLower(packageVersion, scriptInfo.minGCVer)) continue;
-            if (scriptInfo.maxGCVer !== "" && !isSemverLower(packageVersion, scriptInfo.maxGCVer)) continue;
 
             if (file.includes("BL")) {
                 scriptCategories.beforeLoadScripts.push([file, scriptContent, scriptInfo]);
@@ -62,7 +57,8 @@ export async function installDefaultScripts() {
     if (getConfig("autoUpdateDefaultScripts") === false) return;
 
     try {
-        console.log(scriptCategories.disabledScripts);
+        // GoofCord-Scripts repo has a branch for every version of GoofCord since 1.3.0
+        // That way scripts can use the newest features while remaining compatible with older versions
         await download(`https://github.com/Milkshiift/GoofCord-Scripts/tree/${getVersion()}/patches`, scriptsFolder, scriptCategories.disabledScripts);
 
         console.log("[Script Loader] Successfully installed default scripts");
@@ -81,7 +77,7 @@ function modifyScriptContent(content: string) {
 }
 
 function parseScriptInfo(scriptContent: string) {
-    const scriptInfo: ScriptInfo = { name: "", version: "", minGCVer: "", maxGCVer: "" };
+    const scriptInfo: ScriptInfo = { name: "", version: "" };
     let linesProcessed = 0;
     const MAX_LINES = 7;
 
