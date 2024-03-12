@@ -72,7 +72,7 @@ export async function installDefaultScripts() {
 }
 
 function modifyScriptContent(content: string) {
-    content = "(function(){" + content + "})();"; // Turning the script into an IIFE so variable names don't overlap
+    content = "(async function(){" + content + "})();"; // Turning the script into an IIFE so variable names don't overlap
     return content;
 }
 

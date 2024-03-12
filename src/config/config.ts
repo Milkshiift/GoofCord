@@ -42,6 +42,26 @@ export function getConfig(toGet: string): any {
     }
 }
 
+export async function getPermanentConfig(toGet: string): Promise<any> {
+    if (process.type !== "browser") return await ipcRenderer.invoke("config:getPermanentConfig", toGet);
+
+    try {
+        const data = JSON.parse(await fs.promises.readFile(getConfigLocation(), "utf-8"));
+        const result = data[toGet];
+        if (result !== undefined) {
+            return result;
+        } else {
+            console.log("Missing config parameter:", toGet);
+            const defaultValue = getDefaults()[toGet];
+            setConfig(toGet, defaultValue);
+            return defaultValue;
+        }
+    } catch (e) {
+        console.log("getPermanentConfig function errored:", e);
+        return undefined;
+    }
+}
+
 export function setConfig(entry: string, value: unknown) {
     try {
         if (process.type !== "browser") {

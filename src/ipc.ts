@@ -3,7 +3,15 @@ import {mainWindow} from "./window";
 import {getDisplayVersion, getVersion, packageVersion} from "./utils";
 import {createSettingsWindow} from "./settings/main";
 import {decryptMessage, encryptMessage} from "./modules/messageEncryption";
-import {cachedConfig, getConfig, setConfig, setConfigBulk, setTemporaryConfig} from "./config/config";
+import {
+    cachedConfig,
+    getConfig,
+    getPermanentConfig,
+    setConfig,
+    setConfigBulk,
+    setTemporaryConfig
+} from "./config/config";
+import {setBadgeCount} from "./modules/dynamicIcon";
 
 export function registerIpc() {
     ipcMain.on("window:Maximize", () => {
@@ -29,6 +37,9 @@ export function registerIpc() {
     });
     ipcMain.on("config:getConfig", (event, toGet) => {
         event.returnValue = getConfig(toGet);
+    });
+    ipcMain.handle("config:getPermanentConfig", (_event, toGet) => {
+        return getPermanentConfig(toGet);
     });
     ipcMain.on("config:getConfigBulk", (event) => {
         event.returnValue = cachedConfig;
@@ -84,5 +95,8 @@ export function registerIpc() {
     });
     ipcMain.on("getUserDataPath", (event) => {
         event.returnValue = app.getPath("userData");
+    });
+    ipcMain.on("setBadgeCount", (_event, count) => {
+        setBadgeCount(count);
     });
 }

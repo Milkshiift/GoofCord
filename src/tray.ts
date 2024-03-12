@@ -3,22 +3,23 @@ import {mainWindow} from "./window";
 import {getCustomIcon, getDisplayVersion} from "./utils";
 import {createSettingsWindow} from "./settings/main";
 
+export let tray: Tray;
 export async function createTray() {
-    const trayPath = nativeImage.createFromPath(getCustomIcon());
+    const trayImage = nativeImage.createFromPath(getCustomIcon());
 
     // This is maybe unnecessary, but I can't test it so it stays
     const getTrayMenuIcon = () => {
         if (process.platform == "win32") {
-            return trayPath.resize({height: 16});
+            return trayImage.resize({height: 16});
         } else if (process.platform == "darwin") {
-            return trayPath.resize({height: 18});
+            return trayImage.resize({height: 18});
         }
-        return trayPath;
+        return trayImage;
     };
 
-    if (process.platform === "darwin") trayPath.resize({height: 22});
+    if (process.platform === "darwin") trayImage.resize({height: 22});
 
-    const tray = new Tray(trayPath);
+    tray = new Tray(trayImage);
 
     const contextMenu = Menu.buildFromTemplate([
         {
