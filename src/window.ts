@@ -80,13 +80,13 @@ async function setWindowOpenHandler() {
             return {
                 action: "allow",
                 overrideBrowserWindowOptions: {
-                    frame: !getConfig("customTitlebar"),
+                    frame: true,
                     autoHideMenuBar: true,
                     icon: getCustomIcon(),
                     backgroundColor: "#313338",
                     alwaysOnTop: true,
                     webPreferences: {
-                        preload: getConfig("customTitlebar") ? path.join(__dirname, "preload/popoutPreload.js") : undefined,
+                        sandbox: true
                     }
                 }
             };
