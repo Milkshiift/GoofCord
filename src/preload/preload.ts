@@ -7,7 +7,7 @@ import {injectTitlebar} from "./titlebar";
 import {log} from "../modules/logger";
 import {loadScripts} from "../scriptLoader/scriptLoader";
 import fs from "fs";
-import {getConfig} from "../config/config";
+import {getConfig} from "../config";
 
 (async () => {
     // For some reason, preload is called before the document.body is accessible

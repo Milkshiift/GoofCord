@@ -2,7 +2,7 @@ import {app, BrowserWindow, clipboard, ipcMain, shell} from "electron";
 import {getCustomIcon, getDisplayVersion, getVersion} from "../utils";
 import path from "path";
 import os from "os";
-import {cachedConfig} from "../config/config";
+import {cachedConfig} from "../config";
 
 let settingsWindow: BrowserWindow;
 let instance: number = 0;

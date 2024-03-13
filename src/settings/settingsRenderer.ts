@@ -1,4 +1,4 @@
-import {getConfig} from "../config/config";
+import {getConfig} from "../config";
 import path from "path";
 import fs from "fs";
 

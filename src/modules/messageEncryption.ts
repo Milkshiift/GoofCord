@@ -1,7 +1,7 @@
 import StegCloak from "stegcloak";
 import {dialog, safeStorage} from "electron";
 import {mainWindow} from "../window";
-import {getConfig, setTemporaryConfig} from "../config/config";
+import {getConfig, setTemporaryConfig} from "../config";
 
 let stegcloak: StegCloak;
 const encryptionPasswords: string[] = [];

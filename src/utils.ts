@@ -1,6 +1,6 @@
 import {app, dialog} from "electron";
 import path from "path";
-import {getConfig} from "./config/config";
+import {getConfig} from "./config";
 import fs from "fs";
 
 //Get the version value from the "package.json" file

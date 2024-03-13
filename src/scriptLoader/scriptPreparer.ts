@@ -3,7 +3,7 @@ import {app, dialog, ipcMain} from "electron";
 import fs from "fs";
 import {getVersion, readOrCreateFolder} from "../utils";
 import {error} from "../modules/logger";
-import {getConfig} from "../config/config";
+import {getConfig} from "../config";
 import download from "github-directory-downloader";
 
 type ScriptInfo = {

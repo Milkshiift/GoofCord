@@ -1,7 +1,7 @@
 import {app, dialog, ipcRenderer} from "electron";
 import path from "path";
 import * as fs from "fs";
-import {getCustomIcon, tryWithFix} from "../utils";
+import {getCustomIcon, tryWithFix} from "./utils";
 
 export let cachedConfig: object = {};
 

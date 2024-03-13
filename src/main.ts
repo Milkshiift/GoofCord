@@ -1,7 +1,7 @@
 import {app, crashReporter, net, session} from "electron";
 import "v8-compile-cache";
 import AutoLaunch from "auto-launch";
-import {getConfig, loadConfig} from "./config/config";
+import {getConfig, loadConfig} from "./config";
 import {isDev} from "./utils";
 
 if (isDev()) {

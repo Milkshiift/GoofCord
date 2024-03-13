@@ -5,8 +5,7 @@ import {setMenu} from "./menu";
 import {getUserAgent} from "./modules/agent";
 import * as path from "path";
 import {initializeFirewall} from "./modules/firewall";
-import {getConfig} from "./config/config";
-import {getWindowState, setWindowState} from "./config/windowStateManager";
+import {getConfig} from "./config";
 import {registerCustomHandler} from "./screenshare/main";
 import {initArrpc} from "./modules/arrpc";
 
@@ -15,10 +14,8 @@ export let mainWindow: BrowserWindow;
 export async function createMainWindow() {
     const transparency: boolean = getConfig("transparency");
     mainWindow = new BrowserWindow({
-        width: (await getWindowState("width")) ?? 835,
-        height: (await getWindowState("height")) ?? 600,
-        x: await getWindowState("x") ?? 0,
-        y: await getWindowState("y") ?? 0,
+        width: 835,
+        height: 600,
         title: "GoofCord",
         show: false,
         darkTheme: true,
@@ -63,7 +60,6 @@ async function doAfterDefiningTheWindow() {
     registerCustomHandler();
     initArrpc();
     setWindowOpenHandler();
-    setCloseEventHandler();
     setEventWindowStateHandlers();
 
     // Load Discord
@@ -100,24 +96,6 @@ async function setWindowOpenHandler() {
             shell.openExternal(url);
         }
         return {action: "deny"};
-    });
-}
-
-async function setCloseEventHandler() {
-    mainWindow.on("close", async (e) => {
-        // Save window state, so it will be the same when the user opens GF again.
-        const [width, height] = mainWindow.getSize();
-        const position = mainWindow.getPosition();
-        await setWindowState({
-            width,
-            height,
-            isMaximized: mainWindow.isMaximized(),
-            x: position[0],
-            y: position[1],
-        });
-
-        e.preventDefault();
-        getConfig("minimizeToTray") ? mainWindow.hide() : app.quit();
     });
 }
 

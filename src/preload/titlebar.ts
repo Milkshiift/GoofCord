@@ -3,7 +3,7 @@ import {addStyle} from "../utils";
 import * as fs from "fs";
 import * as path from "path";
 import os from "os";
-import {getConfig} from "../config/config";
+import {getConfig} from "../config";
 
 let titlebar: HTMLDivElement;
 function createTitlebar() {

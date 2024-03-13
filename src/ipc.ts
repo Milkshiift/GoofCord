@@ -10,7 +10,7 @@ import {
     setConfig,
     setConfigBulk,
     setTemporaryConfig
-} from "./config/config";
+} from "./config";
 import {setBadgeCount} from "./modules/dynamicIcon";
 
 export function registerIpc() {

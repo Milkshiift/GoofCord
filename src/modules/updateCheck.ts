@@ -1,6 +1,6 @@
 import {fetchWithTimeout, isSemverLower, packageVersion} from "../utils";
 import {Notification, shell} from "electron";
-import {getConfig} from "../config/config";
+import {getConfig} from "../config";
 
 async function getLatestVersion(): Promise<string> {
     try {

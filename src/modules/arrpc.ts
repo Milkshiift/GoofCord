@@ -1,6 +1,6 @@
 // @ts-ignore
 import Server from "arrpc";
-import {getConfig} from "../config/config";
+import {getConfig} from "../config";
 import {mainWindow} from "../window";
 
 export async function initArrpc() {

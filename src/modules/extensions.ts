@@ -3,7 +3,7 @@ import {app, dialog, session} from "electron";
 import {fetchWithTimeout, tryWithFix} from "../utils";
 import {patchVencord} from "../scriptLoader/vencordPatcher";
 import path from "path";
-import {getConfig} from "../config/config";
+import {getConfig} from "../config";
 import extract from "extract-zip";
 
 const modName: keyof typeof MOD_BUNDLE_URLS = getConfig("modName");
