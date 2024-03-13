@@ -10,7 +10,7 @@ function loadBadge(index: number) {
     const cached = badgeCache.get(index);
     if (cached) return cached;
 
-    const img = nativeImage.createFromPath(path.join("assets/badges", `${index}.png`));
+    const img = nativeImage.createFromPath(path.join(__dirname, "assets/badges", `${index}.png`));
     badgeCache.set(index, img);
 
     return img;
@@ -36,7 +36,7 @@ function loadTrayImage(index: number) {
     const cached = trayCache.get(index);
     if (cached) return cached;
 
-    const img = nativeImage.createFromPath(path.join("assets/badges", `tray${index}.png`));
+    const img = nativeImage.createFromPath(path.join(__dirname, "assets/badges", `tray${index}.png`));
     if (process.platform === "darwin") img.resize({height: 22});
 
     trayCache.set(index, img);
