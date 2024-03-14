@@ -55,12 +55,14 @@ async function doAfterDefiningTheWindow() {
         mainWindow.focus();
     });
 
-    registerIpc();
-    setMenu();
-    registerCustomHandler();
-    initArrpc();
-    setWindowOpenHandler();
-    setEventWindowStateHandlers();
+    await Promise.all([
+        registerIpc(),
+        setMenu(),
+        registerCustomHandler(),
+        initArrpc(),
+        setWindowOpenHandler(),
+        setEventWindowStateHandlers()
+    ]);
 
     // Load Discord
     await mainWindow.loadURL(getConfig("discordUrl"));
@@ -106,9 +108,9 @@ async function setEventWindowStateHandlers() {
 
     // Attach event listeners to the mainWindow for maximize, and unmaximize events.
     // These events set body attributes in the web contents.
-    //mainWindow.on("focus", () => setBodyAttribute("unFocused"));
-    //mainWindow.on("blur", () => setBodyAttribute("unFocused", ""));
     // Used in the titlebar.ts
     mainWindow.on("maximize", () => setBodyAttribute("isMaximized"));
     mainWindow.on("unmaximize", () => setBodyAttribute("isMaximized", ""));
+    //mainWindow.on("focus", () => setBodyAttribute("unFocused"));
+    //mainWindow.on("blur", () => setBodyAttribute("unFocused", ""));
 }

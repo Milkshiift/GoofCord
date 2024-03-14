@@ -30,7 +30,7 @@ contextBridge.exposeInMainWorld("settings", {
 
 async function saveSettings() {
     const elements = Array.from(document.querySelectorAll("[data-setting]")) as HTMLInputElement[];
-    const settingsObj = ipcRenderer.sendSync("config:getConfigBulk");
+    const settingsObj = await ipcRenderer.invoke("config:getConfigBulk");
     for (const element of elements) {
         const settingName = element.getAttribute("data-setting");
         try {
@@ -56,8 +56,8 @@ async function saveSettings() {
     }
 
     console.log(settingsObj);
-    ipcRenderer.send("config:setConfigBulk", settingsObj);
-    ipcRenderer.send("flashTitlebar", "#5865F2");
+    ipcRenderer.invoke("config:setConfigBulk", settingsObj);
+    ipcRenderer.invoke("flashTitlebar", "#5865F2");
 }
 
 function createArrayFromTextarea(input: string) {

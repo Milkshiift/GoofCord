@@ -38,7 +38,7 @@ export async function registerCustomHandler() {
         await capturerWindow.loadURL(`file://${path.join(__dirname, "/assets/html/picker.html")}`);
         capturerWindow.webContents.send("getSources", sources);
 
-        ipcMain.once("selectScreenshareSource", async (_event, id, name, audio, resolution, framerate) => {
+        ipcMain.handleOnce("selectScreenshareSource", async (_event, id, name, audio, resolution, framerate) => {
             capturerWindow.close();
             // https://github.com/Milkshiift/GoofCord-Scripts/blob/main/patches/AL10_screenshareQuality.js
             await mainWindow.webContents.executeJavaScript(`

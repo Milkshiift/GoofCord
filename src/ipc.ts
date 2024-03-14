@@ -13,26 +13,26 @@ import {
 } from "./config";
 import {setBadgeCount} from "./modules/dynamicIcon";
 
-export function registerIpc() {
-    ipcMain.on("window:Maximize", () => {
+export async function registerIpc() {
+    ipcMain.handle("window:Maximize", () => {
         mainWindow.maximize();
     });
-    ipcMain.on("window:IsMaximized", (event) => {
-        event.returnValue = mainWindow.isMaximized();
+    ipcMain.handle("window:IsMaximized", () => {
+        return mainWindow.isMaximized();
     });
-    ipcMain.on("window:Minimize", () => {
+    ipcMain.handle("window:Minimize", () => {
         mainWindow.minimize();
     });
-    ipcMain.on("window:Unmaximize", () => {
+    ipcMain.handle("window:Unmaximize", () => {
         mainWindow.unmaximize();
     });
-    ipcMain.on("window:Show", () => {
+    ipcMain.handle("window:Show", () => {
         mainWindow.show();
     });
-    ipcMain.on("window:Hide", () => {
+    ipcMain.handle("window:Hide", () => {
         mainWindow.hide();
     });
-    ipcMain.on("window:Quit", () => {
+    ipcMain.handle("window:Quit", () => {
         app.exit();
     });
     ipcMain.on("config:getConfig", (event, toGet) => {
@@ -41,16 +41,16 @@ export function registerIpc() {
     ipcMain.handle("config:getPermanentConfig", (_event, toGet) => {
         return getPermanentConfig(toGet);
     });
-    ipcMain.on("config:getConfigBulk", (event) => {
-        event.returnValue = cachedConfig;
+    ipcMain.handle("config:getConfigBulk", () => {
+        return cachedConfig;
     });
-    ipcMain.on("config:setConfig", (_event, entry, value) => {
-        setConfig(entry, value);
+    ipcMain.handle("config:setConfig", async (_event, entry, value) => {
+        await setConfig(entry, value);
     });
-    ipcMain.on("config:setTemporaryConfig", (_event, entry, value) => {
+    ipcMain.handle("config:setTemporaryConfig", (_event, entry, value) => {
         setTemporaryConfig(entry, value);
     });
-    ipcMain.on("config:setConfigBulk", (_event, object) => {
+    ipcMain.handle("config:setConfigBulk", (_event, object) => {
         setConfigBulk(object);
     });
     ipcMain.on("getAppVersion", (event) => {
@@ -62,20 +62,13 @@ export function registerIpc() {
     ipcMain.on("getPackageVersion", (event) => {
         event.returnValue = packageVersion;
     });
-    ipcMain.on("restart", () => {
-        app.relaunch();
-        app.exit();
+    ipcMain.handle("flashTitlebar", (_event, color: string) => {
+        mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebar("${color}")`);
     });
-    ipcMain.on("minimizeToTraySetting", async (event) => {
-        event.returnValue = getConfig("minimizeToTray");
+    ipcMain.handle("flashTitlebarWithText", (_event, color: string, text: string) => {
+        mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebarWithText("${color}", "${text}")`);
     });
-    ipcMain.on("flashTitlebar", async (_event, color: string) => {
-        await mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebar("${color}")`);
-    });
-    ipcMain.on("flashTitlebarWithText", async (_event, color: string, text: string) => {
-        await mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebarWithText("${color}", "${text}")`);
-    });
-    ipcMain.on("openSettingsWindow", async () => {
+    ipcMain.handle("openSettingsWindow", async () => {
         await createSettingsWindow();
     });
     ipcMain.handle("encryptMessage", async (_event, message: string) => {
@@ -90,13 +83,10 @@ export function registerIpc() {
     ipcMain.handle("decryptSafeStorage", async (_event, encryptedPassword: string) => {
         return safeStorage.decryptString(Buffer.from(encryptedPassword, "base64"));
     });
-    ipcMain.on("isVencordPresent", async (event) => {
-        event.returnValue = await mainWindow.webContents.executeJavaScript("window.Vencord !== undefined");
+    ipcMain.handle("isVencordPresent", async () => {
+        return await mainWindow.webContents.executeJavaScript("window.Vencord !== undefined");
     });
-    ipcMain.on("getUserDataPath", (event) => {
-        event.returnValue = app.getPath("userData");
-    });
-    ipcMain.on("setBadgeCount", (_event, count) => {
+    ipcMain.handle("setBadgeCount", (_event, count) => {
         setBadgeCount(count);
     });
 }

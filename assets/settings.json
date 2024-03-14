@@ -203,6 +203,9 @@
       "defaultValue": "https://discord.com/app",
       "description": "URL that GoofCord will load on launch. Variations: https://canary.discord.com/app, https://ptb.discord.com/app or https://discord.com/app",
       "inputType": "textfield"
+    },
+    "screensharePreviousSettings": {
+      "defaultValue": ["720", "30", false]
     }
   }
 }

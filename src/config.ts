@@ -62,10 +62,10 @@ export async function getPermanentConfig(toGet: string): Promise<any> {
     }
 }
 
-export function setConfig(entry: string, value: unknown) {
+export async function setConfig(entry: string, value: unknown) {
     try {
         if (process.type !== "browser") {
-            return ipcRenderer.sendSync("config:setConfig", entry, value);
+            await ipcRenderer.invoke("config:setConfig", entry, value);
         }
         cachedConfig[entry] = value;
         const toSave = JSON.stringify(cachedConfig);
@@ -76,10 +76,10 @@ export function setConfig(entry: string, value: unknown) {
     }
 }
 
-export function setTemporaryConfig(entry: string, value: unknown) {
+export async function setTemporaryConfig(entry: string, value: unknown) {
     try {
         if (process.type !== "browser") {
-            return ipcRenderer.sendSync("config:setTemporaryConfig", entry, value);
+            return await ipcRenderer.invoke("config:setTemporaryConfig", entry, value);
         }
         cachedConfig[entry] = value;
     } catch (e: any) {

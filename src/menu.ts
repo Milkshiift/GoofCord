@@ -61,8 +61,7 @@ export async function setApplicationMenu() {
                     accelerator: "Shift+Ctrl+R",
                     click: async function () {
                         app.relaunch();
-                        const EXIT_CODE = 0;
-                        app.exit(EXIT_CODE);
+                        app.exit(0);
                     }
                 },
                 {

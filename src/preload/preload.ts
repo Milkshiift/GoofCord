@@ -60,7 +60,7 @@ function injectInSettings() {
             headerClone.children[0].innerHTML = "GoofCord";
             buttonClone.textContent = "Settings";
             buttonClone.id = "goofcord";
-            buttonClone.onclick = () => ipcRenderer.send("openSettingsWindow");
+            buttonClone.onclick = () => ipcRenderer.invoke("openSettingsWindow");
 
             host.insertAdjacentElement("afterbegin", headerClone);
             headerClone.insertAdjacentElement("afterend", buttonClone);

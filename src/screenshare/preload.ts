@@ -1,5 +1,6 @@
 // RENDERER
 import {ipcRenderer} from "electron";
+import {getConfig, setConfig} from "../config";
 
 interface IPCSources {
     id: string;
@@ -32,19 +33,21 @@ function createSourceItem({ id, name, thumbnail }: IPCSources): HTMLLIElement {
     return li;
 }
 
-function selectSource(id: string | null, title: string | null) {
+async function selectSource(id: string | null, title: string | null) {
     try {
-        const audio = document.getElementById("audio-checkbox") as HTMLInputElement;
-        const resolution = document.getElementById("resolution-textbox") as HTMLInputElement;
-        const framerate = document.getElementById("framerate-textbox") as HTMLInputElement;
-        if (ipcRenderer.sendSync("isVencordPresent") || (resolution.value === "720" && framerate.value === "30")) {
-            ipcRenderer.send("flashTitlebar", "#5865F2");
+        const audio = (document.getElementById("audio-checkbox") as HTMLInputElement).checked;
+        const resolution = (document.getElementById("resolution-textbox") as HTMLInputElement).value;
+        const framerate = (document.getElementById("framerate-textbox") as HTMLInputElement).value;
+        if (await ipcRenderer.invoke("isVencordPresent") || (resolution === "720" && framerate === "30")) {
+            ipcRenderer.invoke("flashTitlebar", "#5865F2");
         }
         else {
-            ipcRenderer.send("flashTitlebarWithText", "#f8312f", "Custom resolution & framerate are only available with Vencord");
+            ipcRenderer.invoke("flashTitlebarWithText", "#f8312f", "Custom resolution & framerate are only available with Vencord");
         }
 
-        ipcRenderer.send("selectScreenshareSource", id, title, audio.checked, resolution.value, framerate.value);
+        setConfig("screensharePreviousSettings", [resolution, framerate, audio]);
+
+        ipcRenderer.invoke("selectScreenshareSource", id, title, audio, resolution, framerate);
     } catch (err) {
         console.error(err);
     }
@@ -58,8 +61,10 @@ async function addDisplays() {
         const closeButton = document.createElement("button");
         closeButton.classList.add("closeButton");
         closeButton.addEventListener("click", () => {
-            ipcRenderer.send("selectScreenshareSource", "window:000000:0", "Close", false, true);
+            ipcRenderer.invoke("selectScreenshareSource", "window:000000:0", "Close", false, true);
         });
+
+        const previousSettings = getConfig("screensharePreviousSettings");
 
         const selectionElem = document.createElement("div");
         selectionElem.classList.add("desktop-capturer-selection");
@@ -72,15 +77,15 @@ async function addDisplays() {
             </div>
             <div class="checkbox-container">
               <div class="subcontainer">
-                <input id="resolution-textbox" type="text" value="720" />
+                <input id="resolution-textbox" type="text" value="${previousSettings[0]}" />
                 <label for="resolution-textbox">Resolution</label>
               </div>
               <div class="subcontainer">
-                <input id="audio-checkbox" type="checkbox" />
+                <input id="audio-checkbox" type="checkbox" ${(()=>{if (previousSettings[2]) return "checked";})()} />
                 <label for="audio-checkbox">Stream audio</label>
               </div>
               <div class="subcontainer">
-                <input id="framerate-textbox" type="text" value="30"/>
+                <input id="framerate-textbox" type="text" value="${previousSettings[1]}"/>
                 <label for="framerate-textbox">Framerate</label>
               </div>
             </div>
