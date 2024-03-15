@@ -56,8 +56,6 @@ async function doAfterDefiningTheWindow() {
     });
 
     await Promise.all([
-        registerIpc(),
-        setMenu(),
         registerCustomHandler(),
         initArrpc(),
         setWindowOpenHandler(),

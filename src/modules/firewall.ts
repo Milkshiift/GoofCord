@@ -1,6 +1,6 @@
 // This file contains everything that uses session.defaultSession.webRequest
 import {mainWindow} from "../window";
-import electron, {session} from "electron";
+import {session} from "electron";
 import {getConfig} from "../config";
 
 export async function initializeFirewall() {
@@ -52,7 +52,7 @@ export async function initializeFirewall() {
 export async function unstrictCSP() {
     console.log("Setting up CSP unstricter...");
 
-    electron.session.defaultSession.webRequest.onHeadersReceived(({responseHeaders, resourceType}, done) => {
+    session.defaultSession.webRequest.onHeadersReceived(({responseHeaders, resourceType}, done) => {
         if (!responseHeaders) return done({});
 
         if (resourceType === "mainFrame") {

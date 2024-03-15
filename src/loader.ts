@@ -3,16 +3,16 @@ import {unstrictCSP} from "./modules/firewall";
 import {createMainWindow} from "./window";
 import {loadExtensions, updateModBundle} from "./modules/extensions";
 import {checkForUpdate} from "./modules/updateCheck";
-import {createTray} from "./tray";
 import {initEncryption} from "./modules/messageEncryption";
+import {registerIpc} from "./ipc";
 
-async function load() {
+export async function load() {
+    initEncryption();
     await Promise.all([
         unstrictCSP(),
-        createTray(),
         loadExtensions(),
         categorizeScripts(),
-        initEncryption()
+        registerIpc()
     ]);
 
     await createMainWindow();
@@ -21,4 +21,3 @@ async function load() {
     updateModBundle();
     checkForUpdate();
 }
-load();

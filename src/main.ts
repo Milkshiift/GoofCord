@@ -3,6 +3,8 @@ import "v8-compile-cache";
 import AutoLaunch from "auto-launch";
 import {getConfig, loadConfig} from "./config";
 import {isDev} from "./utils";
+import {createTray} from "./tray";
+import {setMenu} from "./menu";
 
 if (isDev()) {
     try {
@@ -17,18 +19,20 @@ crashReporter.start({uploadToServer: false});
 loadConfig().then(async () => {
     setFlags();
     setAutoLaunchState();
+    setMenu();
 
     await app.whenReady();
 
+    createTray();
     setPermissions();
-    checkForConnectivity();
+    await checkForConnectivity();
 });
 
 async function checkForConnectivity() {
     while (!net.isOnline()) {
         await new Promise(resolve => setTimeout(resolve, 1000));
     }
-    import("./loader");
+    await (await import("./loader")).load();
 }
 
 async function setAutoLaunchState() {
