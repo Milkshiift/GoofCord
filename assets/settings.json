@@ -58,14 +58,14 @@
     },
     "customJsBundle": {
       "name": "Custom JS bundle",
-      "defaultValue": "https://raw.githubusercontent.com/Milkshiift/empty/main/empty.txt",
+      "defaultValue": "https://maglit.me/empty",
       "description": "",
       "inputType": "textfield"
     },
     "customCssBundle": {
       "name": "Custom CSS bundle",
-      "defaultValue": "https://raw.githubusercontent.com/Milkshiift/empty/main/empty.txt",
-      "description": "A raw link to the JS bundle and CSS bundle of a client mod you want to use. Placeholder css: \"https://raw.githubusercontent.com/Milkshiift/empty/main/empty.txt\"",
+      "defaultValue": "https://maglit.me/empty",
+      "description": "A raw link to the JS bundle and CSS bundle of a client mod you want to use. Does anything only when \"custom\" is selected as a client mod.",
       "inputType": "textfield"
     },
     "noBundleUpdates": {
