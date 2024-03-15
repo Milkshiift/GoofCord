@@ -1,5 +1,7 @@
 * {
     outline: none;
+    scrollbar-width: unset !important;
+    scrollbar-color: unset !important;
 }
 
 [class^="socialLinks-"] + [class^="info-"] {
