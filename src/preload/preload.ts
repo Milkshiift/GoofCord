@@ -24,7 +24,8 @@ setTimeout(() => {
 
 const waitUntilSplashEnds = setInterval(async () => {
     // Waiting until settings button appears, also useful for detecting when the splash is over
-    const settingsButtonSvg = document.querySelectorAll("path[d^='M10.56']")[0];
+    const settingsButtons = document.querySelectorAll("path[d^='M10.56']");
+    const settingsButtonSvg = settingsButtons[settingsButtons.length-1];
     if (settingsButtonSvg !== undefined) {
         clearInterval(waitUntilSplashEnds);
 
