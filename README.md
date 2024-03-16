@@ -11,7 +11,7 @@
 - **:chart_with_upwards_trend: Fast and Performant**: Glide through your chats with GoofCord's superior speed and responsiveness compared to the official client. [Check the Benchmarks!](https://github.com/Milkshiift/GoofCord/wiki/Placeholder)
 - **:bookmark: Standalone**: GoofCord is a standalone client, not reliant on the original Discord client in any way.
 - **:electric_plug: Plugins & Themes support**: Embrace client mods like [Vencord](https://github.com/Vendicated/Vencord) or [Shelter](https://github.com/uwu/shelter) for a world of plugins and themes.
-- **:iphone: Cross-Platform**: Find GoofCord on **Windows**, **Linux** and **macOS**. Sadly we don't support Windows versions lower than 10.    
+- **:iphone: Cross-Platform**: Find GoofCord on **Windows**, **Linux** and **macOS**. Sadly Windows versions lower than 10 are not supported.    
     
 [Full feature list](https://github.com/Milkshiift/GoofCord/wiki)
 
@@ -35,9 +35,9 @@ Choose the file ending with `mac-arm64.dmg` if your computer uses Apple Silicon 
 Choose the file that ends with `mac-x64.dmg` if your computer uses Intel processor.
 
 
-Everything you'll need can be found in the Discords settings.    
+Everything you'll need can be found in the Discord's settings.    
 To open GoofCord settings, look for the topmost button.  
-To explore the enchanting world of plugins and themes, head over to the Vencord category within your Discord settings. Have fun!
+To explore plugins and themes, head over to the Vencord category within your Discord settings. Have fun!
     
 And if you want to compile it yourself, here's how:
 1. Install [Node.js](https://nodejs.dev) and [pnpm](https://pnpm.io/installation#using-npm)
@@ -63,9 +63,6 @@ GoofCord also does some clever tricks to make Discord think you are just using a
 
 ### Seeking the Source Code? 🕵️‍♂️
 - You can find our source code on [GitHub](https://github.com/Milkshiift/GoofCord/).
-  
-### What's the difference between ArmCord and GoofCord? 🤷‍♂️
-- ArmCord and GoofCord share an origin, but now, GoofCord has evolved into a distinct client. It has its own unique philosophy, plans, and features, setting it apart as a separate client. You may have expected a comparison list, but it would be really, really pointless.
 
 ### Check out our [wiki](https://github.com/Milkshiift/GoofCord/wiki) if you've got questions left
 
