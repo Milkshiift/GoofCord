@@ -12,24 +12,20 @@ import {getConfig} from "../config";
 (async () => {
     // For some reason, preload is called before the document.body is accessible
     // So we wait until it's not null
-    while (document.body === null) {
-        await new Promise(resolve => setTimeout(resolve, 2));
+    while (document.body === null || !document.location.href.includes("https")) {
+        await new Promise(resolve => setTimeout(resolve, 5));
     }
     loadScripts(false);
-})();
-
-setTimeout(() => {
     injectTitlebar();
-}, 1000);
+})();
 
 const waitUntilSplashEnds = setInterval(async () => {
     // Waiting until settings button appears, also useful for detecting when the splash is over
-    const settingsButtons = document.querySelectorAll("path[d^='M10.56']");
-    const settingsButtonSvg = settingsButtons[settingsButtons.length-1];
-    if (settingsButtonSvg !== undefined) {
+    const settingsButtonSvg = document.querySelector("g[clip-path='url(#__lottie_element_100)']");
+    if (settingsButtonSvg != null) {
         clearInterval(waitUntilSplashEnds);
 
-        const settingsButton = settingsButtonSvg.parentElement!.parentElement!.parentElement!;
+        const settingsButton = settingsButtonSvg.parentElement!.parentElement!.parentElement!.parentElement!;
 
         settingsButton.addEventListener("click", () => {
             injectInSettings();

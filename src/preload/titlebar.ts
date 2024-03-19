@@ -55,7 +55,13 @@ function attachTitlebarEvents(titlebar: HTMLDivElement) {
 
 export async function injectTitlebar() {
     const titlebar = createTitlebar();
-    const appMount = document.getElementById("app-mount")!;
+
+    let appMount: HTMLElement | null = null;
+    while (appMount == undefined) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        appMount = document.getElementById("app-mount");
+    }
+
     appMount.prepend(titlebar);
 
     // MutationObserver to check if the title bar gets destroyed
