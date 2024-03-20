@@ -1,7 +1,5 @@
 import {app, BrowserWindow, shell} from "electron";
 import {getCustomIcon} from "./utils";
-import {registerIpc} from "./ipc";
-import {setMenu} from "./menu";
 import {getUserAgent} from "./modules/agent";
 import * as path from "path";
 import {initializeFirewall} from "./modules/firewall";
