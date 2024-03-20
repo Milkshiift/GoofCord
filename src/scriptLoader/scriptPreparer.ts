@@ -57,9 +57,9 @@ export async function installDefaultScripts() {
     if (getConfig("autoUpdateDefaultScripts") === false) return;
 
     try {
-        // GoofCord-Scripts repo has a branch for every version of GoofCord since 1.3.0
+        // GoofCord-Scripts repo has a branch for every minor and major version of GoofCord since 1.3.0
         // That way scripts can use the newest features while remaining compatible with older versions
-        await download(`https://github.com/Milkshiift/GoofCord-Scripts/tree/${getVersion()}/patches`, scriptsFolder, scriptCategories.disabledScripts);
+        await download(`https://github.com/Milkshiift/GoofCord-Scripts/tree/${changePatchVersionToZero(getVersion())}/patches`, scriptsFolder, scriptCategories.disabledScripts);
 
         console.log("[Script Loader] Successfully installed default scripts");
     } catch (error: any) {
@@ -69,6 +69,12 @@ export async function installDefaultScripts() {
             error.toString()
         );
     }
+}
+
+function changePatchVersionToZero(version: string): string {
+    const parts = version.split(".");
+    parts[2] = "0"; // Set patch version to 0
+    return parts.join(".");
 }
 
 function modifyScriptContent(content: string) {
