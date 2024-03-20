@@ -187,17 +187,6 @@
       "description": "Disable microphone auto-gain. It can be useful when your mic is quieter than it should be.",
       "inputType": "checkbox"
     },
-    "prfmMode": {
-      "name": "Performance mode",
-      "defaultValue": "none",
-      "description": "Performance mode is an experimental feature that may either increase responsiveness and performance of GoofCord or… decrease it. Try every option and see which fits you the best.",
-      "inputType": "dropdown",
-      "options": [
-        "none",
-        "performance",
-        "battery"
-      ]
-    },
     "discordUrl": {
       "name": "Discord URL",
       "defaultValue": "https://discord.com/app",
