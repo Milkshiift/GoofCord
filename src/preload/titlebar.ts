@@ -44,7 +44,7 @@ function attachTitlebarEvents(titlebar: HTMLDivElement) {
     });
 
     quit.addEventListener("click", () => {
-        const minimizeToTraySetting = getConfig("minimizeToTraySetting");
+        const minimizeToTraySetting = getConfig("minimizeToTray");
         if (minimizeToTraySetting) {
             ipcRenderer.invoke("window:Hide");
         } else {
