@@ -5,73 +5,68 @@ import os from "os";
 import {cachedConfig} from "../config";
 
 let settingsWindow: BrowserWindow;
-let instance: number = 0;
 const userDataPath = app.getPath("userData");
+let isOpen = false;
 
 export async function createSettingsWindow() {
-    console.log("Creating a settings window.");
-    instance = instance + 1;
-    if (instance > 1) {
-        settingsWindow?.show();
-        settingsWindow?.restore();
-    } else {
-        settingsWindow = new BrowserWindow({
-            width: 660,
-            height: 670,
-            title: `GoofCord Settings | Version: ${getDisplayVersion()}`,
-            darkTheme: true,
-            frame: true,
-            icon: getCustomIcon(),
-            backgroundColor: "#2f3136",
-            autoHideMenuBar: true,
-            webPreferences: {
-                sandbox: false,
-                preload: path.join(__dirname, "/settings/preload.js"),
-                nodeIntegrationInSubFrames: false,
-                webSecurity: true,
-                plugins: false,
-                contextIsolation: true
-            }
-        });
-
-        ipcMain.on("openStorageFolder", async () => {
-            await shell.openPath(path.join(userDataPath, "/storage/"));
-        });
-        ipcMain.on("openScriptsFolder", async () => {
-            await shell.openPath(path.join(userDataPath, "/scripts/"));
-        });
-        ipcMain.on("openExtensionsFolder", async () => {
-            await shell.openPath(path.join(userDataPath, "/extensions/"));
-        });
-        ipcMain.on("crash", async () => {
-            process.crash();
-        });
-        ipcMain.on("copyDebugInfo", async () => {
-            clipboard.writeText(
-                "**OS:** " +
-                os.platform() +
-                " " +
-                os.version() +
-                "\n**Architecture:** " +
-                os.arch() +
-                "\n**GoofCord version:** " +
-                getVersion() +
-                "\n**Electron version:** " +
-                process.versions.electron +
-                "\n`" +
-                JSON.stringify(cachedConfig) +
-                "`"
-            );
-        });
-        settingsWindow.webContents.setWindowOpenHandler(({url}) => {
-            shell.openExternal(url);
-            return {action: "deny"};
-        });
-
-        await settingsWindow.loadURL(`file://${path.join(__dirname, "/assets/html/settings.html")}`);
-
-        settingsWindow.on("close", () => {
-            instance = 0;
-        });
+    if (isOpen) {
+        settingsWindow.show();
+        settingsWindow.restore();
+        return;
     }
+
+    console.log("Creating a settings window.");
+    settingsWindow = new BrowserWindow({
+        width: 660,
+        height: 670,
+        title: `GoofCord Settings | Version: ${getDisplayVersion()}`,
+        darkTheme: true,
+        frame: true,
+        icon: getCustomIcon(),
+        backgroundColor: "#2f3136",
+        autoHideMenuBar: true,
+        webPreferences: {
+            sandbox: false,
+            preload: path.join(__dirname, "/settings/preload.js"),
+            nodeIntegrationInSubFrames: false,
+            webSecurity: true,
+            plugins: false,
+            contextIsolation: true
+        }
+    });
+    isOpen = true;
+
+    ipcMain.handle("openFolder", async (_event, folder: string) => {
+        await shell.openPath(path.join(userDataPath, `/${folder}/`));
+    });
+    ipcMain.handle("crash", () => {
+        process.crash();
+    });
+    ipcMain.handle("copyDebugInfo", () => {
+        clipboard.writeText(
+            "**OS:** " +
+            os.platform() +
+            " " +
+            os.version() +
+            "\n**Architecture:** " +
+            os.arch() +
+            "\n**GoofCord version:** " +
+            getVersion() +
+            "\n**Electron version:** " +
+            process.versions.electron +
+            "\n`" +
+            JSON.stringify(cachedConfig) +
+            "`"
+        );
+    });
+    settingsWindow.webContents.setWindowOpenHandler(({url}) => {
+        shell.openExternal(url);
+        return {action: "deny"};
+    });
+
+    await settingsWindow.loadURL(`file://${path.join(__dirname, "/assets/html/settings.html")}`);
+
+    settingsWindow.on("close", () => {
+        isOpen = false;
+    });
 }

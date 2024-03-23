@@ -5,12 +5,11 @@ import {renderSettings} from "./settingsRenderer";
 console.log("GoofCord Settings");
 
 contextBridge.exposeInMainWorld("settings", {
-    openScriptsFolder: () => ipcRenderer.send("openScriptsFolder"),
-    openExtensionsFolder: () => ipcRenderer.send("openExtensionsFolder"),
-    openStorageFolder: () => ipcRenderer.send("openStorageFolder"),
-    openCrashesFolder: () => ipcRenderer.send("openCrashesFolder"),
-    copyDebugInfo: () => ipcRenderer.send("copyDebugInfo"),
-    crash: () => ipcRenderer.send("crash"),
+    openScriptsFolder: () => ipcRenderer.invoke("openFolder", "scripts"),
+    openExtensionsFolder: () => ipcRenderer.invoke("openFolder", "extensions"),
+    openStorageFolder: () => ipcRenderer.invoke("openFolder", "storage"),
+    copyDebugInfo: () => ipcRenderer.invoke("copyDebugInfo"),
+    crash: () => ipcRenderer.invoke("crash"),
     decryptSafeStorage: (string: string) => ipcRenderer.invoke("decryptSafeStorage", string),
 });
 
