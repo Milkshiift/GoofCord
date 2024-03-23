@@ -6,10 +6,8 @@ import {decryptMessage, encryptMessage} from "./modules/messageEncryption";
 import {
     cachedConfig,
     getConfig,
-    getPermanentConfig,
     setConfig,
-    setConfigBulk,
-    setTemporaryConfig
+    setConfigBulk
 } from "./config";
 import {setBadgeCount} from "./modules/dynamicIcon";
 
@@ -38,17 +36,11 @@ export async function registerIpc() {
     ipcMain.on("config:getConfig", (event, toGet) => {
         event.returnValue = getConfig(toGet);
     });
-    ipcMain.handle("config:getPermanentConfig", (_event, toGet) => {
-        return getPermanentConfig(toGet);
-    });
     ipcMain.handle("config:getConfigBulk", () => {
         return cachedConfig;
     });
     ipcMain.handle("config:setConfig", async (_event, entry, value) => {
         await setConfig(entry, value);
-    });
-    ipcMain.handle("config:setTemporaryConfig", (_event, entry, value) => {
-        setTemporaryConfig(entry, value);
     });
     ipcMain.handle("config:setConfigBulk", (_event, object) => {
         setConfigBulk(object);

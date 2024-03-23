@@ -42,26 +42,6 @@ export function getConfig(toGet: string): any {
     }
 }
 
-export async function getPermanentConfig(toGet: string): Promise<any> {
-    if (process.type !== "browser") return await ipcRenderer.invoke("config:getPermanentConfig", toGet);
-
-    try {
-        const data = JSON.parse(await fs.promises.readFile(getConfigLocation(), "utf-8"));
-        const result = data[toGet];
-        if (result !== undefined) {
-            return result;
-        } else {
-            console.log("Missing config parameter:", toGet);
-            const defaultValue = getDefaults()[toGet];
-            setConfig(toGet, defaultValue);
-            return defaultValue;
-        }
-    } catch (e) {
-        console.log("getPermanentConfig function errored:", e);
-        return undefined;
-    }
-}
-
 export async function setConfig(entry: string, value: unknown) {
     try {
         if (process.type !== "browser") {
@@ -73,17 +53,6 @@ export async function setConfig(entry: string, value: unknown) {
     } catch (e: any) {
         console.error("setConfig function errored:", e);
         dialog.showErrorBox("GoofCord was unable to save the settings", e.toString());
-    }
-}
-
-export async function setTemporaryConfig(entry: string, value: unknown) {
-    try {
-        if (process.type !== "browser") {
-            return await ipcRenderer.invoke("config:setTemporaryConfig", entry, value);
-        }
-        cachedConfig[entry] = value;
-    } catch (e: any) {
-        console.error("setTemporaryConfig function errored:", e);
     }
 }
 

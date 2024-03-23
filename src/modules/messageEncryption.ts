@@ -1,7 +1,7 @@
 import StegCloak from "stegcloak";
 import {dialog, safeStorage} from "electron";
 import {mainWindow} from "../window";
-import {getConfig, setTemporaryConfig} from "../config";
+import {getConfig} from "../config";
 
 let stegcloak: StegCloak;
 const encryptionPasswords: string[] = [];
@@ -32,7 +32,6 @@ async function loadPasswords() {
     } catch (error) {
         console.error("Failed to load encryption passwords:", error);
     }
-    setTemporaryConfig("encryptionPasswords", encryptionPasswords);
     chosenPassword = encryptionPasswords[0];
     console.log("Loaded encryption passwords");
 }
