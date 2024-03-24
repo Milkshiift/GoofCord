@@ -21,11 +21,11 @@ import {getConfig} from "../config";
 
 const waitUntilSplashEnds = setInterval(async () => {
     // Waiting until settings button appears, also useful for detecting when the splash is over
-    const settingsButtonSvg = document.querySelector("g[clip-path='url(#__lottie_element_100)']");
+    const settingsButtonSvg = document.getElementsByClassName("flex_f5fbb7 horizontal__992f6 justifyStart__42744 alignStretch_e239ef noWrap__5c413")[0];
     if (settingsButtonSvg != null) {
         clearInterval(waitUntilSplashEnds);
 
-        const settingsButton = settingsButtonSvg.parentElement!.parentElement!.parentElement!.parentElement!;
+        const settingsButton = settingsButtonSvg.lastChild!;
 
         settingsButton.addEventListener("click", () => {
             injectInSettings();
