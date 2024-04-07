@@ -19,7 +19,7 @@ contextBridge.exposeInMainWorld("goofcord", {
     getConfig: (toGet: string) => ipcRenderer.sendSync("config:getConfig", toGet),
     encryptMessage: (message: string) => ipcRenderer.invoke("encryptMessage", message),
     decryptMessage: (message: string) => ipcRenderer.sendSync("decryptMessage", message),
-    openSettingsWindow: () => ipcRenderer.send("openSettingsWindow"),
+    openSettingsWindow: () => ipcRenderer.invoke("openSettingsWindow"),
     setBadgeCount: (count: number) => ipcRenderer.invoke("setBadgeCount", count),
     rpcListen: (callback: any) => { windowCallback = callback; } // https://github.com/Milkshiift/GoofCord-Scripts/blob/main/patches/AL11_richPresence.js
 });

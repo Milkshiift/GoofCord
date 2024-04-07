@@ -6,17 +6,8 @@ import {error} from "../modules/logger";
 import {getConfig} from "../config";
 import download from "github-directory-downloader";
 
-type ScriptInfo = {
-    name: string;
-    version: string;
-};
-
-export const scriptCategories = {
-    beforeLoadScripts: [] as [string, string, ScriptInfo][],
-    afterLoadScripts: [] as [string, string, ScriptInfo][],
-    scriptsCombined: [] as string[],
-    disabledScripts: [] as string[]
-};
+export const enabledScripts: string[][] = [];
+export const disabledScripts: string[] = [];
 
 const scriptsFolder = path.join(app.getPath("userData"), "/scripts/");
 
@@ -27,7 +18,7 @@ export async function categorizeScripts() {
         try {
             if (!file.endsWith(".js")) {
                 if (file.endsWith(".disabled")) {
-                    scriptCategories.disabledScripts.push(file.replace(".disabled", ""));
+                    disabledScripts.push(file.replace(".disabled", ""));
                 }
                 continue;
             }
@@ -35,31 +26,24 @@ export async function categorizeScripts() {
             const filePath = path.join(scriptsFolder, file);
             const scriptContent = modifyScriptContent(await fs.promises.readFile(filePath, "utf-8"));
 
-            const scriptInfo = parseScriptInfo(scriptContent);
-
-            if (file.includes("BL")) {
-                scriptCategories.beforeLoadScripts.push([file, scriptContent, scriptInfo]);
-            } else {
-                scriptCategories.afterLoadScripts.push([file, scriptContent, scriptInfo]);
-            }
-            scriptCategories.scriptsCombined.push(scriptContent);
+            enabledScripts.push([file, scriptContent]);
         } catch (err) {
             error("An error occurred during script categorizing: " + err);
         }
     }
 
-    ipcMain.handle("getScriptCategories", () => {
-        return scriptCategories;
+    ipcMain.handle("getScripts", () => {
+        return enabledScripts;
     });
 }
 
 export async function installDefaultScripts() {
-    if (getConfig("autoUpdateDefaultScripts") === false) return;
+    if (getConfig("autoUpdateDefaultScripts") === false || getConfig("scriptLoading") === false) return;
 
     try {
         // GoofCord-Scripts repo has a branch for every minor and major version of GoofCord since 1.3.0
         // That way scripts can use the newest features while remaining compatible with older versions
-        await download(`https://github.com/Milkshiift/GoofCord-Scripts/tree/${changePatchVersionToZero(getVersion())}/patches`, scriptsFolder, scriptCategories.disabledScripts);
+        await download(`https://github.com/Milkshiift/GoofCord-Scripts/tree/${changePatchVersionToZero(getVersion())}/patches`, scriptsFolder, disabledScripts);
 
         console.log("[Script Loader] Successfully installed default scripts");
     } catch (error: any) {
@@ -80,23 +64,4 @@ function changePatchVersionToZero(version: string): string {
 function modifyScriptContent(content: string) {
     content = "(async function(){" + content + "})();"; // Turning the script into an IIFE so variable names don't overlap
     return content;
-}
-
-function parseScriptInfo(scriptContent: string) {
-    const scriptInfo: ScriptInfo = { name: "", version: "" };
-    let linesProcessed = 0;
-    const MAX_LINES = 7;
-
-    for (const line of scriptContent.split("\n")) {
-        if (linesProcessed >= MAX_LINES) break; // Only parse the first N lines
-
-        const match = line.match(/^.\*.@(\w+)\s(.*)/);
-        if (match) {
-            const [, key, value] = match;
-            scriptInfo[key as keyof ScriptInfo] = value.trim(); // Use keyof to ensure type safety
-        }
-        linesProcessed++;
-    }
-
-    return scriptInfo;
 }

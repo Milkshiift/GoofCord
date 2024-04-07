@@ -61,7 +61,7 @@ async function doAfterDefiningTheWindow() {
     ]);
 
     // Load Discord
-    await mainWindow.loadURL(getConfig("discordUrl"));
+    mainWindow.loadURL(getConfig("discordUrl"));
 
     initializeFirewall();
 }
@@ -107,6 +107,4 @@ async function setEventWindowStateHandlers() {
     // Used in the titlebar.ts
     mainWindow.on("maximize", () => setBodyAttribute("isMaximized"));
     mainWindow.on("unmaximize", () => setBodyAttribute("isMaximized", ""));
-    //mainWindow.on("focus", () => setBodyAttribute("unFocused"));
-    //mainWindow.on("blur", () => setBodyAttribute("unFocused", ""));
 }

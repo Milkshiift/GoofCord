@@ -1,56 +1,64 @@
-import {scriptCategories} from "./scriptPreparer";
 import {getConfig} from "../config";
-
-// For patches in custom scripts to work, we inject them into Vencord's code
+import {getDisplayVersion} from "../utils";
+import {enabledScripts} from "./scriptPreparer";
 
 export async function patchVencord(bundle: string) {
-    if (getConfig("scriptLoading") === false) return bundle;
-
     console.log("[Mod loader] Patching Vencord");
+    console.time("Patching Vencord took");
+    // For patches in custom scripts to work, we inject them into Vencord's code
+    bundle = await patchVencordWithScriptPatches(bundle);
+    // Patch Vencord to show the GoofCord category in settings
+    bundle = await patchString(bundle, /makeSettingsCategories\((.)\){return\[/, `
+        $&
+        {
+            section: $1.HEADER,
+            label: "GoofCord",
+            className: "gf-settings-header"
+        },
+        {
+            section: "GoofCordSettings",
+            label: "Settings",
+            onClick: ()=>{
+                window.goofcord.openSettingsWindow();
+            },
+            className: "gf-settings"
+        },
+        {
+            section: $1.DIVIDER
+        },
+    `);
+    // Patch Vencord to show GoofCord version in settings
+    bundle = await patchString(bundle, /additionalInfo:.{24}(.+?")/, `$&GoofCord ${getDisplayVersion()}"),$1`);
+    console.timeLog("Patching Vencord took");
+    return bundle;
+}
+
+async function patchVencordWithScriptPatches(bundle: string) {
+    if (getConfig("scriptLoading") === false) return bundle;
 
     const patches = getPatchesFromScripts();
 
-    const match = bundle.match(/patches:([a-zA-Z_$][a-zA-Z0-9_$]*)/);
-    const retrievedVarName = match ? match[1] : null;
-
-    if (retrievedVarName) {
-        const patch = `
-            function addObjectsIfNotExists(arr, objs) {
-                objs.forEach(obj => {
-                    if (!arr.some(item => JSON.stringify(item) === JSON.stringify(obj))) {
-                        arr.push(obj);
-                    }
-                });
-            }
-            addObjectsIfNotExists(${retrievedVarName}, ${patches});
-        `;
-
-        const searchable = "Vencord.Plugins;";
-        const index = bundle.indexOf(searchable) + searchable.length;
-        bundle = bundle.substring(0, index) + patch + bundle.substring(index);
-    } else {
-        console.error("An error occurred during Vencord patching");
-    }
+    const patch = `$&$1 = $1.concat(${patches});`;
+    bundle = await patchString(bundle, /patches:([a-zA-Z])}=Vencord\.Plugins;/m, patch);
 
     return bundle;
 }
 
-function getPatchesFromScripts() {
-    const regex = /const\s+patches\s+=\s+(\[[\s\S]+?]);/;
+export async function patchString(bundle: string, searchable: string | RegExp, patch: string) {
+    return bundle.replace(searchable, patch);
+}
 
-    let allPatches = scriptCategories.scriptsCombined
-        .map((scriptContent) => {
-            const patchesMatch = scriptContent.match(regex);
-            return patchesMatch ? patchesMatch[1].replace(/(".*?")|\s+/g, (_match, capture) => {
-                // If the match is inside double quotes, return it unchanged
-                if (capture) {
-                    return capture;
-                }
-                return "";
-            }).slice(1, -1) + "," : "";
+function getPatchesFromScripts() {
+    const regex = /const.patches.=.(\[.+?]);/s;
+
+    const allPatches = enabledScripts
+        .map((script) => {
+            const patchesMatch = script[1].match(regex);
+            return patchesMatch ? patchesMatch[1] // If a patch exists
+                .replaceAll("$", "$$$$") // Duplicating all dollar signs so they don't cause problems when using .replace in patching https://developer.mozilla.org/en-US/docs/web/javascript/reference/global_objects/string/replace#specifying_a_function_as_the_replacement
+                .slice(1, -1) + "," : ""; // Removing [ and ] symbols and adding a comma to account for multiple patches
         })
         .join("");
 
-    allPatches = allPatches.substring(0, allPatches.length - 1);
     return "[" + allPatches + "]";
 }

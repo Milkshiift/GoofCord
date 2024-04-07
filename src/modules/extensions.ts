@@ -28,14 +28,14 @@ const MOD_BUNDLE_URLS = {
     none: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",
     vencord: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",
     shelter: "https://raw.githubusercontent.com/uwu/shelter-builds/main/shelter.js",
-    custom: getConfig("customJsBundle"), // Initialize with an empty string and populate it later
+    custom: getConfig("customJsBundle"),
 };
 
 const MOD_BUNDLE_CSS_URLS = {
     none: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
     vencord: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
     shelter: "https://raw.githubusercontent.com/Milkshiift/empty/main/empty.txt",
-    custom: getConfig("customCssBundle"), // Initialize with an empty string and populate it later
+    custom: getConfig("customCssBundle"),
 };
 
 const EXTENSION_DOWNLOAD_TIMEOUT = 10000;
@@ -46,7 +46,7 @@ async function downloadAndWriteBundle(url: string, filePath: string) {
 
         let bundle = await response.text();
 
-        if (!url.endsWith(".css") && containsVencord(bundle)) {
+        if (url.endsWith(".js") && bundle.includes("Vencord")) {
             bundle = await patchVencord(bundle);
         }
 
@@ -58,13 +58,6 @@ async function downloadAndWriteBundle(url: string, filePath: string) {
         dialog.showErrorBox("GoofCord was unable to download the mod bundle", e.toString());
         throw e;
     }
-}
-
-function containsVencord(str: string) {
-    // Get the first 150 characters of the string
-    const substring = str.slice(0, 150);
-    // Check if "Vencord" is present in the substring
-    return substring.indexOf("Vencord") !== -1;
 }
 
 export async function updateModBundle() {
