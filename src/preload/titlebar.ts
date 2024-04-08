@@ -56,11 +56,7 @@ function attachTitlebarEvents(titlebar: HTMLDivElement) {
 export async function injectTitlebar() {
     const titlebar = createTitlebar();
 
-    let appMount: HTMLElement | null = null;
-    while (appMount == undefined) {
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        appMount = document.getElementById("app-mount");
-    }
+    const appMount = document.getElementById("app-mount")!;
 
     appMount.prepend(titlebar);
 
