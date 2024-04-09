@@ -43,15 +43,12 @@ export async function registerCustomHandler() {
             // https://github.com/Milkshiift/GoofCord-Scripts/blob/main/patches/AL10_screenshareQuality.js
             await mainWindow.webContents.executeJavaScript(`
                 try{
-                    window.ScreenshareQuality.patchScreenshareQuality({
-                        framerate: ${framerate},
-                        height: ${resolution}
-                    })
+                    window.ScreenshareQuality.patchScreenshareQuality(${resolution}, ${framerate})
                 } catch(e) {console.log(e);}
             `);
 
             const result = {id, name, width: 9999, height: 9999};
-            if (audio && process.platform === "win32") {
+            if (audio) {
                 callback({video: result, audio: "loopback"});
                 return;
             }
