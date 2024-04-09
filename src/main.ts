@@ -64,6 +64,6 @@ async function setFlags() {
         "WebRtcAllowInputVolumeAdjustment," +
         "Vulkan"
     );
-    app.commandLine.appendSwitch("enable-features", "WebRTC,VaapiVideoDecoder,VaapiVideoEncoder,WebRtcHideLocalIpsWithMdns,PlatformHEVCEncoderSupport,EnableDrDc,CanvasOopRasterization,UseSkiaRenderer");
+    app.commandLine.appendSwitch("enable-features", "WebRTC,VaapiVideoDecodeLinuxGL,VaapiVideoDecoder,VaapiVideoEncoder,WebRtcHideLocalIpsWithMdns,PlatformHEVCEncoderSupport,EnableDrDc,CanvasOopRasterization,UseSkiaRenderer");
     app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 }
