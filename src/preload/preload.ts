@@ -34,9 +34,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (getConfig("disableAutogain")) {
         addScript(await fs.promises.readFile(path.join(__dirname, "../", "/assets/js/disableAutogain.js"), "utf8"));
     }
-    if (getConfig("arrpc")) {
-        addScript(await fs.promises.readFile(path.join(__dirname, "../", "/assets/js/rpc.js"), "utf8"));
-    }
-
     addStyle(await fs.promises.readFile(path.join(__dirname, "../", "/assets/css/discord.css"), "utf8"));
 });
