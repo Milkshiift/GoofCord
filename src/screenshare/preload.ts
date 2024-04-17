@@ -91,7 +91,6 @@ async function addDisplays() {
             </div>
         `;
 
-        document.body.innerHTML = "";
         document.body.appendChild(closeButton);
         document.body.appendChild(selectionElem);
 

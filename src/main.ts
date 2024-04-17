@@ -12,6 +12,8 @@ if (isDev()) {
     } catch (e) {}
 }
 
+console.time("GoofCord fully loaded in:");
+
 setFlags();
 
 if (!app.requestSingleInstanceLock()) app.exit();
@@ -28,6 +30,7 @@ loadConfig().then(async () => {
     createTray();
     setPermissions();
     await checkForConnectivity();
+    console.timeEnd("GoofCord fully loaded in:");
 });
 
 async function checkForConnectivity() {

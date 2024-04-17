@@ -29,7 +29,7 @@ export async function patchVencord(bundle: string) {
     `);
     // Patch Vencord to show GoofCord version in settings
     bundle = await patchString(bundle, /additionalInfo:.{24}(.+?")/, `$&GoofCord ${getDisplayVersion()}"),$1`);
-    console.timeLog("Patching Vencord took");
+    console.timeEnd("Patching Vencord took");
     return bundle;
 }
 
