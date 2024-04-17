@@ -12,7 +12,7 @@ if (isDev()) {
     } catch (e) {}
 }
 
-console.time("GoofCord fully loaded in:");
+console.time("GoofCord fully loaded in");
 
 setFlags();
 
@@ -30,7 +30,7 @@ loadConfig().then(async () => {
     createTray();
     setPermissions();
     await checkForConnectivity();
-    console.timeEnd("GoofCord fully loaded in:");
+    console.timeEnd("GoofCord fully loaded in");
 });
 
 async function checkForConnectivity() {
