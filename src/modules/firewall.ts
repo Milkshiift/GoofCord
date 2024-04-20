@@ -1,17 +1,24 @@
 // This file contains everything that uses session.defaultSession.webRequest
 import {mainWindow} from "../window";
 import {session} from "electron";
-import {getConfig} from "../config";
+import {getConfig, getDefaultValue} from "../config";
+
+function getConfigOrDefault(key: string): string[] {
+    return getConfig("customFirewallRules") ? getConfig(key) : getDefaultValue(key);
+}
 
 export async function initializeFirewall() {
-    if (!getConfig("enableFirewall")) return;
+    if (!getConfig("firewall")) return;
+    const blocklist = getConfigOrDefault("blocklist");
+    const blockedStrings = getConfigOrDefault("blockedStrings");
+    const allowedStrings = getConfigOrDefault("allowedStrings");
 
-    const blocklist = getConfig("blocklist");
+    // If blocklist is not empty
     if (blocklist[0] !== "") {
         // Blocking URLs. This list works in tandem with "blockedStrings" list.
         session.defaultSession.webRequest.onBeforeRequest(
             {
-                urls: getConfig("blocklist")
+                urls: blocklist
             },
             (_, callback) => callback({cancel: true})
         );
@@ -19,10 +26,7 @@ export async function initializeFirewall() {
 
     /* If the request url includes any of those, it is blocked.
         * By doing so, we can match multiple unwanted URLs, making the blocklist cleaner and more efficient */
-    const blockedStrings = getConfig("blockedStrings");
     const blockRegex = new RegExp(blockedStrings.join("|"), "i"); // 'i' flag for case-insensitive matching
-
-    const allowedStrings = getConfig("allowedStrings");
     const allowRegex = new RegExp(allowedStrings.join("|"), "i");
 
     session.defaultSession.webRequest.onBeforeSendHeaders({urls: ["<all_urls>"]}, (details, callback) => {

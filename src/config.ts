@@ -37,7 +37,7 @@ export function getConfig(toGet: string): any {
         return result;
     } else {
         console.log("Missing config parameter:", toGet);
-        setConfig(toGet, getDefaults()[toGet]);
+        setConfig(toGet, getDefaultValue(toGet));
         return cachedConfig[toGet];
     }
 }
@@ -83,8 +83,12 @@ export async function setup() {
     }, 3000);
 }
 
+const defaults = {};
 export function getDefaults() {
-    const defaults = {};
+    // Caching
+    if (Object.keys(defaults).length !== 0) {
+        return defaults;
+    }
     const settingsPath = path.join(__dirname, "/assets/settings.json");
     const settingsFile = fs.readFileSync(settingsPath, "utf-8");
     const settings = JSON.parse(settingsFile);
@@ -95,6 +99,10 @@ export function getDefaults() {
         }
     }
     return defaults;
+}
+
+export function getDefaultValue(entry: string) {
+    return getDefaults()[entry]
 }
 
 export function getConfigLocation(): string {

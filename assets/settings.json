@@ -76,19 +76,27 @@
     }
   },
   "Firewall settings": {
-    "enableFirewall": {
-      "name": "Enable firewall",
+    "firewall": {
+      "name": "Firewall",
       "defaultValue": true,
       "description": "Never disable unless for debugging.",
+      "inputType": "checkbox"
+    },
+    "customFirewallRules": {
+      "name": "Custom firewall rules",
+      "defaultValue": false,
+      "description": "When enabled allows the modification of firewall rules, otherwise, the default rules are used.",
       "inputType": "checkbox"
     },
     "blocklist": {
       "name": "Blocklist",
       "defaultValue": [
         "https://*/api/v*/science",
-        "https://*.nel.cloudflare.com/*",
         "https://*/api/v*/applications/detectable",
         "https://*/api/v*/auth/location-metadata",
+        "https://*/assets/version.*",
+        "https://*/api/v*/premium-marketing",
+        "https://*/api/v*/scheduled-maintenances/upcoming.json",
         "https://cdn.discordapp.com/bad-domains/*",
         "https://www.youtube.com/youtubei/v*/next?*",
         "https://www.youtube.com/s/desktop/*",
