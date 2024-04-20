@@ -8,7 +8,6 @@ contextBridge.exposeInMainWorld("settings", {
     openScriptsFolder: () => ipcRenderer.invoke("openFolder", "scripts"),
     openExtensionsFolder: () => ipcRenderer.invoke("openFolder", "extensions"),
     openStorageFolder: () => ipcRenderer.invoke("openFolder", "storage"),
-    copyDebugInfo: () => ipcRenderer.invoke("copyDebugInfo"),
     crash: () => ipcRenderer.invoke("crash"),
     decryptSafeStorage: (string: string) => ipcRenderer.invoke("decryptSafeStorage", string),
 });

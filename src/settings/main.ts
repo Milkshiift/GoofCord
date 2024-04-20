@@ -14,23 +14,6 @@ ipcMain.handle("openFolder", async (_event, folder: string) => {
 ipcMain.handle("crash", () => {
     process.crash();
 });
-ipcMain.handle("copyDebugInfo", () => {
-    clipboard.writeText(
-        "**OS:** " +
-        os.platform() +
-        " " +
-        os.version() +
-        "\n**Architecture:** " +
-        os.arch() +
-        "\n**GoofCord version:** " +
-        getVersion() +
-        "\n**Electron version:** " +
-        process.versions.electron +
-        "\n`" +
-        JSON.stringify(cachedConfig) +
-        "`"
-    );
-});
 
 export async function createSettingsWindow() {
     if (isOpen) {
