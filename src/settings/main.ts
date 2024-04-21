@@ -1,8 +1,6 @@
-import {app, BrowserWindow, clipboard, ipcMain, shell} from "electron";
-import {getCustomIcon, getDisplayVersion, getVersion} from "../utils";
+import {app, BrowserWindow, ipcMain, shell} from "electron";
+import {getCustomIcon, getDisplayVersion} from "../utils";
 import path from "path";
-import os from "os";
-import {cachedConfig} from "../config";
 
 let settingsWindow: BrowserWindow;
 const userDataPath = app.getPath("userData");

@@ -13,12 +13,13 @@ contextBridge.exposeInMainWorld("settings", {
 });
 
 (async () => {
+    // DOMContentLoaded is too late and causes a flicker when rendering, so we wait until the body is accessible manually
     while (document.body === null) {
         await new Promise(resolve => setTimeout(resolve, 2));
     }
     await renderSettings();
 
-    const elements = document.querySelectorAll("[data-setting]");
+    elements = Array.from(document.querySelectorAll("[data-setting]")) as HTMLInputElement[];
     elements.forEach((element) => {
         element.addEventListener("change", async () => {
             saveSettings();
@@ -26,8 +27,9 @@ contextBridge.exposeInMainWorld("settings", {
     });
 })();
 
+let elements: HTMLInputElement[];
+
 async function saveSettings() {
-    const elements = Array.from(document.querySelectorAll("[data-setting]")) as HTMLInputElement[];
     const settingsObj = await ipcRenderer.invoke("config:getConfigBulk");
     for (const element of elements) {
         const settingName = element.getAttribute("data-setting");
@@ -67,12 +69,8 @@ function createArrayFromTextarea(input: string) {
 }
 
 async function createArrayFromTextareaEncrypted(input: string) {
-    let inputValue = input.replace(/(\r\n|\n|\r|\s+)/gm, "");
-    if (inputValue.endsWith(",")) {
-        inputValue = inputValue.slice(0, -1);
-    }
+    const arrayFromTextArea = createArrayFromTextarea(input);
     const encryptedPasswords: string[] = [];
-    const arrayFromTextArea = inputValue.split(",");
     for (const password in arrayFromTextArea) {
         encryptedPasswords.push(await ipcRenderer.invoke("encryptSafeStorage", arrayFromTextArea[password]));
     }
