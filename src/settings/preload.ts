@@ -13,51 +13,68 @@ contextBridge.exposeInMainWorld("settings", {
 });
 
 (async () => {
-    // DOMContentLoaded is too late and causes a flicker when rendering, so we wait until the body is accessible manually
+    // DOMContentLoaded is too late and causes a flicker when rendering, so we wait until body is accessible manually
     while (document.body === null) {
         await new Promise(resolve => setTimeout(resolve, 2));
     }
     await renderSettings();
 
-    elements = Array.from(document.querySelectorAll("[data-setting]")) as HTMLInputElement[];
+    elements = Array.from(document.querySelectorAll("[setting-name]")) as HTMLInputElement[];
     elements.forEach((element) => {
         element.addEventListener("change", async () => {
-            saveSettings();
+            await saveSettings(element);
         });
     });
 })();
 
 let elements: HTMLInputElement[];
+const settingsObj = ipcRenderer.sendSync("config:getConfigBulk");
 
-async function saveSettings() {
-    const settingsObj = await ipcRenderer.invoke("config:getConfigBulk");
+async function saveSettings(changedElement: HTMLInputElement) {
+    const changedElementName = changedElement.getAttribute("setting-name")!;
+    const changedElementValue = await getSettingValue(changedElement, changedElementName);
+    // Value should never be undefined in production but still kept as a failsafe to not overwrite existing value with undefined
+    if (changedElementValue === undefined) {
+        return;
+    }
+    settingsObj[changedElementName] = changedElementValue;
+
+    // showAfter implementation. There is maybe a better way
     for (const element of elements) {
-        const settingName = element.getAttribute("data-setting");
-        try {
-            let settingValue: string | boolean | string[] | undefined;
-
-            if (element.tagName === "SELECT" || element.type === "text") {
-                settingValue = element.value;
-            } else if (element.type === "checkbox") {
-                settingValue = element.checked;
-            } else if (element.tagName === "TEXTAREA") {
-                if (settingName === "encryptionPasswords") {
-                    settingValue = await createArrayFromTextareaEncrypted(element.value);
-                } else {
-                    settingValue = createArrayFromTextarea(element.value);
-                }
+        const elementShowAfter = element.getAttribute("show-after")?.split("|");
+        if (elementShowAfter == null || elementShowAfter[0] === undefined) continue;
+        if (changedElementName === elementShowAfter[0]) {
+            if (String(changedElementValue) == elementShowAfter[1]) {
+                element.parentElement?.parentElement?.classList.remove('hidden');
             } else {
-                settingValue = undefined;
+                element.parentElement?.parentElement?.classList.add('hidden');
             }
-            settingsObj[settingName!] = settingValue;
-        } catch (e) {
-            console.error(`Failed to write "${settingName}" value to the config:`, e);
         }
     }
 
     console.log(settingsObj);
     ipcRenderer.invoke("config:setConfigBulk", settingsObj);
     ipcRenderer.invoke("flashTitlebar", "#5865F2");
+}
+
+async function getSettingValue(element: HTMLInputElement, settingName: string) {
+    try {
+        if (element.tagName === "SELECT" || element.type === "text") {
+            return element.value;
+        } else if (element.type === "checkbox") {
+            return element.checked;
+        } else if (element.tagName === "TEXTAREA") {
+            if (settingName === "encryptionPasswords") {
+                return await createArrayFromTextareaEncrypted(element.value);
+            } else {
+                return createArrayFromTextarea(element.value);
+            }
+        }
+        throw new Error(`Unsupported element type: ${element.tagName}, ${element.type}`);
+    } catch (error: any) {
+        console.error(`Failed to get ${settingName}'s value:`, error);
+        return undefined;
+    }
 }
 
 function createArrayFromTextarea(input: string) {

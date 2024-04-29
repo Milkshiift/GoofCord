@@ -36,8 +36,8 @@ export async function registerIpc() {
     ipcMain.on("config:getConfig", (event, toGet) => {
         event.returnValue = getConfig(toGet);
     });
-    ipcMain.handle("config:getConfigBulk", () => {
-        return cachedConfig;
+    ipcMain.on("config:getConfigBulk", (event) => {
+        event.returnValue = cachedConfig;
     });
     ipcMain.handle("config:setConfig", async (_event, entry, value) => {
         await setConfig(entry, value);

@@ -121,18 +121,9 @@ label {
     margin-left: 0.5em;
 }
 
-label.disabled {
-    color: var(--font-color-settings);
-}
-
 input,
 label {
     cursor: pointer;
-}
-
-input:disabled,
-label.disabled {
-    cursor: default;
 }
 
 input[type="checkbox"],
@@ -158,10 +149,6 @@ input[type="radio"] {
 
 input[type="checkbox"] {
     border-color: var(--input-bg);
-}
-
-input[type="radio"]:disabled {
-    outline-color: var(--font-color-settings);
 }
 
 input[type="checkbox"]:checked {
@@ -264,20 +251,6 @@ p.center {
     margin: 0;
 }
 
-.spoiler {
-    position: relative;
-    display: inline-block;
-    overflow: hidden;
-    border-radius: 5px;
-    background-color: var(--input-bg);
-}
-
-.spoiler textarea {
-    filter: blur(5px); /* Adjust the blur amount as needed */
-    transition: filter 0.3s ease; /* Add a smooth transition effect */
-    box-sizing: border-box;
-}
-
-.spoiler:hover textarea {
-    filter: none; /* Remove the blur effect on hover */
+.hidden {
+    display: none;
 }

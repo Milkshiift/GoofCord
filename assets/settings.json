@@ -58,15 +58,23 @@
     },
     "customJsBundle": {
       "name": "Custom JS bundle",
-      "defaultValue": "https://maglit.me/empty",
+      "defaultValue": "",
       "description": "",
-      "inputType": "textfield"
+      "inputType": "textfield",
+      "showAfter": {
+        "key": "modName",
+        "value": "custom"
+      }
     },
     "customCssBundle": {
       "name": "Custom CSS bundle",
-      "defaultValue": "https://maglit.me/empty",
-      "description": "A raw link to the JS bundle and CSS bundle of a client mod you want to use. Does anything only when \"custom\" is selected as a client mod.",
-      "inputType": "textfield"
+      "defaultValue": "",
+      "description": "A raw link to the JS bundle and CSS bundle of a client mod you want to use.",
+      "inputType": "textfield",
+      "showAfter": {
+        "key": "modName",
+        "value": "custom"
+      }
     },
     "noBundleUpdates": {
       "name": "No bundle updates",
@@ -103,7 +111,11 @@
         "https://www.youtube.com/youtubei/v*/log_event?*"
       ],
       "description": "A list of URLs to block. Each entry must be separated by a comma.",
-      "inputType": "textarea"
+      "inputType": "textarea",
+      "showAfter": {
+        "key": "customFirewallRules",
+        "value": true
+      }
     },
     "blockedStrings": {
       "name": "Blocked strings",
@@ -117,7 +129,11 @@
         "analytics"
       ],
       "description": "If any of those strings are in the URL, it will be blocked.",
-      "inputType": "textarea"
+      "inputType": "textarea",
+      "showAfter": {
+        "key": "customFirewallRules",
+        "value": true
+      }
     },
     "allowedStrings": {
       "name": "Allowed strings",
@@ -128,8 +144,12 @@
         "search",
         "api.spotify"
       ],
-      "description": "If any of those strings are in the URL, it will NOT be blocked.",
-      "inputType": "textarea"
+      "description": "If any of those strings are in the URL and it was matched by blocked strings, it will not be blocked.",
+      "inputType": "textarea",
+      "showAfter": {
+        "key": "customFirewallRules",
+        "value": true
+      }
     }
   },
   "Script loader and scripts settings": {

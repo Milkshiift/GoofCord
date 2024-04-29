@@ -81,7 +81,7 @@ async function addDisplays() {
                 <label for="resolution-textbox">Resolution</label>
               </div>
               <div class="subcontainer">
-                <input id="audio-checkbox" type="checkbox" ${(()=>{if (previousSettings[2]) return "checked";})()} />
+                <input id="audio-checkbox" type="checkbox" ${previousSettings[2] ? "checked" : ""} />
                 <label for="audio-checkbox">Stream audio</label>
               </div>
               <div class="subcontainer">
