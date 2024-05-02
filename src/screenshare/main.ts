@@ -5,8 +5,7 @@ import {mainWindow} from "../window";
 let capturerWindow: BrowserWindow;
 
 export async function registerCustomHandler() {
-    const isLinuxWayland = process.env["XDG_SESSION_TYPE"] === "wayland";
-    console.log("Is wayland: ", isLinuxWayland);
+    const isLinuxWayland = process.env.XDG_SESSION_TYPE?.toLowerCase() === "wayland";
 
     const primaryDisplay = screen.getPrimaryDisplay();
     const { width, height } = primaryDisplay.workAreaSize;
@@ -15,11 +14,6 @@ export async function registerCustomHandler() {
         const sources = await desktopCapturer.getSources({
             types: ["screen", "window"]
         });
-
-        if (isLinuxWayland) {
-            callback({video: {id: sources[0]?.id, name: sources[0]?.name}});
-            return;
-        }
 
         capturerWindow = new BrowserWindow({
             width: width,
@@ -40,7 +34,7 @@ export async function registerCustomHandler() {
 
         ipcMain.handleOnce("selectScreenshareSource", async (_event, id, name, audio, resolution, framerate) => {
             capturerWindow.close();
-            // https://github.com/Milkshiift/GoofCord-Scripts/blob/main/patches/AL10_screenshareQuality.js
+            // https://github.com/Milkshiift/GoofCord-Scripts/blob/1.4.0/patches/10_screenshareQuality.js
             await mainWindow.webContents.executeJavaScript(`
                 try{
                     window.ScreenshareQuality.patchScreenshareQuality(${resolution}, ${framerate})
@@ -49,7 +43,7 @@ export async function registerCustomHandler() {
 
             const result = {id, name, width: 9999, height: 9999};
             if (audio) {
-                callback({video: result, audio: "loopback"});
+                callback({video: isLinuxWayland ? sources[0] : result, audio: "loopbackWithMute"});
                 return;
             }
             callback({video: result});
