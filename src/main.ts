@@ -41,7 +41,15 @@ async function checkForConnectivity() {
 }
 
 async function setAutoLaunchState() {
-    const gfAutoLaunch = new AutoLaunch({name: "GoofCord"});
+    console.log("Process execution path: " + process.execPath);
+    let gfAutoLaunch;
+    // When GoofCord is installed from AUR it uses system Electron, which causes it to launch instead of GoofCord
+    if (process.execPath.endsWith("electron") && !isDev()) {
+        // Set the launch path to a shell script file that AUR created to properly start GoofCord
+        gfAutoLaunch = new AutoLaunch({name: "GoofCord", path: "/bin/goofcord"});
+    } else {
+        gfAutoLaunch = new AutoLaunch({name: "GoofCord"});
+    }
     if (getConfig("launchWithOsBoot")) {
         gfAutoLaunch.enable();
     } else {
