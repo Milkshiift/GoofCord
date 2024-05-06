@@ -23,16 +23,16 @@
   },
   "homepage": "https://github.com/Milkshiift/GoofCord",
   "devDependencies": {
-    "@types/node": "^20.12.7",
+    "@types/node": "^20.12.8",
     "@types/stegcloak": "^1.0.2",
-    "electron": "^30.0.1",
+    "electron": "^30.0.2",
     "electron-builder": "^24.13.3",
     "esbuild": "^0.20.2",
     "source-map-support": "^0.5.21",
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "arrpc": "github:OpenAsar/arrpc",
+    "arrpc": "github:OpenAsar/arrpc#32eacace704df86d78d64e432bca361c66fd796b",
     "auto-launch": "^5.0.6",
     "electron-context-menu": "github:Milkshiift/electron-context-menu",
     "extract-zip": "github:Milkshiift/extract-zip",
@@ -103,7 +103,7 @@
       }
     }
   },
-  "engines" : {
-    "node" : ">=21.0.0"
+  "engines": {
+    "node": ">=21.0.0"
   }
 }

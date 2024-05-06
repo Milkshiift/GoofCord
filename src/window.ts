@@ -15,7 +15,7 @@ export async function createMainWindow() {
         width: 835,
         height: 600,
         title: "GoofCord",
-        show: false,
+        show: !getConfig("startMinimized"),
         darkTheme: true,
         icon: getCustomIcon(),
         frame: !getConfig("customTitlebar"),
@@ -38,12 +38,6 @@ export async function createMainWindow() {
 }
 
 async function doAfterDefiningTheWindow() {
-    if (getConfig("startMinimized")) {
-        mainWindow.hide();
-    } else {
-        mainWindow.show();
-    }
-
     // Set the user agent for the web contents based on the Chrome version.
     mainWindow.webContents.userAgent = getUserAgent(process.versions.chrome);
 
@@ -60,10 +54,10 @@ async function doAfterDefiningTheWindow() {
         setEventWindowStateHandlers()
     ]);
 
+    await initializeFirewall();
+
     // Load Discord
     mainWindow.loadURL(getConfig("discordUrl"));
-
-    initializeFirewall();
 }
 
 async function setWindowOpenHandler() {

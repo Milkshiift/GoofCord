@@ -10,6 +10,7 @@ let encryptionMark: string;
 let cover: string;
 
 export async function initEncryption() {
+    if (getConfig("messageEncryption") === false) return;
     try {
         loadPasswords();
         loadCover();
@@ -65,7 +66,7 @@ export function decryptMessage(message: string) {
     // A quick way to check if the message was encrypted.
     // Character \u200c is present in every stegcloaked message
     try {
-        if (!message.includes("\u200c")) return message;
+        if (!message.includes("\u200c") || !getConfig("messageEncryption")) return message;
     } catch (e) {
         return message;
     }
@@ -88,15 +89,5 @@ let currentIndex = 0;
 export function cycleThroughPasswords() {
     currentIndex = (currentIndex + 1) % encryptionPasswords.length;
     chosenPassword = encryptionPasswords[currentIndex];
-    mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebarWithText("#f9c23c", "${"Chosen password: "+truncateString(chosenPassword)}")`);
-}
-
-// Show only N percent of the password for security
-function truncateString(str: string) {
-    // Calculate the length of the truncated string (30% of the input string length)
-    const PERCENTAGE = 0.3;
-    const truncatedLength = Math.ceil(str.length * PERCENTAGE);
-
-    // Extract the first 30% of the string and append "..."
-    return str.slice(0, truncatedLength) + "...";
+    mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebarWithText("#f9c23c", "${"Chosen password: "+chosenPassword.slice(0, 4)+"..."}")`);
 }

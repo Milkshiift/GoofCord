@@ -165,30 +165,48 @@
       "description": "Enables auto-update for the <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord-Scripts\">default GoofCord scripts</a>.",
       "inputType": "checkbox"
     },
+    "messageEncryption": {
+      "name": "Message encryption",
+      "defaultValue": false,
+      "description": "Enables <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/Message-Encryption\">message encryption</a>.",
+      "inputType": "checkbox"
+    },
     "encryptionPasswords": {
       "name": "Encryption passwords",
       "defaultValue": [],
-      "description": "Securely stored, encrypted list of your passwords. A backup in a warm, safe place is recommended. Separate entries with commas.",
-      "inputType": "textarea"
+      "description": "Securely stored, encrypted list of passwords that will be used for encryption. A backup in a warm, safe place is recommended. Separate entries with commas.",
+      "inputType": "textarea",
+      "showAfter": {
+        "key": "messageEncryption",
+        "value": true
+      }
     },
     "encryptionCover": {
       "name": "Encryption cover",
       "defaultValue": "",
       "description": "A message that a user without the password will see. Minimum two words or empty.",
-      "inputType": "textfield"
+      "inputType": "textfield",
+      "showAfter": {
+        "key": "messageEncryption",
+        "value": true
+      }
     },
     "encryptionMark": {
       "name": "Encryption Mark",
       "defaultValue": "| ",
       "description": "A string that will be prepended to each decrypted message so it's easier to know what messages are encrypted.",
-      "inputType": "textfield"
+      "inputType": "textfield",
+      "showAfter": {
+        "key": "messageEncryption",
+        "value": true
+      }
     }
   },
   "Other settings": {
     "arrpc": {
       "name": "Activity display",
       "defaultValue": false,
-      "description": "Enables the use of an <b>open source</b> reimplementation of Discord's\nrich presence called <a target=\"_blank\" href=\"https://github.com/OpenAsar/arrpc\">arRPC</a>.",
+      "description": "Enables the use of an open source reimplementation of Discord's\nrich presence called <a target=\"_blank\" href=\"https://github.com/OpenAsar/arrpc\">arRPC</a>.\nYou don't need to enable WebRichPresence Vencord plugin.",
       "inputType": "checkbox"
     },
     "launchWithOsBoot": {

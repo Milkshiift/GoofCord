@@ -28,7 +28,7 @@ loadConfig().then(async () => {
     await app.whenReady();
 
     createTray();
-    setPermissions();
+    await setPermissions();
     await checkForConnectivity();
     console.timeEnd("GoofCord fully loaded in");
 });
