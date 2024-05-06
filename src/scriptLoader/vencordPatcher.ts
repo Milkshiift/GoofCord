@@ -38,8 +38,8 @@ async function patchVencordWithScriptPatches(bundle: string) {
 
     const patches = getPatchesFromScripts();
 
-    const patch = `$&$1 = $1.concat(${patches});`;
-    bundle = await patchString(bundle, /patches:([a-zA-Z])}=Vencord\.Plugins;/m, patch);
+    const patch = "$1"+patches;
+    bundle = await patchString(bundle, /(\("PluginManager","#a6d189"\),.+?)\[]/m, patch);
 
     return bundle;
 }
