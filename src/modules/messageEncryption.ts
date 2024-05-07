@@ -1,16 +1,19 @@
 import StegCloak from "stegcloak";
-import {dialog, safeStorage} from "electron";
+import {dialog, ipcMain, safeStorage} from "electron";
 import {mainWindow} from "../window";
-import {getConfig} from "../config";
+import {getConfig, setConfig} from "../config";
 
 let stegcloak: StegCloak;
-const encryptionPasswords: string[] = [];
+export const encryptionPasswords: string[] = [];
 let chosenPassword: string;
 let encryptionMark: string;
 let cover: string;
 
+ipcMain.on("messageEncryption:getDecryptedPasswords", async (_event) => {
+    _event.returnValue = encryptionPasswords;
+});
+
 export async function initEncryption() {
-    if (getConfig("messageEncryption") === false) return;
     try {
         loadPasswords();
         loadCover();
@@ -89,5 +92,5 @@ let currentIndex = 0;
 export function cycleThroughPasswords() {
     currentIndex = (currentIndex + 1) % encryptionPasswords.length;
     chosenPassword = encryptionPasswords[currentIndex];
-    mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebarWithText("#f9c23c", "${"Chosen password: "+chosenPassword.slice(0, 4)+"..."}")`);
+    mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebarWithText("#f9c23c", "${"Chosen password: "+chosenPassword.slice(0, 2)+"..."}")`);
 }

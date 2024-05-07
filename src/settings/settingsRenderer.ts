@@ -1,6 +1,7 @@
 import path from "path";
 import fs from "fs";
 import {ipcRenderer} from "electron";
+import {encryptionPasswords} from "../modules/messageEncryption";
 
 const settingsPath = path.join(__dirname, "../", "/assets/settings.json");
 const settingsFile = fs.readFileSync(settingsPath, "utf-8");
@@ -35,10 +36,15 @@ function fillCategory(categoryName: string) {
         try {
             const entry = category[setting];
             if (entry.name === undefined) return;
-            // Getting a config value straight from the cached config skips a missing parameter check
-            // but there will never be a missing parameter unless the user manually edits the config and
-            // with the current config system this provides much better performance since we don't have to do ipc calls.
-            const value = config[setting];
+            let value;
+            if (setting === "encryptionPasswords") {
+                value = ipcRenderer.sendSync("messageEncryption:getDecryptedPasswords");
+            } else {
+                // Getting a config value straight from the cached config skips a missing parameter check
+                // but there will never be a missing parameter unless the user manually edits the config and
+                // with the current config system this provides much better performance since we don't have to do ipc calls.
+                value = config[setting];
+            }
             const showAfter = entry.showAfter?.key+"|"+entry.showAfter?.value;
             html += `
             <fieldset class="${config[entry.showAfter?.key] === entry.showAfter?.value ? "" : "hidden"}">
