@@ -7,11 +7,11 @@
 
 ## Features :sparkles:
 - **:lock: With Privacy in mind**: GoofCord blocks all tracking and uses multiple techniques like message encryption to improve your privacy and security. [Learn more](https://github.com/Milkshiift/GoofCord/wiki/Privacy-FAQ)
-- **:gear: Your Way, Your Client**: Personalize GoofCord to match your vibe with an array of customization options.
+- **:gear: Your Way, Your Client**: Personalize GoofCord to your liking with an array of customization options.
 - **:chart_with_upwards_trend: Fast and Performant**: Glide through your chats with GoofCord's superior speed and responsiveness compared to the official client. [Check the Benchmarks!](https://github.com/Milkshiift/GoofCord/wiki/Placeholder)
 - **:bookmark: Standalone**: GoofCord is a standalone client, not reliant on the original Discord client in any way.
 - **:electric_plug: Plugins & Themes support**: Embrace client mods like [Vencord](https://github.com/Vendicated/Vencord) or [Shelter](https://github.com/uwu/shelter) for a world of plugins and themes.
-- **:iphone: Cross-Platform**: Find GoofCord on **Windows**, **Linux** and **macOS**. Sadly Windows versions lower than 10 are not supported.    
+- **:iphone: Cross-Platform**: Find GoofCord on **Windows**, **Linux** and **macOS**. Windows versions lower than 10 are not supported.  
     
 [Full feature list](https://github.com/Milkshiift/GoofCord/wiki)
 
@@ -19,14 +19,15 @@
 ### Windows 🪟
 
 * Install with prebuilt binaries from the [releases](https://github.com/Milkshiift/GoofCord/releases/latest) page.    
-Choose `GoofCord-Setup-<YOUR ARCHITECTURE>.exe`, or    
-`GoofCord-<VERSION>-win-<YOUR ARCHITECTURE>.zip` and unpack into a directory of your choice.
+Choose `GoofCord-Setup-<YOUR ARCHITECTURE>.exe` for an installer, or    
+`GoofCord-<VERSION>-win-<YOUR ARCHITECTURE>.zip` to manually unpack into a directory of your choice.
 
 ### Linux 🐧
 
 * Install with prebuilt binaries from the [releases](https://github.com/Milkshiift/GoofCord/releases/latest) page.
-* Install from [AUR](https://aur.archlinux.org/packages/goofcord-bin) if you run an Arch-based OS (e.g., Arch Linux, Manjaro). Here's an example using yay:    
-`yay -S goofcord-bin`
+* Install from [AUR](https://aur.archlinux.org/packages/goofcord-bin) if you run an Arch-based OS. Here's an example using pacman:    
+`sudo pacman -S goofcord-bin`    
+Keep in mind that the AUR package is not maintained by the developers of GoofCord.
 
 ### macOS 🍏
 
@@ -34,10 +35,9 @@ Choose `GoofCord-Setup-<YOUR ARCHITECTURE>.exe`, or
 Choose the file ending with `mac-arm64.dmg` if your computer uses Apple Silicon processor. [Mac computers with Apple Silicon](https://support.apple.com/en-us/HT211814)      
 Choose the file that ends with `mac-x64.dmg` if your computer uses Intel processor.
 
-
-Everything you'll need can be found in the Discord's settings.    
-To open GoofCord settings, look for the topmost button.  
-To explore plugins and themes, head over to the Vencord category within your Discord settings. Have fun!
+See FAQ for ways to open GoofCord's settings.    
+To explore plugins and themes, head over to the Vencord category in the Discord settings.    
+Have fun!
     
 And if you want to compile it yourself, here's how:
 1. Install [Node.js](https://nodejs.dev) and [pnpm](https://pnpm.io/installation#using-npm)
@@ -47,18 +47,17 @@ And if you want to compile it yourself, here's how:
 5. Package GoofCord with `pnpm run packageWindows` or `pnpm run packageLinux`
 6. Find your freshly compiled app in the `dist` folder.
 
-## Burning Questions? We've Got Answers!
+## FAQ
 ### Need Support? Join Our Discord!
 [![](https://dcbadge.vercel.app/api/server/CZc4bpnjmm)](https://discord.gg/CZc4bpnjmm)
 
-### Is Using GoofCord Risky Business? 🤔
-- While using GoofCord goes against [Discord ToS](https://discord.com/terms#software-in-discord%E2%80%99s-services), rest assured that no one has ever been banned from using it or any client mods.    
-GoofCord also does some clever tricks to make Discord think you are just using a web client. 
+### Can I get banned from using GoofCord? 🤔
+- While using GoofCord goes against [Discord ToS](https://discord.com/terms#software-in-discord%E2%80%99s-services), rest assured that no one has ever been banned from using it or any client mods.
 
 ### How can I access the settings? ⚙️
 - Multiple ways:
   - Right-click on the tray icon and click `Open Settings`
-  - Open Discord settings, and you should see the top most button in the category "GoofCord", click it, and the settings will pop out for you. 
+  - Click the "Settings" button in the "GoofCord" category in the Discord settings
   - Press `Ctrl+Shift+'` shortcut.
 
 ### Seeking the Source Code? 🕵️‍♂️
