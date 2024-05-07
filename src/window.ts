@@ -50,8 +50,7 @@ async function doAfterDefiningTheWindow() {
     await Promise.all([
         registerCustomHandler(),
         initArrpc(),
-        setWindowOpenHandler(),
-        setEventWindowStateHandlers()
+        setWindowOpenHandler()
     ]);
 
     await initializeFirewall();
@@ -89,16 +88,4 @@ async function setWindowOpenHandler() {
         }
         return {action: "deny"};
     });
-}
-
-async function setEventWindowStateHandlers() {
-    const setBodyAttribute = (attribute: string, value: string = "") => {
-        mainWindow.webContents.executeJavaScript(`document.body.setAttribute("${attribute}", "${value}");`);
-    };
-
-    // Attach event listeners to the mainWindow for maximize, and unmaximize events.
-    // These events set body attributes in the web contents.
-    // Used in the titlebar.ts
-    mainWindow.on("maximize", () => setBodyAttribute("isMaximized"));
-    mainWindow.on("unmaximize", () => setBodyAttribute("isMaximized", ""));
 }

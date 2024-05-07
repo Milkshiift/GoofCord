@@ -9,7 +9,6 @@ contextBridge.exposeInMainWorld("settings", {
     openExtensionsFolder: () => ipcRenderer.invoke("openFolder", "extensions"),
     openStorageFolder: () => ipcRenderer.invoke("openFolder", "storage"),
     crash: () => ipcRenderer.invoke("crash"),
-    decryptSafeStorage: (string: string) => ipcRenderer.invoke("decryptSafeStorage", string),
 });
 
 (async () => {

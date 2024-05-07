@@ -72,9 +72,6 @@ export async function registerIpc() {
     ipcMain.handle("encryptSafeStorage", async (_event, plaintextPassword: string) => {
         return safeStorage.encryptString(plaintextPassword).toString("base64");
     });
-    ipcMain.handle("decryptSafeStorage", async (_event, encryptedPassword: string) => {
-        return safeStorage.decryptString(Buffer.from(encryptedPassword, "base64"));
-    });
     ipcMain.handle("isVencordPresent", async () => {
         return await mainWindow.webContents.executeJavaScript("window.Vencord !== undefined");
     });
