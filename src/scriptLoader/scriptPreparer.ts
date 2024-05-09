@@ -1,5 +1,5 @@
 import path from "path";
-import {app, dialog, ipcMain} from "electron";
+import {app, dialog, ipcMain, shell} from "electron";
 import fs from "fs";
 import {getVersion, readOrCreateFolder} from "../utils";
 import {error} from "../modules/logger";
@@ -16,6 +16,15 @@ export async function categorizeScripts() {
 
     for (const file of files) {
         try {
+            const filePath = path.join(scriptsFolder, file);
+
+            // 1.4.0 changed the naming of the scripts, so when they autoupdate they don't replace the old 1.3.0 ones, creating a duplicate
+            // This is a bad temporary solution for that
+            if (getConfig("autoUpdateDefaultScripts") && /(AL|BL)1[0-2]/.test(file)) {
+                shell.trashItem(filePath);
+                continue;
+            }
+
             if (!file.endsWith(".js")) {
                 if (file.endsWith(".disabled")) {
                     disabledScripts.push(file.replace(".disabled", ""));
@@ -23,7 +32,6 @@ export async function categorizeScripts() {
                 continue;
             }
 
-            const filePath = path.join(scriptsFolder, file);
             const scriptContent = modifyScriptContent(await fs.promises.readFile(filePath, "utf-8"));
 
             enabledScripts.push([file, scriptContent]);
