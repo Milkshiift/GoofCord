@@ -17,7 +17,7 @@ jobs:
             arch: "--x64 --arm64 --armv7l"
           - name: win
             runner: windows-latest
-            targets: "NSIS zip"
+            targets: "zip"
             arch: "--x64 --ia32 --arm64"
           - name: mac
             runner: macos-latest
@@ -42,6 +42,9 @@ jobs:
 
       - name: Install Node dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Install electron-builder globally
+        run: pnpm add electron-builder -g
 
       - name: Build GoofCord
         run: pnpm run build
