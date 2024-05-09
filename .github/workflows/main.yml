@@ -43,9 +43,6 @@ jobs:
       - name: Install Node dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install electron-builder globally
-        run: pnpm add electron-builder -g
-
       - name: Build GoofCord
         run: pnpm run build
 
