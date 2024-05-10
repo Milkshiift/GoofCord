@@ -43,10 +43,10 @@ export async function registerCustomHandler() {
 
             const result = {id, name, width: 9999, height: 9999};
             if (audio) {
-                callback({video: isLinuxWayland ? sources[0] : result, audio: "loopbackWithMute"});
+                callback({video: isLinuxWayland ? sources[0] : result, audio: "loopback"});
                 return;
             }
-            callback({video: result});
+            callback({video: isLinuxWayland ? sources[0] : result});
         });
     });
 }
