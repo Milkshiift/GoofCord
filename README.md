@@ -11,7 +11,7 @@
 - **:chart_with_upwards_trend: Fast and Performant**: Glide through your chats with GoofCord's superior speed and responsiveness compared to the official client. [Check the Benchmarks!](https://github.com/Milkshiift/GoofCord/wiki/Placeholder)
 - **:bookmark: Standalone**: GoofCord is a standalone client, not reliant on the original Discord client in any way.
 - **:electric_plug: Plugins & Themes support**: Embrace client mods like [Vencord](https://github.com/Vendicated/Vencord) or [Shelter](https://github.com/uwu/shelter) for a world of plugins and themes.
-- **:iphone: Cross-Platform**: Find GoofCord on **Windows**, **Linux** and **macOS**. Windows versions lower than 10 are not supported.  
+- **:iphone: Cross-Platform**: Find GoofCord on **Windows**, **Linux** and **macOS**.
     
 [Full feature list](https://github.com/Milkshiift/GoofCord/wiki)
 
@@ -21,6 +21,7 @@
 * Install with prebuilt binaries from the [releases](https://github.com/Milkshiift/GoofCord/releases/latest) page.    
 Choose `GoofCord-Setup-<YOUR ARCHITECTURE>.exe` for an installer, or    
 `GoofCord-<VERSION>-win-<YOUR ARCHITECTURE>.zip` to manually unpack into a directory of your choice.
+* For Windows 7/8 you can use [this](https://github.com/Alex313031/GoofCord-Win7) fork. 
 
 ### Linux 🐧
 
