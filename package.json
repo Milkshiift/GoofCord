@@ -46,7 +46,7 @@
       "include": "build/installer.nsh",
       "artifactName": "${productName} Setup ${arch}.${ext}"
     },
-    "appId": "com.milkshift.goofcord",
+    "appId": "io.github.milkshiift.GoofCord",
     "productName": "GoofCord",
     "files": [
       "!*",
