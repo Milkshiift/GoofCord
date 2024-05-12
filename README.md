@@ -2,16 +2,17 @@
 <img src="assetsDev/gf_logo_full.png" width="520" alt="GoofCord logo">
 <h2>Take control of your Discord experience with GoofCord – the highly configurable and privacy-focused Discord client.<br>Based on <a href="https://github.com/ArmCord/ArmCord">ArmCord</a>.</h2>
 <img src="https://img.shields.io/github/downloads/Milkshiift/GoofCord/total">
-<img src="https://img.shields.io/github/license/Milkshiift/GoofCord">
+<img src="https://img.shields.io/github/license/Milkshiift/GoofCord"><br>
+<img src="assetsDev/screenshot1_rounded.png" width="520" alt="Screenshot of GoofCord">
 </div>
 
 ## Features :sparkles:
 - **:lock: With Privacy in mind**: GoofCord blocks all tracking and uses multiple techniques like message encryption to improve your privacy and security. [Learn more](https://github.com/Milkshiift/GoofCord/wiki/Privacy-FAQ)
-- **:gear: Your Way, Your Client**: Personalize GoofCord to your liking with an array of customization options.
+- **:gear: Your Way, Your Client**: Set up GoofCord to your liking with an array of customization options.
 - **:chart_with_upwards_trend: Fast and Performant**: Glide through your chats with GoofCord's superior speed and responsiveness compared to the official client. [Check the Benchmarks!](https://github.com/Milkshiift/GoofCord/wiki/Placeholder)
 - **:bookmark: Standalone**: GoofCord is a standalone client, not reliant on the original Discord client in any way.
-- **:electric_plug: Plugins & Themes support**: Embrace client mods like [Vencord](https://github.com/Vendicated/Vencord) or [Shelter](https://github.com/uwu/shelter) for a world of plugins and themes.
-- **:iphone: Cross-Platform**: Find GoofCord on **Windows**, **Linux** and **macOS**.
+- **:electric_plug: Plugins & Themes support**: Use client mods like [Vencord](https://github.com/Vendicated/Vencord) or [Shelter](https://github.com/uwu/shelter) for a world of plugins and themes.
+- **🐧 Linux support**: Seamless screen sharing with audio and native Wayland support on Linux. See FAQ for details.
     
 [Full feature list](https://github.com/Milkshiift/GoofCord/wiki)
 
@@ -60,6 +61,13 @@ And if you want to compile it yourself, here's how:
   - Right-click on the tray icon and click `Open Settings`
   - Click the "Settings" button in the "GoofCord" category in the Discord settings
   - Press `Ctrl+Shift+'` shortcut.
+
+### How do I run GoofCord natively on Wayland?
+- Run GoofCord with these flags: `--enable-features=UseOzonePlatform,WebRTCPipeWireCapturer,WaylandWindowDecorations --ozone-platform=wayland`    
+If you have an NVIDIA gpu you may also need to include this flag: `--disable-gpu-sandbox` 
+
+### How do I stream with audio on Linux?
+- If you use PulseAudio it should work out of the box. For PipeWire you will need to install pipewire-pulse if it's not already installed
 
 ### Seeking the Source Code? 🕵️‍♂️
 - You can find our source code on [GitHub](https://github.com/Milkshiift/GoofCord/).
