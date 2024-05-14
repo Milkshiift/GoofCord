@@ -26,7 +26,7 @@ export async function setApplicationMenu() {
         {
             label: "GoofCord",
             submenu: [
-                {label: "About GoofCord", role: "about"}, //orderFrontStandardAboutPanel
+                {label: "About GoofCord", role: "about"},
                 {type: "separator"},
                 {
                     label: "Developer tools",
@@ -58,10 +58,10 @@ export async function setApplicationMenu() {
                 },
                 {
                     label: "Full reload",
-                    accelerator: "Shift+Ctrl+R",
+                    accelerator: "Shift+CmdOrCtrl+R",
                     click: async function () {
                         app.relaunch();
-                        app.exit(0);
+                        app.quit();
                     }
                 },
                 {
@@ -104,7 +104,25 @@ export async function setApplicationMenu() {
                 {label: "Zoom in", accelerator: "CmdOrCtrl+=", role: "zoomIn", visible: false},
                 {label: "Zoom out", accelerator: "CmdOrCtrl+-", role: "zoomOut"}
             ]
-        }
+        },
+        {
+            label: "Developer",
+            submenu: [
+                {
+                    label: "Open chrome://gpu",
+                    accelerator: "CmdorCtrl+Alt+G",
+                    click() {
+                        const gpuWindow = new BrowserWindow({
+                            width: 900,
+                            height: 700,
+                            useContentSize: true,
+                            title: "GPU Internals"
+                        });
+                        gpuWindow.loadURL("chrome://gpu");
+                    }
+                }
+            ]
+        },
     ];
 
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
@@ -112,26 +130,14 @@ export async function setApplicationMenu() {
 
 export function setContextMenu() {
     contextMenu({
+        showSelectAll: true,
         showSaveImageAs: true,
+        showCopyImage: true,
         showCopyImageAddress: true,
-        showSearchWithGoogle: false,
-        prepend: (_defaultActions, parameters) => [
-            {
-                label: "Search with Google",
-                // Only show it when right-clicking text
-                visible: parameters.selectionText.trim().length > 0,
-                click: () => {
-                    shell.openExternal(`https://google.com/search?q=${encodeURIComponent(parameters.selectionText)}`);
-                }
-            },
-            {
-                label: "Search with DuckDuckGo",
-                // Only show it when right-clicking text
-                visible: parameters.selectionText.trim().length > 0,
-                click: () => {
-                    shell.openExternal(`https://duckduckgo.com/?q=${encodeURIComponent(parameters.selectionText)}`);
-                }
-            }
-        ]
+        showCopyLink: true,
+        showSaveLinkAs: true,
+        showInspectElement: true,
+        showSearchWithGoogle: true,
+        showSearchWithDuckDuckGo: true
     });
 }

@@ -16,7 +16,7 @@ importers:
         version: 5.0.6
       electron-context-menu:
         specifier: github:Milkshiift/electron-context-menu
-        version: https://codeload.github.com/Milkshiift/electron-context-menu/tar.gz/d32d27a064543c5dfe8c1c1711c3f1ddc4544d4f
+        version: https://codeload.github.com/Milkshiift/electron-context-menu/tar.gz/1e84322c8a165e08e2d3b7557a675d909e32c86e
       extract-zip:
         specifier: github:Milkshiift/extract-zip
         version: https://codeload.github.com/Milkshiift/extract-zip/tar.gz/2ac2680e6af1dd3c33bbc73a4ee2b4b31d0eb9f1
@@ -680,8 +680,8 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
-  electron-context-menu@https://codeload.github.com/Milkshiift/electron-context-menu/tar.gz/d32d27a064543c5dfe8c1c1711c3f1ddc4544d4f:
-    resolution: {tarball: https://codeload.github.com/Milkshiift/electron-context-menu/tar.gz/d32d27a064543c5dfe8c1c1711c3f1ddc4544d4f}
+  electron-context-menu@https://codeload.github.com/Milkshiift/electron-context-menu/tar.gz/1e84322c8a165e08e2d3b7557a675d909e32c86e:
+    resolution: {tarball: https://codeload.github.com/Milkshiift/electron-context-menu/tar.gz/1e84322c8a165e08e2d3b7557a675d909e32c86e}
     version: 3.6.1
 
   electron-publish@24.13.1:
@@ -2381,7 +2381,7 @@ snapshots:
       - electron-builder-squirrel-windows
       - supports-color
 
-  electron-context-menu@https://codeload.github.com/Milkshiift/electron-context-menu/tar.gz/d32d27a064543c5dfe8c1c1711c3f1ddc4544d4f: {}
+  electron-context-menu@https://codeload.github.com/Milkshiift/electron-context-menu/tar.gz/1e84322c8a165e08e2d3b7557a675d909e32c86e: {}
 
   electron-publish@24.13.1:
     dependencies:
