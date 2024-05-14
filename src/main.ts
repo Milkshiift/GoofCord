@@ -65,6 +65,7 @@ async function setPermissions() {
 }
 
 async function setFlags() {
+    app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
     app.commandLine.appendSwitch("disable-features", "" +
         "OutOfBlinkCors," +
         "UseChromeOSDirectVideoDecoder," +
@@ -75,10 +76,9 @@ async function setFlags() {
         "WebRtcAllowInputVolumeAdjustment," +
         "Vulkan"
     );
-    app.commandLine.appendSwitch("enable-features", "WebRTC,VaapiVideoDecoder,VaapiVideoEncoder,WebRtcHideLocalIpsWithMdns,PlatformHEVCEncoderSupport,EnableDrDc,CanvasOopRasterization,UseSkiaRenderer");
-    app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+    app.commandLine.appendSwitch("enable-features", "WebRTC,WebRtcHideLocalIpsWithMdns,PlatformHEVCEncoderSupport,EnableDrDc,CanvasOopRasterization,UseSkiaRenderer");
     if (process.platform === "linux") {
-        app.commandLine.appendSwitch("enable-features", "PulseaudioLoopbackForScreenShare,VaapiVideoDecodeLinuxGL");
+        app.commandLine.appendSwitch("enable-features", "PulseaudioLoopbackForScreenShare,VaapiVideoDecoder,VaapiVideoEncoder,VaapiVideoDecodeLinuxGL");
         if (process.env.XDG_SESSION_TYPE?.toLowerCase() === "wayland") {
             app.commandLine.appendSwitch("enable-features", "WebRTCPipeWireCapturer");
             console.log("Wayland detected, using PipeWire for video capture.");

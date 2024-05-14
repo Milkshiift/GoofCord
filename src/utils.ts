@@ -42,6 +42,8 @@ export function getCustomIcon() {
     const customIconPath = getConfig("customIconPath");
     if (typeof customIconPath === "string" && customIconPath !== "") {
         return customIconPath;
+    } else if (process.platform == "win32") {
+        return path.join(__dirname, "/assets/gf_icon.ico");
     } else {
         return path.join(__dirname, "/assets/gf_icon.png");
     }

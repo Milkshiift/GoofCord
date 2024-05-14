@@ -56,7 +56,7 @@
       "LICENSE"
     ],
     "linux": {
-      "icon": "build/icon.icns",
+      "icon": "build/icons",
       "category": "Network",
       "maintainer": "MilkShift",
       "target": [
