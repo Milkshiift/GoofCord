@@ -25,7 +25,7 @@
   "devDependencies": {
     "@types/node": "^20.12.12",
     "@types/stegcloak": "^1.0.2",
-    "electron": "^30.0.4",
+    "electron": "^30.0.5",
     "electron-builder": "^24.13.3",
     "esbuild": "^0.21.2",
     "source-map-support": "^0.5.21",
