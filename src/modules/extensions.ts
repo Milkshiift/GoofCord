@@ -28,6 +28,7 @@ const MOD_BUNDLE_URLS = {
     none: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",
     vencord: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",
     shelter: "https://raw.githubusercontent.com/uwu/shelter-builds/main/shelter.js",
+    equicord: "https://github.com/Equicord/Equicord/releases/download/latest/browser.js",
     custom: getConfig("customJsBundle"),
 };
 
@@ -35,6 +36,7 @@ const MOD_BUNDLE_CSS_URLS = {
     none: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
     vencord: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
     shelter: "https://raw.githubusercontent.com/Milkshiift/empty/main/empty.txt",
+    equicord: "https://github.com/Equicord/Equicord/releases/download/latest/browser.css",
     custom: getConfig("customCssBundle"),
 };
 
