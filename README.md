@@ -27,9 +27,11 @@ Choose `GoofCord-Setup-<YOUR ARCHITECTURE>.exe` for an installer, or
 ### Linux 🐧
 
 * Install with prebuilt binaries from the [releases](https://github.com/Milkshiift/GoofCord/releases/latest) page.
-* Install from [AUR](https://aur.archlinux.org/packages/goofcord-bin) if you run an Arch-based OS. Here's an example using pacman:    
+* Install from [AUR](https://aur.archlinux.org/packages/goofcord-bin) if you run an **Arch**-based OS. Here's an example using pacman:    
 `sudo pacman -S goofcord-bin`    
 Keep in mind that the AUR package is not maintained by the developers of GoofCord.
+* Install in **NixOS** system-wide by adding ``pkgs.goofcord`` to ``environment.systemPackages``     
+Testing in a temporary shell can also be done using ``nix shell nixpkgs#goofcord``
 
 ### macOS 🍏
 
@@ -64,7 +66,8 @@ And if you want to compile it yourself, here's how:
 
 ### How do I run GoofCord natively on Wayland?
 - Run GoofCord with these flags: `--enable-features=UseOzonePlatform,WebRTCPipeWireCapturer,WaylandWindowDecorations --ozone-platform=wayland`    
-If you have an NVIDIA gpu you may also need to include this flag: `--disable-gpu-sandbox` 
+If you have an NVIDIA gpu you may also need to include this flag: `--disable-gpu-sandbox`    
+Nix package does that automatically
 
 ### How do I stream with audio on Linux?
 - If you use PulseAudio it should work out of the box. For PipeWire you will need to install pipewire-pulse if it's not already installed
