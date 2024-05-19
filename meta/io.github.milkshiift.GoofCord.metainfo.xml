@@ -3,20 +3,22 @@
   <!--Created with jdAppdataEdit 5.1-->
   <id>io.github.milkshiift.GoofCord</id>
   <name>GoofCord</name>
-  <summary>Take control of your Discord experience with GoofCord – the highly configurable and privacy minded discord client.</summary>
-  <developer_name>MilkShift</developer_name>
+  <summary>A privacy minded and highly configurable Discord client</summary>
+  <developer id="io.github.milkshiift">
+    <name>MilkShift</name>
+  </developer>
   <launchable type="desktop-id">io.github.milkshiift.GoofCord.desktop</launchable>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>OSL-3.0</project_license>
   <project_group>GoofCord</project_group>
   <description>
     <ul>
-      <li><b>With Privacy in mind:</b> GoofCord blocks all tracking and uses multiple techniques like message encryption to improve your privacy and security. <a href="https://github.com/Milkshiift/GoofCord/wiki/Privacy-FAQ">Learn more</a></li>
-      <li><b>Your Way, Your Client:</b> Set up GoofCord to your liking with an array of customization options.</li>
-      <li><b>Fast and Performant:</b> Glide through your chats with GoofCord's superior speed and responsiveness compared to the official client.</li>
-      <li><b>Standalone:</b> GoofCord is a standalone client, not reliant on the original Discord client in any way.</li>
-      <li><b>Plugins &amp; Themes support:</b> Use client mods like <a href="https://github.com/Vendicated/Vencord">Vencord</a> or <a href="https://github.com/uwu/shelter">Shelter</a> for a world of plugins and themes.</li>
-      <li><b>Linux support:</b> Seamless screen sharing with audio and native Wayland support on Linux. See <a href="https://github.com/Milkshiift/GoofCord/#faq">FAQ</a> for details.</li>
+      <li>With Privacy in mind: GoofCord blocks all tracking and uses multiple techniques like message encryption to improve your privacy and security. Learn more in the wiki</li>
+      <li>Your Way, Your Client: Set up GoofCord to your liking with an array of customization options.</li>
+      <li>Fast and Performant: Glide through your chats with GoofCord's superior speed and responsiveness compared to the official client.</li>
+      <li>Standalone: GoofCord is a standalone client, not reliant on the original Discord client in any way.</li>
+      <li>Plugins &amp; Themes support: Use client mods like Vencord or Shelter for a world of plugins and themes.</li>
+      <li>Linux support: Seamless screen sharing with audio and native Wayland support on Linux. See FAQ for details.</li>
     </ul>
   </description>
   <screenshots>
@@ -39,20 +41,13 @@
     <category>Security</category>
   </categories>
   <requires>
-    <control>pointing</control>
-    <control>keyboard</control>
-    <display_length compare="ge">small</display_length>
     <internet>always</internet>
   </requires>
   <recommends>
     <control>voice</control>
-    <display_length compare="ge">medium</display_length>
-    <display_length compare="le">xlarge</display_length>
-    <internet>always</internet>
+    <control>pointing</control>
+    <control>keyboard</control>
   </recommends>
-  <supports>
-    <internet>always</internet>
-  </supports>
   <content_rating type="oars-1.1">
     <content_attribute id="social-chat">intense</content_attribute>
     <content_attribute id="social-audio">intense</content_attribute>
