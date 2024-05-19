@@ -26,6 +26,7 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.4.2" date="2024-05-15"/>
     <release version="1.4.1" date="2024-05-09"/>
   </releases>
   <url type="homepage">https://github.com/Milkshiift/GoofCord</url>
