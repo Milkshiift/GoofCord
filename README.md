@@ -27,6 +27,7 @@ Choose `GoofCord-Setup-<YOUR ARCHITECTURE>.exe` for an installer, or
 ### Linux 🐧
 
 * Install with prebuilt binaries from the [releases](https://github.com/Milkshiift/GoofCord/releases/latest) page.
+* Install from [Flathub](https://flathub.org/apps/io.github.milkshiift.GoofCord)
 * Install from [AUR](https://aur.archlinux.org/packages/goofcord-bin) if you run an **Arch**-based OS. Here's an example using pacman:    
 `sudo pacman -S goofcord-bin`    
 Keep in mind that the AUR package is not maintained by the developers of GoofCord.
@@ -36,8 +37,8 @@ Testing in a temporary shell can also be done using ``nix shell nixpkgs#goofcord
 ### macOS 🍏
 
 * Install with prebuilt binaries from the [releases](https://github.com/Milkshiift/GoofCord/releases/latest) page.    
-Choose the file ending with `mac-arm64.dmg` if your computer uses Apple Silicon processor. [Mac computers with Apple Silicon](https://support.apple.com/en-us/HT211814)      
-Choose the file that ends with `mac-x64.dmg` if your computer uses Intel processor.
+Choose the file ending with `mac-arm64.dmg` if your computer uses an Apple Silicon processor. [Mac computers with Apple Silicon](https://support.apple.com/en-us/HT211814)      
+Otherwise, choose the file that ends with `mac-x64.dmg`
 
 See FAQ for ways to open GoofCord's settings.    
 To explore plugins and themes, head over to the Vencord category in the Discord settings.    
@@ -45,8 +46,8 @@ Have fun!
     
 And if you want to compile it yourself, here's how:
 1. Install [Node.js](https://nodejs.dev) and [pnpm](https://pnpm.io/installation#using-npm)
-2. Grab the source code from the latest release. Getting it from the main branch is not recommended for stable experience.
-3. Open the command line in the directory of the source code
+2. Grab the source code from the latest release. Getting it from the main branch is not recommended for a stable experience.
+3. Open a command line in the directory of the source code
 4. Install the dependencies with `pnpm install`
 5. Package GoofCord with `pnpm run packageWindows` or `pnpm run packageLinux`
 6. Find your freshly compiled app in the `dist` folder.
@@ -56,7 +57,7 @@ And if you want to compile it yourself, here's how:
 [![](https://dcbadge.vercel.app/api/server/CZc4bpnjmm)](https://discord.gg/CZc4bpnjmm)
 
 ### Can I get banned from using GoofCord? 🤔
-- While using GoofCord goes against [Discord ToS](https://discord.com/terms#software-in-discord%E2%80%99s-services), rest assured that no one has ever been banned from using it or any client mods.
+- While using GoofCord goes against [Discord ToS](https://discord.com/terms#software-in-discord%E2%80%99s-services), no one has ever been banned from using it or any client mods.
 
 ### How can I access the settings? ⚙️
 - Multiple ways:
@@ -66,8 +67,8 @@ And if you want to compile it yourself, here's how:
 
 ### How do I run GoofCord natively on Wayland?
 - Run GoofCord with these flags: `--enable-features=UseOzonePlatform,WebRTCPipeWireCapturer,WaylandWindowDecorations --ozone-platform=wayland`    
-If you have an NVIDIA gpu you may also need to include this flag: `--disable-gpu-sandbox`    
-Nix package does that automatically
+If GoofCord shows a black screen, also include this flag: `--disable-gpu-sandbox`    
+- Flatpak and Nix packages do that automatically
 
 ### How do I stream with audio on Linux?
 - If you use PulseAudio it should work out of the box. For PipeWire you will need to install pipewire-pulse if it's not already installed
