@@ -75,7 +75,7 @@ async function setWindowOpenHandler() {
                     autoHideMenuBar: true,
                     icon: getCustomIcon(),
                     backgroundColor: "#313338",
-                    alwaysOnTop: true,
+                    alwaysOnTop: getConfig("popoutWindowAlwaysOnTop"),
                     webPreferences: {
                         sandbox: true
                     }

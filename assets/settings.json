@@ -222,6 +222,12 @@
       "description": "Whether to enable spellcheck for input fields or not.",
       "inputType": "checkbox"
     },
+    "popoutWindowAlwaysOnTop": {
+      "name": "Pop out window always on top",
+      "defaultValue": true,
+      "description": "When enabled, voice chat pop out window will always stay above other windows.",
+      "inputType": "checkbox"
+    },
     "updateNotification": {
       "name": "Update notification",
       "defaultValue": true,
