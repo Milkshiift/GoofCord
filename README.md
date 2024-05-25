@@ -39,6 +39,7 @@ Testing in a temporary shell can also be done using ``nix shell nixpkgs#goofcord
 * Install with prebuilt binaries from the [releases](https://github.com/Milkshiift/GoofCord/releases/latest) page.    
 Choose the file ending with `mac-arm64.dmg` if your computer uses an Apple Silicon processor. [Mac computers with Apple Silicon](https://support.apple.com/en-us/HT211814)      
 Otherwise, choose the file that ends with `mac-x64.dmg`
+* If you get an error like "GoofCord is damaged and can't be opened" see [this issue](https://github.com/Milkshiift/GoofCord/issues/7)
 
 See FAQ for ways to open GoofCord's settings.    
 To explore plugins and themes, head over to the Vencord category in the Discord settings.    
