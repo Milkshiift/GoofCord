@@ -1,11 +1,15 @@
 import {app, BrowserWindow, ipcMain, shell} from "electron";
 import {getCustomIcon, getDisplayVersion} from "../utils";
 import path from "path";
+import {clearCache} from "../modules/cacheManager";
 
 let settingsWindow: BrowserWindow;
 const userDataPath = app.getPath("userData");
 let isOpen = false;
 
+ipcMain.handle("clearCache", async (_event, folder: string) => {
+    await clearCache();
+});
 ipcMain.handle("openFolder", async (_event, folder: string) => {
     await shell.openPath(path.join(userDataPath, `/${folder}/`));
 });

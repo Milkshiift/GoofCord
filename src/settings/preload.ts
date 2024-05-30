@@ -8,6 +8,7 @@ contextBridge.exposeInMainWorld("settings", {
     openScriptsFolder: () => ipcRenderer.invoke("openFolder", "scripts"),
     openExtensionsFolder: () => ipcRenderer.invoke("openFolder", "extensions"),
     openStorageFolder: () => ipcRenderer.invoke("openFolder", "storage"),
+    clearCache: () => ipcRenderer.invoke("clearCache"),
     crash: () => ipcRenderer.invoke("crash"),
 });
 
