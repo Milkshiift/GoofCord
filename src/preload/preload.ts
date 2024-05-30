@@ -6,6 +6,7 @@ import {injectTitlebar} from "./titlebar";
 import {loadScripts} from "../scriptLoader/scriptLoader";
 import fs from "fs";
 import {getConfig} from "../config";
+import {initArrpc} from "../modules/arrpc";
 
 document.addEventListener("DOMContentLoaded", async () => {
     loadScripts();
@@ -23,7 +24,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             originalSetter.call(this, function() {
                 onClick.apply(this, arguments);
                 goofcord.window.show();
-                goofcord.window.maximize();
             })
             },
             configurable: true

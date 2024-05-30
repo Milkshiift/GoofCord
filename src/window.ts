@@ -47,11 +47,9 @@ async function doAfterDefiningTheWindow() {
         mainWindow.focus();
     });
 
-    await Promise.all([
-        registerCustomHandler(),
-        initArrpc(),
-        setWindowOpenHandler()
-    ]);
+    registerCustomHandler()
+    setWindowOpenHandler()
+    initArrpc()
 
     await initializeFirewall();
 

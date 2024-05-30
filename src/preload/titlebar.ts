@@ -37,7 +37,6 @@ function attachTitlebarEvents(titlebar: HTMLDivElement) {
         const isMaximized = await ipcRenderer.invoke("window:IsMaximized");
         if (isMaximized) {
             ipcRenderer.invoke("window:Unmaximize");
-            document.body.removeAttribute("isMaximized");
         } else {
             ipcRenderer.invoke("window:Maximize");
         }
