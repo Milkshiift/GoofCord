@@ -3,10 +3,10 @@ import {flashTitlebar, flashTitlebarWithText} from "./titlebar";
 
 contextBridge.exposeInMainWorld("goofcord", {
     window: {
-        show: () => ipcRenderer.send("window:Show"),
-        hide: () => ipcRenderer.send("window:Hide"),
-        minimize: () => ipcRenderer.send("window:Minimize"),
-        maximize: () => ipcRenderer.send("window:Maximize")
+        show: () => ipcRenderer.invoke("window:Show"),
+        hide: () => ipcRenderer.invoke("window:Hide"),
+        minimize: () => ipcRenderer.invoke("window:Minimize"),
+        maximize: () => ipcRenderer.invoke("window:Maximize")
     },
     titlebar: {
         flashTitlebar: (color: string) => flashTitlebar(color),

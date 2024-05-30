@@ -80,9 +80,7 @@ export async function updateModBundle() {
 
 async function installModLoader() {
     const extensionFolder = path.join(app.getPath("userData"), "extensions/");
-    try {
-        await fs.promises.mkdir(extensionFolder);
-    } catch (e) {}
+    try {await fs.promises.mkdir(extensionFolder);} catch(e){}
 
     try {
         const zipBuffer = await fs.promises.readFile(path.join(__dirname, "assets/js/loader.zip"));
@@ -90,8 +88,7 @@ async function installModLoader() {
 
         console.log("[Mod loader] Mod loader installed");
     } catch (error) {
-        console.error("[Mod loader] Failed to install the mod loader");
-        console.error(error);
+        console.error("[Mod loader] Failed to install the mod loader:",error);
         dialog.showErrorBox(
             "Oops, something went wrong.",
             `GoofCord couldn't install the internal mod loader.\n\n${error}`
