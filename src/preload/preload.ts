@@ -6,7 +6,7 @@ import {injectTitlebar} from "./titlebar";
 import {loadScripts} from "../scriptLoader/scriptLoader";
 import fs from "fs";
 import {getConfig} from "../config";
-import {initArrpc} from "../modules/arrpc";
+import {initPushToTalk} from "../modules/pushToTalk";
 
 document.addEventListener("DOMContentLoaded", async () => {
     loadScripts();
@@ -30,6 +30,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
         })();
     `);
+
+    initPushToTalk();
 
     if (getConfig("disableAutogain")) {
         addScript(await fs.promises.readFile(path.join(__dirname, "../", "/assets/js/disableAutogain.js"), "utf8"));
