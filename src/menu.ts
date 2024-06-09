@@ -4,18 +4,6 @@ import {createSettingsWindow} from "./settings/main";
 import {cycleThroughPasswords} from "./modules/messageEncryption";
 import contextMenu from "electron-context-menu";
 
-interface Pasteable {
-    paste(): void;
-}
-function paste(contents: Pasteable) {
-    const contentTypes = clipboard.availableFormats().toString();
-    // Workaround: fix pasting the images.
-    if (contentTypes.includes("image/") && contentTypes.includes("text/html")) {
-        clipboard.writeImage(clipboard.readImage());
-    }
-    contents.paste();
-}
-
 export async function setMenu() {
     setApplicationMenu();
     setContextMenu();
@@ -85,13 +73,7 @@ export async function setApplicationMenu() {
                 {type: "separator"},
                 {label: "Cut", accelerator: "CmdOrCtrl+X", role: "cut"},
                 {label: "Copy", accelerator: "CmdOrCtrl+C", role: "copy"},
-                {
-                    label: "Paste",
-                    accelerator: "CmdOrCtrl+V",
-                    click() {
-                        paste(mainWindow.webContents);
-                    }
-                },
+                {label: "Paste", accelerator: "CmdOrCtrl+V", role: "paste"},
                 {label: "Select All", accelerator: "CmdOrCtrl+A", role: "selectAll"}
             ]
         },
