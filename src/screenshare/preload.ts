@@ -39,15 +39,15 @@ async function selectSource(id: string | null, title: string | null) {
         const resolution = (document.getElementById("resolution-textbox") as HTMLInputElement).value;
         const framerate = (document.getElementById("framerate-textbox") as HTMLInputElement).value;
         if (await ipcRenderer.invoke("isVencordPresent") || (resolution === "720" && framerate === "30")) {
-            ipcRenderer.invoke("flashTitlebar", "#5865F2");
+            void ipcRenderer.invoke("flashTitlebar", "#5865F2");
         }
         else {
-            ipcRenderer.invoke("flashTitlebarWithText", "#f8312f", "Custom resolution & framerate are only available with Vencord");
+            void ipcRenderer.invoke("flashTitlebarWithText", "#f8312f", "Custom resolution & framerate are only available with Vencord");
         }
 
-        setConfig("screensharePreviousSettings", [resolution, framerate, audio]);
+        void setConfig("screensharePreviousSettings", [resolution, framerate, audio]);
 
-        ipcRenderer.invoke("selectScreenshareSource", id, title, audio, resolution, framerate);
+        void ipcRenderer.invoke("selectScreenshareSource", id, title, audio, resolution, framerate);
     } catch (err) {
         console.error(err);
     }
@@ -101,4 +101,4 @@ async function addDisplays() {
     });
 }
 
-addDisplays();
+void addDisplays();

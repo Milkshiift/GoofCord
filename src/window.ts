@@ -47,14 +47,14 @@ async function doAfterDefiningTheWindow() {
         mainWindow.focus();
     });
 
-    registerCustomHandler()
-    setWindowOpenHandler()
-    initArrpc()
+    void registerCustomHandler()
+    void setWindowOpenHandler()
+    void initArrpc()
 
     await initializeFirewall();
 
     // Load Discord
-    mainWindow.loadURL(getConfig("discordUrl"));
+    void mainWindow.loadURL(getConfig("discordUrl"));
 }
 
 async function setWindowOpenHandler() {

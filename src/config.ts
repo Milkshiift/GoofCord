@@ -37,7 +37,7 @@ export function getConfig(toGet: string): any {
         return result;
     } else {
         console.log("Missing config parameter:", toGet);
-        setConfig(toGet, getDefaultValue(toGet));
+        void setConfig(toGet, getDefaultValue(toGet));
         return cachedConfig[toGet];
     }
 }
@@ -49,7 +49,7 @@ export async function setConfig(entry: string, value: unknown) {
         }
         cachedConfig[entry] = value;
         const toSave = JSON.stringify(cachedConfig);
-        fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
+        void fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
     } catch (e: any) {
         console.error("setConfig function errored:", e);
         dialog.showErrorBox("GoofCord was unable to save the settings", e.toString());
@@ -63,7 +63,7 @@ export function setConfigBulk(object: object) {
         }
         cachedConfig = object;
         const toSave = JSON.stringify(object);
-        fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
+        void fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
     } catch (e: any) {
         console.error("setConfigBulk function errored:", e);
         dialog.showErrorBox("GoofCord was unable to save the settings", e.toString());

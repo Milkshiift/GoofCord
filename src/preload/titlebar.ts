@@ -30,24 +30,24 @@ function attachTitlebarEvents(titlebar: HTMLDivElement) {
     const quit = titlebar.querySelector("#quit")!;
 
     minimize.addEventListener("click", () => {
-        ipcRenderer.invoke("window:Minimize");
+        void ipcRenderer.invoke("window:Minimize");
     });
 
     maximize.addEventListener("click", async () => {
         const isMaximized = await ipcRenderer.invoke("window:IsMaximized");
         if (isMaximized) {
-            ipcRenderer.invoke("window:Unmaximize");
+            void ipcRenderer.invoke("window:Unmaximize");
         } else {
-            ipcRenderer.invoke("window:Maximize");
+            void ipcRenderer.invoke("window:Maximize");
         }
     });
 
     quit.addEventListener("click", () => {
         const minimizeToTraySetting = getConfig("minimizeToTray");
         if (minimizeToTraySetting) {
-            ipcRenderer.invoke("window:Hide");
+            void ipcRenderer.invoke("window:Hide");
         } else {
-            ipcRenderer.invoke("window:Quit");
+            void ipcRenderer.invoke("window:Quit");
         }
     });
 }

@@ -7,7 +7,7 @@ let settingsWindow: BrowserWindow;
 const userDataPath = app.getPath("userData");
 let isOpen = false;
 
-ipcMain.handle("clearCache", async (_event, folder: string) => {
+ipcMain.handle("clearCache", async (_event) => {
     await clearCache();
 });
 ipcMain.handle("openFolder", async (_event, folder: string) => {

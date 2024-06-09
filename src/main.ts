@@ -14,7 +14,7 @@ if (isDev()) {
 
 console.time("GoofCord fully loaded in");
 
-setFlags();
+void setFlags();
 
 if (!app.requestSingleInstanceLock()) app.exit();
 
@@ -22,13 +22,13 @@ crashReporter.start({uploadToServer: false});
 
 loadConfig().then(async () => {
     if (getConfig("autoscroll")) app.commandLine.appendSwitch("enable-blink-features", "MiddleClickAutoscroll");
-    setAutoLaunchState();
-    setMenu();
+    void setAutoLaunchState();
+    void setMenu();
 
     await app.whenReady();
 
-    createTray();
-    await setPermissions();
+    void createTray();
+    void setPermissions();
     await checkForConnectivity();
     console.timeEnd("GoofCord fully loaded in");
 });

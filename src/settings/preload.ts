@@ -53,8 +53,8 @@ async function saveSettings(changedElement: HTMLInputElement) {
     }
 
     console.log(settingsObj);
-    ipcRenderer.invoke("config:setConfigBulk", settingsObj);
-    ipcRenderer.invoke("flashTitlebar", "#5865F2");
+    void ipcRenderer.invoke("config:setConfigBulk", settingsObj);
+    void ipcRenderer.invoke("flashTitlebar", "#5865F2");
 }
 
 async function getSettingValue(element: HTMLInputElement, settingName: string) {

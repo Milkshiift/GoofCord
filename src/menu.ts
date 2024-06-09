@@ -1,11 +1,11 @@
-import {app, BrowserWindow, clipboard, Menu, shell} from "electron";
+import {app, BrowserWindow, Menu} from "electron";
 import {mainWindow} from "./window";
 import {createSettingsWindow} from "./settings/main";
 import {cycleThroughPasswords} from "./modules/messageEncryption";
 import contextMenu from "electron-context-menu";
 
 export async function setMenu() {
-    setApplicationMenu();
+    void setApplicationMenu();
     setContextMenu();
 }
 

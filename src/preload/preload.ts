@@ -9,8 +9,8 @@ import {getConfig} from "../config";
 import {initPushToTalk} from "../modules/pushToTalk";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    loadScripts();
-    injectTitlebar();
+    void loadScripts();
+    void injectTitlebar();
 
     // Hide "Download Discord Desktop now!" banner
     window.localStorage.setItem("hideNag", "true");

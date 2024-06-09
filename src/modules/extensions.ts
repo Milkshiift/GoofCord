@@ -13,12 +13,12 @@ export async function loadExtensions() {
     const extensionsFolder = path.join(userDataPath, "extensions/");
     try {
         for (const file of (await fs.promises.readdir(extensionsFolder))) {
-            session.defaultSession.loadExtension(`${userDataPath}/extensions/${file}`);
+            void session.defaultSession.loadExtension(`${userDataPath}/extensions/${file}`);
             console.log(`[Mod loader] Loaded extension: ${file}`);
         }
     } catch (e: any) {
         if (e.code === "ENOENT") {
-            installModLoader();
+            void installModLoader();
         }
         console.error("[Mod loader] Failed to load extensions:", e);
     }

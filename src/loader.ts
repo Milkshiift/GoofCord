@@ -7,7 +7,7 @@ import {initEncryption} from "./modules/messageEncryption";
 import {registerIpc} from "./ipc";
 
 export async function load() {
-    initEncryption();
+    void initEncryption();
     await Promise.all([
         unstrictCSP(),
         loadExtensions(),
@@ -17,7 +17,7 @@ export async function load() {
 
     await createMainWindow();
 
-    installDefaultScripts();
-    updateModBundle();
-    checkForUpdate();
+    void installDefaultScripts();
+    void updateModBundle();
+    void checkForUpdate();
 }

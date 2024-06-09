@@ -21,7 +21,7 @@ export async function categorizeScripts() {
             // 1.4.0 changed the naming of the scripts, so when they autoupdate they don't replace the old 1.3.0 ones, creating a duplicate
             // This is a bad temporary solution for that
             if (getConfig("autoUpdateDefaultScripts") && /(AL|BL)1[0-2]/.test(file)) {
-                shell.trashItem(filePath);
+                void shell.trashItem(filePath);
                 continue;
             }
 
