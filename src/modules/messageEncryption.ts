@@ -2,6 +2,7 @@ import StegCloak from "stegcloak";
 import {dialog, ipcMain, safeStorage} from "electron";
 import {mainWindow} from "../window";
 import {getConfig} from "../config";
+import chalk from "chalk";
 
 let stegcloak: StegCloak;
 export const encryptionPasswords: string[] = [];
@@ -37,7 +38,7 @@ async function loadPasswords() {
         console.error("Failed to load encryption passwords:", error);
     }
     chosenPassword = encryptionPasswords[0];
-    console.log("Loaded encryption passwords");
+    console.log(chalk.magenta("[Message Encryption]"), "Loaded encryption passwords");
 }
 
 async function decryptString(encryptedString: string): Promise<string> {

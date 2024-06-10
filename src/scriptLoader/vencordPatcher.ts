@@ -1,10 +1,11 @@
 import {getConfig} from "../config";
 import {getDisplayVersion} from "../utils";
 import {enabledScripts} from "./scriptPreparer";
+import chalk from "chalk";
 
 export async function patchVencord(bundle: string) {
-    console.log("[Mod loader] Patching Vencord");
-    console.time("Patching Vencord took");
+    console.log(chalk.yellow("[Mod Loader]"), "Patching Vencord");
+    console.time(chalk.green("[Timer]") + " Patching Vencord took");
     // For patches in custom scripts to work, we inject them into Vencord's code
     bundle = await patchVencordWithScriptPatches(bundle);
     // Patch Vencord to show the GoofCord category in settings
@@ -29,7 +30,7 @@ export async function patchVencord(bundle: string) {
     `);
     // Patch Vencord to show GoofCord version in settings
     bundle = await patchString(bundle, /additionalInfo:.{24}(.+?")/, `$&GoofCord ${getDisplayVersion()}"),$1`);
-    console.timeEnd("Patching Vencord took");
+    console.timeEnd(chalk.green("[Timer]") + " Patching Vencord took");
     return bundle;
 }
 

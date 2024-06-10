@@ -2,6 +2,7 @@
 import {mainWindow} from "../window";
 import {session} from "electron";
 import {getConfig, getDefaultValue} from "../config";
+import chalk from "chalk";
 
 function getConfigOrDefault(key: string): string[] {
     return getConfig("customFirewallRules") ? getConfig(key) : getDefaultValue(key);
@@ -50,12 +51,10 @@ export async function initializeFirewall() {
         });
     });
 
-    console.log("Firewall initialized");
+    console.log(chalk.red("[Firewall]"), "Firewall initialized");
 }
 
 export async function unstrictCSP() {
-    console.log("Setting up CSP unstricter...");
-
     session.defaultSession.webRequest.onHeadersReceived(({responseHeaders, resourceType}, done) => {
         if (!responseHeaders) return done({});
 
@@ -71,4 +70,5 @@ export async function unstrictCSP() {
         }
         done({responseHeaders});
     });
+    console.log(chalk.red("[Firewall]"), "Set up CSP unstricter");
 }

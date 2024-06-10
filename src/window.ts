@@ -2,7 +2,6 @@ import {app, BrowserWindow, shell} from "electron";
 import {getCustomIcon} from "./utils";
 import {getUserAgent} from "./modules/agent";
 import * as path from "path";
-import {initializeFirewall} from "./modules/firewall";
 import {getConfig} from "./config";
 import {registerCustomHandler} from "./screenshare/main";
 import {initArrpc} from "./modules/arrpc";
@@ -60,9 +59,7 @@ async function setWindowOpenHandler() {
     // Define a handler for opening new windows.
     mainWindow.webContents.setWindowOpenHandler(({url}) => {
         // For Vencord's quick css
-        if (url === "about:blank") {
-            return {action: "allow"};
-        }
+        if (url === "about:blank") return {action: "allow"};
         // Allow Discord voice chat popout
         if (url.includes("discord.com/popout")) {
             return {
@@ -79,10 +76,7 @@ async function setWindowOpenHandler() {
                 }
             };
         }
-        if (url.startsWith("http") || url.startsWith("mailto:")) {
-            // Open external URLs using the system's default browser.
-            shell.openExternal(url);
-        }
+        if (url.startsWith("http") || url.startsWith("mailto:")) shell.openExternal(url);
         return {action: "deny"};
     });
 }

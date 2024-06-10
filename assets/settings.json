@@ -47,7 +47,7 @@
     "modName": {
       "name": "Client mod",
       "defaultValue": "vencord",
-      "description": "What client mod to use. Vencord or forks of it (Equicord) are heavily recommended because much of GoofCord's functionality depends on them.",
+      "description": "What client mod to use. Vencord or forks of it (Equicord) are recommended because much of GoofCord's functionality depends on them.",
       "inputType": "dropdown",
       "options": [
         "none",

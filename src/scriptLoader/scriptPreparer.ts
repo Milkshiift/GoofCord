@@ -5,6 +5,7 @@ import {getVersion, readOrCreateFolder} from "../utils";
 import {error} from "../modules/logger";
 import {getConfig} from "../config";
 import download from "github-directory-downloader";
+import chalk from "chalk";
 
 export const enabledScripts: string[][] = [];
 export const disabledScripts: string[] = [];
@@ -41,6 +42,7 @@ export async function categorizeScripts() {
             error("An error occurred during script categorizing: " + err);
         }
     }
+    console.log(chalk.yellowBright("[Script Loader]"), "Categorized scripts");
 }
 
 export async function installDefaultScripts() {
@@ -51,13 +53,9 @@ export async function installDefaultScripts() {
         // That way scripts can use the newest features while remaining compatible with older versions
         await download(`https://github.com/Milkshiift/GoofCord-Scripts/tree/${changePatchVersionToZero(getVersion())}/patches`, scriptsFolder, disabledScripts);
 
-        console.log("[Script Loader] Successfully installed default scripts");
+        console.log(chalk.yellowBright("[Script Loader]"), "Successfully installed default scripts");
     } catch (error: any) {
         console.error("[Script Loader] Failed to install default scripts", error);
-        dialog.showErrorBox(
-            "GoofCord was unable to install the default scripts",
-            error.toString()
-        );
     }
 }
 

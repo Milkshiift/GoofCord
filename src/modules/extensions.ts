@@ -5,6 +5,7 @@ import {patchVencord} from "../scriptLoader/vencordPatcher";
 import path from "path";
 import {getConfig} from "../config";
 import extract from "extract-zip";
+import chalk from "chalk";
 
 const modName: keyof typeof MOD_BUNDLE_URLS = getConfig("modName");
 
@@ -14,13 +15,13 @@ export async function loadExtensions() {
     try {
         for (const file of (await fs.promises.readdir(extensionsFolder))) {
             await session.defaultSession.loadExtension(`${userDataPath}/extensions/${file}`);
-            console.log(`[Mod loader] Loaded extension: ${file}`);
+            console.log(chalk.yellow("[Mod Loader]"), `Loaded extension: ${file}`);
         }
     } catch (e: any) {
         if (e.code === "ENOENT") {
             void installModLoader();
         }
-        console.error("[Mod loader] Failed to load extensions:", e);
+        console.error("[Mod Loader] Failed to load extensions:", e);
     }
 }
 
@@ -54,9 +55,9 @@ async function downloadAndWriteBundle(url: string, filePath: string) {
 
         await tryWithFix(() => {
             fs.promises.writeFile(filePath, bundle, "utf-8");
-        }, installModLoader, "[Mod loader] Failed to write bundle:");
+        }, installModLoader, "[Mod Loader] Failed to write bundle:");
     } catch (e: any) {
-        console.error("[Mod loader] Failed to download bundle:", e);
+        console.error("[Mod Loader] Failed to download bundle:", e);
         dialog.showErrorBox("GoofCord was unable to download the mod bundle", e.toString());
         throw e;
     }
@@ -64,18 +65,18 @@ async function downloadAndWriteBundle(url: string, filePath: string) {
 
 export async function updateModBundle() {
     if (getConfig("noBundleUpdates") || modName === "none") {
-        console.log("[Mod loader] Skipping mod bundle update");
+        console.log(chalk.yellow("[Mod Loader]"), "Skipping mod bundle update");
         return;
     }
 
     const distFolder = path.join(app.getPath("userData"), "extensions/loader/dist/");
 
-    console.log("[Mod loader] Downloading mod bundle");
+    console.log(chalk.yellow("[Mod Loader]"), "Downloading mod bundle");
 
     await downloadAndWriteBundle(MOD_BUNDLE_URLS[modName], path.join(distFolder, "bundle.js"));
     await downloadAndWriteBundle(MOD_BUNDLE_CSS_URLS[modName], path.join(distFolder, "bundle.css"));
 
-    console.log("[Mod loader] Mod bundle updated");
+    console.log(chalk.yellow("[Mod Loader]"), "Mod bundle updated");
 }
 
 async function installModLoader() {
@@ -86,9 +87,9 @@ async function installModLoader() {
         const zipBuffer = await fs.promises.readFile(path.join(__dirname, "assets/js/loader.zip"));
         await extract.extractBuffer(zipBuffer, {dir: extensionFolder});
 
-        console.log("[Mod loader] Mod loader installed");
+        console.log(chalk.yellow("[Mod Loader]"), "Mod loader installed");
     } catch (error) {
-        console.error("[Mod loader] Failed to install the mod loader:",error);
+        console.error("[Mod Loader] Failed to install the mod loader:",error);
         dialog.showErrorBox(
             "Oops, something went wrong.",
             `GoofCord couldn't install the internal mod loader.\n\n${error}`

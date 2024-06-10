@@ -1,6 +1,5 @@
 import {app, crashReporter, net, session} from "electron";
 import "v8-compile-cache";
-import AutoLaunch from "auto-launch";
 import {getConfig, loadConfig} from "./config";
 import {isDev} from "./utils";
 import {createTray} from "./tray";
@@ -9,6 +8,7 @@ import {initEncryption} from "./modules/messageEncryption";
 import {initializeFirewall, unstrictCSP} from "./modules/firewall";
 import {categorizeScripts} from "./scriptLoader/scriptPreparer";
 import {registerIpc} from "./ipc";
+import chalk from "chalk";
 
 if (isDev()) {
     try {
@@ -16,7 +16,7 @@ if (isDev()) {
     } catch (e) {}
 }
 
-console.time("GoofCord fully loaded in");
+console.time(chalk.green("[Timer]") + " GoofCord fully loaded in");
 
 void setFlags();
 
@@ -42,20 +42,21 @@ loadConfig().then(async () => {
         initializeFirewall()
     ]);
     await checkForConnectivity();
-    console.timeEnd("GoofCord fully loaded in");
+    console.timeEnd(chalk.green("[Timer]") + " GoofCord fully loaded in");
 });
 
 async function checkForConnectivity() {
     while (!net.isOnline()) {
         await new Promise(resolve => setTimeout(resolve, 1000));
     }
-    const loader = await import("./loader");
-    await loader.load();
+    const { load } = await import('./loader.js');
+    await load();
 }
 
 async function setAutoLaunchState() {
     console.log("Process execution path: " + process.execPath);
-    let gfAutoLaunch: AutoLaunch;
+    const { default: AutoLaunch } = await import('auto-launch');
+    let gfAutoLaunch;
     // When GoofCord is installed from AUR it uses system Electron, which causes IT to launch instead of GoofCord
     if (process.execPath.endsWith("electron") && !isDev()) {
         // Set the launch path to a shell script file that AUR created to properly start GoofCord

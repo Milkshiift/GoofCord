@@ -1,5 +1,5 @@
 export function initPushToTalk() {
-    const keybinds = window.localStorage.getItem("keybinds");
+    const keybinds = JSON.parse(window.localStorage.getItem("keybinds")!);
     const PTTKeybinds = findSubobjectWithValue(keybinds, "action", "PUSH_TO_TALK");
     if (!PTTKeybinds) return;
 
@@ -18,14 +18,12 @@ export function initPushToTalk() {
         }
     }
 
-    // We need to somehow listen to global keydown and keyup events, which is very problematic in nodejs
-    // https://www.npmjs.com/package/iohook or https://www.npmjs.com/package/uiohook-napi don't provide prebuilds for the latest electron and nodejs versions
     // https://www.npmjs.com/package/node-global-key-listener works only in X11 on Linux
-    // Electron's globalShortcut doesn't allow to listen for individual keydown and keyup events
 }
 
-function findSubobjectWithValue(mainObj, objKey, value) {
-    for (let key in mainObj) {
+function findSubobjectWithValue(mainObj: object | null, objKey: string, value: string) {
+    if (!mainObj) return null;
+    for (const key in mainObj) {
         if (mainObj[key][objKey] === value) {
             return mainObj[key];
         }
