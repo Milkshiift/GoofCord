@@ -1,20 +1,10 @@
-import {categorizeScripts, installDefaultScripts} from "./scriptLoader/scriptPreparer";
-import {unstrictCSP} from "./modules/firewall";
+import {installDefaultScripts} from "./scriptLoader/scriptPreparer";
 import {createMainWindow} from "./window";
 import {loadExtensions, updateModBundle} from "./modules/extensions";
 import {checkForUpdate} from "./modules/updateCheck";
-import {initEncryption} from "./modules/messageEncryption";
-import {registerIpc} from "./ipc";
 
 export async function load() {
-    void initEncryption();
-    await Promise.all([
-        unstrictCSP(),
-        loadExtensions(),
-        categorizeScripts(),
-        registerIpc()
-    ]);
-
+    await loadExtensions()
     await createMainWindow();
 
     void installDefaultScripts();

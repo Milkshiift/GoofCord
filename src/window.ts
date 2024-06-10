@@ -15,7 +15,7 @@ export async function createMainWindow() {
         width: 835,
         height: 600,
         title: "GoofCord",
-        show: !getConfig("startMinimized"),
+        show: false,
         darkTheme: true,
         icon: getCustomIcon(),
         frame: !getConfig("customTitlebar"),
@@ -28,12 +28,13 @@ export async function createMainWindow() {
             preload: path.join(__dirname, "preload/preload.js"),
             nodeIntegrationInSubFrames: false,
             enableWebSQL: false,
-            plugins: true,
             spellcheck: getConfig("spellcheck"),
         }
     });
 
-    mainWindow.maximize();
+    if (!getConfig("startMinimized")) {
+        mainWindow.maximize();
+    }
     await doAfterDefiningTheWindow();
 }
 
@@ -50,8 +51,6 @@ async function doAfterDefiningTheWindow() {
     void registerCustomHandler()
     void setWindowOpenHandler()
     void initArrpc()
-
-    await initializeFirewall();
 
     // Load Discord
     void mainWindow.loadURL(getConfig("discordUrl"));

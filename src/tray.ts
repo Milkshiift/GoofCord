@@ -19,8 +19,6 @@ export async function createTray() {
 
     if (process.platform === "darwin") trayImage.resize({height: 22});
 
-    tray = new Tray(trayImage);
-
     const contextMenu = Menu.buildFromTemplate([
         {
             label: "GoofCord " + getDisplayVersion(),
@@ -53,6 +51,9 @@ export async function createTray() {
         }
     ]);
 
+    await app.whenReady();
+
+    tray = new Tray(trayImage);
     tray.setContextMenu(contextMenu);
     tray.setToolTip("GoofCord");
     tray.on("click", function () {

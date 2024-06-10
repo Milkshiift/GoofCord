@@ -1,6 +1,7 @@
 export function initPushToTalk() {
     const keybinds = window.localStorage.getItem("keybinds");
     const PTTKeybinds = findSubobjectWithValue(keybinds, "action", "PUSH_TO_TALK");
+    if (!PTTKeybinds) return;
 
     let control = false;
     let shift = false;

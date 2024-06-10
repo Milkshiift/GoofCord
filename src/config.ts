@@ -7,7 +7,9 @@ export let cachedConfig: object = {};
 
 export async function loadConfig() {
     await tryWithFix(async () => {
-        const rawData = await fs.promises.readFile(getConfigLocation(), "utf-8");
+        // I don't know why but specifically in this scenario using fs.promises.readFile is whopping 180 ms compared to ~1 ms using fs.readFileSync
+        // Related? https://github.com/nodejs/performance/issues/151
+        const rawData = fs.readFileSync(getConfigLocation(), "utf-8");
         cachedConfig = JSON.parse(rawData);
     }, tryFixErrors, "GoofCord was unable to load the config: ");
 }

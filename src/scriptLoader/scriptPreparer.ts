@@ -8,12 +8,14 @@ import download from "github-directory-downloader";
 
 export const enabledScripts: string[][] = [];
 export const disabledScripts: string[] = [];
+ipcMain.handle("getScripts", () => {
+    return enabledScripts;
+});
 
 const scriptsFolder = path.join(app.getPath("userData"), "/scripts/");
 
 export async function categorizeScripts() {
     const files = await readOrCreateFolder(scriptsFolder);
-
     for (const file of files) {
         try {
             const filePath = path.join(scriptsFolder, file);
@@ -39,10 +41,6 @@ export async function categorizeScripts() {
             error("An error occurred during script categorizing: " + err);
         }
     }
-
-    ipcMain.handle("getScripts", () => {
-        return enabledScripts;
-    });
 }
 
 export async function installDefaultScripts() {
