@@ -7,8 +7,10 @@ assignees: ''
 
 ---
 
+[Replace the square brackets with needed information, and remove this]
+
 ### Description
-[Please provide a clear and concise description of the feature you'd like to request.]
+[Provide a clear and concise description of the feature you'd like to request.]
 
 ### Use Case
 [Explain how this feature would be useful to you or your project.]

@@ -46,7 +46,7 @@ export async function createTray() {
         {
             label: "Quit GoofCord",
             click: function () {
-                app.quit();
+                app.exit();
             }
         }
     ]);

@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-[Replace everything in square brackets with needed information, and remove this]
+[Replace the square brackets with needed information, and remove this]
 
 ### Description
 [Provide a brief description of the bug you encountered]

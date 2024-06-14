@@ -21,7 +21,7 @@
     "dynamicIcon": {
       "name": "Dynamic icon",
       "defaultValue": false,
-      "description": "Following Discord's behavior on Windows, this shows unread messages/pings count on GoofCord's icon instead of its tray. Overwrites the custom icon.",
+      "description": "When enabled shows pings/mentions count on GoofCord's icon and its tray. Overwrites the custom icon.\nOn Linux pings on the taskbar icon only show when Unity launcher is used",
       "inputType": "checkbox"
     },
     "customIconPath": {

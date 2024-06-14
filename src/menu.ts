@@ -49,7 +49,7 @@ export async function setApplicationMenu() {
                     accelerator: "Shift+CmdOrCtrl+R",
                     click: async function () {
                         app.relaunch();
-                        app.quit();
+                        app.exit();
                     }
                 },
                 {
@@ -60,7 +60,7 @@ export async function setApplicationMenu() {
                     label: "Quit",
                     accelerator: "CmdOrCtrl+Q",
                     click: function () {
-                        app.quit();
+                        app.exit();
                     }
                 },
             ]

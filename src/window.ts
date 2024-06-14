@@ -46,6 +46,17 @@ async function doAfterDefiningTheWindow() {
         mainWindow.show();
         mainWindow.focus();
     });
+    app.on("before-quit", (event) => {
+        if (getConfig("minimizeToTray") && !getConfig("customTitlebar")) {
+            event.preventDefault();
+        }
+    });
+    mainWindow.on('close', (event) => {
+        if (getConfig("minimizeToTray") && !getConfig("customTitlebar")) {
+            event.preventDefault();
+            mainWindow.hide();
+        }
+    });
 
     void registerCustomHandler()
     void setWindowOpenHandler()
