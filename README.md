@@ -68,9 +68,9 @@ And if you want to compile it yourself, here's how:
   - Press `Ctrl+Shift+'` shortcut.
 
 ### How do I run GoofCord natively on Wayland?
-- Run GoofCord with these flags: `--enable-features=UseOzonePlatform,WebRTCPipeWireCapturer,WaylandWindowDecorations --ozone-platform=wayland`    
-If GoofCord shows a black screen, also include this flag: `--disable-gpu-sandbox`    
-- Flatpak and Nix packages do that automatically
+- GoofCord should run natively out of the box starting from 1.4.3. If it doesn't, run with these flags:    
+`--enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform-hint=auto`    
+If GoofCord shows a black screen, also include this flag: `--disable-gpu-sandbox`
 
 ### How do I stream with audio on Linux?
 - If you use PulseAudio it should work out of the box. For PipeWire you will need to install pipewire-pulse if it's not already installed
