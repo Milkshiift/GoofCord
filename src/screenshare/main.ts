@@ -27,6 +27,7 @@ export async function registerCustomHandler() {
                 preload: path.join(__dirname, "/screenshare/preload.js")
             }
         });
+        capturerWindow.center();
         capturerWindow.maximize();
 
         await capturerWindow.loadURL(`file://${path.join(__dirname, "/assets/html/picker.html")}`);
