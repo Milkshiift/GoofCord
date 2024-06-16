@@ -54,7 +54,10 @@ And if you want to compile it yourself, here's how:
 5. Package GoofCord with `pnpm run packageWindows` or `pnpm run packageLinux`
 6. Find your freshly compiled app in the `dist` folder.
 
-## FAQ
+## Short FAQ
+### Where is the long FAQ?
+- [On the Wiki](https://github.com/Milkshiift/GoofCord/wiki/FAQ)
+
 ### Need Support? Join Our Discord!
 [![](https://dcbadge.vercel.app/api/server/CZc4bpnjmm)](https://discord.gg/CZc4bpnjmm)
 
