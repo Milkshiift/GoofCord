@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
-  <!--Created with jdAppdataEdit 5.1-->
   <id>io.github.milkshiift.GoofCord</id>
   <name>GoofCord</name>
   <summary>A privacy minded and highly configurable Discord client</summary>
@@ -28,6 +27,7 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.4.3" date="2024-06-17"/>
     <release version="1.4.2" date="2024-05-15"/>
     <release version="1.4.1" date="2024-05-09"/>
   </releases>
