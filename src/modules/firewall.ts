@@ -42,11 +42,13 @@ export async function initializeFirewall() {
                 return;
             }
         }
+
         callback({
             cancel: false,
             requestHeaders: {
+                Origin: '*',
+                "User-Agent": mainWindow.webContents.userAgent,
                 ...details.requestHeaders,
-                "User-Agent": mainWindow.webContents.userAgent
             }
         });
     });
@@ -58,10 +60,8 @@ export async function unstrictCSP() {
     session.defaultSession.webRequest.onHeadersReceived(({responseHeaders, resourceType}, done) => {
         if (!responseHeaders) return done({});
 
+        responseHeaders["access-control-allow-origin"] = ["*"];
         if (resourceType === "mainFrame") {
-            // This behaves very strangely. For some, everything works without deleting CSP,
-            // for some "CSP" works, for some "csp"
-            delete responseHeaders["Content-Security-Policy"];
             delete responseHeaders["content-security-policy"];
         } else if (resourceType === "stylesheet") {
             // Fix hosts that don't properly set the css content type, such as
