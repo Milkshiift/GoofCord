@@ -85,7 +85,6 @@ export async function tryWithFix(toDo: () => any, attemptFix: () => any, message
             await toDo();
         } catch (error: any) {
             console.error(message, error);
-            dialog.showErrorBox(message, error.toString());
         }
     }
 }
