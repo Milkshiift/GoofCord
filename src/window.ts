@@ -5,16 +5,15 @@ import * as path from "path";
 import {getConfig} from "./config";
 import {registerCustomHandler} from "./screenshare/main";
 import {initArrpc} from "./modules/arrpc";
+import {adjustWindow} from "./modules/windowStateManager";
 
 export let mainWindow: BrowserWindow;
 
 export async function createMainWindow() {
     const transparency: boolean = getConfig("transparency");
     mainWindow = new BrowserWindow({
-        width: 835,
-        height: 600,
         title: "GoofCord",
-        show: false,
+        show: true,
         darkTheme: true,
         icon: getCustomIcon(),
         frame: !getConfig("customTitlebar"),
@@ -31,8 +30,9 @@ export async function createMainWindow() {
         }
     });
 
-    if (!getConfig("startMinimized")) {
-        mainWindow.maximize();
+    adjustWindow(mainWindow, "main", [true, [0,0], [835,600]]);
+    if (getConfig("startMinimized")) {
+        mainWindow.hide();
     }
     await doAfterDefiningTheWindow();
 }

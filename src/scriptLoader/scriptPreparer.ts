@@ -1,5 +1,5 @@
 import path from "path";
-import {app, dialog, ipcMain, shell} from "electron";
+import {app, ipcMain, shell} from "electron";
 import fs from "fs";
 import {getVersion, readOrCreateFolder} from "../utils";
 import {error} from "../modules/logger";

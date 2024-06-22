@@ -2,6 +2,7 @@ import {app, BrowserWindow, ipcMain, shell} from "electron";
 import {getCustomIcon, getDisplayVersion} from "../utils";
 import path from "path";
 import {clearCache} from "../modules/cacheManager";
+import {adjustWindow} from "../modules/windowStateManager";
 
 let settingsWindow: BrowserWindow;
 const userDataPath = app.getPath("userData");
@@ -44,6 +45,7 @@ export async function createSettingsWindow() {
         }
     });
     isOpen = true;
+    adjustWindow(settingsWindow, "settings", [false, [100,100], [660,670]]);
 
     settingsWindow.webContents.setWindowOpenHandler(({url}) => {
         shell.openExternal(url);

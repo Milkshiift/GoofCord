@@ -12,7 +12,6 @@ export async function initArrpc() {
 
         server.on("invite", (code: string) => {
             mainWindow.webContents.executeJavaScript(`
-                // Doing findByProps every time is not very efficient but this is not going to get called frequently. So it's fine
                 Vencord.Webpack.findByProps("acceptInviteAndTransitionToInviteChannel").acceptInviteAndTransitionToInviteChannel({inviteKey: "${code}"})
                 goofcord.window.show();
             `);
