@@ -11,10 +11,8 @@
 - **:gear: Your Way, Your Client**: Set up GoofCord to your liking with an array of customization options.
 - **:chart_with_upwards_trend: Fast and Performant**: Glide through your chats with GoofCord's superior speed and responsiveness compared to the official client. 
 - **:bookmark: Standalone**: GoofCord is a standalone client, not reliant on the original Discord client in any way.
-- **:electric_plug: Plugins & Themes support**: Use client mods like [Vencord](https://github.com/Vendicated/Vencord) or [Shelter](https://github.com/uwu/shelter) for a world of plugins and themes.
-- **🐧 Linux support**: Seamless screen sharing with audio and native Wayland support on Linux. See FAQ for details.
-    
-[Full feature list](https://github.com/Milkshiift/GoofCord/wiki)
+- **:electric_plug: Plugins & Themes support**: Easily use client mods like [Vencord](https://github.com/Vendicated/Vencord) or [Shelter](https://github.com/uwu/shelter) for a world of plugins and themes.
+- **🐧 Linux support**: Seamless screensharing with audio and native Wayland support on Linux. See FAQ for details.
 
 ## Ready to Dive In?
 ### Windows 🪟
@@ -71,7 +69,7 @@ And if you want to compile it yourself, here's how:
   - Press `Ctrl+Shift+'` shortcut.
 
 ### How do I run GoofCord natively on Wayland?
-- GoofCord should run natively out of the box starting from 1.4.3. If it doesn't, run with these flags:    
+- GoofCord should run natively out of the box, but if it doesn't, run with these flags:    
 `--enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform-hint=auto`    
 If GoofCord shows a black screen, also include this flag: `--disable-gpu-sandbox`
 
