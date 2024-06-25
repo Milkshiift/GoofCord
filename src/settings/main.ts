@@ -38,10 +38,7 @@ export async function createSettingsWindow() {
         webPreferences: {
             sandbox: false,
             preload: path.join(__dirname, "/settings/preload.js"),
-            nodeIntegrationInSubFrames: false,
-            webSecurity: true,
-            plugins: false,
-            contextIsolation: true
+            nodeIntegrationInSubFrames: false
         }
     });
     isOpen = true;

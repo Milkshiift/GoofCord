@@ -61,7 +61,7 @@ export async function unstrictCSP() {
         if (!responseHeaders) return done({});
 
         responseHeaders["access-control-allow-origin"] = ["*"];
-        if (resourceType === "mainFrame") {
+        if (resourceType === "mainFrame" || resourceType === "subFrame") {
             delete responseHeaders["content-security-policy"];
         } else if (resourceType === "stylesheet") {
             // Fix hosts that don't properly set the css content type, such as
