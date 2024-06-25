@@ -89,21 +89,14 @@ async function setPermissions() {
 async function setFlags() {
     app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
     app.commandLine.appendSwitch("disable-features", "" +
-        "OutOfBlinkCors," +
         "UseChromeOSDirectVideoDecoder," +
-        "WinRetrieveSuggestionsOnlyOnDemand," + // Work around electron 13 bug w/ async spellchecking on Windows.
         "HardwareMediaKeyHandling," + // Prevent Discord from registering as a media service.
         "MediaSessionService," + //         ⤴
-        "WidgetLayering," + // Fix dev tools layers
         "WebRtcAllowInputVolumeAdjustment," +
         "Vulkan"
     );
     app.commandLine.appendSwitch("enable-features", "WebRTC,WebRtcHideLocalIpsWithMdns,PlatformHEVCEncoderSupport,EnableDrDc,CanvasOopRasterization,UseSkiaRenderer");
     if (process.platform === "linux") {
         app.commandLine.appendSwitch("enable-features", "PulseaudioLoopbackForScreenShare,VaapiVideoDecoder,VaapiVideoEncoder,VaapiVideoDecodeLinuxGL");
-        if (process.env.XDG_SESSION_TYPE?.toLowerCase() === "wayland") {
-            // Maybe unnecessary, but I didn't find a concrete proof of that
-            app.commandLine.appendSwitch("enable-features", "WebRTCPipeWireCapturer");
-        }
     }
 }
