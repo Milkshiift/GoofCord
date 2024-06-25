@@ -18,7 +18,7 @@ export function initPushToTalk() {
         }
     }
 
-    // https://www.npmjs.com/package/node-global-key-listener works only in X11 on Linux
+    // https://www.npmjs.com/package/node-global-key-listener works only in X11 on Linux, in my testing doesn't work in X11 either
 }
 
 function findSubobjectWithValue(mainObj: object | null, objKey: string, value: string) {

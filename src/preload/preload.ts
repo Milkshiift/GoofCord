@@ -33,8 +33,5 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     initPushToTalk();
 
-    if (getConfig("disableAutogain")) {
-        addScript(await fs.promises.readFile(path.join(__dirname, "../", "/assets/js/disableAutogain.js"), "utf8"));
-    }
     addStyle(await fs.promises.readFile(path.join(__dirname, "../", "/assets/css/discord.css"), "utf8"));
 });

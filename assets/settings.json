@@ -234,12 +234,6 @@
       "description": "If enabled, when a new version releases, a notification will pop up telling you that an update is available. Pings github.com",
       "inputType": "checkbox"
     },
-    "disableAutogain": {
-      "name": "Disable auto-gain",
-      "defaultValue": false,
-      "description": "Disable microphone auto-gain. It can be useful when your mic is quieter than it should be.",
-      "inputType": "checkbox"
-    },
     "discordUrl": {
       "name": "Discord URL",
       "defaultValue": "https://discord.com/app",
