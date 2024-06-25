@@ -1,4 +1,4 @@
-import {app, crashReporter, net, session} from "electron";
+import {app, crashReporter, net, session, systemPreferences} from "electron";
 import "v8-compile-cache";
 import {getConfig, loadConfig} from "./config";
 import {isDev} from "./utils";
@@ -72,9 +72,17 @@ async function setAutoLaunchState() {
 }
 
 async function setPermissions() {
-    session.fromPartition("some-partition").setPermissionRequestHandler((_webContents, permission, callback) => {
-        if (permission === "notifications") callback(true);
-        if (permission === "media") callback(true);
+    session.defaultSession.setPermissionRequestHandler(async (_webContents, permission, callback, details) => {
+        if (process.platform === "darwin" && "mediaTypes" in details) {
+            if (details.mediaTypes?.includes("audio")) {
+                callback(await systemPreferences.askForMediaAccess("microphone"));
+            }
+            if (details.mediaTypes?.includes("video")) {
+                callback(await systemPreferences.askForMediaAccess("camera"));
+            }
+        } else if (permission === "notifications" || permission === "media") {
+            callback(true);
+        }
     });
 }
 
