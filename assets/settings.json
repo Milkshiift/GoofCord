@@ -103,9 +103,12 @@
         "https://*/api/v*/science",
         "https://*/api/v*/applications/detectable",
         "https://*/api/v*/auth/location-metadata",
-        "https://*/assets/version.*",
+        "https://*/api/v*/users/@me/billing/country-code",
+        "https://*/api/v*/users/@me/billing/payment-sources",
         "https://*/api/v*/premium-marketing",
         "https://*/api/v*/scheduled-maintenances/upcoming.json",
+        "https://*/error-reporting-proxy/*",
+        "https://*/assets/version.*",
         "https://cdn.discordapp.com/bad-domains/*",
         "https://www.youtube.com/youtubei/v*/next?*",
         "https://www.youtube.com/s/desktop/*",
@@ -127,7 +130,8 @@
         "stats",
         "\\.spotify",
         "pagead",
-        "analytics"
+        "analytics",
+        "doubleclick"
       ],
       "description": "If any of those strings are in the URL, it will be blocked.",
       "inputType": "textarea",
@@ -245,3 +249,4 @@
     }
   }
 }
+

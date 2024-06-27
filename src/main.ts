@@ -89,6 +89,7 @@ async function setPermissions() {
 async function setFlags() {
     app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
     app.commandLine.appendSwitch("disable-features", "" +
+        "OutOfBlinkCors," +
         "UseChromeOSDirectVideoDecoder," +
         "HardwareMediaKeyHandling," + // Prevent Discord from registering as a media service.
         "MediaSessionService," + //         ⤴
