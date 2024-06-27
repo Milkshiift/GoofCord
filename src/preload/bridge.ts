@@ -21,10 +21,4 @@ contextBridge.exposeInMainWorld("goofcord", {
     decryptMessage: (message: string) => ipcRenderer.sendSync("decryptMessage", message),
     openSettingsWindow: () => ipcRenderer.invoke("openSettingsWindow"),
     setBadgeCount: (count: number) => ipcRenderer.invoke("setBadgeCount", count),
-    rpcListen: (callback: any) => { windowCallback = callback; }
-});
-
-let windowCallback: (data: object) => void;
-ipcRenderer.on("rpc", (_event, data: object) => {
-    windowCallback(data);
 });

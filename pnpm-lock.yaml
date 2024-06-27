@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       arrpc:
-        specifier: github:OpenAsar/arrpc#32eacace704df86d78d64e432bca361c66fd796b
-        version: https://codeload.github.com/OpenAsar/arrpc/tar.gz/32eacace704df86d78d64e432bca361c66fd796b
+        specifier: github:OpenAsar/arrpc
+        version: https://codeload.github.com/OpenAsar/arrpc/tar.gz/c62ec6a04c8d870530aa6944257fe745f6c59a24
       auto-launch:
         specifier: ^5.0.6
         version: 5.0.6
@@ -415,9 +415,9 @@ packages:
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
 
-  arrpc@https://codeload.github.com/OpenAsar/arrpc/tar.gz/32eacace704df86d78d64e432bca361c66fd796b:
-    resolution: {tarball: https://codeload.github.com/OpenAsar/arrpc/tar.gz/32eacace704df86d78d64e432bca361c66fd796b}
-    version: 3.3.1
+  arrpc@https://codeload.github.com/OpenAsar/arrpc/tar.gz/c62ec6a04c8d870530aa6944257fe745f6c59a24:
+    resolution: {tarball: https://codeload.github.com/OpenAsar/arrpc/tar.gz/c62ec6a04c8d870530aa6944257fe745f6c59a24}
+    version: 3.4.0
     hasBin: true
 
   assert-plus@1.0.0:
@@ -2067,7 +2067,7 @@ snapshots:
 
   argparse@2.0.1: {}
 
-  arrpc@https://codeload.github.com/OpenAsar/arrpc/tar.gz/32eacace704df86d78d64e432bca361c66fd796b:
+  arrpc@https://codeload.github.com/OpenAsar/arrpc/tar.gz/c62ec6a04c8d870530aa6944257fe745f6c59a24:
     dependencies:
       ws: 8.17.1
     transitivePeerDependencies:

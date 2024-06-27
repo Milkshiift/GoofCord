@@ -7,6 +7,8 @@ const isDev = process.argv.some(arg => arg === "--dev" || arg === "-d");
 
 await fs.promises.rm("ts-out", { recursive: true, force: true });
 
+await fixArrpc();
+
 const NodeCommonOpts = {
     minify: true,
     bundle: true,
@@ -32,38 +34,31 @@ await fs.promises.cp('./assets/', './ts-out/assets', {recursive: true});
 
 // Every preload file should be marked with "// RENDERER" on the first line so it's included
 async function searchPreloadFiles(directory, result = []) {
-    const files = await fs.promises.readdir(directory);
-
-    for (const file of files) {
-        const filePath = path.join(directory, file);
-        const stats = await fs.promises.stat(filePath);
-
-        if (stats.isDirectory()) {
-            // Recursively search subdirectories
-            searchPreloadFiles(filePath, result);
-        } else {
-            if (await getFirstLine(filePath) === "// RENDERER") {
-                result.push(filePath);
-            }
+    await traverseDirectory(directory, async (filePath) => {
+        if (await getFirstLine(filePath) === "// RENDERER") {
+            result.push(filePath);
         }
-    }
-
+    });
     return result;
 }
 
+async function fixArrpc() {
+    const file = await fs.promises.readFile("./node_modules/arrpc/src/process/index.js", { encoding: 'utf8' });
+    const modifiedFile = file.replaceAll(`import fs from 'node:fs';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const DetectableDB = JSON.parse(fs.readFileSync(join(__dirname, 'detectable.json'), 'utf8'));`, `import DetectableDB from "./detectable.json" assert { type: "json" };`);
+    await fs.promises.writeFile("./node_modules/arrpc/src/process/index.js", modifiedFile, { encoding: 'utf8' });
+}
+
 async function deleteSourceMaps(directoryPath) {
-    const files = await fs.promises.readdir(directoryPath);
-
-    for (const file of files) {
-        const filePath = path.join(directoryPath, file);
-        const stats = await fs.promises.stat(filePath);
-
-        if (stats.isDirectory()) {
-            deleteSourceMaps(filePath); // Recursively delete files in subdirectory
-        } else if (file.endsWith('.map')) {
-            fs.promises.unlink(filePath);
+    await traverseDirectory(directoryPath, async (filePath) => {
+        if (filePath.endsWith('.map')) {
+            void fs.promises.unlink(filePath);
         }
-    }
+    });
 }
 
 async function getFirstLine(pathToFile) {
@@ -77,4 +72,20 @@ async function getFirstLine(pathToFile) {
     });
     readable.close();
     return line;
+}
+
+async function traverseDirectory(directory, fileHandler) {
+    const files = await fs.promises.readdir(directory);
+
+    for (const file of files) {
+        const filePath = path.join(directory, file);
+        const stats = await fs.promises.stat(filePath);
+
+        if (stats.isDirectory()) {
+            // Recursively search subdirectories
+            await traverseDirectory(filePath, fileHandler);
+        } else {
+            fileHandler(filePath);
+        }
+    }
 }
