@@ -2,13 +2,12 @@ import fs from "fs";
 import {app, dialog, session} from "electron";
 import {fetchWithTimeout, readOrCreateFolder, tryWithFix} from "../utils";
 import path from "path";
-import {getConfig} from "../config";
+import {getConfig, getDefaultValue} from "../config";
 import chalk from "chalk";
 
-const modName: string = getConfig("modName");
+const modNames: string[] = getConfig("modNames");
 const extensionsFolder = path.join(app.getPath("userData"), "extensions/");
 const MOD_BUNDLES_URLS = {
-    none: [undefined, undefined],
     vencord: ["https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js", "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css"],
     equicord: ["https://github.com/Equicord/Equicord/releases/download/latest/browser.js", "https://github.com/Equicord/Equicord/releases/download/latest/browser.css"],
     shelter: ["https://raw.githubusercontent.com/uwu/shelter-builds/main/shelter.js", undefined],
@@ -49,11 +48,18 @@ async function downloadBundles(urls: Array<string | undefined>, destFolder: stri
 }
 
 export async function updateMods() {
-    if (getConfig("noBundleUpdates") || modName === "none") {
+    if (getConfig("noBundleUpdates") || modNames.length === 0) {
         console.log(chalk.yellow("[Mod Loader]"), "Skipping mod bundle update");
         return;
     }
-    await downloadBundles(MOD_BUNDLES_URLS[modName], modName);
+    const possibleMods = Object.keys(MOD_BUNDLES_URLS);
+    for (const possibleMod of possibleMods) {
+        if (modNames.includes(possibleMod)) {
+            void downloadBundles(MOD_BUNDLES_URLS[possibleMod], possibleMod);
+            continue;
+        }
+        void fs.promises.rm(path.join(extensionsFolder, possibleMod), {recursive: true, force: true});
+    }
 }
 
 async function installModLoader(name: string) {
@@ -61,7 +67,7 @@ async function installModLoader(name: string) {
         const folderContents = await readFolderIntoMemory(path.join(__dirname, "assets/loader"));
         await writeFolderFromMemory(folderContents, extensionsFolder + name);
 
-        console.log(chalk.yellow("[Mod Loader]"), "Mod loader installed");
+        console.log(chalk.yellow("[Mod Loader]"), "Mod loader installed for:", name);
     } catch (error) {
         console.error("[Mod Loader] Failed to install the mod loader:",error);
         dialog.showErrorBox(

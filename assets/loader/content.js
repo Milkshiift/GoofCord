@@ -20,7 +20,6 @@ async function loadResource(url, type) {
             console.warn(`${url} not found`);
         }
     } catch (e) {
-        console.error(`Error loading ${url}:`, e);
     }
 }
 

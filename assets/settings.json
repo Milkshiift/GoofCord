@@ -44,13 +44,12 @@
     }
   },
   "Client mods settings": {
-    "modName": {
-      "name": "Client mod",
-      "defaultValue": "vencord",
-      "description": "What client mod to use. Vencord or forks of it (Equicord) are recommended because much of GoofCord's functionality depends on them.",
-      "inputType": "dropdown",
+    "modNames": {
+      "name": "Client mods",
+      "defaultValue": ["shelter", "vencord"],
+      "description": "What client mods to use. <b>You shouldn't disable Shelter</b> as it is used by many GoofCord features. Do not mix forks of the same mod (e.g. Vencord and Equicord).",
+      "inputType": "dropdown-multiselect",
       "options": [
-        "none",
         "vencord",
         "shelter",
         "equicord",
@@ -63,8 +62,8 @@
       "description": "",
       "inputType": "textfield",
       "showAfter": {
-        "key": "modName",
-        "value": "custom"
+        "key": "modNames",
+        "value": "return arg.includes('custom')"
       }
     },
     "customCssBundle": {
@@ -73,8 +72,8 @@
       "description": "A raw link to the JS bundle and CSS bundle of a client mod you want to use.",
       "inputType": "textfield",
       "showAfter": {
-        "key": "modName",
-        "value": "custom"
+        "key": "modNames",
+        "value": "return arg.includes('custom')"
       }
     },
     "noBundleUpdates": {
@@ -118,7 +117,7 @@
       "inputType": "textarea",
       "showAfter": {
         "key": "customFirewallRules",
-        "value": true
+        "value": "return arg === true"
       }
     },
     "blockedStrings": {
@@ -137,7 +136,7 @@
       "inputType": "textarea",
       "showAfter": {
         "key": "customFirewallRules",
-        "value": true
+        "value": "return arg === true"
       }
     },
     "allowedStrings": {
@@ -153,7 +152,7 @@
       "inputType": "textarea",
       "showAfter": {
         "key": "customFirewallRules",
-        "value": true
+        "value": "return arg === true"
       }
     }
   },
@@ -183,7 +182,7 @@
       "inputType": "textarea",
       "showAfter": {
         "key": "messageEncryption",
-        "value": true
+        "value": "return arg === true"
       }
     },
     "encryptionCover": {
@@ -193,7 +192,7 @@
       "inputType": "textfield",
       "showAfter": {
         "key": "messageEncryption",
-        "value": true
+        "value": "return arg === true"
       }
     },
     "encryptionMark": {
@@ -203,7 +202,7 @@
       "inputType": "textfield",
       "showAfter": {
         "key": "messageEncryption",
-        "value": true
+        "value": "return arg === true"
       }
     }
   },

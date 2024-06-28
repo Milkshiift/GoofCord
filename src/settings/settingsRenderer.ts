@@ -45,7 +45,7 @@ function fillCategory(categoryName: string) {
                 // with the current config system this provides much better performance since we don't have to do ipc calls.
                 value = config[setting];
             }
-            const showAfter = entry.showAfter?.key+"|"+entry.showAfter?.value;
+            const showAfter = entry.showAfter?.key+"$"+entry.showAfter?.value;
             html += `
             <fieldset class="${config[entry.showAfter?.key] === entry.showAfter?.value ? "" : "hidden"}">
                 <div class='checkbox-container'>
@@ -73,10 +73,10 @@ function getInputElement(entry: { inputType: string; name: string; description: 
         return `
             <textarea setting-name="${setting}" show-after="${showAfter}">${value.join(",\n")}</textarea>
         `;
-    } else if (entry.inputType === "dropdown") {
+    } else if (entry.inputType.startsWith("dropdown")) {
         return `
-            <select setting-name="${setting}" show-after="${showAfter}" class="left dropdown" id="${setting}" name="${setting}">
-                ${entry.options.map((option: any) => `<option value="${option}" ${option === value ? "selected" : ""}>${option}</option>`).join("")}
+            <select setting-name="${setting}" show-after="${showAfter}" class="left dropdown" id="${setting}" name="${setting}" ${entry.inputType.endsWith("multiselect") ? "multiple" : ""}>
+                ${entry.options.map((option: any) => `<option value="${option}" ${(option === value) || (Array.isArray(value) && value.includes(option)) ? "selected" : ""}>${option}</option>`).join("")}
             </select>
         `;
     }

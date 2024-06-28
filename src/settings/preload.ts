@@ -15,7 +15,7 @@ contextBridge.exposeInMainWorld("settings", {
 (async () => {
     // DOMContentLoaded is too late and causes a flicker when rendering, so we wait until body is accessible manually
     while (document.body === null) {
-        await new Promise(resolve => setTimeout(resolve, 2));
+        await new Promise(resolve => setTimeout(resolve, 1));
     }
     await renderSettings();
 
@@ -41,10 +41,11 @@ async function saveSettings(changedElement: HTMLInputElement) {
 
     // showAfter implementation. There is maybe a better way
     for (const element of elements) {
-        const elementShowAfter = element.getAttribute("show-after")?.split("|");
+        const elementShowAfter = element.getAttribute("show-after")?.split("$");
         if (elementShowAfter == null || elementShowAfter[0] === undefined) continue;
         if (changedElementName === elementShowAfter[0]) {
-            if (String(changedElementValue) == elementShowAfter[1]) {
+            const func = (0, eval)("(arg)=>{"+elementShowAfter[1]+"}");
+            if (func(changedElementValue)) {
                 element.parentElement?.parentElement?.classList.remove('hidden');
             } else {
                 element.parentElement?.parentElement?.classList.add('hidden');
@@ -60,6 +61,10 @@ async function saveSettings(changedElement: HTMLInputElement) {
 async function getSettingValue(element: HTMLInputElement, settingName: string) {
     try {
         if (element.tagName === "SELECT" || element.type === "text") {
+            if (element.multiple) {
+                const selected = document.querySelectorAll(`[setting-name="${settingName}"] option:checked`);
+                return Array.from(selected).map(option => (option as HTMLOptionElement).value);
+            }
             return element.value;
         } else if (element.type === "checkbox") {
             return element.checked;
