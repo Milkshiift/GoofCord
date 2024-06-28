@@ -5,7 +5,6 @@ import {addScript, addStyle} from "../utils";
 import {injectTitlebar} from "./titlebar";
 import {loadScripts} from "../scriptLoader/scriptLoader";
 import fs from "fs";
-import {getConfig} from "../config";
 import {initPushToTalk} from "../modules/pushToTalk";
 
 document.addEventListener("DOMContentLoaded", async () => {

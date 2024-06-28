@@ -8,7 +8,7 @@ export function adjustWindow(window: BrowserWindow, windowName: string, defaults
     let previousWindowState = getConfig(`windowState:${windowName}`) as WindowState | undefined;
     if (!previousWindowState) {
         previousWindowState = defaults;
-        setConfig("windowState:"+windowName, defaults);
+        void setConfig("windowState:"+windowName, defaults);
     }
 
     const [osMaximized, [x,y], [width, height]] = previousWindowState;

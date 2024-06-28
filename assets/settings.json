@@ -163,12 +163,6 @@
       "description": "Enables the script loader.",
       "inputType": "checkbox"
     },
-    "autoUpdateDefaultScripts": {
-      "name": "Auto-update default scripts",
-      "defaultValue": true,
-      "description": "Enables auto-update for the <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord-Scripts\">default GoofCord scripts</a>.",
-      "inputType": "checkbox"
-    },
     "messageEncryption": {
       "name": "Message encryption",
       "defaultValue": false,

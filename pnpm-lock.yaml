@@ -20,9 +20,6 @@ importers:
       electron-context-menu:
         specifier: github:Milkshiift/electron-context-menu
         version: https://codeload.github.com/Milkshiift/electron-context-menu/tar.gz/1e84322c8a165e08e2d3b7557a675d909e32c86e
-      github-directory-downloader:
-        specifier: github:Milkshiift/github-directory-downloader
-        version: https://codeload.github.com/Milkshiift/github-directory-downloader/tar.gz/a9a8f4acdddffc8feeaee209c727f25611288e7e
       stegcloak:
         specifier: github:Milkshiift/stegcloak-node
         version: https://codeload.github.com/Milkshiift/stegcloak-node/tar.gz/da5a41944fdf5fd1b7e44f174c47cc4f572fac44
@@ -847,10 +844,6 @@ packages:
   get-stream@5.2.0:
     resolution: {integrity: sha512-nBF+F1rAZVCu/p7rjzgA+Yb4lfYXrpl7a6VmJrU8wF9I1CKvP/QwPNZHnOlwbTkY6dvtFIzFMSyQXbLoTQPRpA==}
     engines: {node: '>=8'}
-
-  github-directory-downloader@https://codeload.github.com/Milkshiift/github-directory-downloader/tar.gz/a9a8f4acdddffc8feeaee209c727f25611288e7e:
-    resolution: {tarball: https://codeload.github.com/Milkshiift/github-directory-downloader/tar.gz/a9a8f4acdddffc8feeaee209c727f25611288e7e}
-    version: 1.3.6
 
   glob@10.4.2:
     resolution: {integrity: sha512-GwMlUF6PkPo3Gk21UxkCohOv0PLcIXVtKyLlpEI28R/cO/4eNOdmLk3CMW1wROV/WR/EsZOWAfBbBOqYvs88/w==}
@@ -2631,8 +2624,6 @@ snapshots:
   get-stream@5.2.0:
     dependencies:
       pump: 3.0.0
-
-  github-directory-downloader@https://codeload.github.com/Milkshiift/github-directory-downloader/tar.gz/a9a8f4acdddffc8feeaee209c727f25611288e7e: {}
 
   glob@10.4.2:
     dependencies:

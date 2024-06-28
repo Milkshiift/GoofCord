@@ -1,10 +1,8 @@
 import path from "path";
 import {app, ipcMain, shell} from "electron";
 import fs from "fs";
-import {getVersion, readOrCreateFolder} from "../utils";
+import {readOrCreateFolder} from "../utils";
 import {error} from "../modules/logger";
-import {getConfig} from "../config";
-import download from "github-directory-downloader";
 import chalk from "chalk";
 
 export const enabledScripts: string[][] = [];
@@ -21,9 +19,8 @@ export async function categorizeScripts() {
         try {
             const filePath = path.join(scriptsFolder, file);
 
-            // 1.4.0 changed the naming of the scripts, so when they autoupdate they don't replace the old 1.3.0 ones, creating a duplicate
-            // This is a bad temporary solution for that
-            if (getConfig("autoUpdateDefaultScripts") && /(AL|BL)1[0-2]/.test(file)) {
+            const scriptsForRemoval = ["10_screenshareQuality.js", "11_dynamicIcon.js", "12_consoleSupressor.js", "13_messageEncryption.js", "14_invidiousEmbeds.js", "15_richPresence.js"]
+            if (scriptsForRemoval.includes(file)) {
                 void shell.trashItem(filePath);
                 continue;
             }
@@ -43,26 +40,6 @@ export async function categorizeScripts() {
         }
     }
     console.log(chalk.yellowBright("[Script Loader]"), "Categorized scripts");
-}
-
-export async function installDefaultScripts() {
-    if (getConfig("autoUpdateDefaultScripts") === false || getConfig("scriptLoading") === false) return;
-
-    try {
-        // GoofCord-Scripts repo has a branch for every minor and major version of GoofCord since 1.3.0
-        // That way scripts can use the newest features while remaining compatible with older versions
-        await download(`https://github.com/Milkshiift/GoofCord-Scripts/tree/${changePatchVersionToZero(getVersion())}/patches`, scriptsFolder, disabledScripts);
-
-        console.log(chalk.yellowBright("[Script Loader]"), "Successfully installed default scripts");
-    } catch (error: any) {
-        console.error("[Script Loader] Failed to install default scripts", error);
-    }
-}
-
-function changePatchVersionToZero(version: string): string {
-    const parts = version.split(".");
-    parts[2] = "0"; // Set patch version to 0
-    return parts.join(".");
 }
 
 function modifyScriptContent(content: string) {

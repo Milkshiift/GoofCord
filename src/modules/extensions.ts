@@ -2,7 +2,7 @@ import fs from "fs";
 import {app, dialog, session} from "electron";
 import {fetchWithTimeout, readOrCreateFolder, tryWithFix} from "../utils";
 import path from "path";
-import {getConfig, getDefaultValue} from "../config";
+import {getConfig} from "../config";
 import chalk from "chalk";
 
 const modNames: string[] = getConfig("modNames");
