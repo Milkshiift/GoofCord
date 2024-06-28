@@ -1,13 +1,13 @@
 import {installDefaultScripts} from "./scriptLoader/scriptPreparer";
 import {createMainWindow} from "./window";
-import {loadExtensions, updateModBundle} from "./modules/extensions";
+import {loadExtensions, updateMods} from "./modules/extensions";
 import {checkForUpdate} from "./modules/updateCheck";
 
 export async function load() {
-    await loadExtensions()
+    await loadExtensions();
     await createMainWindow();
 
     void installDefaultScripts();
-    void updateModBundle();
+    void updateMods();
     void checkForUpdate();
 }

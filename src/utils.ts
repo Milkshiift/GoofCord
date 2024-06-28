@@ -1,7 +1,8 @@
-import {app} from "electron";
+import {app, dialog} from "electron";
 import path from "path";
 import {getConfig} from "./config";
 import fs from "fs";
+import chalk from "chalk";
 
 //Get the version value from the "package.json" file
 export const packageVersion = require("../package.json").version;
@@ -79,12 +80,13 @@ export async function tryWithFix(toDo: () => any, attemptFix: () => any, message
     try {
         await toDo();
     } catch (error) {
-        console.error(message, error);
+        console.error(chalk.bgRed("[Auto Fixer]"), message, error);
         await attemptFix();
         try {
             await toDo();
         } catch (error: any) {
-            console.error(message, error);
+            console.error(chalk.bgRedBright("[Auto Fixer FAIL]"), message, error);
+            dialog.showErrorBox("Auto fixer tried to fix an issue, but failed", message+"\n\n"+error.toString());
         }
     }
 }

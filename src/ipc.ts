@@ -42,8 +42,8 @@ export async function registerIpc() {
     ipcMain.handle("config:setConfig", async (_event, entry, value) => {
         await setConfig(entry, value);
     });
-    ipcMain.handle("config:setConfigBulk", (_event, object) => {
-        setConfigBulk(object);
+    ipcMain.handle("config:setConfigBulk", async (_event, object) => {
+        await setConfigBulk(object);
     });
     ipcMain.on("getAppVersion", (event) => {
         event.returnValue = getVersion();

@@ -1,91 +1,65 @@
 import fs from "fs";
 import {app, dialog, session} from "electron";
-import {fetchWithTimeout, tryWithFix} from "../utils";
-import {patchVencord} from "../scriptLoader/vencordPatcher";
+import {fetchWithTimeout, readOrCreateFolder, tryWithFix} from "../utils";
 import path from "path";
 import {getConfig} from "../config";
-import extract from "extract-zip";
 import chalk from "chalk";
 
-const modName: keyof typeof MOD_BUNDLE_URLS = getConfig("modName");
+const modName: string = getConfig("modName");
+const extensionsFolder = path.join(app.getPath("userData"), "extensions/");
+const MOD_BUNDLES_URLS = {
+    none: [undefined, undefined],
+    vencord: ["https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js", "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css"],
+    equicord: ["https://github.com/Equicord/Equicord/releases/download/latest/browser.js", "https://github.com/Equicord/Equicord/releases/download/latest/browser.css"],
+    shelter: ["https://raw.githubusercontent.com/uwu/shelter-builds/main/shelter.js", undefined],
+    custom: [getConfig("customJsBundle"), getConfig("customCssBundle")],
+};
+const EXTENSION_DOWNLOAD_TIMEOUT = 10000;
 
 export async function loadExtensions() {
-    const userDataPath = app.getPath("userData");
-    const extensionsFolder = path.join(userDataPath, "extensions/");
     try {
-        for (const file of (await fs.promises.readdir(extensionsFolder))) {
-            await session.defaultSession.loadExtension(`${userDataPath}/extensions/${file}`);
+        for (const file of (await readOrCreateFolder(extensionsFolder))) {
+            await session.defaultSession.loadExtension(path.join(extensionsFolder, file));
             console.log(chalk.yellow("[Mod Loader]"), `Loaded extension: ${file}`);
         }
     } catch (e: any) {
-        if (e.code === "ENOENT") {
-            void installModLoader();
-        }
         console.error("[Mod Loader] Failed to load extensions:", e);
     }
 }
 
-const MOD_BUNDLE_URLS = {
-    none: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",
-    vencord: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",
-    shelter: "https://raw.githubusercontent.com/uwu/shelter-builds/main/shelter.js",
-    equicord: "https://github.com/Equicord/Equicord/releases/download/latest/browser.js",
-    custom: getConfig("customJsBundle"),
-};
-
-const MOD_BUNDLE_CSS_URLS = {
-    none: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
-    vencord: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
-    shelter: "https://raw.githubusercontent.com/Milkshiift/empty/main/empty.txt",
-    equicord: "https://github.com/Equicord/Equicord/releases/download/latest/browser.css",
-    custom: getConfig("customCssBundle"),
-};
-
-const EXTENSION_DOWNLOAD_TIMEOUT = 10000;
-
-async function downloadAndWriteBundle(url: string, filePath: string) {
+async function downloadBundles(urls: Array<string | undefined>, destFolder: string) {
+    console.log(chalk.yellow("[Mod Loader]"), "Downloading mod bundles for:", destFolder);
+    const filePath = path.join(extensionsFolder, destFolder+"/dist/")
     try {
-        const response = await fetchWithTimeout(url, {method: "GET"}, EXTENSION_DOWNLOAD_TIMEOUT);
+        for (const url of urls) {
+            if (!url) continue;
 
-        let bundle = await response.text();
+            const response = await fetchWithTimeout(url, {method: "GET"}, EXTENSION_DOWNLOAD_TIMEOUT);
+            let bundle = await response.text();
 
-        if (url.endsWith(".js") && bundle.includes("Vencord")) {
-            bundle = await patchVencord(bundle);
+            await tryWithFix(async () => {
+                await fs.promises.writeFile(filePath+"bundle"+path.extname(url), bundle, "utf-8");
+            }, async ()=>{await installModLoader(destFolder)}, "[Mod Loader] Failed to write bundles:");
         }
-
-        await tryWithFix(() => {
-            fs.promises.writeFile(filePath, bundle, "utf-8");
-        }, installModLoader, "[Mod Loader] Failed to write bundle:");
     } catch (e: any) {
-        console.error("[Mod Loader] Failed to download bundle:", e);
-        dialog.showErrorBox("GoofCord was unable to download the mod bundle", e.toString());
+        console.error("[Mod Loader] Failed to download bundles:", e);
         throw e;
     }
+    console.log(chalk.yellow("[Mod Loader]"), "Bundles downloaded for:", destFolder);
 }
 
-export async function updateModBundle() {
+export async function updateMods() {
     if (getConfig("noBundleUpdates") || modName === "none") {
         console.log(chalk.yellow("[Mod Loader]"), "Skipping mod bundle update");
         return;
     }
-
-    const distFolder = path.join(app.getPath("userData"), "extensions/loader/dist/");
-
-    console.log(chalk.yellow("[Mod Loader]"), "Downloading mod bundle");
-
-    await downloadAndWriteBundle(MOD_BUNDLE_URLS[modName], path.join(distFolder, "bundle.js"));
-    await downloadAndWriteBundle(MOD_BUNDLE_CSS_URLS[modName], path.join(distFolder, "bundle.css"));
-
-    console.log(chalk.yellow("[Mod Loader]"), "Mod bundle updated");
+    await downloadBundles(MOD_BUNDLES_URLS[modName], modName);
 }
 
-async function installModLoader() {
-    const extensionFolder = path.join(app.getPath("userData"), "extensions/");
-    try {await fs.promises.mkdir(extensionFolder);} catch(e){}
-
+async function installModLoader(name: string) {
     try {
-        const zipBuffer = await fs.promises.readFile(path.join(__dirname, "assets/js/loader.zip"));
-        await extract.extractBuffer(zipBuffer, {dir: extensionFolder});
+        const folderContents = await readFolderIntoMemory(path.join(__dirname, "assets/loader"));
+        await writeFolderFromMemory(folderContents, extensionsFolder + name);
 
         console.log(chalk.yellow("[Mod Loader]"), "Mod loader installed");
     } catch (error) {
@@ -94,5 +68,39 @@ async function installModLoader() {
             "Oops, something went wrong.",
             `GoofCord couldn't install the internal mod loader.\n\n${error}`
         );
+    }
+}
+
+async function readFolderIntoMemory(folderPath: string) {
+    const files = await fs.promises.readdir(folderPath);
+    const folderContents = {};
+
+    for (const file of files) {
+        const filePath = path.join(folderPath, file);
+        const stats = await fs.promises.stat(filePath);
+
+        if (stats.isFile()) {
+            folderContents[file] = await fs.promises.readFile(filePath);
+        } else if (stats.isDirectory()) {
+            folderContents[file] = await readFolderIntoMemory(filePath); // Recursively read subfolders
+        }
+    }
+
+    return folderContents;
+}
+
+async function writeFolderFromMemory(folderContents: object, targetPath: string) {
+    try {await fs.promises.mkdir(targetPath, { recursive: true });} catch(e){}
+    for (const [fileName, content] of Object.entries(folderContents)) {
+        const targetFilePath = path.join(targetPath, fileName);
+
+        if (Buffer.isBuffer(content)) {
+            // It's a file
+            await fs.promises.writeFile(targetFilePath, content);
+        } else {
+            // It's a folder
+            await fs.promises.mkdir(targetFilePath, { recursive: true });
+            await writeFolderFromMemory(content, targetFilePath); // Recursively write subfolders
+        }
     }
 }

@@ -58,14 +58,14 @@ export async function setConfig(entry: string, value: unknown) {
     }
 }
 
-export function setConfigBulk(object: object) {
+export async function setConfigBulk(object: object) {
     try {
         if (process.type !== "browser") {
-            return ipcRenderer.sendSync("config:setConfigBulk", object);
+            return await ipcRenderer.invoke("config:setConfigBulk", object);
         }
         cachedConfig = object;
         const toSave = JSON.stringify(object);
-        void fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
+        await fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
     } catch (e: any) {
         console.error("setConfigBulk function errored:", e);
         dialog.showErrorBox("GoofCord was unable to save the settings", e.toString());
@@ -74,7 +74,7 @@ export function setConfigBulk(object: object) {
 
 export async function setup() {
     console.log("Setting up default GoofCord settings.");
-    setConfigBulk(getDefaults());
+    await setConfigBulk(getDefaults());
     setTimeout(() => {
         dialog.showMessageBox({
             message: "Welcome to GoofCord!\nIt seems that this is the first launch of GoofCord. It is advisable to fully restart GoofCord so it can fully set itself up.\nYou can do this with Ctrl+Shift+R or through the tray menu.\nHappy chatting!",
