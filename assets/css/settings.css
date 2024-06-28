@@ -6,12 +6,7 @@
 
 @font-face {
     font-family: "Ubuntu";
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
     src: url("../fonts/Ubuntu.woff2") format("woff2");
-    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC,
-    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 :root {
@@ -35,7 +30,7 @@
 html {
     padding: 10px;
     background-color: var(--bg-primary);
-    font-family: var(--font-family);
+    font-family: var(--font-family), sans-serif;
     color: var(--font-color-normal);
     line-height: 1.25;
     cursor: default;
@@ -48,7 +43,6 @@ h4,
 h5,
 h6 {
     color: var(--font-color-header);
-    margin-top: 1em;
     margin-bottom: 0.5em;
 }
 
@@ -68,12 +62,8 @@ a {
     color: #fff;
 }
 
-a:active {
-    color: #d52735;
-}
-
-h1 {
-    font-size: 1.6em;
+a:hover {
+    color: var(--color-primary-light);
 }
 
 h2 {
@@ -85,14 +75,12 @@ h2 {
 .description {
     margin-top: 0.5em;
     margin-left: 2.1em;
-    font-size: 1em;
     padding-right: 1em;
     color: var(--font-color-settings);
 }
 
 form {
     display: flex;
-    overflow-x: hidden;
     flex-direction: column;
     margin: 0 40px 2em 40px;
     padding: 10px 15px 0;
@@ -102,8 +90,6 @@ form {
 }
 
 fieldset {
-    display: flex;
-    flex-direction: column;
     margin: 0.5em 0;
     padding: 0;
     border: none;
@@ -112,13 +98,8 @@ fieldset {
 .checkbox-container {
     display: flex;
     margin: 0 1em;
-}
-
-label {
-    font-size: 1em;
-    display: flex;
+    gap: 0.5em;
     align-items: center;
-    margin-left: 0.5em;
 }
 
 input,
@@ -126,9 +107,7 @@ label {
     cursor: pointer;
 }
 
-input[type="checkbox"],
-input[type="radio"] {
-    flex-shrink: 0;
+input[type="checkbox"] {
     height: 1.5em;
     width: 1.5em;
     border-radius: 5px;
@@ -139,35 +118,17 @@ input[type="radio"] {
     margin: 0;
 }
 
-input[type="radio"] {
-    border-radius: 100%;
-    background-color: var(--bg-secondary);
-    border: solid var(--bg-secondary) 4px;
-    outline: none;
-    box-shadow: 0 0 0 2px var(--font-color-normal);
-}
-
-input[type="checkbox"] {
-    border-color: var(--input-bg);
-}
-
 input[type="checkbox"]:checked {
     background-color: var(--color-primary);
     background-image: var(--checkmark-icon);
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
-    border-color: var(--color-primary);
     animation: checkmark-animation 0.4s ease-in-out;
 }
 
 input[type="checkbox"]:not(:checked) {
     animation: checkmark-animation-unchecked 0.3s ease-in-out;
-}
-
-input[type="radio"]:checked {
-    background-color: var(--color-primary-light);
-    outline-color: var(--font-color-header);
 }
 
 @keyframes checkmark-animation {
@@ -200,32 +161,30 @@ textarea {
     border-radius: 5px;
     background-color: var(--input-bg);
     border: none;
-    color: #ffffff;
+    color: var(--font-color-normal);
     padding: 10px;
-    font-family: var(--font-family);
+    font-family: var(--font-family), sans-serif;
 }
 
 .text {
-    flex-shrink: 0;
     border-radius: 5px;
-    width: 190px;
-    appearance: none;
+    width: 15em;
     background-color: var(--input-bg);
     border: none;
-    color: #ffffff;
+    color: var(--font-color-normal);
     padding: 10px;
-    font-family: var(--font-family);
+    font-family: var(--font-family), sans-serif;
     cursor: text;
 }
 
 button {
-    flex-shrink: 0;
     margin: 0.2em auto;
     padding: 5px;
     width: fit-content;
     border-radius: 5px;
     background-color: var(--color-primary-light);
-    color: white;
+    color: var(--font-color-header);
+    font-weight: bold;
     border: solid #0000 4px;
     transition: background-color 0.2s ease-in-out;
     cursor: pointer;
@@ -237,12 +196,11 @@ button:hover {
 
 select {
     border-radius: 5px;
-    width: fit-content;
     background-color: var(--input-bg);
     border: none;
-    color: #ffffff;
+    color: var(--font-color-normal);
     padding: 10px;
-    font-family: var(--font-family);
+    font-family: var(--font-family), sans-serif;
     cursor: pointer;
 }
 
