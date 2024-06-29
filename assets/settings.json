@@ -30,17 +30,11 @@
       "description": "Leave empty for the default icon. The path should conform to your OS's format.\nA Windows example: \"D:/Downloads/icon.png\". A Linux and macOS example: \"~/Downloads/icon.png\".",
       "inputType": "textfield"
     },
-    "autoscroll": {
-      "name": "Auto-scroll",
-      "defaultValue": false,
-      "description": "Enables the ability to auto-scroll with a middle mouse button click. Enable this only if that is not the default behavior already.",
-      "inputType": "checkbox"
-    },
-    "transparency": {
-      "name": "Transparency",
-      "defaultValue": false,
-      "description": "Makes the window transparent so it's possible to use translucent themes.",
-      "inputType": "checkbox"
+    "discordUrl": {
+      "name": "Discord URL",
+      "defaultValue": "https://discord.com/app",
+      "description": "URL that GoofCord will load on launch. Variations: https://canary.discord.com/app, https://ptb.discord.com/app or https://discord.com/app",
+      "inputType": "textfield"
     }
   },
   "Client mods settings": {
@@ -231,11 +225,17 @@
       "description": "If enabled, when a new version releases, a notification will pop up telling you that an update is available. Pings github.com",
       "inputType": "checkbox"
     },
-    "discordUrl": {
-      "name": "Discord URL",
-      "defaultValue": "https://discord.com/app",
-      "description": "URL that GoofCord will load on launch. Variations: https://canary.discord.com/app, https://ptb.discord.com/app or https://discord.com/app",
-      "inputType": "textfield"
+    "autoscroll": {
+      "name": "Auto-scroll",
+      "defaultValue": false,
+      "description": "Enables the ability to auto-scroll with a middle mouse button click. Enable this only if that is not the default behavior already.",
+      "inputType": "checkbox"
+    },
+    "transparency": {
+      "name": "Transparency",
+      "defaultValue": false,
+      "description": "Makes the window transparent so it's possible to use translucent themes.",
+      "inputType": "checkbox"
     },
     "screensharePreviousSettings": {
       "defaultValue": ["720", "30", false]
