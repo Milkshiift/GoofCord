@@ -6,10 +6,12 @@ import {injectTitlebar} from "./titlebar";
 import {loadScripts} from "../scriptLoader/scriptLoader";
 import fs from "fs";
 import {initPushToTalk} from "../modules/pushToTalk";
+import {addDefaultPlugins} from "./shelter";
 
 document.addEventListener("DOMContentLoaded", async () => {
     void loadScripts();
     void injectTitlebar();
+    void addDefaultPlugins();
 
     // Hide "Download Discord Desktop now!" banner
     window.localStorage.setItem("hideNag", "true");
