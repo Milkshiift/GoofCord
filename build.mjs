@@ -19,7 +19,8 @@ const NodeCommonOpts = {
     external: ["electron"],
     target: ["esnext"],
     entryPoints: await searchPreloadFiles("src", ["src/main.ts"]),
-    outdir: "ts-out"
+    outdir: "ts-out",
+    packages: "bundle"
 };
 
 const ctx = await context(NodeCommonOpts)

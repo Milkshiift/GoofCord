@@ -44,8 +44,7 @@ async function saveSettings(changedElement: HTMLInputElement) {
         const elementShowAfter = element.getAttribute("show-after")?.split("$");
         if (elementShowAfter == null || elementShowAfter[0] === undefined) continue;
         if (changedElementName === elementShowAfter[0]) {
-            const func = (0, eval)("(arg)=>{"+elementShowAfter[1]+"}");
-            if (func(changedElementValue)) {
+            if (evaluateShowAfter(elementShowAfter[1], changedElementValue)) {
                 element.parentElement?.parentElement?.classList.remove('hidden');
             } else {
                 element.parentElement?.parentElement?.classList.add('hidden');
@@ -97,4 +96,9 @@ async function createArrayFromTextareaEncrypted(input: string) {
         encryptedPasswords.push(await ipcRenderer.invoke("encryptSafeStorage", arrayFromTextArea[password]));
     }
     return encryptedPasswords;
+}
+
+export function evaluateShowAfter(condition: string | undefined, arg: any) {
+    if (!condition) return;
+    return ((0, eval)("(arg)=>{"+condition+"}"))(arg);
 }

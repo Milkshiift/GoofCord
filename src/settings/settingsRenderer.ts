@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import {ipcRenderer} from "electron";
-import {encryptionPasswords} from "../modules/messageEncryption";
+import {evaluateShowAfter} from "./preload";
 
 const settingsPath = path.join(__dirname, "../", "/assets/settings.json");
 const settingsFile = fs.readFileSync(settingsPath, "utf-8");
@@ -46,8 +46,9 @@ function fillCategory(categoryName: string) {
                 value = config[setting];
             }
             const showAfter = entry.showAfter?.key+"$"+entry.showAfter?.value;
+            console.log(evaluateShowAfter(entry.showAfter?.value, config[entry.showAfter?.key]))
             html += `
-            <fieldset class="${config[entry.showAfter?.key] === entry.showAfter?.value ? "" : "hidden"}">
+            <fieldset class="${evaluateShowAfter(entry.showAfter?.value, config[entry.showAfter?.key]) === false ? "hidden" : ""}">
                 <div class='checkbox-container'>
                     ${getInputElement(entry, setting, value, showAfter)}
                     <label for="${setting}">${entry.name}</label>
