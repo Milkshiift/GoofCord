@@ -63,10 +63,10 @@ export async function registerIpc() {
     ipcMain.handle("openSettingsWindow", async () => {
         await createSettingsWindow();
     });
-    ipcMain.handle("encryptMessage", async (_event, message: string) => {
-        return encryptMessage(message);
+    ipcMain.on("encryptMessage", (event, message: string) => {
+        event.returnValue = encryptMessage(message);
     });
-    ipcMain.on("decryptMessage", async (event, message: string) => {
+    ipcMain.on("decryptMessage", (event, message: string) => {
         event.returnValue = decryptMessage(message);
     });
     ipcMain.handle("encryptSafeStorage", async (_event, plaintextPassword: string) => {

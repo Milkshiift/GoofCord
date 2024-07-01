@@ -29,13 +29,13 @@ loadConfig().then(async () => {
     void setAutoLaunchState();
     void setMenu();
     void createTray();
-    void initEncryption();
     void categorizeScripts();
     void registerIpc();
 
     // app.whenReady takes a lot of time so if there's something that doesn't need electron to be ready, do it before
     await app.whenReady();
 
+    void initEncryption();
     await Promise.all([
         setPermissions(),
         unstrictCSP(),

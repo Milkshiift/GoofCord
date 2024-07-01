@@ -46,7 +46,7 @@ export async function initializeFirewall() {
         callback({
             cancel: false,
             requestHeaders: {
-                Origin: '*',
+                //Origin: '*',
                 "User-Agent": mainWindow.webContents.userAgent,
                 ...details.requestHeaders,
             }
@@ -60,7 +60,7 @@ export async function unstrictCSP() {
     session.defaultSession.webRequest.onHeadersReceived(({responseHeaders, resourceType}, done) => {
         if (!responseHeaders) return done({});
 
-        responseHeaders["access-control-allow-origin"] = ["*"];
+        //responseHeaders["access-control-allow-origin"] = ["*"];
         if (resourceType === "mainFrame" || resourceType === "subFrame") {
             delete responseHeaders["content-security-policy"];
         } else if (resourceType === "stylesheet") {

@@ -10,8 +10,8 @@ let chosenPassword: string;
 let encryptionMark: string;
 let cover: string;
 
-ipcMain.on("messageEncryption:getDecryptedPasswords", async (_event) => {
-    _event.returnValue = encryptionPasswords;
+ipcMain.on("messageEncryption:getDecryptedPasswords", (event) => {
+    event.returnValue = encryptionPasswords;
 });
 
 export async function initEncryption() {
@@ -32,13 +32,14 @@ async function loadPasswords() {
     const encryptedPasswords = getConfig("encryptionPasswords");
     try {
         for (const password of encryptedPasswords) {
+            if (!password) continue;
             encryptionPasswords.push(await decryptString(password));
         }
+        chosenPassword = encryptionPasswords[0];
+        console.log(chalk.magenta("[Message Encryption]"), "Loaded encryption passwords");
     } catch (error) {
         console.error("Failed to load encryption passwords:", error);
     }
-    chosenPassword = encryptionPasswords[0];
-    console.log(chalk.magenta("[Message Encryption]"), "Loaded encryption passwords");
 }
 
 async function decryptString(encryptedString: string): Promise<string> {
@@ -59,7 +60,7 @@ export function encryptMessage(message: string) {
     } catch (e: any) {
         console.error(e);
         dialog.showErrorBox(
-            "GoofCord was unable to encrypt your message",
+            "GoofCord was unable to encrypt your message, did you setup message encryption?",
             e.toString()
         );
         return "";
@@ -95,3 +96,7 @@ export function cycleThroughPasswords() {
     chosenPassword = encryptionPasswords[currentIndex];
     void mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebarWithText("#f9c23c", "${"Chosen password: "+chosenPassword.slice(0, 2)+"..."}")`);
 }
+
+ipcMain.handle("messageEncryption:cycleThroughPasswords", () => {
+    cycleThroughPasswords();
+});
