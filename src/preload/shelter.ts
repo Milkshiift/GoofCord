@@ -14,7 +14,8 @@ export async function addDefaultPlugins() {
             "https://milkshiift.github.io/goofcord-shelter-plugins/screenshare-quality/",
             "https://milkshiift.github.io/goofcord-shelter-plugins/console-suppressor/",
             "https://milkshiift.github.io/goofcord-shelter-plugins/message-encryption/",
-            "https://milkshiift.github.io/goofcord-shelter-plugins/invidious-embeds/"
+            "https://milkshiift.github.io/goofcord-shelter-plugins/invidious-embeds/",
+            "https://milkshiift.github.io/goofcord-shelter-plugins/settings-category/",
         ];
         //const ids = defaultPlugins.map(getId);
         for (const pluginUrl of defaultPlugins) {
