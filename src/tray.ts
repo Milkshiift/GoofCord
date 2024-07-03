@@ -11,6 +11,8 @@ export async function createTray() {
     const getTrayMenuIcon = () => {
         if (process.platform == "win32") {
             return trayImage.resize({height: 16});
+        } else if (process.platform == "linux") {
+            return trayImage.resize({height: 24});
         } else if (process.platform == "darwin") {
             return trayImage.resize({height: 18});
         }
