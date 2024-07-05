@@ -50,7 +50,7 @@ export async function setConfig(entry: string, value: unknown) {
             await ipcRenderer.invoke("config:setConfig", entry, value);
         }
         cachedConfig[entry] = value;
-        const toSave = JSON.stringify(cachedConfig);
+        const toSave = JSON.stringify(cachedConfig, undefined, 2);
         void fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
     } catch (e: any) {
         console.error("setConfig function errored:", e);
@@ -64,7 +64,7 @@ export async function setConfigBulk(object: object) {
             return await ipcRenderer.invoke("config:setConfigBulk", object);
         }
         cachedConfig = object;
-        const toSave = JSON.stringify(object);
+        const toSave = JSON.stringify(object, undefined, 2);
         await fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
     } catch (e: any) {
         console.error("setConfigBulk function errored:", e);
