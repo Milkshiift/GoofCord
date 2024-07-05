@@ -31,7 +31,7 @@ export async function registerIpc() {
         mainWindow.hide();
     });
     ipcMain.handle("window:Quit", () => {
-        app.exit();
+        mainWindow.close();
     });
     ipcMain.on("config:getConfig", (event, toGet) => {
         event.returnValue = getConfig(toGet);

@@ -31,39 +31,46 @@ export async function createMainWindow() {
     });
 
     adjustWindow(mainWindow, "main", [true, [0,0], [835,600]]);
-    if (getConfig("startMinimized")) {
-        mainWindow.hide();
-    }
+    if (getConfig("startMinimized")) mainWindow.hide();
     await doAfterDefiningTheWindow();
 }
 
 async function doAfterDefiningTheWindow() {
     // Set the user agent for the web contents based on the Chrome version.
     mainWindow.webContents.userAgent = getUserAgent(process.versions.chrome);
-
-    app.on("second-instance", () => {
-        mainWindow.restore();
-        mainWindow.show();
-        mainWindow.focus();
-    });
-    app.on("before-quit", (event) => {
-        if (getConfig("minimizeToTray") && !getConfig("customTitlebar")) {
-            event.preventDefault();
-        }
-    });
     mainWindow.on('close', (event) => {
-        if (getConfig("minimizeToTray") && !getConfig("customTitlebar")) {
+        if (getConfig("minimizeToTray")) {
             event.preventDefault();
             mainWindow.hide();
         }
     });
 
+    subscribeToEvents();
     void registerCustomHandler()
     void setWindowOpenHandler()
     void initArrpc()
 
     // Load Discord
     void mainWindow.loadURL(getConfig("discordUrl"));
+}
+
+let subscribed = false;
+function subscribeToEvents() {
+    if (subscribed) return;
+    subscribed = true;
+    app.on("second-instance", () => {
+        mainWindow.restore();
+        mainWindow.show();
+        mainWindow.focus();
+    });
+    app.on("window-all-closed", () => {
+        if (process.platform !== "darwin") app.quit();
+    });
+    app.on('activate', () => {
+        app.on('activate', () => {
+            if (BrowserWindow.getAllWindows().length === 0) void createMainWindow();
+        })
+    })
 }
 
 async function setWindowOpenHandler() {
