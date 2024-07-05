@@ -36,7 +36,7 @@ function fillCategory(categoryName: string) {
         try {
             const entry = category[setting];
             if (entry.name === undefined) return;
-            let value;
+            let value: any;
             if (setting === "encryptionPasswords") {
                 value = ipcRenderer.sendSync("messageEncryption:getDecryptedPasswords");
             } else {

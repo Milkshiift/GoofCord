@@ -9,6 +9,8 @@ import {initializeFirewall, unstrictCSP} from "./modules/firewall";
 import {categorizeScripts} from "./scriptLoader/scriptPreparer";
 import {registerIpc} from "./ipc";
 import chalk from "chalk";
+import {createMainWindow} from "./window";
+import {checkForUpdate} from "./modules/updateCheck";
 
 if (isDev()) {
     try {
@@ -31,6 +33,7 @@ loadConfig().then(async () => {
     void createTray();
     void categorizeScripts();
     void registerIpc();
+    const extensions = await import("./modules/extensions");
 
     // app.whenReady takes a lot of time so if there's something that doesn't need electron to be ready, do it before
     await app.whenReady();
@@ -39,18 +42,23 @@ loadConfig().then(async () => {
     await Promise.all([
         setPermissions(),
         unstrictCSP(),
-        initializeFirewall()
+        initializeFirewall(),
+        extensions.loadExtensions(),
+        waitForInternetConnection()
     ]);
-    await checkForConnectivity();
+
+    await createMainWindow();
+
     console.timeEnd(chalk.green("[Timer]") + " GoofCord fully loaded in");
+
+    void extensions.updateMods();
+    void checkForUpdate();
 });
 
-async function checkForConnectivity() {
+async function waitForInternetConnection() {
     while (!net.isOnline()) {
         await new Promise(resolve => setTimeout(resolve, 1000));
     }
-    const { load } = await import('./loader.js');
-    await load();
 }
 
 async function setAutoLaunchState() {
