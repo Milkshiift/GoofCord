@@ -19,13 +19,20 @@ function loadBadge(index: number) {
 export function setBadgeCount(count: number) {
     switch (process.platform) {
     case "linux":
-    case "darwin":
         app.setBadgeCount(count);
+        break;
+    case "darwin":
+        if (count === 0) {
+            app.dock.setBadge("");
+            break;
+        }
+        app.dock.setBadge(count.toString());
         break;
     case "win32":
         mainWindow.setOverlayIcon(loadBadge(count), count+" Notifications");
         break;
     }
+    if (process.platform === "darwin") return;
     tray.setImage(loadTrayImage(count));
 }
 
