@@ -239,16 +239,25 @@ p.center {
     box-shadow: #2b2b2b 0 3px 8px;
     z-index: 100;
     border-radius: 4px;
-    display: none;
+    display: block;
     position: absolute;
     top:0;
     left: 0;
     right: 0;
     background: var(--bg-primary);
-    width: fit-content;
+    transition: max-height 0.2s linear;
+    max-height: 200px;
+    min-width: 90px;
+    overflow-y: hidden;
 }
+
+.dropdown-hidden {
+    max-height: 0;
+}
+
 .multiselect-dropdown-list{
     padding: 2px;
+    overflow-y: hidden;
 }
 .multiselect-dropdown-list div{
     padding: 0.25em;

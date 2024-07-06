@@ -27,6 +27,7 @@ function MultiselectDropdown(options){
     let list=newEl('div',{class:'multiselect-dropdown-list'});
     div.appendChild(listWrap);
     listWrap.appendChild(list);
+    listWrap.classList.add('dropdown-hidden');
 
     el.loadOptions=()=>{
       list.innerHTML='';
@@ -65,12 +66,12 @@ function MultiselectDropdown(options){
     el.loadOptions();
 
     div.addEventListener('click',()=>{
-      div.listEl.style.display='block';
+      div.listEl.classList.remove('dropdown-hidden')
     });
 
     document.addEventListener('click', function(event) {
       if (!div.contains(event.target)) {
-        listWrap.style.display='none';
+        listWrap.classList.add('dropdown-hidden');
         div.refresh();
       }
     });

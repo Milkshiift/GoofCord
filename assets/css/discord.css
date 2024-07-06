@@ -13,8 +13,3 @@
 [class^="listItem_"]:has(+ [class^="listItem_"] [data-list-item-id="guildsnav___app-download-button"]) {
     display: none;
 }
-
-/* Hide avatar decoration ad */
-.containerWrapper_fa6aa6.animation_fb8933.withoutAvatar__0549d {
-    display: none;
-}

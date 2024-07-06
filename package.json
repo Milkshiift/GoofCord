@@ -23,13 +23,13 @@
   },
   "homepage": "https://github.com/Milkshiift/GoofCord",
   "devDependencies": {
-    "@types/node": "^20.14.9",
+    "@types/node": "^20.14.10",
     "@types/stegcloak": "^1.0.2",
     "electron": "^31.1.0",
     "electron-builder": "^24.13.3",
-    "esbuild": "^0.22.0",
+    "esbuild": "^0.23.0",
     "source-map-support": "^0.5.21",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.3"
   },
   "dependencies": {
     "arrpc": "github:OpenAsar/arrpc",
