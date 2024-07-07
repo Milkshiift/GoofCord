@@ -52,6 +52,8 @@ export async function updateMods() {
         console.log(chalk.yellow("[Mod Loader]"), "Skipping mod bundle update");
         return;
     }
+    // Remove <1.5.0 mods
+    await fs.promises.rm(path.join(extensionsFolder, "loader"), {recursive: true, force: true});
     const possibleMods = Object.keys(MOD_BUNDLES_URLS);
     for (const possibleMod of possibleMods) {
         if (modNames.includes(possibleMod)) {
@@ -65,7 +67,9 @@ export async function updateMods() {
 async function installModLoader(name: string) {
     try {
         const folderContents = await readFolderIntoMemory(path.join(__dirname, "assets/loader"));
-        await writeFolderFromMemory(folderContents, extensionsFolder + name);
+        const modPath = path.join(extensionsFolder, name);
+        await writeFolderFromMemory(folderContents, modPath);
+        try {await fs.promises.mkdir(path.join(modPath, "dist"));} catch(e){}
 
         console.log(chalk.yellow("[Mod Loader]"), "Mod loader installed for:", name);
     } catch (error) {
