@@ -29,8 +29,8 @@ export async function loadExtensions() {
 async function downloadBundles(urls: Array<string | undefined>, destFolder: string) {
     console.log(chalk.yellow("[Mod Loader]"), "Downloading mod bundles for:", destFolder);
     const filePath = path.join(extensionsFolder, destFolder+"/dist/")
-    try {
-        for (const url of urls) {
+    for (const url of urls) {
+        try {
             if (!url) continue;
 
             const response = await fetchWithTimeout(url, {method: "GET"}, EXTENSION_DOWNLOAD_TIMEOUT);
@@ -39,10 +39,10 @@ async function downloadBundles(urls: Array<string | undefined>, destFolder: stri
             await tryWithFix(async () => {
                 await fs.promises.writeFile(filePath+"bundle"+path.extname(url), bundle, "utf-8");
             }, async ()=>{await installModLoader(destFolder)}, "[Mod Loader] Failed to write bundles:");
+        } catch (e: any) {
+            console.error("[Mod Loader] Failed to download bundle:", e);
+            throw e;
         }
-    } catch (e: any) {
-        console.error("[Mod Loader] Failed to download bundles:", e);
-        throw e;
     }
     console.log(chalk.yellow("[Mod Loader]"), "Bundles downloaded for:", destFolder);
 }
