@@ -1,6 +1,6 @@
 import fs from "fs";
 import {app, dialog, session} from "electron";
-import {fetchWithTimeout, readOrCreateFolder, tryWithFix} from "../utils";
+import {readOrCreateFolder, tryWithFix} from "../utils";
 import path from "path";
 import {getConfig} from "../config";
 import chalk from "chalk";
@@ -13,7 +13,6 @@ const MOD_BUNDLES_URLS = {
     shelter: ["https://raw.githubusercontent.com/uwu/shelter-builds/main/shelter.js", undefined],
     custom: [getConfig("customJsBundle"), getConfig("customCssBundle")],
 };
-const EXTENSION_DOWNLOAD_TIMEOUT = 10000;
 
 export async function loadExtensions() {
     try {
@@ -33,7 +32,7 @@ async function downloadBundles(urls: Array<string | undefined>, destFolder: stri
         try {
             if (!url) continue;
 
-            const response = await fetchWithTimeout(url, {method: "GET"}, EXTENSION_DOWNLOAD_TIMEOUT);
+            const response = await fetch(url, {method: "GET"});
             let bundle = await response.text();
 
             await tryWithFix(async () => {

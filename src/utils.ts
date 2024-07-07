@@ -4,7 +4,6 @@ import {getConfig} from "./config";
 import fs from "fs";
 import chalk from "chalk";
 
-//Get the version value from the "package.json" file
 export const packageVersion = require("../package.json").version;
 
 export function addStyle(styleString: string) {
@@ -48,14 +47,6 @@ export function getCustomIcon() {
     } else {
         return path.join(__dirname, "/assets/gf_icon.png");
     }
-}
-
-export async function fetchWithTimeout(url: string, options: RequestInit = {}, timeout = 10000): Promise<Response> {
-    const controller = new AbortController();
-    const timeoutPromise = new Promise<Response>((_, reject) => {
-        setTimeout(() => reject(new Error("Timeout reached while fetching from "+url+". Check your internet connection")), timeout);
-    });
-    return await Promise.race([fetch(url, {signal: controller.signal, ...options}), timeoutPromise]);
 }
 
 export function isSemverLower(version1: string, version2: string): boolean {

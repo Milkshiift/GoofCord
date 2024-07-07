@@ -1,10 +1,10 @@
-import {fetchWithTimeout, isSemverLower, packageVersion} from "../utils";
+import {isSemverLower, packageVersion} from "../utils";
 import {Notification, shell} from "electron";
 import {getConfig} from "../config";
 
 async function getLatestVersion(): Promise<string> {
     try {
-        const response = await fetchWithTimeout("https://api.github.com/repos/Milkshiift/GoofCord/releases/latest");
+        const response = await fetch("https://api.github.com/repos/Milkshiift/GoofCord/releases/latest");
         const data = await response.json();
         return data.tag_name.replace("v", "");
     } catch (e) {
