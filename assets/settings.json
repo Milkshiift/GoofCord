@@ -41,12 +41,13 @@
     "modNames": {
       "name": "Client mods",
       "defaultValue": ["shelter", "vencord"],
-      "description": "What client mods to use. <b>You shouldn't disable Shelter</b> as it is used by many GoofCord features. Do not mix forks of the same mod (e.g. Vencord and Equicord).",
+      "description": "What client mods to use. <b>You shouldn't disable Shelter</b> as it is used by many GoofCord features. Do not mix forks of the same mod (e.g. Vencord and Equicord). <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/FAQ#how-do-i-add-a-custom-client-mod\">Client mod I want to use is not listed</a>.",
       "inputType": "dropdown-multiselect",
       "options": [
         "vencord",
-        "shelter",
         "equicord",
+        "suncord",
+        "shelter",
         "custom"
       ]
     },
