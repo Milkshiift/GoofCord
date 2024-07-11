@@ -27,6 +27,10 @@ export async function loadExtensions() {
 }
 
 async function downloadBundles(urls: Array<string | undefined>, destFolder: string) {
+    if (getConfig("noBundleUpdates")) {
+        console.log(chalk.yellow("[Mod Loader]"), "Skipping bundle download for:", destFolder);
+        return;
+    }
     console.log(chalk.yellow("[Mod Loader]"), "Downloading mod bundles for:", destFolder);
     const filePath = path.join(extensionsFolder, destFolder+"/dist/")
     for (const url of urls) {
@@ -48,10 +52,6 @@ async function downloadBundles(urls: Array<string | undefined>, destFolder: stri
 }
 
 export async function updateMods() {
-    if (getConfig("noBundleUpdates") || modNames.length === 0) {
-        console.log(chalk.yellow("[Mod Loader]"), "Skipping mod bundle update");
-        return;
-    }
     // Remove <1.5.0 mods
     await fs.promises.rm(path.join(extensionsFolder, "loader"), {recursive: true, force: true});
     const possibleMods = Object.keys(MOD_BUNDLES_URLS);
