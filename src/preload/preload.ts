@@ -6,10 +6,19 @@ import {injectTitlebar} from "./titlebar";
 import fs from "fs";
 import {initPushToTalk} from "../modules/pushToTalk";
 import {addDefaultPlugins} from "./shelter";
-import {loadScripts} from "../modules/scriptLoader";
+import {getConfig} from "../config";
+import {ipcRenderer} from "electron";
+import {log} from "../modules/logger";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    void loadScripts();
+    if (getConfig("scriptLoading")) {
+        const scripts: string[][] = await ipcRenderer.invoke("getScripts");
+        for (const script of scripts) {
+            addScript(script[1]);
+            log(`Loaded "${script[0]}" script`);
+        }
+    }
+
     void injectTitlebar();
     void addDefaultPlugins();
 
