@@ -151,11 +151,11 @@
       }
     }
   },
-  "Script loader and scripts settings": {
-    "scriptLoading": {
-      "name": "Script loading",
+  "Shelter settings": {
+    "installDefaultShelterPlugins": {
+      "name": "Install default Shelter plugins",
       "defaultValue": true,
-      "description": "Enables the script loader.",
+      "description": "Adds GoofCord's helper plugins to Shelter on launch. Don't disable unless facing issues.",
       "inputType": "checkbox"
     },
     "messageEncryption": {
@@ -200,6 +200,12 @@
       "name": "Activity display",
       "defaultValue": false,
       "description": "Enables the use of an open source reimplementation of Discord's\nrich presence called <a target=\"_blank\" href=\"https://github.com/OpenAsar/arrpc\">arRPC</a>.\nYou don't need to enable WebRichPresence Vencord plugin.",
+      "inputType": "checkbox"
+    },
+    "scriptLoading": {
+      "name": "Script loading",
+      "defaultValue": true,
+      "description": "Enables the script loader.",
       "inputType": "checkbox"
     },
     "launchWithOsBoot": {
