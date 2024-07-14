@@ -6,7 +6,7 @@ import {createTray} from "./tray";
 import {setMenu} from "./menu";
 import {initEncryption} from "./modules/messageEncryption";
 import {initializeFirewall, unstrictCSP} from "./modules/firewall";
-import {categorizeScripts} from "./scriptLoader/scriptPreparer";
+import {categorizeScripts} from "./modules/scriptLoader";
 import {registerIpc} from "./ipc";
 import chalk from "chalk";
 import {createMainWindow} from "./window";

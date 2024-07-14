@@ -3,10 +3,10 @@ import "./bridge";
 import * as path from "path";
 import {addScript, addStyle} from "../utils";
 import {injectTitlebar} from "./titlebar";
-import {loadScripts} from "../scriptLoader/scriptLoader";
 import fs from "fs";
 import {initPushToTalk} from "../modules/pushToTalk";
 import {addDefaultPlugins} from "./shelter";
+import {loadScripts} from "../modules/scriptLoader";
 
 document.addEventListener("DOMContentLoaded", async () => {
     void loadScripts();

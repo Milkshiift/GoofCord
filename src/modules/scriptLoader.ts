@@ -1,9 +1,10 @@
 import path from "path";
-import {app, ipcMain, shell} from "electron";
+import {app, ipcMain, ipcRenderer, shell} from "electron";
 import fs from "fs";
-import {readOrCreateFolder} from "../utils";
-import {error} from "../modules/logger";
+import {addScript, readOrCreateFolder} from "../utils";
+import {error, log} from "./logger";
 import chalk from "chalk";
+import {getConfig} from "../config";
 
 export const enabledScripts: string[][] = [];
 export const disabledScripts: string[] = [];
@@ -45,4 +46,14 @@ export async function categorizeScripts() {
 function modifyScriptContent(content: string) {
     content = "(async function(){" + content + "})();"; // Turning the script into an IIFE so variable names don't overlap
     return content;
+}
+
+export async function loadScripts() {
+    if (getConfig("scriptLoading") === false) return;
+
+    const scripts: string[][] = await ipcRenderer.invoke("getScripts");
+    for (const script of scripts) {
+        addScript(script[1]);
+        log(`Loaded "${script[0]}" script`);
+    }
 }
