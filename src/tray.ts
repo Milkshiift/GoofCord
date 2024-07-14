@@ -7,7 +7,6 @@ export let tray: Tray;
 export async function createTray() {
     const trayImage = nativeImage.createFromPath(getCustomIcon());
 
-    // This is maybe unnecessary, but I can't test it so it stays
     const getTrayMenuIcon = () => {
         if (process.platform == "win32") {
             return trayImage.resize({height: 16});
@@ -18,8 +17,6 @@ export async function createTray() {
         }
         return trayImage;
     };
-
-    if (process.platform === "darwin") trayImage.resize({height: 22});
 
     const contextMenu = Menu.buildFromTemplate([
         {
@@ -55,10 +52,14 @@ export async function createTray() {
 
     await app.whenReady();
 
-    tray = new Tray(trayImage);
-    tray.setContextMenu(contextMenu);
-    tray.setToolTip("GoofCord");
-    tray.on("click", function () {
-        mainWindow.show();
-    });
+    if (process.platform === "darwin") {
+        app.dock.setMenu(contextMenu);
+    } else {
+        tray = new Tray(trayImage);
+        tray.setContextMenu(contextMenu);
+        tray.setToolTip("GoofCord");
+        tray.on("click", function () {
+            mainWindow.show();
+        });
+    }
 }
