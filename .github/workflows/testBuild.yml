@@ -1,0 +1,65 @@
+name: Test build
+
+on:
+  workflow_dispatch
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - name: linux
+            runner: ubuntu-latest
+            targets: "tar.xz AppImage deb rpm"
+            arch: "--x64 --arm64 --armv7l"
+          - name: win
+            runner: windows-latest
+            targets: "zip"
+            arch: "--x64 --ia32 --arm64"
+          - name: mac
+            runner: macos-latest
+            targets: "dmg"
+            arch: "--x64 --arm64"
+
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Github checkout
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+          cache: "pnpm"
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install electron-builder globally
+        run: pnpm add electron-builder -g
+
+      - name: Build GoofCord
+        run: pnpm run build
+
+      - name: Package GoofCord
+        run: electron-builder ${{ matrix.arch }} --${{ matrix.name }} ${{ matrix.targets }} --publish=never
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}-artifacts
+          path: |
+            dist/**/*.tar.xz
+            dist/**/*.AppImage
+            dist/**/*.deb
+            dist/**/*.rpm
+            dist/**/*.zip
+            dist/**/*.dmg
