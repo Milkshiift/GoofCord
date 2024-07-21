@@ -13,7 +13,7 @@ jobs:
         include:
           - name: linux
             runner: ubuntu-latest
-            targets: "tar.gz AppImage deb"
+            targets: "tar.xz AppImage deb rpm"
             arch: "--x64 --arm64 --armv7l"
           - name: win
             runner: windows-latest
