@@ -39,7 +39,7 @@ async function doAfterDefiningTheWindow() {
     // Set the user agent for the web contents based on the Chrome version.
     mainWindow.webContents.userAgent = getUserAgent(process.versions.chrome);
     mainWindow.on('close', (event) => {
-        if (getConfig("minimizeToTray")) {
+        if (getConfig("minimizeToTray") || process.platform === "darwin") {
             event.preventDefault();
             mainWindow.hide();
         }
@@ -63,13 +63,8 @@ function subscribeToEvents() {
         mainWindow.show();
         mainWindow.focus();
     });
-    app.on("window-all-closed", () => {
-        if (process.platform !== "darwin") app.quit();
-    });
     app.on('activate', () => {
-        app.on('activate', () => {
-            if (BrowserWindow.getAllWindows().length === 0) void createMainWindow();
-        })
+        mainWindow.show();
     })
 }
 
