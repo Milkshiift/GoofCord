@@ -7,7 +7,6 @@ export async function addDefaultPlugins() {
         while(!window.shelter?.plugins?.addRemotePlugin) await new Promise(resolve => setTimeout(resolve, 500));
         const defaultPlugins = [
             ["https://yellowsink.github.io/shelter-plugins/crisp-img/", true],
-            ["https://yellowsink.github.io/shelter-plugins/no-devtools-detect", true],
             ["https://spikehd.github.io/shelter-plugins/plugin-browser/", false],
             ["https://spikehd.github.io/shelter-plugins/shelteRPC/", true],
             ["https://milkshiift.github.io/goofcord-shelter-plugins/dynamic-icon/", true],
