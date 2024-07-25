@@ -17,7 +17,7 @@
 ## Ready to Dive In?
 ### Windows 🪟
 
-* **Windows 7/8:** Use [this](https://github.com/Alex313031/GoofCord-Win7) fork.
+* **Windows 7/8:** Use [this](https://github.com/Alex313031/GoofCord-Win7) fork. (could be outdated)
 * Install with prebuilt binaries from the [releases](https://github.com/Milkshiift/GoofCord/releases/latest) page.    
 Choose `GoofCord-Setup-<YOUR ARCHITECTURE>.exe` for an installer, or    
 `GoofCord-<VERSION>-win-<YOUR ARCHITECTURE>.zip` to manually unpack into a directory of your choice.
