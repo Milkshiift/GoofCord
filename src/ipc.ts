@@ -55,9 +55,11 @@ export async function registerIpc() {
         event.returnValue = packageVersion;
     });
     ipcMain.handle("flashTitlebar", (_event, color: string) => {
+        if (!mainWindow) return;
         mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebar("${color}")`);
     });
     ipcMain.handle("flashTitlebarWithText", (_event, color: string, text: string) => {
+        if (!mainWindow) return;
         mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebarWithText("${color}", "${text}")`);
     });
     ipcMain.handle("openSettingsWindow", async () => {
@@ -71,9 +73,6 @@ export async function registerIpc() {
     });
     ipcMain.handle("encryptSafeStorage", async (_event, plaintextPassword: string) => {
         return safeStorage.encryptString(plaintextPassword).toString("base64");
-    });
-    ipcMain.handle("isVencordPresent", async () => {
-        return await mainWindow.webContents.executeJavaScript("window.Vencord !== undefined");
     });
     ipcMain.handle("setBadgeCount", (_event, count) => {
         setBadgeCount(count);

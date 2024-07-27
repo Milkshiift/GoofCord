@@ -42,7 +42,6 @@ export async function createSettingsWindow() {
         }
     });
     isOpen = true;
-    adjustWindow(settingsWindow, "settings", [false, [100,100], [660,670]]);
 
     settingsWindow.webContents.setWindowOpenHandler(({url}) => {
         shell.openExternal(url);

@@ -43,14 +43,7 @@ export async function initializeFirewall() {
             }
         }
 
-        callback({
-            cancel: false,
-            requestHeaders: {
-                //Origin: '*',
-                "User-Agent": mainWindow.webContents.userAgent,
-                ...details.requestHeaders,
-            }
-        });
+        callback({cancel: false});
     });
 
     console.log(chalk.red("[Firewall]"), "Firewall initialized");

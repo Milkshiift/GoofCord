@@ -1,9 +1,10 @@
 import {app, dialog, ipcRenderer} from "electron";
 import path from "path";
 import * as fs from "fs";
-import {getCustomIcon, tryWithFix} from "./utils";
+import {tryWithFix} from "./utils";
 
 export let cachedConfig: object = {};
+export let firstLaunch = false;
 
 export async function loadConfig() {
     await tryWithFix(() => {
@@ -74,15 +75,8 @@ export async function setConfigBulk(object: object) {
 
 export async function setup() {
     console.log("Setting up default GoofCord settings.");
+    firstLaunch = true;
     await setConfigBulk(getDefaults());
-    setTimeout(() => {
-        dialog.showMessageBox({
-            message: "Welcome to GoofCord!\nIt seems that this is the first launch of GoofCord. It is advisable to fully restart GoofCord so it can fully set itself up.\nYou can do this with Ctrl+Shift+R or through the tray menu.\nHappy chatting!",
-            type: "info",
-            icon: getCustomIcon(),
-            noLink: false
-        });
-    }, 3000);
 }
 
 const defaults = {};

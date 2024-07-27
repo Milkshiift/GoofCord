@@ -1,7 +1,7 @@
-import {app, crashReporter, net, session, systemPreferences} from "electron";
+import {app, crashReporter, dialog, net, session, systemPreferences} from "electron";
 import "v8-compile-cache";
-import {getConfig, loadConfig} from "./config";
-import {isDev} from "./utils";
+import {firstLaunch, getConfig, loadConfig} from "./config";
+import {getCustomIcon, isDev} from "./utils";
 import {createTray} from "./tray";
 import {setMenu} from "./menu";
 import {initEncryption} from "./modules/messageEncryption";
@@ -11,6 +11,7 @@ import {registerIpc} from "./ipc";
 import chalk from "chalk";
 import {createMainWindow} from "./window";
 import {checkForUpdate} from "./modules/updateCheck";
+import {createSettingsWindow} from "./settings/main";
 
 if (isDev()) {
     try {
@@ -47,7 +48,17 @@ loadConfig().then(async () => {
         waitForInternetConnection()
     ]);
 
-    await createMainWindow();
+    if (firstLaunch) {
+        await createSettingsWindow();
+        void dialog.showMessageBox({
+            message: "Welcome to GoofCord!\nSetup the settings to your liking and restart GoofCord to access Discord.\nYou can do this with Ctrl+Shift+R or through the tray/dock menu.\nHappy chatting!",
+            type: "info",
+            icon: getCustomIcon(),
+            noLink: false
+        });
+    } else {
+        await createMainWindow();
+    }
 
     console.timeEnd(chalk.green("[Timer]") + " GoofCord fully loaded in");
 

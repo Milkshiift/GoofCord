@@ -11,6 +11,8 @@ import {ipcRenderer} from "electron";
 import {log} from "../modules/logger";
 
 document.addEventListener("DOMContentLoaded", async () => {
+    if (!document.location.hostname.includes("discord")) return;
+
     if (getConfig("scriptLoading")) {
         const scripts: string[][] = await ipcRenderer.invoke("getScripts");
         for (const script of scripts) {

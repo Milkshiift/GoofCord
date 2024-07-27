@@ -38,12 +38,7 @@ async function selectSource(id: string | null, title: string | null) {
         const audio = (document.getElementById("audio-checkbox") as HTMLInputElement).checked;
         const resolution = (document.getElementById("resolution-textbox") as HTMLInputElement).value;
         const framerate = (document.getElementById("framerate-textbox") as HTMLInputElement).value;
-        if (await ipcRenderer.invoke("isVencordPresent") || (resolution === "720" && framerate === "30")) {
-            void ipcRenderer.invoke("flashTitlebar", "#5865F2");
-        }
-        else {
-            void ipcRenderer.invoke("flashTitlebarWithText", "#f8312f", "Custom resolution & framerate are only available with Vencord");
-        }
+        void ipcRenderer.invoke("flashTitlebar", "#5865F2");
 
         void setConfig("screensharePreviousSettings", [resolution, framerate, audio]);
 
