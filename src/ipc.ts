@@ -1,4 +1,4 @@
-import {app, ipcMain, safeStorage} from "electron";
+import {ipcMain, safeStorage} from "electron";
 import {mainWindow} from "./window";
 import {getDisplayVersion, getVersion, packageVersion} from "./utils";
 import {createSettingsWindow} from "./settings/main";

@@ -1,11 +1,9 @@
-import {app, BrowserWindow, ipcMain, shell} from "electron";
-import {getCustomIcon, getDisplayVersion} from "../utils";
+import {BrowserWindow, ipcMain, shell} from "electron";
+import {getCustomIcon, getDisplayVersion, userDataPath} from "../utils";
 import path from "path";
 import {clearCache} from "../modules/cacheManager";
-import {adjustWindow} from "../modules/windowStateManager";
 
 let settingsWindow: BrowserWindow;
-const userDataPath = app.getPath("userData");
 let isOpen = false;
 
 ipcMain.handle("clearCache", async (_event) => {

@@ -1,12 +1,12 @@
 import fs from "fs";
-import {app, dialog, session} from "electron";
-import {readOrCreateFolder, tryWithFix} from "../utils";
+import {dialog, session} from "electron";
+import {getGoofCordFolderPath, readOrCreateFolder, tryWithFix} from "../utils";
 import path from "path";
 import {getConfig} from "../config";
 import chalk from "chalk";
 
 const modNames: string[] = getConfig("modNames");
-const extensionsFolder = path.join(app.getPath("userData"), "extensions/");
+const extensionsFolder = path.join(getGoofCordFolderPath(), "extensions/");
 const MOD_BUNDLES_URLS = {
     vencord: ["https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js", "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css"],
     equicord: ["https://github.com/Equicord/Equicord/releases/download/latest/browser.js", "https://github.com/Equicord/Equicord/releases/download/latest/browser.css"],

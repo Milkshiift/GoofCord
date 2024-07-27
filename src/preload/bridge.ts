@@ -1,6 +1,5 @@
 import {contextBridge, ipcRenderer} from "electron";
 import {flashTitlebar, flashTitlebarWithText} from "./titlebar";
-import {cycleThroughPasswords} from "../modules/messageEncryption";
 
 contextBridge.exposeInMainWorld("goofcord", {
     window: {

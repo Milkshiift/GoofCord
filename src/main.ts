@@ -1,7 +1,7 @@
 import {app, crashReporter, dialog, net, session, systemPreferences} from "electron";
 import "v8-compile-cache";
 import {firstLaunch, getConfig, loadConfig} from "./config";
-import {getCustomIcon, isDev} from "./utils";
+import {getCustomIcon, getGoofCordFolderPath, isDev, tryCreateFolder, userDataPath} from "./utils";
 import {createTray} from "./tray";
 import {setMenu} from "./menu";
 import {initEncryption} from "./modules/messageEncryption";
@@ -12,59 +12,70 @@ import chalk from "chalk";
 import {createMainWindow} from "./window";
 import {checkForUpdate} from "./modules/updateCheck";
 import {createSettingsWindow} from "./settings/main";
+import fs from "fs";
+import path from "path";
+// DIY top level awaits
+(async () => {
 
 if (isDev()) {
     try {
         import("source-map-support/register");
-    } catch (e) {}
+    } catch (e: unknown) {}
 }
+crashReporter.start({uploadToServer: false});
+if (!app.requestSingleInstanceLock()) app.exit();
 
 console.time(chalk.green("[Timer]") + " GoofCord fully loaded in");
 
 void setFlags();
 
-if (!app.requestSingleInstanceLock()) app.exit();
+await tryCreateFolder(getGoofCordFolderPath());
+// Before GoofCord used different folders. This migrates these folders to the new location
+// This code should be removed after 2 updates
+try {
+    await fs.promises.rename(path.join(userDataPath, "storage/settings.json"), path.join(getGoofCordFolderPath(), "settings.json"));
+    await fs.promises.rename(path.join(userDataPath, "extensions"), path.join(getGoofCordFolderPath(), "extensions"));
+    await fs.promises.rename(path.join(userDataPath, "scripts"), path.join(getGoofCordFolderPath(), "scripts"));
+} catch (e) {}
 
-crashReporter.start({uploadToServer: false});
+await loadConfig();
 
-loadConfig().then(async () => {
-    if (getConfig("autoscroll")) app.commandLine.appendSwitch("enable-blink-features", "MiddleClickAutoscroll");
-    void setAutoLaunchState();
-    void setMenu();
-    void createTray();
-    void categorizeScripts();
-    void registerIpc();
-    const extensions = await import("./modules/extensions");
+if (getConfig("autoscroll")) app.commandLine.appendSwitch("enable-blink-features", "MiddleClickAutoscroll");
+void setAutoLaunchState();
+void setMenu();
+void createTray();
+void categorizeScripts();
+void registerIpc();
+const extensions = await import("./modules/extensions");
 
-    // app.whenReady takes a lot of time so if there's something that doesn't need electron to be ready, do it before
-    await app.whenReady();
+// app.whenReady takes a lot of time so if there's something that doesn't need electron to be ready, do it before
+await app.whenReady();
 
-    void initEncryption();
-    await Promise.all([
-        setPermissions(),
-        unstrictCSP(),
-        initializeFirewall(),
-        extensions.loadExtensions(),
-        waitForInternetConnection()
-    ]);
+void initEncryption();
+await Promise.all([
+    setPermissions(),
+    unstrictCSP(),
+    initializeFirewall(),
+    extensions.loadExtensions(),
+    waitForInternetConnection()
+]);
 
-    if (firstLaunch) {
-        await createSettingsWindow();
-        void dialog.showMessageBox({
-            message: "Welcome to GoofCord!\nSetup the settings to your liking and restart GoofCord to access Discord.\nYou can do this with Ctrl+Shift+R or through the tray/dock menu.\nHappy chatting!",
-            type: "info",
-            icon: getCustomIcon(),
-            noLink: false
-        });
-    } else {
-        await createMainWindow();
-    }
+if (firstLaunch) {
+    await createSettingsWindow();
+    void dialog.showMessageBox({
+        message: "Welcome to GoofCord!\nSetup the settings to your liking and restart GoofCord to access Discord.\nYou can do this with Ctrl+Shift+R or through the tray/dock menu.\nHappy chatting!",
+        type: "info",
+        icon: getCustomIcon(),
+        noLink: false
+    });
+} else {
+    await createMainWindow();
+}
 
-    console.timeEnd(chalk.green("[Timer]") + " GoofCord fully loaded in");
+console.timeEnd(chalk.green("[Timer]") + " GoofCord fully loaded in");
 
-    void extensions.updateMods();
-    void checkForUpdate();
-});
+void extensions.updateMods();
+void checkForUpdate();
 
 async function waitForInternetConnection() {
     while (!net.isOnline()) {
@@ -120,3 +131,5 @@ async function setFlags() {
         app.commandLine.appendSwitch("enable-features", "PulseaudioLoopbackForScreenShare,VaapiVideoDecoder,VaapiVideoEncoder,VaapiVideoDecodeLinuxGL");
     }
 }
+
+})();

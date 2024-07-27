@@ -5,6 +5,7 @@ import fs from "fs";
 import chalk from "chalk";
 
 export const packageVersion = require("../package.json").version;
+export const userDataPath = app.getPath("userData");
 
 export function addStyle(styleString: string) {
     const style = document.createElement("style");
@@ -24,6 +25,10 @@ export function getVersion() {
 
 export function isDev() {
     return process.argv.some(arg => arg === "--dev" || arg === "-d");
+}
+
+export function getGoofCordFolderPath() {
+    return path.join(userDataPath, "/GoofCord/");
 }
 
 export function getDisplayVersion() {
@@ -86,7 +91,17 @@ export async function readOrCreateFolder(path: string) {
     try {
         return await fs.promises.readdir(path);
     } catch (e) {
-        await fs.promises.mkdir(path, { recursive: true });
+        await tryCreateFolder(path);
         return [];
+    }
+}
+
+export async function tryCreateFolder(path: string) {
+    try {
+        await fs.promises.mkdir(path, { recursive: true });
+    } catch (e: any) {
+        if (e.code !== "EEXIST") {
+            console.error(e);
+        }
     }
 }

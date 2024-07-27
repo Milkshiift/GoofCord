@@ -1,7 +1,7 @@
 import {app, dialog, ipcRenderer} from "electron";
 import path from "path";
 import * as fs from "fs";
-import {tryWithFix} from "./utils";
+import {getGoofCordFolderPath, tryWithFix} from "./utils";
 
 export let cachedConfig: object = {};
 export let firstLaunch = false;
@@ -17,19 +17,7 @@ export async function loadConfig() {
 
 async function tryFixErrors() {
     // This covers: missing settings.json, missing storage folder, corrupted settings.json (parsing error)
-    await createStorageFolder();
     await setup();
-}
-
-async function createStorageFolder() {
-    const userDataPath = app.getPath("userData");
-    try {
-        await fs.promises.mkdir(path.join(userDataPath, "storage"));
-    } catch (e: any) {
-        if (e.code !== "EEXIST") {
-            console.error("Couldn't create the storage folder:", e);
-        }
-    }
 }
 
 export function getConfig(toGet: string): any {
@@ -102,7 +90,5 @@ export function getDefaultValue(entry: string) {
 }
 
 export function getConfigLocation(): string {
-    const userDataPath = app.getPath("userData");
-    const storagePath = path.join(userDataPath, "/storage/");
-    return `${storagePath}settings.json`;
+    return path.join(getGoofCordFolderPath(), "settings.json");
 }
