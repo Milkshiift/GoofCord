@@ -12,92 +12,77 @@ import chalk from "chalk";
 import {createMainWindow} from "./window";
 import {checkForUpdate} from "./modules/updateCheck";
 import {createSettingsWindow} from "./settings/main";
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
-// DIY top level awaits
-(async () => {
 
-if (isDev()) {
-    try {
-        import("source-map-support/register");
-    } catch (e: unknown) {}
-}
-crashReporter.start({uploadToServer: false});
+setFlags();
+if (isDev()) import("source-map-support/register").catch(() => {});
 if (!app.requestSingleInstanceLock()) app.exit();
+crashReporter.start({ uploadToServer: false });
 
-console.time(chalk.green("[Timer]") + " GoofCord fully loaded in");
+async function main() {
+    console.time(chalk.green("[Timer]") + " GoofCord fully loaded in");
 
-void setFlags();
+    await tryCreateFolder(getGoofCordFolderPath());
+    await migrateFolders();
+    await loadConfig();
 
-await tryCreateFolder(getGoofCordFolderPath());
-// Before GoofCord used different folders. This migrates these folders to the new location
-// This code should be removed after 2 updates
-try {
-    await fs.promises.rename(path.join(userDataPath, "storage/settings.json"), path.join(getGoofCordFolderPath(), "settings.json"));
-    await fs.promises.rename(path.join(userDataPath, "extensions"), path.join(getGoofCordFolderPath(), "extensions"));
-    await fs.promises.rename(path.join(userDataPath, "scripts"), path.join(getGoofCordFolderPath(), "scripts"));
-} catch (e) {}
+    if (getConfig("autoscroll")) app.commandLine.appendSwitch("enable-blink-features", "MiddleClickAutoscroll");
+    void Promise.all([setAutoLaunchState(), setMenu(), createTray(), categorizeScripts(), registerIpc()]);
+    const extensions = await import("./modules/extensions");
 
-await loadConfig();
+    await app.whenReady();
 
-if (getConfig("autoscroll")) app.commandLine.appendSwitch("enable-blink-features", "MiddleClickAutoscroll");
-void setAutoLaunchState();
-void setMenu();
-void createTray();
-void categorizeScripts();
-void registerIpc();
-const extensions = await import("./modules/extensions");
+    void initEncryption();
+    await Promise.all([waitForInternetConnection(), setPermissions(), unstrictCSP(), initializeFirewall(), extensions.loadExtensions()]);
+    firstLaunch ? await handleFirstLaunch() : await createMainWindow();
 
-// app.whenReady takes a lot of time so if there's something that doesn't need electron to be ready, do it before
-await app.whenReady();
+    console.timeEnd(chalk.green("[Timer]") + " GoofCord fully loaded in");
 
-void initEncryption();
-await Promise.all([
-    setPermissions(),
-    unstrictCSP(),
-    initializeFirewall(),
-    extensions.loadExtensions(),
-    waitForInternetConnection()
-]);
+    await extensions.updateMods();
+    await checkForUpdate();
+}
 
-if (firstLaunch) {
+function setFlags() {
+    const disableFeatures = ["OutOfBlinkCors", "UseChromeOSDirectVideoDecoder", "HardwareMediaKeyHandling", "MediaSessionService", "WebRtcAllowInputVolumeAdjustment", "Vulkan"];
+    const enableFeatures = ["WebRTC", "WebRtcHideLocalIpsWithMdns", "PlatformHEVCEncoderSupport", "EnableDrDc", "CanvasOopRasterization", "UseSkiaRenderer"];
+    if (process.platform === "linux") enableFeatures.push("PulseaudioLoopbackForScreenShare", "VaapiVideoDecoder", "VaapiVideoEncoder", "VaapiVideoDecodeLinuxGL");
+    app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+    app.commandLine.appendSwitch("disable-features", disableFeatures.join(","));
+    app.commandLine.appendSwitch("enable-features", enableFeatures.join(","));
+}
+
+async function handleFirstLaunch() {
     await createSettingsWindow();
-    void dialog.showMessageBox({
+    await dialog.showMessageBox({
         message: "Welcome to GoofCord!\nSetup the settings to your liking and restart GoofCord to access Discord.\nYou can do this with Ctrl+Shift+R or through the tray/dock menu.\nHappy chatting!",
         type: "info",
         icon: getCustomIcon(),
         noLink: false
     });
-} else {
-    await createMainWindow();
 }
 
-console.timeEnd(chalk.green("[Timer]") + " GoofCord fully loaded in");
-
-void extensions.updateMods();
-void checkForUpdate();
-
-async function waitForInternetConnection() {
-    while (!net.isOnline()) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-    }
+async function migrateFolders() {
+    try {
+        await fs.rename(path.join(userDataPath, "storage/settings.json"), path.join(getGoofCordFolderPath(), "settings.json"));
+        await fs.rename(path.join(userDataPath, "extensions"), path.join(getGoofCordFolderPath(), "extensions"));
+        await fs.rename(path.join(userDataPath, "scripts"), path.join(getGoofCordFolderPath(), "scripts"));
+    } catch (e) {}
 }
 
 async function setAutoLaunchState() {
     console.log("Process execution path: " + process.execPath);
     const { default: AutoLaunch } = await import('auto-launch');
-    let gfAutoLaunch;
-    // When GoofCord is installed from AUR it uses system Electron, which causes IT to launch instead of GoofCord
-    if (process.execPath.endsWith("electron") && !isDev()) {
-        // Set the launch path to a shell script file that AUR created to properly start GoofCord
-        gfAutoLaunch = new AutoLaunch({name: "GoofCord", path: "/bin/goofcord"});
-    } else {
-        gfAutoLaunch = new AutoLaunch({name: "GoofCord"});
-    }
+    const isAUR = process.execPath.endsWith("electron") && !isDev();
+    const gfAutoLaunch = new AutoLaunch({
+        name: "GoofCord",
+        path: isAUR ? "/bin/goofcord" : undefined
+    });
+
     if (getConfig("launchWithOsBoot")) {
-        gfAutoLaunch.enable();
+        await gfAutoLaunch.enable();
     } else {
-        gfAutoLaunch.disable();
+        await gfAutoLaunch.disable();
     }
 }
 
@@ -110,26 +95,16 @@ async function setPermissions() {
             if (details.mediaTypes?.includes("video")) {
                 callback(await systemPreferences.askForMediaAccess("camera"));
             }
-        } else if (["media", "notifications", "fullscreen", "clipboard-sanitized-write", "idle-detection", "openExternal"].includes(permission)) {
+        } else if (["media", "notifications", "fullscreen", "clipboard-sanitized-write", "openExternal"].includes(permission)) {
             callback(true);
         }
     });
 }
 
-async function setFlags() {
-    app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
-    app.commandLine.appendSwitch("disable-features", "" +
-        "OutOfBlinkCors," +
-        "UseChromeOSDirectVideoDecoder," +
-        "HardwareMediaKeyHandling," + // Prevent Discord from registering as a media service.
-        "MediaSessionService," + //         ⤴
-        "WebRtcAllowInputVolumeAdjustment," +
-        "Vulkan"
-    );
-    app.commandLine.appendSwitch("enable-features", "WebRTC,WebRtcHideLocalIpsWithMdns,PlatformHEVCEncoderSupport,EnableDrDc,CanvasOopRasterization,UseSkiaRenderer");
-    if (process.platform === "linux") {
-        app.commandLine.appendSwitch("enable-features", "PulseaudioLoopbackForScreenShare,VaapiVideoDecoder,VaapiVideoEncoder,VaapiVideoDecodeLinuxGL");
+async function waitForInternetConnection() {
+    while (!net.isOnline()) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
     }
 }
 
-})();
+main().catch(console.error);
