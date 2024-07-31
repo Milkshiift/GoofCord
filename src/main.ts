@@ -33,8 +33,7 @@ async function main() {
 
     await app.whenReady();
 
-    void initEncryption();
-    await Promise.all([waitForInternetConnection(), setPermissions(), unstrictCSP(), initializeFirewall(), extensions.loadExtensions()]);
+    await Promise.all([waitForInternetConnection(), setPermissions(), unstrictCSP(), initializeFirewall(), extensions.loadExtensions(), initEncryption()]);
     firstLaunch ? await handleFirstLaunch() : await createMainWindow();
 
     console.timeEnd(chalk.green("[Timer]") + " GoofCord fully loaded in");

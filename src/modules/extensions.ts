@@ -10,7 +10,6 @@ const extensionsFolder = path.join(getGoofCordFolderPath(), "extensions/");
 const MOD_BUNDLES_URLS = {
     vencord: ["https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js", "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css"],
     equicord: ["https://github.com/Equicord/Equicord/releases/download/latest/browser.js", "https://github.com/Equicord/Equicord/releases/download/latest/browser.css"],
-    suncord: ["https://github.com/verticalsync/Suncord/releases/download/devbuild/browser.js", "https://github.com/verticalsync/Suncord/releases/download/devbuild/browser.css"],
     shelter: ["https://raw.githubusercontent.com/uwu/shelter-builds/main/shelter.js", undefined],
     custom: [getConfig("customJsBundle"), getConfig("customCssBundle")],
 };
