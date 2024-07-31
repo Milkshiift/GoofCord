@@ -1,7 +1,7 @@
 import {ipcRenderer} from "electron";
 import {addStyle} from "../utils";
-import * as fs from "fs";
-import * as path from "path";
+import fs from "fs/promises";
+import path from "path";
 import os from "os";
 import {getConfig} from "../config";
 
@@ -70,10 +70,10 @@ export async function injectTitlebar() {
     observer.observe(appMount, { childList: true, subtree: false });
 
     if (!getConfig("customTitlebar")) {
-        const infoOnlyTitlebarCss = await fs.promises.readFile(path.join(__dirname, "../", "/assets/css/infoOnlyTitlebar.css"), "utf8");
+        const infoOnlyTitlebarCss = await fs.readFile(path.join(__dirname, "../", "/assets/css/infoOnlyTitlebar.css"), "utf8");
         addStyle(infoOnlyTitlebarCss);
     }
-    const titlebarCss = await fs.promises.readFile(path.join(__dirname, "../", "/assets/css/titlebar.css"), "utf8");
+    const titlebarCss = await fs.readFile(path.join(__dirname, "../", "/assets/css/titlebar.css"), "utf8");
     addStyle(titlebarCss);
 
     document.body.setAttribute("goofcord-platform", os.platform());

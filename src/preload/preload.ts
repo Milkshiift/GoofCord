@@ -3,7 +3,7 @@ import "./bridge";
 import * as path from "path";
 import {addScript, addStyle} from "../utils";
 import {injectTitlebar} from "./titlebar";
-import fs from "fs";
+import fs from "fs/promises";
 import {initPushToTalk} from "../modules/pushToTalk";
 import {addDefaultPlugins} from "./shelter";
 import {getConfig} from "../config";
@@ -45,5 +45,5 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     initPushToTalk();
 
-    addStyle(await fs.promises.readFile(path.join(__dirname, "../", "/assets/css/discord.css"), "utf8"));
+    addStyle(await fs.readFile(path.join(__dirname, "../", "/assets/css/discord.css"), "utf8"));
 });

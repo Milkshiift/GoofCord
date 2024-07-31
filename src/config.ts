@@ -1,6 +1,6 @@
-import {app, dialog, ipcRenderer} from "electron";
+import {dialog, ipcRenderer} from "electron";
 import path from "path";
-import * as fs from "fs";
+import fs from "fs";
 import {getGoofCordFolderPath, tryWithFix} from "./utils";
 
 export let cachedConfig: object = {};

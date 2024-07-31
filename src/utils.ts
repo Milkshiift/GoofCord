@@ -1,7 +1,7 @@
 import {app, dialog} from "electron";
 import path from "path";
 import {getConfig} from "./config";
-import fs from "fs";
+import fs from "fs/promises";
 import chalk from "chalk";
 
 export const packageVersion = require("../package.json").version;
@@ -89,7 +89,7 @@ export async function tryWithFix(toDo: () => any, attemptFix: () => any, message
 
 export async function readOrCreateFolder(path: string) {
     try {
-        return await fs.promises.readdir(path);
+        return await fs.readdir(path);
     } catch (e) {
         await tryCreateFolder(path);
         return [];
@@ -98,7 +98,7 @@ export async function readOrCreateFolder(path: string) {
 
 export async function tryCreateFolder(path: string) {
     try {
-        await fs.promises.mkdir(path, { recursive: true });
+        await fs.mkdir(path, { recursive: true });
     } catch (e: any) {
         if (e.code !== "EEXIST") {
             console.error(e);

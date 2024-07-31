@@ -1,6 +1,6 @@
 import path from "path";
 import {ipcMain} from "electron";
-import fs from "fs";
+import fs from "fs/promises";
 import {getGoofCordFolderPath, readOrCreateFolder} from "../utils";
 import {error} from "./logger";
 import chalk from "chalk";
@@ -22,7 +22,7 @@ export async function categorizeScripts() {
                 continue;
             }
 
-            const scriptContent = modifyScriptContent(await fs.promises.readFile(filePath, "utf-8"));
+            const scriptContent = modifyScriptContent(await fs.readFile(filePath, "utf-8"));
 
             enabledScripts.push([file, scriptContent]);
         } catch (err) {

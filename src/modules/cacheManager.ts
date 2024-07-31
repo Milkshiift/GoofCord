@@ -1,5 +1,5 @@
 import {app} from "electron";
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
 import {mainWindow} from "../window";
 
@@ -9,14 +9,14 @@ export async function clearCache() {
 
     const userDataPath = app.getPath("userData");
     // Get all folders
-    const folders = (await fs.promises.readdir(userDataPath, { withFileTypes: true }))
+    const folders = (await fs.readdir(userDataPath, { withFileTypes: true }))
         .filter(dirent => dirent.isDirectory())
         .map(dirent => dirent.name)
 
     for (const folder of folders) {
         if (folder.toLowerCase().includes("cache")) {
             try {
-                void fs.promises.rm(path.join(userDataPath, folder), {recursive: true, force: true});
+                void fs.rm(path.join(userDataPath, folder), {recursive: true, force: true});
             } catch (e) {}
         }
     }
