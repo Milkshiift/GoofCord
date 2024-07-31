@@ -27,7 +27,7 @@
     "customIconPath": {
       "name": "Custom Icon",
       "defaultValue": "",
-      "description": "",
+      "description": "Select an alternative icon for GoofCord to use. Formats with transparency are recommended.",
       "inputType": "file"
     },
     "discordUrl": {
@@ -232,8 +232,12 @@
     "autoscroll": {
       "name": "Auto-scroll",
       "defaultValue": false,
-      "description": "Enables the ability to auto-scroll with a middle mouse button click. Enable this only if that is not the default behavior already.",
-      "inputType": "checkbox"
+      "description": "Enables auto-scrolling with middle mouse button.",
+      "inputType": "checkbox",
+      "showAfter": {
+        "key": "autoscroll",
+        "value": "return process.platform === 'linux'"
+      }
     },
     "transparency": {
       "name": "Transparency",

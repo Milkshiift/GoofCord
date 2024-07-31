@@ -27,7 +27,6 @@ async function main() {
     await migrateFolders();
     await loadConfig();
 
-    if (getConfig("autoscroll")) app.commandLine.appendSwitch("enable-blink-features", "MiddleClickAutoscroll");
     void Promise.all([setAutoLaunchState(), setMenu(), createTray(), categorizeScripts(), registerIpc()]);
     const extensions = await import("./modules/extensions");
 

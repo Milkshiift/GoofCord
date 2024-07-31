@@ -27,6 +27,7 @@ export async function createMainWindow() {
             nodeIntegrationInSubFrames: false,
             enableWebSQL: false,
             spellcheck: getConfig("spellcheck"),
+            enableBlinkFeatures: getConfig("autoscroll") ? "MiddleClickAutoscroll" : undefined
         }
     });
 
