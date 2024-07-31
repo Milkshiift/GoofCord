@@ -1,4 +1,4 @@
-import {ipcMain, safeStorage} from "electron";
+import {app, ipcMain, safeStorage} from "electron";
 import {mainWindow} from "./window";
 import {getDisplayVersion, getVersion, packageVersion} from "./utils";
 import {createSettingsWindow} from "./settings/main";
@@ -47,6 +47,9 @@ export async function registerIpc() {
     });
     ipcMain.on("getAppVersion", (event) => {
         event.returnValue = getVersion();
+    });
+    ipcMain.on("getUserDataPath", (event) => {
+        event.returnValue = app.getPath("userData");
     });
     ipcMain.on("displayVersion", (event) => {
         event.returnValue = getDisplayVersion();

@@ -203,6 +203,25 @@ button:hover {
     background-color: var(--color-primary-ultralight);
 }
 
+input[type=file] {
+    width: 7em;
+}
+
+input[type=file]::file-selector-button {
+    border: none;
+    width: 7em;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: var(--color-primary);
+    color: var(--font-color-header);
+    transition: background-color 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+input[type=file]::file-selector-button:hover {
+    background-color: var(--color-primary-light);
+}
+
 select {
     border-radius: 5px;
     background-color: var(--input-bg);

@@ -25,10 +25,10 @@
       "inputType": "checkbox"
     },
     "customIconPath": {
-      "name": "Custom Icon Path",
+      "name": "Custom Icon",
       "defaultValue": "",
-      "description": "Leave empty for the default icon. The path should conform to your OS's format.\nA Windows example: \"D:/Downloads/icon.png\". A Linux and macOS example: \"~/Downloads/icon.png\".",
-      "inputType": "textfield"
+      "description": "",
+      "inputType": "file"
     },
     "discordUrl": {
       "name": "Discord URL",

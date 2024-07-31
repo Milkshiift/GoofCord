@@ -1,11 +1,11 @@
-import {app, dialog} from "electron";
+import {app, dialog, ipcRenderer} from "electron";
 import path from "path";
 import {getConfig} from "./config";
 import fs from "fs/promises";
 import chalk from "chalk";
 
 export const packageVersion = require("../package.json").version;
-export const userDataPath = app.getPath("userData");
+export const userDataPath = process.type === "browser" ? app.getPath("userData") : ipcRenderer.sendSync("getUserDataPath");
 
 export function addStyle(styleString: string) {
     const style = document.createElement("style");

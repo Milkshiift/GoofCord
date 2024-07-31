@@ -4,81 +4,87 @@ import {ipcRenderer} from "electron";
 import {evaluateShowAfter} from "./preload";
 
 const settingsPath = path.join(__dirname, "../", "/assets/settings.json");
-const settingsFile = fs.readFileSync(settingsPath, "utf-8");
-const settings = JSON.parse(settingsFile);
+const settings = JSON.parse(fs.readFileSync(settingsPath, "utf-8"));
 const config = ipcRenderer.sendSync("config:getConfigBulk");
 
-export async function renderSettings() {
-    let html = "";
-    Object.keys(settings).forEach(category => {
-        html += makeCategory(category);
-    });
+interface SettingEntry {
+    name: string;
+    description: string;
+    inputType: string;
+    options?: string[];
+    showAfter?: {
+        key: string;
+        value: string;
+    };
+}
 
+
+export async function renderSettings() {
+    const html = Object.keys(settings).map(makeCategory).join("");
     const settingsDiv = document.getElementById("settings");
-    if (settingsDiv != undefined) {
+    if (settingsDiv) {
         settingsDiv.innerHTML = html;
     }
 }
 
 function makeCategory(name: string) {
-    let html = "";
-    html += `<h2>${name}</h2>`;
-    html += "<form class='settingsContainer'>";
-    html += fillCategory(name);
-    html += "</form>";
-    return html;
+    return `
+        <h2>${name}</h2>
+        <form class='settingsContainer'>
+            ${fillCategory(name)}
+        </form>
+    `;
 }
 
 function fillCategory(categoryName: string) {
-    let html = "";
-    const category = settings[categoryName];
-    Object.keys(category).forEach(setting => {
-        try {
-            const entry = category[setting];
-            if (entry.name === undefined) return;
-            let value: any;
-            if (setting === "encryptionPasswords") {
-                value = ipcRenderer.sendSync("messageEncryption:getDecryptedPasswords");
-            } else {
-                // Getting a config value straight from the cached config skips a missing parameter check
-                // but there will never be a missing parameter unless the user manually edits the config and
-                // with the current config system this provides much better performance since we don't have to do ipc calls.
-                value = config[setting];
-            }
-            const showAfter = entry.showAfter?.key+"$"+entry.showAfter?.value;
-            console.log(evaluateShowAfter(entry.showAfter?.value, config[entry.showAfter?.key]))
-            html += `
-            <fieldset class="${evaluateShowAfter(entry.showAfter?.value, config[entry.showAfter?.key]) === false ? "hidden" : ""}">
-                <div class='checkbox-container'>
-                    ${getInputElement(entry, setting, value, showAfter)}
-                    <label for="${setting}">${entry.name}</label>
-                </div>
-                <p class="description">${entry.description}</p>
-            </fieldset>
-            `;
-        } catch (e) {console.error(e);}
-    });
-    return html;
+    return Object.entries(settings[categoryName])
+        .map(([setting, entry]) => createSettingField(setting, entry as SettingEntry))
+        .filter(Boolean)
+        .join("");
 }
 
-function getInputElement(entry: { inputType: string; name: string; description: string; options: any[] }, setting: string, value: any, showAfter: string) {
-    if (entry.inputType === "checkbox") {
-        return `
-            <input setting-name="${setting}" show-after="${showAfter}" id="${setting}" type="checkbox" ${value ? "checked" : ""}/>
-        `;
-    } else if (entry.inputType === "textfield") {
-        return `
-            <input setting-name="${setting}" show-after="${showAfter}" class="text" id="${setting}" type="text" value="${value}"/>
-        `;
-    } else if (entry.inputType === "textarea") {
-        return `
-            <textarea setting-name="${setting}" show-after="${showAfter}">${value.join(",\n")}</textarea>
-        `;
-    } else if (entry.inputType.startsWith("dropdown")) {
-        return `
-            <select setting-name="${setting}" show-after="${showAfter}" class="left dropdown" id="${setting}" name="${setting}" ${entry.inputType.endsWith("multiselect") ? "multiple" : ""}>
-                ${entry.options.map((option: any) => `<option value="${option}" ${(option === value) || (Array.isArray(value) && value.includes(option)) ? "selected" : ""}>${option}</option>`).join("")}
-            </select>
-        `;
+function createSettingField(setting: string, entry: SettingEntry) {
+    if (!entry.name) return "";
+
+    const value = setting === "encryptionPasswords" ? ipcRenderer.sendSync("messageEncryption:getDecryptedPasswords") : config[setting];
+
+    const showAfter = entry.showAfter ? `${entry.showAfter.key}$${entry.showAfter.value}` : "";
+    const isHidden = entry.showAfter && !evaluateShowAfter(entry.showAfter.value, config[entry.showAfter.key]);
+
+    return `
+        <fieldset class="${isHidden ? "hidden" : ""}">
+            <div class='checkbox-container'>
+                ${getInputElement(entry, setting, value, showAfter)}
+                <label for="${setting}">${entry.name}</label>
+            </div>
+            <p class="description">${entry.description}</p>
+        </fieldset>
+    `;
+}
+
+function getInputElement(entry: SettingEntry, setting: string, value: any, showAfter: string) {
+    switch (entry.inputType) {
+        case "checkbox":
+            return `<input setting-name="${setting}" show-after="${showAfter}" id="${setting}" type="checkbox" ${value ? "checked" : ""}/>`;
+        case "textfield":
+            return `<input setting-name="${setting}" show-after="${showAfter}" class="text" id="${setting}" type="text" value="${value}"/>`;
+        case "textarea":
+            return `<textarea setting-name="${setting}" show-after="${showAfter}">${Array.isArray(value) ? value.join(",\n") : value}</textarea>`;
+        case "file":
+            return `<input setting-name="${setting}" show-after="${showAfter}" id="${setting}" type="file"/>`;
+        case "dropdown":
+        case "dropdown-multiselect":
+            return `
+                <select setting-name="${setting}" show-after="${showAfter}" class="left dropdown" id="${setting}" name="${setting}" ${entry.inputType === "dropdown-multiselect" ? "multiple" : ""}>
+                    ${entry.options?.map(option => `
+                        <option value="${option}" ${(option === value) || (Array.isArray(value) && value.includes(option)) ? "selected" : ""}>
+                            ${option}
+                        </option>
+                    `).join("")}
+                </select>
+            `;
+        default:
+            console.warn(`Unsupported input type: ${entry.inputType}`);
+            return "";
     }
 }

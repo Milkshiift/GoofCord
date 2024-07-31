@@ -19,9 +19,7 @@ contextBridge.exposeInMainWorld("settings", {
 
     elements = Array.from(document.querySelectorAll("[setting-name]")) as HTMLInputElement[];
     elements.forEach((element) => {
-        element.addEventListener("change", async () => {
-            await saveSettings(element);
-        });
+        element.addEventListener("change", () => saveSettings(element));
     });
 })();
 
@@ -37,22 +35,26 @@ async function saveSettings(changedElement: HTMLInputElement) {
     }
     settingsObj[changedElementName] = changedElementValue;
 
-    // showAfter implementation. There is maybe a better way
-    for (const element of elements) {
-        const elementShowAfter = element.getAttribute("show-after")?.split("$");
-        if (elementShowAfter == null || elementShowAfter[0] === undefined) continue;
-        if (changedElementName === elementShowAfter[0]) {
-            if (evaluateShowAfter(elementShowAfter[1], changedElementValue)) {
-                element.parentElement?.parentElement?.classList.remove('hidden');
-            } else {
-                element.parentElement?.parentElement?.classList.add('hidden');
-            }
-        }
-    }
+    updateVisibility(changedElementName, changedElementValue);
 
     console.log(settingsObj);
     void ipcRenderer.invoke("config:setConfigBulk", settingsObj);
     void ipcRenderer.invoke("flashTitlebar", "#5865F2");
+}
+
+function updateVisibility(changedElementName: string, changedElementValue: any) {
+    elements.forEach(element => {
+        const elementShowAfter = element.getAttribute("show-after")?.split("$");
+        if (elementShowAfter && elementShowAfter[0] === changedElementName) {
+            const shouldShow = evaluateShowAfter(elementShowAfter[1], changedElementValue);
+            element.closest('fieldset')?.classList.toggle('hidden', !shouldShow);
+        }
+    });
+}
+
+export function evaluateShowAfter(condition: string | undefined, arg: any) {
+    if (!condition) return;
+    return ((0, eval)("(arg)=>{"+condition+"}"))(arg);
 }
 
 async function getSettingValue(element: HTMLInputElement, settingName: string) {
@@ -71,6 +73,8 @@ async function getSettingValue(element: HTMLInputElement, settingName: string) {
             } else {
                 return createArrayFromTextarea(element.value);
             }
+        } else if (element.type === "file") {
+            return element.files?.[0]?.path;
         }
         throw new Error(`Unsupported element type: ${element.tagName}, ${element.type}`);
     } catch (error: any) {
@@ -80,23 +84,12 @@ async function getSettingValue(element: HTMLInputElement, settingName: string) {
 }
 
 function createArrayFromTextarea(input: string) {
-    let inputValue = input.replace(/(\r\n|\n|\r|\s+)/gm, "");
-    if (inputValue.endsWith(",")) {
-        inputValue = inputValue.slice(0, -1);
-    }
-    return inputValue.split(",");
+    return input.replace(/(\r\n|\n|\r|\s+)/gm, "").replace(/,$/, "").split(",");
 }
 
 async function createArrayFromTextareaEncrypted(input: string) {
     const arrayFromTextArea = createArrayFromTextarea(input);
-    const encryptedPasswords: string[] = [];
-    for (const password in arrayFromTextArea) {
-        encryptedPasswords.push(await ipcRenderer.invoke("encryptSafeStorage", arrayFromTextArea[password]));
-    }
-    return encryptedPasswords;
-}
-
-export function evaluateShowAfter(condition: string | undefined, arg: any) {
-    if (!condition) return;
-    return ((0, eval)("(arg)=>{"+condition+"}"))(arg);
+    return Promise.all(arrayFromTextArea.map(password =>
+        ipcRenderer.invoke("encryptSafeStorage", password)
+    ));
 }
