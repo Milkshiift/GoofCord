@@ -19,6 +19,8 @@ contextBridge.exposeInMainWorld("settings", {
 
     elements = Array.from(document.querySelectorAll("[setting-name]")) as HTMLInputElement[];
     elements.forEach((element) => {
+        // Revert button
+        [...element.parentElement!.children][0].addEventListener("click", () => revertSetting(element));
         element.addEventListener("change", () => saveSettings(element));
     });
 })();
@@ -38,7 +40,7 @@ async function saveSettings(changedElement: HTMLInputElement) {
     updateVisibility(changedElementName, changedElementValue);
 
     console.log(settingsObj);
-    void ipcRenderer.invoke("config:setConfigBulk", settingsObj);
+    await ipcRenderer.invoke("config:setConfigBulk", settingsObj);
     void ipcRenderer.invoke("flashTitlebar", "#5865F2");
 }
 
@@ -61,7 +63,7 @@ async function getSettingValue(element: HTMLInputElement, settingName: string) {
     try {
         if (element.tagName === "SELECT" || element.type === "text") {
             if (element.multiple) {
-                const selected = document.querySelectorAll(`[setting-name="${settingName}"] option:checked`);
+                const selected = element.querySelectorAll(`option:checked`);
                 return Array.from(selected).map(option => (option as HTMLOptionElement).value);
             }
             return element.value;
@@ -74,13 +76,35 @@ async function getSettingValue(element: HTMLInputElement, settingName: string) {
                 return createArrayFromTextarea(element.value);
             }
         } else if (element.type === "file") {
-            return element.files?.[0]?.path;
+            const path = element.files?.[0]?.path;
+            return path ? path : "";
         }
         throw new Error(`Unsupported element type: ${element.tagName}, ${element.type}`);
     } catch (error: any) {
         console.error(`Failed to get ${settingName}'s value:`, error);
         return undefined;
     }
+}
+
+export async function revertSetting(setting: HTMLInputElement) {
+    const elementName = setting.getAttribute("setting-name")!;
+    const defaultValue = ipcRenderer.sendSync("config:getDefaultValue", elementName);
+    if (setting.type === "text") {
+        setting.value = defaultValue;
+    } else if (setting.type === "checkbox") {
+        setting.checked = defaultValue;
+    } else if (setting.type === "file") {
+        setting.files = null;
+    } else if (setting.tagName === "TEXTAREA") {
+        setting.value = Array.isArray(defaultValue) ? defaultValue.join(",\n") : defaultValue;
+    }
+    //else if (setting.tagName === "SELECT") {
+    //    const selects = setting.children;
+    //    for (const select of selects) {
+    //        select.selected = defaultValue === (select as HTMLOptionElement).value;
+    //    }
+    //}
+    await saveSettings(setting);
 }
 
 function createArrayFromTextarea(input: string) {

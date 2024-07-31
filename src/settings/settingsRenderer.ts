@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import {ipcRenderer} from "electron";
-import {evaluateShowAfter} from "./preload";
+import {evaluateShowAfter, revertSetting} from "./preload";
 
 const settingsPath = path.join(__dirname, "../", "/assets/settings.json");
 const settings = JSON.parse(fs.readFileSync(settingsPath, "utf-8"));
@@ -54,6 +54,7 @@ function createSettingField(setting: string, entry: SettingEntry) {
     return `
         <fieldset class="${isHidden ? "hidden" : ""}">
             <div class='checkbox-container'>
+                ${entry.inputType.includes("dropdown") ? '' : '<div id="revert-button" title="Revert to default value"></div>'}
                 ${getInputElement(entry, setting, value, showAfter)}
                 <label for="${setting}">${entry.name}</label>
             </div>

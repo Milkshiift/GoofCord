@@ -5,7 +5,7 @@ import {createSettingsWindow} from "./settings/main";
 import {decryptMessage, encryptMessage} from "./modules/messageEncryption";
 import {
     cachedConfig,
-    getConfig,
+    getConfig, getDefaultValue,
     setConfig,
     setConfigBulk
 } from "./config";
@@ -44,6 +44,9 @@ export async function registerIpc() {
     });
     ipcMain.handle("config:setConfigBulk", async (_event, object) => {
         await setConfigBulk(object);
+    });
+    ipcMain.on("config:getDefaultValue", (event, setting) => {
+        event.returnValue = getDefaultValue(setting);
     });
     ipcMain.on("getAppVersion", (event) => {
         event.returnValue = getVersion();

@@ -47,9 +47,9 @@ async function doAfterDefiningTheWindow() {
     });
 
     subscribeToEvents();
-    void registerCustomHandler()
-    void setWindowOpenHandler()
-    void initArrpc()
+    setWindowOpenHandler();
+    void registerCustomHandler();
+    void initArrpc();
 
     // Load Discord
     void mainWindow.loadURL(getConfig("discordUrl"));
@@ -69,7 +69,7 @@ function subscribeToEvents() {
     })
 }
 
-async function setWindowOpenHandler() {
+function setWindowOpenHandler() {
     // Define a handler for opening new windows.
     mainWindow.webContents.setWindowOpenHandler(({url}) => {
         // For Vencord's quick css
