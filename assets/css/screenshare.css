@@ -141,11 +141,17 @@ input[type="text"] {
     appearance: none;
     background-color: #484c52;
     border: solid #0000 4px;
-    margin: 0.25em;
+    margin: 0.3em;
+    cursor: text;
 }
 
-input[type="text"]:hover {
-    cursor: text;
+select {
+    color: white;
+    border-radius: 5px;
+    background-color: #484c52;
+    border: solid #0000 4px;
+    margin: 0.3em;
+    cursor: pointer;
 }
 
 

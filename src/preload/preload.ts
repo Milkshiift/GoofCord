@@ -13,6 +13,31 @@ import {log} from "../modules/logger";
 document.addEventListener("DOMContentLoaded", async () => {
     if (!document.location.hostname.includes("discord")) return;
 
+    const original = navigator.mediaDevices.getDisplayMedia;
+    navigator.mediaDevices.getDisplayMedia = async function (opts) {
+        const stream = await original.call(this, opts);
+        const videoTrack = stream.getVideoTracks()[0];
+        videoTrack.contentHint = "motion";
+        const audioTrack = stream.getAudioTracks()[0];
+        if (audioTrack) audioTrack.contentHint = "music";
+
+        return stream;
+    };
+
+    void loadScripts();
+    void injectTitlebar();
+    void addDefaultPlugins();
+    fixScreenShare();
+    fixNotifications();
+    initPushToTalk();
+
+    // Hide "Download Discord Desktop now!" banner
+    window.localStorage.setItem("hideNag", "true");
+
+    addStyle(await fs.readFile(path.join(__dirname, "../", "/assets/css/discord.css"), "utf8"));
+});
+
+async function loadScripts() {
     if (getConfig("scriptLoading")) {
         const scripts: string[][] = await ipcRenderer.invoke("getScripts");
         for (const script of scripts) {
@@ -20,14 +45,30 @@ document.addEventListener("DOMContentLoaded", async () => {
             log(`Loaded "${script[0]}" script`);
         }
     }
+}
 
-    void injectTitlebar();
-    void addDefaultPlugins();
+function fixScreenShare() {
+    addScript(`
+        (() => {
+        const original = navigator.mediaDevices.getDisplayMedia;
+        navigator.mediaDevices.getDisplayMedia = async function (opts) {
+            const stream = await original.call(this, opts);
+            console.log("Setting stream's content hint");
+            
+            const videoTrack = stream.getVideoTracks()[0];
+            videoTrack.contentHint = window.contentHint || "motion";
+            
+            const audioTrack = stream.getAudioTracks()[0];
+            if (audioTrack) audioTrack.contentHint = "music";
+    
+            return stream;
+        };
+        })();
+    `);
+}
 
-    // Hide "Download Discord Desktop now!" banner
-    window.localStorage.setItem("hideNag", "true");
-
-    // dirty hack to make clicking notifications focus GoofCord
+function fixNotifications() {
+    // hack to make clicking notifications focus GoofCord
     addScript(`
         (() => {
         const originalSetter = Object.getOwnPropertyDescriptor(Notification.prototype, "onclick").set;
@@ -42,8 +83,4 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
         })();
     `);
-
-    initPushToTalk();
-
-    addStyle(await fs.readFile(path.join(__dirname, "../", "/assets/css/discord.css"), "utf8"));
-});
+}

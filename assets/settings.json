@@ -246,7 +246,7 @@
       "inputType": "checkbox"
     },
     "screensharePreviousSettings": {
-      "defaultValue": ["720", "30", false]
+      "defaultValue": ["720", "30", false, "motion"]
     }
   }
 }

@@ -33,21 +33,22 @@ export async function registerCustomHandler() {
         await capturerWindow.loadURL(`file://${path.join(__dirname, "/assets/html/picker.html")}`);
         capturerWindow.webContents.send("getSources", sources);
 
-        ipcMain.handleOnce("selectScreenshareSource", async (_event, id, name, audio, resolution, framerate) => {
+        ipcMain.handleOnce("selectScreenshareSource", async (_event, id, name, audio, contentHint, resolution, framerate) => {
             capturerWindow.close();
-            // https://github.com/Milkshiift/GoofCord-Scripts/blob/1.4.0/patches/10_screenshareQuality.js
+            // https://github.com/Milkshiift/goofcord-shelter-plugins/tree/main/plugins/screenshare-quality
             await mainWindow.webContents.executeJavaScript(`
                 try{
                     window.ScreenshareQuality.patchScreenshareQuality(${resolution}, ${framerate})
                 } catch(e) {console.log(e);}
+                window.contentHint = "${contentHint}";
             `);
 
-            const result = {id, name, width: 9999, height: 9999};
+            const result = isLinuxWayland || id === "0" ? sources[0] : {id, name, width: 9999, height: 9999};
             if (audio) {
-                callback({video: isLinuxWayland ? sources[0] : result, audio: "loopback"});
+                callback({video: result, audio: "loopback"});
                 return;
             }
-            callback({video: isLinuxWayland ? sources[0] : result});
+            callback({video: result});
         });
     });
 }

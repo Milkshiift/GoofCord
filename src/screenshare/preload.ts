@@ -36,13 +36,14 @@ function createSourceItem({ id, name, thumbnail }: IPCSources): HTMLLIElement {
 async function selectSource(id: string | null, title: string | null) {
     try {
         const audio = (document.getElementById("audio-checkbox") as HTMLInputElement).checked;
+        const contentHint = (document.getElementById("content-hint-select") as HTMLInputElement).value;
         const resolution = (document.getElementById("resolution-textbox") as HTMLInputElement).value;
         const framerate = (document.getElementById("framerate-textbox") as HTMLInputElement).value;
         void ipcRenderer.invoke("flashTitlebar", "#5865F2");
 
-        void setConfig("screensharePreviousSettings", [resolution, framerate, audio]);
+        void setConfig("screensharePreviousSettings", [resolution, framerate, audio, contentHint]);
 
-        void ipcRenderer.invoke("selectScreenshareSource", id, title, audio, resolution, framerate);
+        void ipcRenderer.invoke("selectScreenshareSource", id, title, audio, contentHint, resolution, framerate);
     } catch (err) {
         console.error(err);
     }
@@ -72,12 +73,19 @@ async function addDisplays() {
             </div>
             <div class="checkbox-container">
               <div class="subcontainer">
-                <input id="resolution-textbox" type="text" value="${previousSettings[0]}" />
-                <label for="resolution-textbox">Resolution</label>
+                <input id="audio-checkbox" type="checkbox" ${previousSettings[2] ? "checked" : ""} />
+                <label for="audio-checkbox">Audio</label>
               </div>
               <div class="subcontainer">
-                <input id="audio-checkbox" type="checkbox" ${previousSettings[2] ? "checked" : ""} />
-                <label for="audio-checkbox">Stream audio</label>
+                <select id="content-hint-select">
+                  <option value="motion" ${previousSettings[3] !== "detail" ? "selected" : ""}>Motion</option>
+                  <option value="detail" ${previousSettings[3] === "detail" ? "selected" : ""}>Detail</option>
+                </select>
+                <label for="audio-checkbox">Optimization</label>
+              </div>
+              <div class="subcontainer">
+                <input id="resolution-textbox" type="text" value="${previousSettings[0]}" />
+                <label for="resolution-textbox">Resolution</label>
               </div>
               <div class="subcontainer">
                 <input id="framerate-textbox" type="text" value="${previousSettings[1]}"/>
@@ -97,3 +105,11 @@ async function addDisplays() {
 }
 
 void addDisplays();
+
+document.addEventListener('keydown', (key) => {
+    if (key.code === "Escape") {
+        void ipcRenderer.invoke("selectScreenshareSource");
+    } else if (key.code === "Enter") {
+        selectSource("0", "Screen");
+    }
+});
