@@ -141,6 +141,10 @@ input[type="checkbox"]:not(:checked) {
     animation: checkmark-animation-unchecked 0.3s ease-in-out;
 }
 
+input[type="checkbox"]:hover {
+    background-color: var(--color-primary-light);
+}
+
 @keyframes checkmark-animation {
     0% {
         transform: scale(1);

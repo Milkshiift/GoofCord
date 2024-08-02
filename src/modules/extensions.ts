@@ -18,7 +18,7 @@ const MOD_BUNDLES_URLS: ModBundleUrls = {
     custom: [getConfig("customJsBundle"), getConfig("customCssBundle")],
 };
 
-export async function loadExtensions(): Promise<void> {
+export async function loadExtensions() {
     try {
         const files = await readOrCreateFolder(extensionsFolder);
         for (const file of files) {

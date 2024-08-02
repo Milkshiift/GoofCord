@@ -106,7 +106,6 @@ html {
 }
 
 input[type="checkbox"] {
-    display: flex;
     height: 2em;
     width: 2em;
     border-radius: 5px;
@@ -114,6 +113,7 @@ input[type="checkbox"] {
     background-color: #484c52;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: solid #0000 4px;
+    cursor: pointer;
 }
 
 input[type="checkbox"]:checked {
@@ -122,7 +122,6 @@ input[type="checkbox"]:checked {
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
-    border-color: #5865f2;
     animation: checkmark-animation 0.4s ease-in-out;
 }
 
@@ -131,7 +130,7 @@ input[type="checkbox"]:not(:checked) {
 }
 
 input[type="checkbox"]:hover {
-    cursor: pointer;
+    background-color: #797eff;
 }
 
 input[type="text"] {
