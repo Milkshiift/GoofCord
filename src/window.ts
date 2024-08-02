@@ -6,6 +6,7 @@ import {getConfig} from "./config";
 import {registerCustomHandler} from "./screenshare/main";
 import {initArrpc} from "./modules/arrpc";
 import {adjustWindow} from "./modules/windowStateManager";
+import fs from "fs/promises";
 
 export let mainWindow: BrowserWindow;
 
@@ -44,6 +45,14 @@ async function doAfterDefiningTheWindow() {
             event.preventDefault();
             mainWindow.hide();
         }
+    });
+    const adblocker = await fs.readFile(path.join(__dirname, "/assets/adblocker.js"), "utf8");
+    mainWindow.webContents.on("frame-created", (_, {frame}) => {
+        frame.once("dom-ready", () => {
+            if (frame.url.includes("youtube.com/embed/") || (frame.url.includes("discordsays") && frame.url.includes("youtube.com"))) {
+                frame.executeJavaScript(adblocker);
+            }
+        });
     });
 
     subscribeToEvents();
