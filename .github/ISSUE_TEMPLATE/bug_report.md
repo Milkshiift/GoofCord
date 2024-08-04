@@ -7,6 +7,7 @@ assignees: ''
 ---
 
 - [ ] I have searched and found no existing issues on the same topic
+- [ ] I have searched the [wiki](https://github.com/Milkshiift/GoofCord/wiki/FAQ) and found no mention of my problem
 
 ### Description
 
@@ -20,7 +21,6 @@ assignees: ''
 
 ### Environment
 - Operating System (name and version):
-- CPU Architecture (e.g. x64):
 - GoofCord Version:
 
 ### Additional Information
