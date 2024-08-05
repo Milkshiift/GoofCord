@@ -155,6 +155,12 @@
       "description": "Adds GoofCord's helper plugins to Shelter on launch. Don't disable unless facing issues.",
       "inputType": "checkbox"
     },
+    "invidiousEmbeds": {
+      "name": "Invidious embeds",
+      "defaultValue": true,
+      "description": "Replaces YouTube embeds with Invidious embeds.",
+      "inputType": "checkbox"
+    },
     "messageEncryption": {
       "name": "Message encryption",
       "defaultValue": false,
