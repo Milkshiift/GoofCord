@@ -80,9 +80,10 @@ export async function setApplicationMenu() {
         {
             label: "Zoom",
             submenu: [
-                {label: "Zoom in", accelerator: "CmdOrCtrl+Plus", role: "zoomIn"},
                 // Fix for zoom in on keyboards with dedicated + like QWERTZ (or numpad)
                 // See https://github.com/electron/electron/issues/14742 and https://github.com/electron/electron/issues/5256
+                {label: "Zoom in", accelerator: "CmdOrCtrl+Plus", role: "zoomIn", visible: false},
+                {label: "Zoom in", accelerator: "CmdOrCtrl++", role: "zoomIn"},
                 {label: "Zoom in", accelerator: "CmdOrCtrl+=", role: "zoomIn", visible: false},
                 {label: "Zoom out", accelerator: "CmdOrCtrl+-", role: "zoomOut"}
             ]
