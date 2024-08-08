@@ -50,9 +50,11 @@ export async function loadCloud() {
         return;
     }
 
+    /* Decrypt the config before saving it to the local file
     for (const key in cloudSettings) {
         cloudSettings[key] = decrypt(cloudSettings[key], getEncryptionSecret(), encryptionAlgorithm);
     }
+    */
 
     await setConfigBulk(cloudSettings);
     console.log(chalk.cyanBright("[Cloud Settings]"), "Loaded cloud settings:", cloudSettings);
@@ -65,6 +67,13 @@ export async function loadCloud() {
 }
 
 export async function saveCloud() {
+
+    /* Encrypt the config before sending it to the server
+    for (const key in cachedConfig) {
+        cachedConfig[key] = encrypt(cachedConfig[key], getEncryptionSecret(), encryptionAlgorithm);
+    }
+    */
+
     const response = await callEndpoint("save", "POST", JSON.stringify(cachedConfig));
     if (!response) return;
 
