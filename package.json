@@ -35,6 +35,7 @@
     "arrpc": "github:OpenAsar/arrpc",
     "auto-launch": "^5.0.6",
     "chalk": "^5.3.0",
+    "crypto": "^1.0.1",
     "electron-context-menu": "github:Milkshiift/electron-context-menu",
     "stegcloak": "github:Milkshiift/stegcloak-node",
     "v8-compile-cache": "^2.4.0"
@@ -105,5 +106,8 @@
         "com.apple.security.device.camera": true
       }
     }
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }

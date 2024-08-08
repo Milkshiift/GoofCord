@@ -259,6 +259,12 @@
       "defaultValue": "https://goofcordcloud.wuemeli.com",
       "description": "DO NOT MESS WITH THIS UNLESS YOU KNOW WHAT YOU'RE DOING",
       "inputType": "textfield"
+    },
+    "cloudEncryptionKey": {
+      "name": "Cloud Encryption Key",
+      "defaultValue": "supersecretvalue",
+      "description": "Set your Cloud Encryption Key here",
+      "inputType": "textfield"
     }
   }
 }
