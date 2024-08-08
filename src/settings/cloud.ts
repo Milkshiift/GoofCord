@@ -1,229 +1,124 @@
 import { createServer } from 'http';
-import { getConfig, getConfigLocation, setConfigBulk } from '../config';
-import { getGoofCordFolderPath } from "../utils";
-import { shell, dialog } from 'electron';
-import crypto from 'crypto';
-
-import fs from 'fs';
+import {cachedConfig, getConfig, setConfigBulk} from '../config';
+import {getGoofCordFolderPath, tryWithFix} from "../utils";
+import {shell, dialog} from 'electron';
+import fs from 'fs/promises';
 import path from 'path';
 
-async function cloudConfigCheck() {
-    const filePath = getCloudConfigLocation();
-    try {
-        await fs.promises.access(filePath);
-    } catch (error) {
-        fs.writeFileSync(filePath, "{}", "utf-8");
-    }
-}
+const cloudConfigPath = path.join(getGoofCordFolderPath(), "cloud.json");
 
-function getCloudConfigLocation(): string {
-    const check = path.join(getGoofCordFolderPath(), "cloud.json");
-    if (!fs.existsSync(check)) {
-        fs.writeFileSync(check, "");
-    }
-    return path.join(getGoofCordFolderPath(), "cloud.json");
-}
+let cachedToken: string;
+async function getCloudToken(): Promise<string> {
+    if (cachedToken || serverListening) return cachedToken;
 
-async function getCloudToken(): Promise<string | undefined> {
-    const path = getCloudConfigLocation();
-    try {
-        const token = fs.readFileSync(path, "utf-8");
-        console.log("Cloud token:", token);
-        return token;
-    } catch (error) {
-        await cloudConfigCheck();
-        return undefined;
-    }
-}
+    // tryWithFix is always a bit ugly, but it provides a standardized way of handling errors so it's preferred
+    cachedToken = await tryWithFix(
+        async () => {
+            const token = await fs.readFile(cloudConfigPath, "utf-8");
+            if (token.length < 20) throw "Invalid token";
+            return token;
+        },
+        async () => await fs.writeFile(cloudConfigPath, await getTokenFromServer(), "utf-8"),
+        "GoofCord was unable to get cloud token: "
+    );
 
-function saveCloudToken(token: string) {
-    const path = getCloudConfigLocation();
-    fs.unlinkSync(path);
-    fs.writeFileSync(path, token);
+    console.log("Cloud token:", cachedToken);
+    return cachedToken;
 }
 
 function getCloudHost() {
-    return getConfig("cloudHost");
-}
-const cloudToken = getCloudToken();
-
-let isServerRunning = false;
-
-async function preCheck() {
-    if (!getCloudHost()) {
-        console.error("Cloud host not defined");
-        return;
-    }
-
-    if (!cloudToken) {
-        startCloudServer();
-        console.error("Cloud token not defined");
-        const loginUrl = `${getCloudHost()}/login`;
-        await shell.openExternal((loginUrl));
-
-        while (!cloudToken) {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-        }
-        return;
-    }
-}
-
-export async function deleteCloud() {
-    console.log("Deleting cloud settings.");
-
-    await preCheck();
-
-    const path = getCloudConfigLocation();
-    fs.unlinkSync(path);
-
-    const deletefetch = await fetch(`${getCloudHost()}/delete`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `${cloudToken}`
-        }
-    });
-
-    const deletejson = await deletefetch.json();
-
-    if (deletejson.error) {
-        console.warn("Error deleting cloud settings:", deletejson.error);
-        dialog.showMessageBoxSync({
-            type: "error",
-            title: "Error deleting cloud settings",
-            message: deletejson.error + "\n\nPlease try by restarting GoofCord and try again.",
-            buttons: ["OK"]
-        });
-
-        return;
-    }
-
-    console.log("Deleted cloud settings.");
-
-    dialog.showMessageBoxSync({
-        type: "info",
-        title: "Settings deleted",
-        message: "Settings deleted successfully.",
-        buttons: ["OK"]
-    });
-
-    return;
+    return getConfig("cloudHost")+"/";
 }
 
 export async function loadCloud() {
-    console.log("Loading cloud settings.");
-
-    await preCheck();
-
-    const loadfetch = await fetch(`${getCloudHost()}/load`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `${cloudToken}`
-        }
-    });
-
-    const loadjsonraw = await loadfetch.json();
-
-    if (loadjsonraw.error) {
-        console.warn("Error loading cloud settings:", loadjsonraw.error);
-        dialog.showMessageBoxSync({
-            type: "error",
-            title: "Click Delete Cloud Data in the settings and try again.",
-            message: loadjsonraw.error,
-            buttons: ["OK"]
-        });
-        return;
-    }
-
-    const loadjson = JSON.stringify(loadjsonraw);
-    const loadjsonobj = JSON.parse(loadjson);
-
-    console.log("Loaded cloud settings:", loadjson);
-
-    setConfigBulk(loadjsonobj);
-
-    console.log("Settings applied.");
-
+    const cloudSettings = await callEndpoint("load", "GET");
+    if (!cloudSettings) return;
+    await setConfigBulk(cloudSettings.settings);
+    console.log("Loaded cloud settings:", cloudSettings);
     dialog.showMessageBoxSync({
         type: "info",
         title: "Settings loaded",
-        message: "Settings loaded successfully. Please restart GoofCord to apply the changes.",
+        message: "Settings loaded from cloud successfully. Please restart GoofCord to apply the changes.",
         buttons: ["OK"]
     });
 }
 
 export async function saveCloud() {
-    console.log("Saving cloud settings.");
-
-    await preCheck();
-
-    const location = getConfigLocation();
-
-    type CloudSettingData = {
-        key: string;
-        value: any;
-    };
-
-    const data: CloudSettingData[] = [];
-
-    const rawData = fs.readFileSync(location, "utf-8");
-    const cachedConfig = JSON.parse(rawData);
-
-    for (const key in cachedConfig) {
-        data.push({ key, value: cachedConfig[key] });
-    }
-
-    const savefetch = await fetch(`${getCloudHost()}/save`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `${cloudToken}`
-        },
-        body: JSON.stringify(data)
-    });
-
-    const savejson = await savefetch.json();
-
-    if (savejson.error) {
-        console.warn("Error saving cloud settings:", savejson.error);
-        dialog.showMessageBoxSync({
-            type: "error",
-            title: "Click Delete Cloud Data in the settings and try again.",
-            message: savejson.error,
-            buttons: ["OK"]
-        });
-        return;
-    }
+    const response = await callEndpoint("save", "POST", JSON.stringify(cachedConfig));
+    if (!response) return;
 
     console.log("Saved cloud settings.");
     dialog.showMessageBoxSync({
         type: "info",
         title: "Settings saved",
-        message: "Settings saved successfully.",
+        message: "Settings saved successfully on cloud.",
         buttons: ["OK"]
     });
-
-    return;
 }
 
-async function startCloudServer() {
-    if (isServerRunning) return;
+export async function deleteCloud() {
+    console.log("Deleting cloud settings.");
 
-    const server = createServer((req, res) => {
-        const token = req.url?.split("/")[1];
-        if (token) {
-            saveCloudToken(token);
-            res.writeHead(200, { 'Content-Type': 'text/plain' });
-            res.end('Token received, you can close this tab now.');
-            server.close();
-            return;
-        }
+    const response = await callEndpoint("delete", "GET");
+    if (!response) return;
+    void fs.unlink(cloudConfigPath);
+    cachedToken = "";
+
+    console.log("Deleted cloud settings.");
+    dialog.showMessageBoxSync({
+        type: "info",
+        title: "Settings deleted",
+        message: "Settings deleted from cloud successfully.",
+        buttons: ["OK"]
     });
+}
 
-    server.listen(9999, '127.0.0.1', () => {
-        console.log('Listening on 127.0.0.1:9999');
-        isServerRunning = true;
+async function callEndpoint(endpoint: string, method: string, body?: string) {
+    // Try catch is needed for scenarios like an offline server
+    try {
+        console.log("Calling cloud endpoint:", endpoint);
+        const serverResponse = await fetch(getCloudHost()+endpoint, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': await getCloudToken()
+            },
+            body: body
+        });
+        const responseJson = await serverResponse.json();
+        // Server sends a JSON with "error" property upon internal errors
+        if (responseJson.error) throw responseJson.error;
+        return responseJson;
+    } catch (error: any) {
+        const errorMessage = `Error when calling "${endpoint}" endpoint: ${error}`;
+        console.warn(errorMessage);
+        void dialog.showMessageBox({
+            type: "error",
+            title: "Cloud error",
+            message: errorMessage,
+            buttons: ["OK"]
+        });
+    }
+}
+
+let serverListening = false;
+async function getTokenFromServer(): Promise<string> {
+    serverListening = true;
+    await shell.openExternal(getCloudHost() + "login");
+    return new Promise<string>((resolve) => {
+        const server = createServer((req, res) => {
+            const token = req.url?.split("/")[1];
+            if (token) {
+                res.writeHead(200, { 'Content-Type': 'text/plain' });
+                res.end('Token received, you can close this tab now.');
+                server.close();
+                serverListening = false;
+                resolve(token);
+            }
+        });
+
+        server.listen(9998, '127.0.0.1', () => {
+            console.log('Listening on', server.address());
+        });
     });
-
 }
