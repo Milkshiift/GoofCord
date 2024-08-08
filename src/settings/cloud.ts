@@ -110,8 +110,12 @@ export async function loadCloud() {
 
     if (loadjsonraw.error) {
         console.warn("Error loading cloud settings:", loadjsonraw.error);
-        console.log("Starting local server.");
-        startCloudServer();
+        dialog.showMessageBoxSync({
+            type: "error",
+            title: "Click Delete Cloud Data in the settings and try again.",
+            message: loadjsonraw.error,
+            buttons: ["OK"]
+        });
         return;
     }
 
@@ -168,7 +172,7 @@ export async function saveCloud() {
         console.warn("Error saving cloud settings:", savejson.error);
         dialog.showMessageBoxSync({
             type: "error",
-            title: "Error saving cloud settings",
+            title: "Click Delete Cloud Data in the settings and try again.",
             message: savejson.error,
             buttons: ["OK"]
         });
