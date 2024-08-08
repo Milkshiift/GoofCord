@@ -4,6 +4,7 @@ import {getGoofCordFolderPath, tryWithFix} from "../utils";
 import {shell, dialog} from 'electron';
 import fs from 'fs/promises';
 import path from 'path';
+import chalk from "chalk";
 
 const cloudConfigPath = path.join(getGoofCordFolderPath(), "cloud.json");
 
@@ -22,7 +23,7 @@ async function getCloudToken(): Promise<string> {
         "GoofCord was unable to get cloud token: "
     );
 
-    console.log("Cloud token:", cachedToken);
+    console.log(chalk.cyanBright("[Cloud Settings]"), "Cloud token:", cachedToken);
     return cachedToken;
 }
 
@@ -31,10 +32,20 @@ function getCloudHost() {
 }
 
 export async function loadCloud() {
-    const cloudSettings = await callEndpoint("load", "GET");
-    if (!cloudSettings) return;
-    await setConfigBulk(cloudSettings.settings);
-    console.log("Loaded cloud settings:", cloudSettings);
+    const cloudSettings = (await callEndpoint("load", "GET")).settings;
+    if (!cloudSettings || Object.keys(cloudSettings).length < 5) {
+        console.log(chalk.cyanBright("[Cloud Settings]"), "Nothing to load");
+        dialog.showMessageBoxSync({
+            type: "info",
+            title: "Cloud Settings",
+            message: "Nothing to load",
+            buttons: ["OK"]
+        });
+        return;
+    }
+
+    await setConfigBulk(cloudSettings);
+    console.log(chalk.cyanBright("[Cloud Settings]"), "Loaded cloud settings:", cloudSettings);
     dialog.showMessageBoxSync({
         type: "info",
         title: "Settings loaded",
@@ -47,7 +58,7 @@ export async function saveCloud() {
     const response = await callEndpoint("save", "POST", JSON.stringify(cachedConfig));
     if (!response) return;
 
-    console.log("Saved cloud settings.");
+    console.log(chalk.cyanBright("[Cloud Settings]"), "Saved cloud settings.");
     dialog.showMessageBoxSync({
         type: "info",
         title: "Settings saved",
@@ -57,14 +68,12 @@ export async function saveCloud() {
 }
 
 export async function deleteCloud() {
-    console.log("Deleting cloud settings.");
-
     const response = await callEndpoint("delete", "GET");
     if (!response) return;
     void fs.unlink(cloudConfigPath);
     cachedToken = "";
 
-    console.log("Deleted cloud settings.");
+    console.log(chalk.cyanBright("[Cloud Settings]"), "Deleted cloud settings.");
     dialog.showMessageBoxSync({
         type: "info",
         title: "Settings deleted",
@@ -76,7 +85,7 @@ export async function deleteCloud() {
 async function callEndpoint(endpoint: string, method: string, body?: string) {
     // Try catch is needed for scenarios like an offline server
     try {
-        console.log("Calling cloud endpoint:", endpoint);
+        console.log(chalk.cyanBright("[Cloud Settings]"), "Calling endpoint:", endpoint);
         const serverResponse = await fetch(getCloudHost()+endpoint, {
             method: method,
             headers: {
@@ -91,7 +100,7 @@ async function callEndpoint(endpoint: string, method: string, body?: string) {
         return responseJson;
     } catch (error: any) {
         const errorMessage = `Error when calling "${endpoint}" endpoint: ${error}`;
-        console.warn(errorMessage);
+        console.warn(chalk.cyanBright("[Cloud Settings]"), errorMessage);
         void dialog.showMessageBox({
             type: "error",
             title: "Cloud error",
