@@ -58,7 +58,7 @@ async function preCheck() {
         console.error("Cloud token not defined");
         const loginUrl = `${cloudHost}/login`;
         await shell.openExternal((loginUrl));
-        
+
         while (!cloudToken) {
             await new Promise(resolve => setTimeout(resolve, 1000));
         }
@@ -139,21 +139,6 @@ export async function loadCloud() {
 
     console.log("Loaded cloud settings:", loadjson);
 
-    const key = getConfig("cloudEncryptionKey");
-
-    if (!key) {
-        console.warn("Cloud Encryption Key not set.");
-        dialog.showMessageBoxSync({
-            type: "error",
-            title: "Cloud Encryption Key not set",
-            message: "Please set the Cloud Encryption Key in the settings and try again.",
-            buttons: ["OK"]
-        });
-        return;
-    }
-
-    const iv = crypto.randomBytes(16);
-
     setConfigBulk(loadjsonobj);
 
     console.log("Settings applied.");
@@ -183,27 +168,8 @@ export async function saveCloud() {
     const rawData = fs.readFileSync(location, "utf-8");
     const cachedConfig = JSON.parse(rawData);
 
-    const key = getConfig("cloudEncryptionKey");
-    if (!key) {
-        console.warn("Cloud Encryption Key not set.");
-        dialog.showMessageBoxSync({
-            type: "error",
-            title: "Cloud Encryption Key not set",
-            message: "Please set the Cloud Encryption Key in the settings and try again.",
-            buttons: ["OK"]
-        });
-        return;
-    }
-    const iv = crypto.randomBytes(16);
-    const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
-
-    delete cachedConfig["cloudEncryption"];
-    const encryptedData = cipher.update(cachedConfig, 'utf8', 'base64') + cipher.final('base64');
-
-    const parsedEncryptedData = JSON.parse(atob(encryptedData));
-
-    for (const key in parsedEncryptedData) {
-        data.push({ key, value: parsedEncryptedData[key] });
+    for (const key in cachedConfig) {
+        data.push({ key, value: cachedConfig[key] });
     }
 
     const savefetch = await fetch(`${cloudHost}/save`, {
