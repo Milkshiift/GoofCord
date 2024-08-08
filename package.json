@@ -105,8 +105,5 @@
         "com.apple.security.device.camera": true
       }
     }
-  },
-  "engines": {
-    "node": ">=21.0.0"
   }
 }

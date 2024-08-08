@@ -6,3 +6,6 @@ ts-out
 yes.txt
 .idea
 /fix.bat
+bun.lockb
+package-lock.json
+pnpm-lock.yaml

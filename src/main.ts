@@ -18,6 +18,7 @@ import path from "path";
 setFlags();
 if (isDev()) import("source-map-support/register").catch(() => {});
 if (!app.requestSingleInstanceLock()) app.exit();
+const cloudHost = getConfig("cloudHost");
 crashReporter.start({ uploadToServer: false });
 
 async function main() {
@@ -100,7 +101,9 @@ async function setPermissions() {
 }
 
 async function waitForInternetConnection() {
-    while (!net.isOnline()) {
+    const check = await fetch(`${cloudHost}/ping`);
+    while (!check.ok) {
+        console.log("Waiting for internet connection...");
         await new Promise(resolve => setTimeout(resolve, 1000));
     }
 }

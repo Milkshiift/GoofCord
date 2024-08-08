@@ -253,6 +253,12 @@
     },
     "screensharePreviousSettings": {
       "defaultValue": ["720", "30", false, "motion"]
+    },
+    "cloudHost": {
+      "name": "Cloud Host",
+      "defaultValue": "http://localhost:3000",
+      "description": "DO NOT MESS WITH THIS UNLESS YOU KNOW WHAT YOU'RE DOING",
+      "inputType": "textfield"
     }
   }
 }
