@@ -7,6 +7,15 @@ import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 
+async function cloudConfigCheck() {
+    const filePath = getCloudConfigLocation();
+    try {
+        await fs.promises.access(filePath); 
+    } catch (error) {
+        fs.writeFileSync(filePath, "{}", "utf-8");
+    }
+}
+
 function getCloudConfigLocation(): string {
     const check = path.join(getGoofCordFolderPath(), "cloud.json");
     if (!fs.existsSync(check)) {
@@ -15,11 +24,16 @@ function getCloudConfigLocation(): string {
     return path.join(getGoofCordFolderPath(), "cloud.json");
 }
 
-function getCloudToken(): string {
+async function getCloudToken(): Promise<string | undefined> {
     const path = getCloudConfigLocation();
-    const token = fs.readFileSync(path, "utf-8");
-    console.log("Cloud token:", token);
-    return token;
+    try {
+        const token = fs.readFileSync(path, "utf-8");
+        console.log("Cloud token:", token);
+        return token;
+    } catch (error) {
+        await cloudConfigCheck();
+        return undefined; 
+    }
 }
 
 function saveCloudToken(token: string) {
@@ -44,7 +58,7 @@ async function preCheck() {
         console.error("Cloud token not defined");
         const loginUrl = `${cloudHost}/login`;
         await shell.openExternal((loginUrl));
-
+        
         while (!cloudToken) {
             await new Promise(resolve => setTimeout(resolve, 1000));
         }
