@@ -12,6 +12,7 @@
 - **:chart_with_upwards_trend: Fast and Performant**: Glide through your chats with GoofCord's superior speed and responsiveness compared to the official client. 
 - **:bookmark: Standalone**: GoofCord is a standalone client, not reliant on the original Discord client in any way.
 - **:electric_plug: Plugins & Themes support**: Easily use client mods like [Vencord](https://github.com/Vendicated/Vencord) or [Shelter](https://github.com/uwu/shelter) for a world of plugins and themes.
+- **☁️ Cloud Sync**: Sync your settings across devices with GoofCord's cloud sync feature.
 - **🐧 Linux support**: Seamless screensharing with audio and native Wayland support on Linux. See FAQ for details.
 
 ## Ready to Dive In?
@@ -88,3 +89,6 @@ If GoofCord shows a black screen, also include this flag: `--disable-gpu-sandbox
 [Vencord](https://github.com/Vendicated/Vencord)     
 [Vesktop](https://github.com/Vencord/Vesktop)    
 [WebCord](https://github.com/SpacingBat3/WebCord)
+
+## Related Projects
+[CloudServer](https://github.com/Wuemeli/goofcord-cloudserver)

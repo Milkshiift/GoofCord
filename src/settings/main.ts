@@ -1,11 +1,21 @@
-import {BrowserWindow, ipcMain, shell} from "electron";
-import {getCustomIcon, getDisplayVersion, userDataPath} from "../utils";
+import { BrowserWindow, ipcMain, shell } from "electron";
+import { getCustomIcon, getDisplayVersion, userDataPath } from "../utils";
 import path from "path";
-import {clearCache} from "../modules/cacheManager";
+import { clearCache } from "../modules/cacheManager";
+import { deleteCloud, loadCloud, saveCloud } from "./cloud";
 
 let settingsWindow: BrowserWindow;
 let isOpen = false;
 
+ipcMain.handle("deleteCloud", async () => {
+    await deleteCloud();
+});
+ipcMain.handle("loadCloud", async () => {
+    await loadCloud();
+});
+ipcMain.handle("saveCloud", async () => {
+    await saveCloud();
+});
 ipcMain.handle("clearCache", async (_event) => {
     await clearCache();
 });
@@ -41,9 +51,9 @@ export async function createSettingsWindow() {
     });
     isOpen = true;
 
-    settingsWindow.webContents.setWindowOpenHandler(({url}) => {
+    settingsWindow.webContents.setWindowOpenHandler(({ url }) => {
         shell.openExternal(url);
-        return {action: "deny"};
+        return { action: "deny" };
     });
 
     await settingsWindow.loadURL(`file://${path.join(__dirname, "/assets/html/settings.html")}`);

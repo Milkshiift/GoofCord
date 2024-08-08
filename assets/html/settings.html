@@ -11,6 +11,12 @@
 <body>
 <p class="center">Some changes require a restart to take effect</p>
 
+<div style="display: flex; flex-direction: column; margin: 1em 0 0;">
+    <button class="center" data-string="cloud-load" onclick="settings.loadCloud()">Load from cloud</button>
+    <button class="center" data-string="cloud-save" onclick="settings.saveCloud()">Save to cloud</button>
+    <button class="center" data-string="cloud-delete" onclick="settings.deleteCloud()">Delete cloud data</button>
+</div>
+
 <div id="settings"></div>
 
 <div style="display: flex; flex-direction: column; margin: -1em 0 0;">
