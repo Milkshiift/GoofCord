@@ -51,7 +51,6 @@ export async function loadCloud() {
     }
 
     for (const key in cloudSettings) {
-        if (key === "cloudEncryptionKey") continue;
         cloudSettings[key] = decrypt(cloudSettings[key], getEncryptionSecret(), encryptionAlgorithm);
     }
 
