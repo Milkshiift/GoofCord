@@ -56,6 +56,9 @@ export async function deleteCloud() {
 
     await preCheck();
 
+    const path = getCloudConfigLocation();
+    fs.unlinkSync(path);
+
     const deletefetch = await fetch(`${cloudHost}/delete`, {
         method: 'GET',
         headers: {
@@ -71,15 +74,12 @@ export async function deleteCloud() {
         dialog.showMessageBoxSync({
             type: "error",
             title: "Error deleting cloud settings",
-            message: deletejson.error,
+            message: deletejson.error + "\n\nPlease try by restarting GoofCord and try again.",
             buttons: ["OK"]
         });
 
         return;
     }
-
-    const path = getCloudConfigLocation();
-    fs.unlinkSync(path);
 
     console.log("Deleted cloud settings.");
 
@@ -131,7 +131,7 @@ export async function loadCloud() {
     dialog.showMessageBoxSync({
         type: "info",
         title: "Settings loaded",
-        message: "Settings loaded successfully.",
+        message: "Settings loaded successfully. Please restart GoofCord to apply the changes.",
         buttons: ["OK"]
     });
 }
