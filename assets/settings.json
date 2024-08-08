@@ -256,7 +256,7 @@
     },
     "cloudHost": {
       "name": "Cloud Host",
-      "defaultValue": "http://localhost:3000",
+      "defaultValue": "https://goofcordcloud.wuemeli.com",
       "description": "DO NOT MESS WITH THIS UNLESS YOU KNOW WHAT YOU'RE DOING",
       "inputType": "textfield"
     }
