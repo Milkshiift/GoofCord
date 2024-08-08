@@ -38,6 +38,7 @@
     "crypto": "^1.0.1",
     "electron-context-menu": "github:Milkshiift/electron-context-menu",
     "stegcloak": "github:Milkshiift/stegcloak-node",
+    "super-simple-crypto-lib": "latest",
     "v8-compile-cache": "^2.4.0"
   },
   "build": {

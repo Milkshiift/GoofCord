@@ -2,11 +2,13 @@ import { createServer } from 'http';
 import {cachedConfig, getConfig, setConfigBulk} from '../config';
 import {getGoofCordFolderPath, tryWithFix} from "../utils";
 import {shell, dialog} from 'electron';
+import {encrypt, decrypt} from 'super-simple-crypto-lib';
 import fs from 'fs/promises';
 import path from 'path';
 import chalk from "chalk";
 
 const cloudConfigPath = path.join(getGoofCordFolderPath(), "cloud.json");
+const encryptionAlgorithm = "aes-256-cbc";
 
 let cachedToken: string;
 async function getCloudToken(): Promise<string> {
@@ -31,6 +33,10 @@ function getCloudHost() {
     return getConfig("cloudHost")+"/";
 }
 
+function getEncryptionSecret() {
+    return getConfig("cloudEncryptionKey");
+}
+
 export async function loadCloud() {
     const cloudSettings = (await callEndpoint("load", "GET")).settings;
     if (!cloudSettings || Object.keys(cloudSettings).length < 5) {
@@ -42,6 +48,11 @@ export async function loadCloud() {
             buttons: ["OK"]
         });
         return;
+    }
+
+    for (const key in cloudSettings) {
+        if (key === "cloudEncryptionKey") continue;
+        cloudSettings[key] = decrypt(cloudSettings[key], getEncryptionSecret(), encryptionAlgorithm);
     }
 
     await setConfigBulk(cloudSettings);
