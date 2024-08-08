@@ -1,7 +1,7 @@
 import { createServer } from 'http';
 import { getConfig, getConfigLocation, setConfigBulk } from '../config';
 import { getGoofCordFolderPath } from "../utils";
-import { shell } from 'electron';
+import { shell, dialog } from 'electron';
 
 import fs from 'fs';
 import path from 'path';
@@ -68,6 +68,13 @@ export async function deleteCloud() {
 
     if (deletejson.error) {
         console.warn("Error deleting cloud settings:", deletejson.error);
+        dialog.showMessageBoxSync({
+            type: "error",
+            title: "Error deleting cloud settings",
+            message: deletejson.error,
+            buttons: ["OK"]
+        });
+
         return;
     }
 
@@ -75,6 +82,14 @@ export async function deleteCloud() {
     fs.unlinkSync(path);
 
     console.log("Deleted cloud settings.");
+
+    dialog.showMessageBoxSync({
+        type: "info",
+        title: "Settings deleted",
+        message: "Settings deleted successfully.",
+        buttons: ["OK"]
+    });
+
     return;
 }
 
@@ -108,6 +123,13 @@ export async function loadCloud() {
     setConfigBulk(loadjsonobj);
 
     console.log("Settings applied.");
+
+    dialog.showMessageBoxSync({
+        type: "info",
+        title: "Settings loaded",
+        message: "Settings loaded successfully.",
+        buttons: ["OK"]
+    });
 }
 
 export async function saveCloud() {
@@ -144,10 +166,23 @@ export async function saveCloud() {
 
     if (savejson.error) {
         console.warn("Error saving cloud settings:", savejson.error);
+        dialog.showMessageBoxSync({
+            type: "error",
+            title: "Error saving cloud settings",
+            message: savejson.error,
+            buttons: ["OK"]
+        });
         return;
     }
 
     console.log("Saved cloud settings.");
+    dialog.showMessageBoxSync({
+        type: "info",
+        title: "Settings saved",
+        message: "Settings saved successfully.",
+        buttons: ["OK"]
+    });
+
     return;
 
 }
