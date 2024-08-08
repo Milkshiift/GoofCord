@@ -10,7 +10,7 @@ import path from 'path';
 async function cloudConfigCheck() {
     const filePath = getCloudConfigLocation();
     try {
-        await fs.promises.access(filePath); 
+        await fs.promises.access(filePath);
     } catch (error) {
         fs.writeFileSync(filePath, "{}", "utf-8");
     }
@@ -32,7 +32,7 @@ async function getCloudToken(): Promise<string | undefined> {
         return token;
     } catch (error) {
         await cloudConfigCheck();
-        return undefined; 
+        return undefined;
     }
 }
 
@@ -42,13 +42,15 @@ function saveCloudToken(token: string) {
     fs.writeFileSync(path, token);
 }
 
-const cloudHost = getConfig("cloudHost");
+function getCloudHost() {
+    return getConfig("cloudHost");
+}
 const cloudToken = getCloudToken();
 
 let isServerRunning = false;
 
 async function preCheck() {
-    if (!cloudHost) {
+    if (!getCloudHost()) {
         console.error("Cloud host not defined");
         return;
     }
@@ -56,7 +58,7 @@ async function preCheck() {
     if (!cloudToken) {
         startCloudServer();
         console.error("Cloud token not defined");
-        const loginUrl = `${cloudHost}/login`;
+        const loginUrl = `${getCloudHost()}/login`;
         await shell.openExternal((loginUrl));
 
         while (!cloudToken) {
@@ -74,7 +76,7 @@ export async function deleteCloud() {
     const path = getCloudConfigLocation();
     fs.unlinkSync(path);
 
-    const deletefetch = await fetch(`${cloudHost}/delete`, {
+    const deletefetch = await fetch(`${getCloudHost()}/delete`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -113,7 +115,7 @@ export async function loadCloud() {
 
     await preCheck();
 
-    const loadfetch = await fetch(`${cloudHost}/load`, {
+    const loadfetch = await fetch(`${getCloudHost()}/load`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -172,7 +174,7 @@ export async function saveCloud() {
         data.push({ key, value: cachedConfig[key] });
     }
 
-    const savefetch = await fetch(`${cloudHost}/save`, {
+    const savefetch = await fetch(`${getCloudHost()}/save`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
