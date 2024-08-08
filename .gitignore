@@ -3,7 +3,5 @@ out/
 dist
 ts-out/
 ts-out
-yes.txt
 .idea
-/fix.bat
 .vscode/
