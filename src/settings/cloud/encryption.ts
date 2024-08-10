@@ -5,13 +5,16 @@ import {showDialogAndLog} from "./cloud";
 
 const brotliCompress = util.promisify(zlib.brotliCompress);
 const brotliDecompress = util.promisify(zlib.brotliDecompress);
+
 export async function encryptString(string: string, password: string) {
     try {
-        const key = crypto.createHash('sha256').update(password).digest().subarray(0, 16); // Derive a 16-byte key
+        // Derive a 32-byte key for AES-256
+        const key = crypto.createHash('sha256').update(password).digest();
         const iv = crypto.randomBytes(16);
+
         const compressedSettings = await brotliCompress(Buffer.from(string, 'utf8'));
 
-        const cipher = crypto.createCipheriv("aes-128-ctr", key, iv);
+        const cipher = crypto.createCipheriv("aes-256-ctr", key, iv);
         let encrypted = cipher.update(compressedSettings);
         encrypted = Buffer.concat([encrypted, cipher.final()]);
 
@@ -25,12 +28,13 @@ export async function encryptString(string: string, password: string) {
 
 export async function decryptString(encryptedStr: string, password: string) {
     try {
-        const key = crypto.createHash('sha256').update(password).digest().subarray(0, 16); // Derive a 16-byte key
+        // Derive a 32-byte key for AES-256
+        const key = crypto.createHash('sha256').update(password).digest();
         const encryptedBuffer = Buffer.from(encryptedStr, 'base64');
         const iv = encryptedBuffer.subarray(0, 16);
         const encryptedData = encryptedBuffer.subarray(16);
 
-        const decipher = crypto.createDecipheriv("aes-128-ctr", key, iv);
+        const decipher = crypto.createDecipheriv("aes-256-ctr", key, iv);
         let decrypted = decipher.update(encryptedData);
         decrypted = Buffer.concat([decrypted, decipher.final()]);
 

@@ -1,7 +1,7 @@
-import { cachedConfig, getConfig, setConfigBulk } from '../../config';
-import { dialog } from 'electron';
+import {cachedConfig, getConfig, setConfigBulk} from '../../config';
+import {dialog} from 'electron';
 import chalk from "chalk";
-import { deleteToken, getCloudHost, getCloudToken } from "./token";
+import {deleteToken, getCloudHost, getCloudToken} from "./token";
 import {decryptString, encryptString} from "./encryption";
 
 const LOG_PREFIX = chalk.cyanBright("[Cloud Settings]");
