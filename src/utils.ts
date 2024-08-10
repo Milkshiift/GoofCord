@@ -3,6 +3,9 @@ import path from "path";
 import {getConfig} from "./config";
 import fs from "fs/promises";
 import chalk from "chalk";
+import util from "node:util";
+import zlib from "node:zlib";
+import crypto from "crypto";
 
 export const packageVersion = require("../package.json").version;
 export const userDataPath = process.type === "browser" ? app.getPath("userData") : ipcRenderer.sendSync("getUserDataPath");

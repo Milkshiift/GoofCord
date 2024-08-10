@@ -2,7 +2,7 @@ import { BrowserWindow, ipcMain, shell } from "electron";
 import { getCustomIcon, getDisplayVersion, userDataPath } from "../utils";
 import path from "path";
 import { clearCache } from "../modules/cacheManager";
-import { deleteCloud, loadCloud, saveCloud } from "./cloud";
+import { deleteCloud, loadCloud, saveCloud } from "./cloud/cloud";
 
 let settingsWindow: BrowserWindow;
 let isOpen = false;
