@@ -202,7 +202,7 @@
     "arrpc": {
       "name": "Activity display",
       "defaultValue": false,
-      "description": "Enables the use of an open source reimplementation of Discord's\nrich presence called <a target=\"_blank\" href=\"https://github.com/OpenAsar/arrpc\">arRPC</a>.\nYou don't need to enable WebRichPresence Vencord plugin.",
+      "description": "Enables the use of an open source reimplementation of Discord's\nrich presence called <a target=\"_blank\" href=\"https://github.com/OpenAsar/arrpc\">arRPC</a>.\nA <a target=\"_blank\" href=\"https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence\">workaround</a> is needed for arRPC to work on Flatpak",
       "inputType": "checkbox"
     },
     "scriptLoading": {
