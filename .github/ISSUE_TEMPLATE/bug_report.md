@@ -22,5 +22,6 @@ assignees: ''
 ### Environment
 - Operating System (name and version):
 - GoofCord Version:
+- Way of installing:
 
 ### Additional Information
