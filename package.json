@@ -1,112 +1,96 @@
 {
-  "name": "goofcord",
-  "version": "1.6.0",
-  "description": "Take control of your Discord experience with GoofCord – the highly configurable and privacy-minded discord client.",
-  "main": "ts-out/main.js",
-  "scripts": {
-    "build": "node build.mjs",
-    "start": "pnpm run build --dev && electron ./ts-out/main.js --dev",
-    "startWithLoginFix": "pnpm run fixLogin && pnpm run build --dev && electron ./ts-out/main.js --dev",
-    "packageLinux": "pnpm run build && electron-builder --linux",
-    "packageWindows": "pnpm run build && electron-builder --win",
-    "packageMac": "pnpm run build && electron-builder --mac",
-    "fixLogin": "rm -rf ~/.config/Electron/Local\\ Storage && cp -r ~/.config/goofcord/Local\\ Storage ~/.config/Electron/"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Milkshiift/GoofCord"
-  },
-  "author": "MilkShift",
-  "license": "OSL-3.0",
-  "bugs": {
-    "url": "https://github.com/Milkshiift/GoofCord/issues"
-  },
-  "homepage": "https://github.com/Milkshiift/GoofCord",
-  "devDependencies": {
-    "@types/node": "^22.1.0",
-    "@types/stegcloak": "^1.0.2",
-    "electron": "^31.3.1",
-    "electron-builder": "^24.13.3",
-    "esbuild": "^0.23.0",
-    "source-map-support": "^0.5.21",
-    "typescript": "^5.5.4"
-  },
-  "dependencies": {
-    "arrpc": "github:OpenAsar/arrpc",
-    "auto-launch": "^5.0.6",
-    "chalk": "^5.3.0",
-    "electron-context-menu": "github:Milkshiift/electron-context-menu",
-    "stegcloak": "github:Milkshiift/stegcloak-node",
-    "v8-compile-cache": "^2.4.0"
-  },
-  "build": {
-    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
-    "nsis": {
-      "include": "build/installer.nsh",
-      "artifactName": "${productName} Setup ${arch}.${ext}"
-    },
-    "appId": "io.github.milkshiift.GoofCord",
-    "productName": "GoofCord",
-    "files": [
-      "!*",
-      "!node_modules/**/*",
-      "ts-out",
-      "package.json",
-      "LICENSE"
-    ],
-    "linux": {
-      "icon": "build/icon.icns",
-      "category": "Network",
-      "maintainer": "MilkShift",
-      "target": [
-        {
-          "target": "AppImage",
-          "arch": [
-            "x64",
-            "arm64",
-            "armv7l"
-          ]
-        }
-      ],
-      "executableArgs": [
-        "--enable-features=UseOzonePlatform,WaylandWindowDecorations",
-        "--ozone-platform-hint=auto"
-      ]
-    },
-    "win": {
-      "icon": "build/icon.ico",
-      "target": [
-        {
-          "target": "NSIS",
-          "arch": [
-            "x64",
-            "ia32",
-            "arm64"
-          ]
-        }
-      ]
-    },
-    "mac": {
-      "category": "public.app-category.social-networking",
-      "target": [
-        {
-          "target": "dmg",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        }
-      ],
-      "icon": "build/icon.icns",
-      "extendInfo": {
-        "NSMicrophoneUsageDescription": "This app needs access to the microphone",
-        "NSCameraUsageDescription": "This app needs access to the camera",
-        "com.apple.security.device.audio-input": true,
-        "com.apple.security.device.camera": true
-      }
-    }
-  },
-  "engines": {
-    "node": ">=21.0.0"
-  }
+	"name": "goofcord",
+	"version": "1.6.0",
+	"description": "Take control of your Discord experience with GoofCord – the highly configurable and privacy-minded discord client.",
+	"main": "ts-out/main.js",
+	"scripts": {
+		"build": "node build.mjs",
+		"start": "pnpm run build --dev && electron ./ts-out/main.js --dev",
+		"startWithLoginFix": "pnpm run fixLogin && pnpm run build --dev && electron ./ts-out/main.js --dev",
+		"packageLinux": "pnpm run build && electron-builder --linux",
+		"packageWindows": "pnpm run build && electron-builder --win",
+		"packageMac": "pnpm run build && electron-builder --mac",
+		"fixLogin": "rm -rf ~/.config/Electron/Local\\ Storage && cp -r ~/.config/goofcord/Local\\ Storage ~/.config/Electron/"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Milkshiift/GoofCord"
+	},
+	"author": "MilkShift",
+	"license": "OSL-3.0",
+	"bugs": {
+		"url": "https://github.com/Milkshiift/GoofCord/issues"
+	},
+	"homepage": "https://github.com/Milkshiift/GoofCord",
+	"devDependencies": {
+		"@types/node": "^22.4.1",
+		"@types/stegcloak": "^1.0.2",
+		"electron": "^31.4.0",
+		"electron-builder": "^24.13.3",
+		"esbuild": "^0.23.1",
+		"source-map-support": "^0.5.21",
+		"typescript": "^5.5.4",
+		"@biomejs/biome": "^1.8.3"
+	},
+	"dependencies": {
+		"arrpc": "github:OpenAsar/arrpc",
+		"auto-launch": "^5.0.6",
+		"chalk": "^5.3.0",
+		"electron-context-menu": "github:Milkshiift/electron-context-menu",
+		"stegcloak": "github:Milkshiift/stegcloak-node",
+		"v8-compile-cache": "^2.4.0"
+	},
+	"build": {
+		"artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+		"nsis": {
+			"include": "build/installer.nsh",
+			"artifactName": "${productName} Setup ${arch}.${ext}"
+		},
+		"appId": "io.github.milkshiift.GoofCord",
+		"productName": "GoofCord",
+		"files": ["!*", "!node_modules/**/*", "ts-out", "package.json", "LICENSE"],
+		"linux": {
+			"icon": "build/icon.icns",
+			"category": "Network",
+			"maintainer": "MilkShift",
+			"target": [
+				{
+					"target": "AppImage",
+					"arch": ["x64", "arm64", "armv7l"]
+				}
+			],
+			"executableArgs": [
+				"--enable-features=UseOzonePlatform,WaylandWindowDecorations",
+				"--ozone-platform-hint=auto"
+			]
+		},
+		"win": {
+			"icon": "build/icon.ico",
+			"target": [
+				{
+					"target": "NSIS",
+					"arch": ["x64", "ia32", "arm64"]
+				}
+			]
+		},
+		"mac": {
+			"category": "public.app-category.social-networking",
+			"target": [
+				{
+					"target": "dmg",
+					"arch": ["x64", "arm64"]
+				}
+			],
+			"icon": "build/icon.icns",
+			"extendInfo": {
+				"NSMicrophoneUsageDescription": "This app needs access to the microphone",
+				"NSCameraUsageDescription": "This app needs access to the camera",
+				"com.apple.security.device.audio-input": true,
+				"com.apple.security.device.camera": true
+			}
+		}
+	},
+	"engines": {
+		"node": ">=21.0.0"
+	}
 }
