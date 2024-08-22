@@ -1,16 +1,18 @@
 import fs from "node:fs/promises";
 import * as path from "node:path";
-import { BrowserWindow, app, shell } from "electron";
+import { app, BrowserWindow, shell } from "electron";
 import { getConfig } from "./config";
 import { getUserAgent } from "./modules/agent";
 import { initArrpc } from "./modules/arrpc";
 import { adjustWindow } from "./modules/windowStateManager";
 import { registerCustomHandler } from "./screenshare/main";
 import { getCustomIcon } from "./utils";
+import chalk from "chalk";
 
 export let mainWindow: BrowserWindow;
 
 export async function createMainWindow() {
+	console.log(`${chalk.blue("[Window]")} Opening window...`);
 	const transparency: boolean = getConfig("transparency");
 	mainWindow = new BrowserWindow({
 		title: "GoofCord",
@@ -38,6 +40,8 @@ export async function createMainWindow() {
 }
 
 async function doAfterDefiningTheWindow() {
+	console.log(`${chalk.blue("[Window]")} Setting up window...`);
+
 	// Set the user agent for the web contents based on the Chrome version.
 	mainWindow.webContents.userAgent = getUserAgent(process.versions.chrome);
 	mainWindow.on("close", (event) => {
