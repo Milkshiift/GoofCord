@@ -1,10 +1,10 @@
 import path from "path";
-import {getGoofCordFolderPath, tryWithFix} from "../../utils";
+import { getGoofCordFolderPath, tryWithFix } from "../../utils";
 import fs from "fs/promises";
 import chalk from "chalk";
-import {shell} from "electron";
-import {createServer} from "http";
-import {getConfig} from "../../config";
+import { shell } from "electron";
+import { createServer } from "http";
+import { getConfig } from "../../config";
 
 const cloudConfigPath = path.join(getGoofCordFolderPath(), "cloud.json");
 
@@ -16,7 +16,7 @@ export async function getCloudToken(): Promise<string> {
     cachedToken = await tryWithFix(
         async () => {
             const token = await fs.readFile(cloudConfigPath, "utf-8");
-            if (token.length < 20) throw "Invalid token";
+            if (token.length < 32) throw "Invalid token";
             return token;
         },
         async () => await fs.writeFile(cloudConfigPath, await getTokenFromServer(), "utf-8"),
