@@ -1,38 +1,38 @@
-import path from "path";
-import {ipcMain} from "electron";
-import fs from "fs/promises";
-import {getGoofCordFolderPath, readOrCreateFolder} from "../utils";
-import {error} from "./logger";
+import fs from "node:fs/promises";
+import path from "node:path";
 import chalk from "chalk";
+import { ipcMain } from "electron";
+import { getGoofCordFolderPath, readOrCreateFolder } from "../utils";
+import { error } from "./logger";
 
 export const enabledScripts: string[][] = [];
 ipcMain.handle("getScripts", () => {
-    return enabledScripts;
+	return enabledScripts;
 });
 
 const scriptsFolder = path.join(getGoofCordFolderPath(), "scripts/");
 
 export async function categorizeScripts() {
-    const files = await readOrCreateFolder(scriptsFolder);
-    for (const file of files) {
-        try {
-            const filePath = path.join(scriptsFolder, file);
+	const files = await readOrCreateFolder(scriptsFolder);
+	for (const file of files) {
+		try {
+			const filePath = path.join(scriptsFolder, file);
 
-            if (!file.endsWith(".js")) {
-                continue;
-            }
+			if (!file.endsWith(".js")) {
+				continue;
+			}
 
-            const scriptContent = modifyScriptContent(await fs.readFile(filePath, "utf-8"));
+			const scriptContent = modifyScriptContent(await fs.readFile(filePath, "utf-8"));
 
-            enabledScripts.push([file, scriptContent]);
-        } catch (err) {
-            error("An error occurred during script categorizing: " + err);
-        }
-    }
-    console.log(chalk.yellowBright("[Script Loader]"), "Categorized scripts");
+			enabledScripts.push([file, scriptContent]);
+		} catch (err) {
+			error(`An error occurred during script categorizing: ${err}`);
+		}
+	}
+	console.log(chalk.yellowBright("[Script Loader]"), "Categorized scripts");
 }
 
 function modifyScriptContent(content: string) {
-    content = "(async function(){" + content + "})();"; // Turning the script into an IIFE so variable names don't overlap
-    return content;
+	content = `(async function(){${content}})();`; // Turning the script into an IIFE so variable names don't overlap
+	return content;
 }
