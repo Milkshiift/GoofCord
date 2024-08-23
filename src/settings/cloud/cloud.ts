@@ -3,6 +3,7 @@ import { dialog } from "electron";
 import chalk from "chalk";
 import { deleteToken, getCloudHost, getCloudToken } from "./token";
 import { decryptString, encryptString } from "./encryption";
+import { encryptionPasswords } from "../../modules/messageEncryption";
 
 const LOG_PREFIX = chalk.cyanBright("[Cloud Settings]");
 
@@ -17,9 +18,8 @@ export async function loadCloud() {
 		return;
 	}
 
-	const decryptedSettings = await decryptString(response.settings, getEncryptionKey());
-	if (!decryptedSettings) return;
-	const cloudSettings = JSON.parse(decryptedSettings);
+	const cloudSettings = await decryptString(response.settings, getEncryptionKey());
+	if (!cloudSettings) return;
 	console.log(LOG_PREFIX, "Loading cloud settings:", cloudSettings);
 
 	const configToSet = { ...cachedConfig };
@@ -30,11 +30,20 @@ export async function loadCloud() {
 	await showDialogAndLog("info", "Settings loaded", "Settings loaded from cloud successfully. Please restart GoofCord to apply the changes.");
 }
 
-const excludedOptions = ["cloudEncryptionKey", "cloudHost"];
 export async function saveCloud() {
-	const settings = Object.fromEntries(Object.entries(cachedConfig).filter(([key]) => !excludedOptions.includes(key)));
+	const excludedOptions = ["cloudEncryptionKey", "cloudHost"];
+	const configToSave = { ...cachedConfig };
+	if (getEncryptionKey()) {
+		// biome-ignore lint/complexity/useLiteralKeys: Config currently does not have types
+		configToSave["encryptionPasswords"] = encryptionPasswords;
+	} else {
+		excludedOptions.push("encryptionPasswords");
+	}
+
+	const settings = Object.fromEntries(Object.entries(configToSave).filter(([key]) => !excludedOptions.includes(key)));
 	const encryptedSettings = await encryptString(JSON.stringify(settings), getEncryptionKey());
 	if (!encryptedSettings) return;
+
 	const response = await callEndpoint("save", "POST", JSON.stringify({ settings: encryptedSettings }));
 	if (!response) return;
 	await showDialogAndLog("info", "Settings saved", "Settings saved successfully on cloud.");
