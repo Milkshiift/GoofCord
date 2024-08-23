@@ -20,14 +20,20 @@ export async function loadCloud() {
 	const decryptedSettings = await decryptString(response.settings, getEncryptionKey());
 	if (!decryptedSettings) return;
 	const cloudSettings = JSON.parse(decryptedSettings);
-
 	console.log(LOG_PREFIX, "Loading cloud settings:", cloudSettings);
-	await setConfigBulk(cloudSettings);
+
+	const configToSet = { ...cachedConfig };
+	for (const [key, value] of Object.entries(cloudSettings)) {
+		configToSet[key] = value;
+	}
+	await setConfigBulk(configToSet);
 	await showDialogAndLog("info", "Settings loaded", "Settings loaded from cloud successfully. Please restart GoofCord to apply the changes.");
 }
 
+const excludedOptions = ["cloudEncryptionKey", "cloudHost"];
 export async function saveCloud() {
-	const encryptedSettings = await encryptString(JSON.stringify(cachedConfig), getEncryptionKey());
+	const settings = Object.fromEntries(Object.entries(cachedConfig).filter(([key]) => !excludedOptions.includes(key)));
+	const encryptedSettings = await encryptString(JSON.stringify(settings), getEncryptionKey());
 	if (!encryptedSettings) return;
 	const response = await callEndpoint("save", "POST", JSON.stringify({ settings: encryptedSettings }));
 	if (!response) return;
