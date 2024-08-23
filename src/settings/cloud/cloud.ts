@@ -53,11 +53,13 @@ async function callEndpoint(endpoint: string, method: string, body?: string) {
 			body,
 		});
 
+		console.log(LOG_PREFIX, "Received server response:", await response.clone().text());
 		const responseJson = await response.json();
 		if (responseJson.error) throw new Error(responseJson.error);
 		return responseJson;
 	} catch (error: unknown) {
 		const errorMessage = error instanceof Error ? error.message : String(error);
+		if (errorMessage.includes("Unauthorized")) await deleteToken();
 		await showDialogAndLog("error", "Cloud error", `Error when calling "${endpoint}" endpoint: ${errorMessage}`);
 		return undefined;
 	}
