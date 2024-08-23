@@ -3,7 +3,7 @@ import path from "node:path";
 import chalk from "chalk";
 import util from "node:util";
 import zlib from "node:zlib";
-import crypto from "crypto";
+import crypto from "node:crypto";
 import { app, dialog, ipcRenderer } from "electron";
 import { getConfig } from "./config";
 

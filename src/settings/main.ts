@@ -8,13 +8,13 @@ let settingsWindow: BrowserWindow;
 let isOpen = false;
 
 ipcMain.handle("deleteCloud", async () => {
-    await deleteCloud();
+	await deleteCloud();
 });
 ipcMain.handle("loadCloud", async () => {
-    await loadCloud();
+	await loadCloud();
 });
 ipcMain.handle("saveCloud", async () => {
-    await saveCloud();
+	await saveCloud();
 });
 ipcMain.handle("clearCache", async (_event) => {
 	await clearCache();
@@ -50,7 +50,7 @@ export async function createSettingsWindow() {
 		},
 	});
 	isOpen = true;
-  
+
 	settingsWindow.webContents.setWindowOpenHandler(({ url }) => {
 		shell.openExternal(url);
 		return { action: "deny" };

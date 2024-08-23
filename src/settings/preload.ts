@@ -5,12 +5,9 @@ import { renderSettings } from "./settingsRenderer";
 console.log("GoofCord Settings");
 
 contextBridge.exposeInMainWorld("settings", {
-  loadCloud: () => ipcRenderer.invoke("loadCloud"),
-  deleteCloud: () => ipcRenderer.invoke("deleteCloud"),
-  saveCloud: () => ipcRenderer.invoke("saveCloud"),
-  openFolder: (folder: string) => ipcRenderer.invoke("openFolder", folder),
-  clearCache: () => ipcRenderer.invoke("clearCache"),
-  crash: () => ipcRenderer.invoke("crash"),
+	loadCloud: () => ipcRenderer.invoke("loadCloud"),
+	deleteCloud: () => ipcRenderer.invoke("deleteCloud"),
+	saveCloud: () => ipcRenderer.invoke("saveCloud"),
 	openFolder: (folder: string) => ipcRenderer.invoke("openFolder", folder),
 	clearCache: () => ipcRenderer.invoke("clearCache"),
 	crash: () => ipcRenderer.invoke("crash"),
