@@ -55,5 +55,6 @@ async function getTokenFromServer(): Promise<string> {
 }
 
 export function getCloudHost() {
-	return `${getConfig("cloudHost")}/`;
+	const link = getConfig("cloudHost");
+	return link.endsWith('/') ? link : link + "/";
 }
