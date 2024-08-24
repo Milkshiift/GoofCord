@@ -73,12 +73,12 @@ export function isSemverLower(version1: string, version2: string): boolean {
 
 export async function tryWithFix(toDo: () => any, attemptFix: () => any, message: string) {
 	try {
-		await toDo();
+		return await toDo();
 	} catch (error) {
 		console.error(chalk.bgRed("[Auto Fixer]"), message, error);
 		await attemptFix();
 		try {
-			await toDo();
+			return await toDo();
 		} catch (error: any) {
 			console.error(chalk.bgRedBright("[Auto Fixer FAIL]"), message, error);
 			dialog.showErrorBox("Auto fixer tried to fix an issue, but failed", `${message}\n\n${error.toString()}`);

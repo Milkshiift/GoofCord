@@ -253,6 +253,21 @@
     },
     "screensharePreviousSettings": {
       "defaultValue": ["720", "30", false, "motion"]
+    },
+    "cloudHost": {
+      "name": "Cloud Host",
+      "defaultValue": "https://goofcordcloud.wuemeli.com",
+      "description": "DO NOT MESS WITH THIS UNLESS YOU KNOW WHAT YOU'RE DOING",
+      "inputType": "textfield"
+    },
+    "cloudEncryptionKey": {
+      "name": "Cloud Encryption Key",
+      "defaultValue": "",
+      "description": "Leave empty to not use encryption and not save message encryption passwords on cloud. You can't recover your password if you lose it.",
+      "inputType": "textfield"
+    },
+    "cloudToken": {
+      "defaultValue": ""
     }
   }
 }

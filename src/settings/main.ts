@@ -1,11 +1,21 @@
-import path from "node:path";
 import { BrowserWindow, ipcMain, shell } from "electron";
-import { clearCache } from "../modules/cacheManager";
 import { getCustomIcon, getDisplayVersion, userDataPath } from "../utils";
+import { clearCache } from "../modules/cacheManager";
+import { deleteCloud, loadCloud, saveCloud } from "./cloud/cloud";
+import path from "node:path";
 
 let settingsWindow: BrowserWindow;
 let isOpen = false;
 
+ipcMain.handle("deleteCloud", async () => {
+	await deleteCloud();
+});
+ipcMain.handle("loadCloud", async () => {
+	await loadCloud();
+});
+ipcMain.handle("saveCloud", async () => {
+	await saveCloud();
+});
 ipcMain.handle("clearCache", async (_event) => {
 	await clearCache();
 });

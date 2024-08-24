@@ -149,9 +149,11 @@ input[type="checkbox"]:hover {
     0% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(1.1);
     }
+
     100% {
         transform: scale(1);
     }
@@ -161,9 +163,11 @@ input[type="checkbox"]:hover {
     0% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(0.9);
     }
+
     100% {
         transform: scale(1);
     }
@@ -246,7 +250,7 @@ p.center {
     display: none;
 }
 
-.multiselect-dropdown{
+.multiselect-dropdown {
     border-radius: 5px;
     background-color: var(--input-bg);
     border: none;
@@ -259,13 +263,14 @@ p.center {
     display: flex;
     gap: 10px;
 }
-.multiselect-dropdown-list-wrapper{
+
+.multiselect-dropdown-list-wrapper {
     box-shadow: #2b2b2b 0 3px 8px;
     z-index: 100;
     border-radius: 4px;
     display: block;
     position: absolute;
-    top:0;
+    top: 0;
     left: 0;
     right: 0;
     background: var(--bg-primary);
@@ -279,11 +284,12 @@ p.center {
     max-height: 0;
 }
 
-.multiselect-dropdown-list{
+.multiselect-dropdown-list {
     padding: 2px;
     overflow-y: hidden;
 }
-.multiselect-dropdown-list div{
+
+.multiselect-dropdown-list div {
     padding: 0.25em;
 }
 
@@ -308,4 +314,10 @@ p.center {
 
 fieldset:hover #revert-button {
     display: block;
+}
+
+.checked {
+    background-color: green;
+    color: white;
+
 }
