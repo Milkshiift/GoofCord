@@ -1,35 +1,22 @@
-import path from "node:path";
-import { getGoofCordFolderPath, tryWithFix } from "../../utils";
-import fs from "node:fs/promises";
-import chalk from "chalk";
 import { shell } from "electron";
 import { createServer } from "node:http";
-import { getConfig } from "../../config";
+import { getConfig, setConfig } from "../../config";
+import { LOG_PREFIX } from "./cloud";
 
-const cloudConfigPath = path.join(getGoofCordFolderPath(), "cloud.json");
-
-let cachedToken: string;
 export async function getCloudToken(): Promise<string> {
-	if (cachedToken || serverListening) return cachedToken;
+	let cloudToken = getConfig("cloudToken");
 
-	// tryWithFix is always a bit ugly, but it provides a standardized way of handling errors so it's preferred
-	cachedToken = await tryWithFix(
-		async () => {
-			const token = await fs.readFile(cloudConfigPath, "utf-8");
-			if (token.length < 32) throw "Invalid token";
-			return token;
-		},
-		async () => await fs.writeFile(cloudConfigPath, await getTokenFromServer(), "utf-8"),
-		"GoofCord was unable to get cloud token: ",
-	);
+	if (!serverListening && (!cloudToken || cloudToken.length < 32)) {
+		cloudToken = await getTokenFromServer();
+		await setConfig("cloudToken", cloudToken);
+	}
 
-	console.log(chalk.cyanBright("[Cloud Settings]"), "Cloud token:", cachedToken);
-	return cachedToken;
+	console.log(LOG_PREFIX, "Cloud token:", cloudToken);
+	return cloudToken;
 }
 
 export async function deleteToken() {
-	void fs.unlink(cloudConfigPath);
-	cachedToken = "";
+	await setConfig("cloudToken", "");
 }
 
 let serverListening = false;

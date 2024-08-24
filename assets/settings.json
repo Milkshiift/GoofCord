@@ -265,6 +265,9 @@
       "defaultValue": "",
       "description": "Leave empty to not use encryption and not save message encryption passwords on cloud. You can't recover your password if you lose it.",
       "inputType": "textfield"
+    },
+    "cloudToken": {
+      "defaultValue": ""
     }
   }
 }

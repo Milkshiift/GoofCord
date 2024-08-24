@@ -5,7 +5,7 @@ import { deleteToken, getCloudHost, getCloudToken } from "./token";
 import { decryptString, encryptString } from "./encryption";
 import { encryptionPasswords } from "../../modules/messageEncryption";
 
-const LOG_PREFIX = chalk.cyanBright("[Cloud Settings]");
+export const LOG_PREFIX = chalk.cyanBright("[Cloud Settings]");
 
 function getEncryptionKey(): string {
 	return getConfig("cloudEncryptionKey");
@@ -31,7 +31,7 @@ export async function loadCloud() {
 }
 
 export async function saveCloud() {
-	const excludedOptions = ["cloudEncryptionKey", "cloudHost"];
+	const excludedOptions = ["cloudEncryptionKey", "cloudHost", "cloudToken"];
 	const configToSave = { ...cachedConfig };
 	if (getEncryptionKey()) {
 		// biome-ignore lint/complexity/useLiteralKeys: Config currently does not have types
