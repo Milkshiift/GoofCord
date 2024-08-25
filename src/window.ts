@@ -34,7 +34,7 @@ export async function createMainWindow() {
 		},
 	});
 
-	adjustWindow(mainWindow, "main", [true, [0, 0], [835, 600]]);
+	adjustWindow(mainWindow, "windowState:main");
 	if (getConfig("startMinimized")) mainWindow.hide();
 	await doAfterDefiningTheWindow();
 }
@@ -103,7 +103,7 @@ function setWindowOpenHandler() {
 				},
 			};
 		}
-		if (url.startsWith("http") || url.startsWith("mailto:")) shell.openExternal(url);
+		if (url.startsWith("http") || url.startsWith("mailto:")) void shell.openExternal(url);
 		return { action: "deny" };
 	});
 }

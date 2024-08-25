@@ -89,7 +89,7 @@ let currentIndex = 0;
 export function cycleThroughPasswords() {
 	currentIndex = (currentIndex + 1) % encryptionPasswords.length;
 	chosenPassword = encryptionPasswords[currentIndex];
-	void mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebarWithText("#f9c23c", "${`Chosen password: ${chosenPassword.slice(0, 2)}...`}")`);
+	void mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebarWithText("#f9c23c", "Chosen password: ${chosenPassword.slice(0, 2)}...")`);
 }
 
 ipcMain.handle("messageEncryption:cycleThroughPasswords", () => {

@@ -1,16 +1,11 @@
 import type { BrowserWindow } from "electron";
-import { getConfig, setConfig } from "../config";
+import { getConfigDynamic, setConfigDynamic } from "../config";
 
 type NumberPair = [number, number];
 type WindowState = [boolean, NumberPair, NumberPair];
 
-export function adjustWindow(window: BrowserWindow, windowName: string, defaults: WindowState) {
-	let previousWindowState = getConfig(`windowState:${windowName}`) as WindowState | undefined;
-	if (!previousWindowState) {
-		previousWindowState = defaults;
-		void setConfig(`windowState:${windowName}`, defaults);
-	}
-
+export function adjustWindow(window: BrowserWindow, configEntry: string) {
+	const previousWindowState = getConfigDynamic(configEntry) as WindowState;
 	const [osMaximized, [x, y], [width, height]] = previousWindowState;
 	window.setPosition(x, y);
 	window.setSize(width, height);
@@ -29,6 +24,6 @@ export function adjustWindow(window: BrowserWindow, windowName: string, defaults
 		}
 
 		const windowState: WindowState = [isMaximized, position, size];
-		await setConfig(`windowState:${windowName}`, windowState);
+		await setConfigDynamic(configEntry, windowState);
 	});
 }

@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { ipcRenderer } from "electron";
-import { evaluateShowAfter, revertSetting } from "./preload";
+import { evaluateShowAfter } from "./preload";
 
 const settingsPath = path.join(__dirname, "../", "/assets/settings.json");
 const settings = JSON.parse(fs.readFileSync(settingsPath, "utf-8"));

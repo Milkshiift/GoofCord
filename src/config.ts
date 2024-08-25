@@ -2,8 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { dialog, ipcRenderer } from "electron";
 import { getGoofCordFolderPath, tryWithFix } from "./utils";
+import type { Config, ConfigKey } from "./configTypes";
 
-export let cachedConfig: object = {};
+export let cachedConfig: Config;
 export let firstLaunch = false;
 
 export async function loadConfig() {
@@ -12,6 +13,7 @@ export async function loadConfig() {
 			// I don't know why but specifically in this scenario using fs.promises.readFile is whopping 180 ms compared to ~1 ms using fs.readFileSync
 			// Related? https://github.com/nodejs/performance/issues/151
 			const rawData = fs.readFileSync(getConfigLocation(), "utf-8");
+			// Read config *can* be of type other than "Config" if the user modifies it but that doesn't concern us :3
 			cachedConfig = JSON.parse(rawData);
 		},
 		tryFixErrors,
@@ -24,19 +26,33 @@ async function tryFixErrors() {
 	await setup();
 }
 
-export function getConfig(toGet: string): any {
+// Should be avoided. Use the type safe `getConfig` instead.
+export function getConfigDynamic(toGet: string): unknown {
 	if (process.type !== "browser") return ipcRenderer.sendSync("config:getConfig", toGet);
 
 	const result = cachedConfig[toGet];
-	if (result !== undefined) {
-		return result;
-	}
+	if (result !== undefined) return result;
 	console.log("Missing config parameter:", toGet);
-	void setConfig(toGet, getDefaultValue(toGet));
+	void setConfigDynamic(toGet, getDefaultValue(toGet));
 	return cachedConfig[toGet];
 }
 
-export async function setConfig(entry: string, value: unknown) {
+export function getConfig<K extends ConfigKey>(toGet: K): Config[K] {
+	if (process.type !== "browser") return ipcRenderer.sendSync("config:getConfig", toGet) as Config[K];
+
+	const result = cachedConfig[toGet];
+	if (result !== undefined) return result;
+	console.log("Missing config parameter:", toGet);
+	void setConfig(toGet, getDefaultValue(toGet));
+	return cachedConfig[toGet] as Config[K];
+}
+
+// Should be avoided. Use the type safe `setConfig` instead.
+export async function setConfigDynamic(entry: string, value: unknown) {
+	await setConfig(entry as ConfigKey, value as Config[ConfigKey]);
+}
+
+export async function setConfig<K extends ConfigKey>(entry: K, value: Config[K]) {
 	try {
 		if (process.type !== "browser") {
 			await ipcRenderer.invoke("config:setConfig", entry, value);
@@ -50,13 +66,13 @@ export async function setConfig(entry: string, value: unknown) {
 	}
 }
 
-export async function setConfigBulk(object: object) {
+export async function setConfigBulk(toSet: Config) {
 	try {
 		if (process.type !== "browser") {
-			return await ipcRenderer.invoke("config:setConfigBulk", object);
+			return await ipcRenderer.invoke("config:setConfigBulk", toSet);
 		}
-		cachedConfig = object;
-		const toSave = JSON.stringify(object, undefined, 2);
+		cachedConfig = toSet;
+		const toSave = JSON.stringify(toSet, undefined, 2);
 		await fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
 	} catch (e: any) {
 		console.error("setConfigBulk function errored:", e);
@@ -70,12 +86,13 @@ export async function setup() {
 	await setConfigBulk(getDefaults());
 }
 
-const defaults = {};
-export function getDefaults() {
+const defaults: Config = {} as Config;
+export function getDefaults(): Config {
 	// Caching
 	if (Object.keys(defaults).length !== 0) {
 		return defaults;
 	}
+
 	const settingsPath = path.join(__dirname, "/assets/settings.json");
 	const settingsFile = fs.readFileSync(settingsPath, "utf-8");
 	const settings = JSON.parse(settingsFile);
@@ -85,10 +102,13 @@ export function getDefaults() {
 			defaults[setting] = categorySettings[setting].defaultValue;
 		}
 	}
+
 	return defaults;
 }
 
-export function getDefaultValue(entry: string) {
+export function getDefaultValue<K extends ConfigKey>(entry: K): Config[K];
+export function getDefaultValue(entry: string): unknown;
+export function getDefaultValue(entry: string): unknown {
 	return getDefaults()[entry];
 }
 

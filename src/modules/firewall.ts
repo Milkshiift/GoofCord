@@ -2,9 +2,10 @@ import chalk from "chalk";
 // This file contains everything that uses session.defaultSession.webRequest
 import { session } from "electron";
 import { getConfig, getDefaultValue } from "../config";
+import type { Config, ConfigKey } from "../configTypes";
 
-function getConfigOrDefault(key: string): string[] {
-	return getConfig("customFirewallRules") ? getConfig(key) : getDefaultValue(key);
+function getConfigOrDefault<K extends ConfigKey>(toGet: K): Config[K] {
+	return getConfig("customFirewallRules") ? getConfig(toGet) : getDefaultValue(toGet);
 }
 
 export async function initializeFirewall() {
@@ -55,7 +56,7 @@ export async function unstrictCSP() {
 
 		//responseHeaders["access-control-allow-origin"] = ["*"];
 		if (resourceType === "mainFrame" || resourceType === "subFrame") {
-			responseHeaders["content-security-policy"] = undefined;
+			responseHeaders["content-security-policy"] = [""];
 		} else if (resourceType === "stylesheet") {
 			// Fix hosts that don't properly set the css content type, such as
 			// raw.githubusercontent.com

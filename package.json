@@ -5,8 +5,8 @@
 	"main": "ts-out/main.js",
 	"scripts": {
 		"build": "node build.mjs",
-		"start": "pnpm run build --dev && electron ./ts-out/main.js --dev",
-		"startWithLoginFix": "pnpm run fixLogin && pnpm run build --dev && electron ./ts-out/main.js --dev",
+		"start": "pnpm run build --dev && electron ./ts-out/main.js --dev --ozone-platform-hint=auto",
+		"startWithLoginFix": "pnpm run fixLogin && pnpm run build --dev && electron ./ts-out/main.js --dev --ozone-platform-hint=auto",
 		"packageLinux": "pnpm run build && electron-builder --linux",
 		"packageWindows": "pnpm run build && electron-builder --win",
 		"packageMac": "pnpm run build && electron-builder --mac",

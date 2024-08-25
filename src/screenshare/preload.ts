@@ -41,7 +41,7 @@ async function selectSource(id: string | null, title: string | null) {
 		const framerate = (document.getElementById("framerate-textbox") as HTMLInputElement).value;
 		void ipcRenderer.invoke("flashTitlebar", "#5865F2");
 
-		void setConfig("screensharePreviousSettings", [resolution, framerate, audio, contentHint]);
+		void setConfig("screensharePreviousSettings", [+resolution, +framerate, audio, contentHint]);
 
 		void ipcRenderer.invoke("selectScreenshareSource", id, title, audio, contentHint, resolution, framerate);
 	} catch (err) {
@@ -113,6 +113,6 @@ document.addEventListener("keydown", (key) => {
 	if (key.code === "Escape") {
 		void ipcRenderer.invoke("selectScreenshareSource");
 	} else if (key.code === "Enter") {
-		selectSource("0", "Screen");
+		void selectSource("0", "Screen");
 	}
 });

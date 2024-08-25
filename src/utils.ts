@@ -43,12 +43,8 @@ export function getDisplayVersion() {
 
 export function getCustomIcon() {
 	const customIconPath = getConfig("customIconPath");
-	if (typeof customIconPath === "string" && customIconPath !== "") {
-		return customIconPath;
-	}
-	if (process.platform === "win32") {
-		return path.join(__dirname, "/assets/gf_icon.ico");
-	}
+	if (customIconPath !== "") return customIconPath;
+	if (process.platform === "win32") return path.join(__dirname, "/assets/gf_icon.ico");
 	return path.join(__dirname, "/assets/gf_icon.png");
 }
 

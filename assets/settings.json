@@ -252,7 +252,8 @@
       "inputType": "checkbox"
     },
     "screensharePreviousSettings": {
-      "defaultValue": ["720", "30", false, "motion"]
+      "defaultValue": ["720", "30", false, "motion"],
+      "outputType": "[number, number, boolean, string]"
     },
     "cloudHost": {
       "name": "Cloud Host",
@@ -267,7 +268,11 @@
       "inputType": "textfield"
     },
     "cloudToken": {
-      "defaultValue": ""
+      "defaultValue": "",
+      "outputType": "string"
+    },
+    "windowState:main": {
+      "defaultValue": [true, [0, 0], [835, 600]]
     }
   }
 }
