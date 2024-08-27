@@ -67,7 +67,7 @@ export function isSemverLower(version1: string, version2: string): boolean {
 	return false;
 }
 
-export async function tryWithFix(toDo: () => any, attemptFix: () => any, message: string) {
+export async function tryWithFix<T>(toDo: () => T | Promise<T>, attemptFix: () => void | Promise<void>, message: string) {
 	try {
 		return await toDo();
 	} catch (error) {
@@ -75,9 +75,9 @@ export async function tryWithFix(toDo: () => any, attemptFix: () => any, message
 		await attemptFix();
 		try {
 			return await toDo();
-		} catch (error: any) {
+		} catch (error) {
 			console.error(chalk.bgRedBright("[Auto Fixer FAIL]"), message, error);
-			dialog.showErrorBox("Auto fixer tried to fix an issue, but failed", `${message}\n\n${error.toString()}`);
+			dialog.showErrorBox("Auto fixer tried to fix an issue, but failed", `${message}\n\n${getErrorMessage(error)}`);
 		}
 	}
 }
@@ -94,9 +94,40 @@ export async function readOrCreateFolder(path: string) {
 export async function tryCreateFolder(path: string) {
 	try {
 		await fs.mkdir(path, { recursive: true });
-	} catch (e: any) {
-		if (e.code !== "EEXIST") {
+	} catch (e: unknown) {
+		if (e instanceof Error && 'code' in e && e.code !== "EEXIST") {
 			console.error(e);
 		}
 	}
+}
+
+type ErrorWithMessage = {
+	message: string
+}
+
+function isErrorWithMessage(error: unknown): error is ErrorWithMessage {
+	return (
+		typeof error === 'object' &&
+		error !== null &&
+		'message' in error &&
+		typeof (error as Record<string, unknown>).message === 'string'
+	)
+}
+
+function toErrorWithMessage(maybeError: unknown): ErrorWithMessage {
+	if (isErrorWithMessage(maybeError)) {
+		return maybeError
+	}
+
+	try {
+		return new Error(JSON.stringify(maybeError))
+	} catch {
+		// fallback in case there's an error stringifying the maybeError
+		//  with circular references for example.
+		return new Error(String(maybeError))
+	}
+}
+
+export function getErrorMessage(error: unknown): string {
+	return toErrorWithMessage(error).message
 }

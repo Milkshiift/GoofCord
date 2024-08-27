@@ -101,9 +101,9 @@ async function addDisplays() {
 		document.body.appendChild(selectionElem);
 
 		// Attach event listeners after elements are added to the DOM
-		document.querySelectorAll(".desktop-capturer-selection__btn").forEach((button) => {
+		for (const button of document.querySelectorAll(".desktop-capturer-selection__btn")) {
 			button.addEventListener("click", () => selectSource(button.getAttribute("data-id"), button.getAttribute("title")));
-		});
+		}
 	});
 }
 
