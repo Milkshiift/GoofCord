@@ -43,5 +43,5 @@ async function getTokenFromServer(): Promise<string> {
 
 export function getCloudHost() {
 	const link = getConfig("cloudHost");
-	return link.endsWith('/') ? link : link + "/";
+	return link.endsWith("/") ? link : link + "/";
 }

@@ -23,6 +23,7 @@
   "tray-openGoofcord": "Open GoofCord",
   "tray-openSettings": "Open Settings",
   "tray-quitGoofcord": "Quit GoofCord",
+  "settingsWindow-title": "GoofCord Settings | Version: ",
   "category-general": "General settings",
   "opt-customTitlebar": "Custom titlebar",
   "opt-customTitlebar-desc": "Enables a Discord-like titlebar.",

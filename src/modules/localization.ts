@@ -7,5 +7,5 @@ const defaultLang = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "asset
 
 // Gets localized string. Shortened because it's used very often
 export function i(key: string) {
-    return localization[key] || defaultLang[key];
+	return localization[key] || defaultLang[key];
 }

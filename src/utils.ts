@@ -95,39 +95,51 @@ export async function tryCreateFolder(path: string) {
 	try {
 		await fs.mkdir(path, { recursive: true });
 	} catch (e: unknown) {
-		if (e instanceof Error && 'code' in e && e.code !== "EEXIST") {
+		if (e instanceof Error && "code" in e && e.code !== "EEXIST") {
 			console.error(e);
 		}
 	}
 }
 
 type ErrorWithMessage = {
-	message: string
-}
+	message: string;
+};
 
 function isErrorWithMessage(error: unknown): error is ErrorWithMessage {
-	return (
-		typeof error === 'object' &&
-		error !== null &&
-		'message' in error &&
-		typeof (error as Record<string, unknown>).message === 'string'
-	)
+	return typeof error === "object" && error !== null && "message" in error && typeof (error as Record<string, unknown>).message === "string";
 }
 
 function toErrorWithMessage(maybeError: unknown): ErrorWithMessage {
 	if (isErrorWithMessage(maybeError)) {
-		return maybeError
+		return maybeError;
 	}
 
 	try {
-		return new Error(JSON.stringify(maybeError))
+		return new Error(JSON.stringify(maybeError));
 	} catch {
 		// fallback in case there's an error stringifying the maybeError
 		//  with circular references for example.
-		return new Error(String(maybeError))
+		return new Error(String(maybeError));
 	}
 }
 
 export function getErrorMessage(error: unknown): string {
-	return toErrorWithMessage(error).message
+	return toErrorWithMessage(error).message;
+}
+
+export function findKeyAtDepth(obj: object, targetKey: string, depth: number) {
+	if (depth === 1) {
+		return obj[targetKey] || undefined;
+	}
+
+	for (const key in obj) {
+		if (typeof obj[key] === "object" && obj[key] !== null) {
+			const result = findKeyAtDepth(obj[key], targetKey, depth - 1);
+			if (result !== undefined) {
+				return result;
+			}
+		}
+	}
+
+	return undefined;
 }

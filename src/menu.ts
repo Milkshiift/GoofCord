@@ -1,9 +1,9 @@
-import {app, BrowserWindow, Menu} from "electron";
+import { app, BrowserWindow, Menu } from "electron";
 import contextMenu from "electron-context-menu";
-import {cycleThroughPasswords} from "./modules/messageEncryption";
-import {createSettingsWindow} from "./settings/main";
-import {mainWindow} from "./window";
-import {i} from "./modules/localization";
+import { cycleThroughPasswords } from "./modules/messageEncryption";
+import { createSettingsWindow } from "./settings/main";
+import { mainWindow } from "./window";
+import { i } from "./modules/localization";
 
 export async function setMenu() {
 	void setApplicationMenu();

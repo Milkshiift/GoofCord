@@ -50,7 +50,7 @@ And if you want to compile it yourself, here's how:
 2. Grab the source code from the latest release. Getting it from the main branch is not recommended for a stable experience.
 3. Open a command line in the directory of the source code
 4. Install the dependencies with `pnpm install`
-5. Package GoofCord with `pnpm run packageWindows` or `pnpm run packageLinux`
+5. Package GoofCord with either `pnpm run packageWindows`, `pnpm run packageLinux` or `pnpm run packageMac`
 6. Find your freshly compiled app in the `dist` folder.
 
 ## Short FAQ

@@ -3,6 +3,7 @@ import { getCustomIcon, getDisplayVersion, userDataPath } from "../utils";
 import { clearCache } from "../modules/cacheManager";
 import { deleteCloud, loadCloud, saveCloud } from "./cloud/cloud";
 import path from "node:path";
+import { i } from "../modules/localization";
 
 let settingsWindow: BrowserWindow;
 let isOpen = false;
@@ -37,7 +38,7 @@ export async function createSettingsWindow() {
 	settingsWindow = new BrowserWindow({
 		width: 660,
 		height: 670,
-		title: `GoofCord Settings | Version: ${getDisplayVersion()}`,
+		title: i("settingsWindow-title") + getDisplayVersion(),
 		darkTheme: true,
 		frame: true,
 		icon: getCustomIcon(),

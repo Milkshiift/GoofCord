@@ -1,6 +1,6 @@
-// RENDERER
 import { contextBridge, ipcRenderer } from "electron";
-import { renderSettings } from "./settingsRenderer";
+import { renderSettings, type SettingEntry, settings } from "./settingsRenderer";
+import { findKeyAtDepth } from "../utils";
 
 console.log("GoofCord Settings");
 
@@ -13,113 +13,100 @@ contextBridge.exposeInMainWorld("settings", {
 	crash: () => ipcRenderer.invoke("crash"),
 });
 
-(async () => {
-	// DOMContentLoaded is too late and causes a flicker when rendering, so we wait until body is accessible manually
-	while (document.body === null) {
-		await new Promise((resolve) => setTimeout(resolve, 1));
-	}
+const settingsData: Record<string, SettingEntry> = {};
+const elementsWithShowAfter: [string, HTMLElement][] = [];
+
+async function initializeSettings() {
+	while (document.body === null) await new Promise((resolve) => setTimeout(resolve, 10));
 	await renderSettings();
 
-	elements = Array.from(document.querySelectorAll("[setting-name]")) as HTMLInputElement[];
-	elements.forEach((element) => {
-		// Revert button
-		[...element.parentElement?.children][0].addEventListener("click", () => revertSetting(element));
+	const elements = document.querySelectorAll<HTMLElement>("[setting-name]");
+	for (const element of elements) {
+		const name = element.getAttribute("setting-name");
+		if (!name) continue;
+
+		const revertButton = element.parentElement?.firstElementChild;
+		revertButton?.addEventListener("click", () => revertSetting(element));
 		element.addEventListener("change", () => saveSettings(element));
-	});
-})();
 
-let elements: HTMLInputElement[];
-const settingsObj = ipcRenderer.sendSync("config:getConfigBulk");
-
-async function saveSettings(changedElement: HTMLInputElement) {
-	const changedElementName = changedElement.getAttribute("setting-name")!;
-	const changedElementValue = await getSettingValue(changedElement, changedElementName);
-	// Value should never be undefined in production but still kept as a failsafe to not overwrite existing value with undefined
-	if (changedElementValue === undefined) {
-		return;
+		const settingData = findKeyAtDepth(settings, name, 2);
+		if (settingData?.showAfter) elementsWithShowAfter.push([name, element]);
+		settingsData[name] = settingData;
 	}
-	settingsObj[changedElementName] = changedElementValue;
+}
 
-	updateVisibility(changedElementName, changedElementValue);
+async function saveSettings(changedElement: HTMLElement) {
+	const settingName = changedElement.getAttribute("setting-name");
+	if (!settingName) return;
 
-	console.log(settingsObj);
-	await ipcRenderer.invoke("config:setConfigBulk", settingsObj);
+	const settingValue = await getSettingValue(changedElement, settingName);
+	if (settingValue === undefined) return;
+
+	void ipcRenderer.invoke("config:setConfig", settingName, settingValue);
+	updateVisibility(settingName, settingValue);
 	void ipcRenderer.invoke("flashTitlebar", "#5865F2");
 }
 
-function updateVisibility(changedElementName: string, changedElementValue: any) {
-	elements.forEach((element) => {
-		const elementShowAfter = element.getAttribute("show-after")?.split("$");
-		if (elementShowAfter && elementShowAfter[0] === changedElementName) {
-			const shouldShow = evaluateShowAfter(elementShowAfter[1], changedElementValue);
+function updateVisibility(changedElementName: string, changedElementValue: unknown) {
+	for (const [name, element] of elementsWithShowAfter) {
+		const settingData = settingsData[name];
+		if (settingData?.showAfter && settingData.showAfter.key === changedElementName) {
+			const shouldShow = evaluateShowAfter(settingData.showAfter.value, changedElementValue);
 			element.closest("fieldset")?.classList.toggle("hidden", !shouldShow);
 		}
-	});
+	}
 }
 
-export function evaluateShowAfter(condition: string | undefined, arg: any) {
-	if (!condition) return;
+export function evaluateShowAfter(condition: string, arg: unknown) {
+	// biome-ignore lint/style/noCommaOperator:
+	// biome-ignore lint/security/noGlobalEval:
 	return (0, eval)(`(arg)=>{${condition}}`)(arg);
 }
 
-async function getSettingValue(element: HTMLInputElement, settingName: string) {
+async function getSettingValue(element: HTMLElement, settingName: string) {
 	try {
-		if (element.tagName === "SELECT" || element.type === "text") {
-			if (element.multiple) {
-				const selected = element.querySelectorAll("option:checked");
-				return Array.from(selected).map((option) => (option as HTMLOptionElement).value);
-			}
-			return element.value;
+		if (element instanceof HTMLInputElement) {
+			if (element.type === "checkbox") return element.checked;
+			if (element.type === "text") return element.value;
+			if (element.type === "file") return element.files?.[0]?.path || "";
+		} else if (element instanceof HTMLSelectElement) {
+			return element.multiple ? Array.from(element.selectedOptions).map((option) => option.value) : element.value;
+		} else if (element instanceof HTMLTextAreaElement) {
+			return settingName === "encryptionPasswords" ? await Promise.all(createArrayFromTextarea(element.value).map((password) => ipcRenderer.invoke("encryptSafeStorage", password))) : createArrayFromTextarea(element.value);
 		}
-		if (element.type === "checkbox") {
-			return element.checked;
-		}
-		if (element.tagName === "TEXTAREA") {
-			if (settingName === "encryptionPasswords") {
-				return await createArrayFromTextareaEncrypted(element.value);
-			}
-			return createArrayFromTextarea(element.value);
-		}
-		if (element.type === "file") {
-			const path = element.files?.[0]?.path;
-			return path ? path : "";
-		}
-		throw new Error(`Unsupported element type: ${element.tagName}, ${element.type}`);
-	} catch (error: any) {
+		throw new Error(`Unsupported element type for: ${settingName}`);
+	} catch (error) {
 		console.error(`Failed to get ${settingName}'s value:`, error);
 		return undefined;
 	}
 }
 
-export async function revertSetting(setting: HTMLInputElement) {
-	const elementName = setting.getAttribute("setting-name")!;
-	const defaultValue = ipcRenderer.sendSync("config:getDefaultValue", elementName);
-	if (setting.type === "text") {
-		setting.value = defaultValue;
-	} else if (setting.type === "checkbox") {
-		setting.checked = defaultValue;
-	} else if (setting.type === "file") {
-		setting.files = null;
-	} else if (setting.tagName === "TEXTAREA") {
+export async function revertSetting(setting: HTMLElement) {
+	const elementName = setting.getAttribute("setting-name");
+	if (!elementName) return;
+
+	const defaultValue = settingsData[elementName]?.defaultValue;
+
+	if (setting instanceof HTMLInputElement) {
+		if (setting.type === "checkbox" && typeof defaultValue === "boolean") {
+			setting.checked = defaultValue;
+		} else if (setting.type === "file") {
+			setting.value = "";
+		} else if (typeof defaultValue === "string") {
+			setting.value = defaultValue;
+		}
+	} else if (setting instanceof HTMLTextAreaElement && typeof defaultValue === "string") {
 		setting.value = Array.isArray(defaultValue) ? defaultValue.join(",\n") : defaultValue;
 	}
-	//else if (setting.tagName === "SELECT") {
-	//    const selects = setting.children;
-	//    for (const select of selects) {
-	//        select.selected = defaultValue === (select as HTMLOptionElement).value;
-	//    }
-	//}
+
 	await saveSettings(setting);
 }
 
-function createArrayFromTextarea(input: string) {
+function createArrayFromTextarea(input: string): string[] {
 	return input
-		.replace(/(\r\n|\n|\r|\s+)/gm, "")
-		.replace(/,$/, "")
-		.split(",");
+		.split(/[\r\n,]+/)
+		.map((item) => item.trim())
+		.filter(Boolean);
 }
 
-async function createArrayFromTextareaEncrypted(input: string) {
-	const arrayFromTextArea = createArrayFromTextarea(input);
-	return Promise.all(arrayFromTextArea.map((password) => ipcRenderer.invoke("encryptSafeStorage", password)));
-}
+initializeSettings().catch(console.error);

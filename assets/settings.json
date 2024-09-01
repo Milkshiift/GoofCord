@@ -283,7 +283,8 @@
       "name": "Cloud Encryption Key",
       "defaultValue": "",
       "description": "Leave empty to not use encryption and not save message encryption passwords on cloud. You can't recover your password if you lose it.",
-      "inputType": "textfield"
+      "inputType": "textfield",
+      "encrypt": true
     },
     "cloudToken": {
       "defaultValue": "",

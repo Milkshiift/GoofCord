@@ -1,7 +1,6 @@
 import {context} from "esbuild";
 import fs from "fs";
 import path from "path";
-import * as readline from "readline";
 import {generateDTSFile} from "./genSettingsTypes.mjs";
 import {genSettingsLangFile} from "./genSettingsLangFile.mjs";
 
@@ -9,7 +8,7 @@ const isDev = process.argv.some(arg => arg === "--dev" || arg === "-d");
 
 await fs.promises.rm("ts-out", { recursive: true, force: true });
 
-generateDTSFile();
+await generateDTSFile();
 await genSettingsLangFile();
 await fixArrpc();
 
@@ -31,16 +30,13 @@ const ctx = await context(NodeCommonOpts)
 await ctx.rebuild()
 await ctx.dispose()
 
-if (!isDev) {
-    deleteSourceMaps("./ts-out");
-}
+if (!isDev) await deleteSourceMaps("./ts-out");
 
 await fs.promises.cp('./assets/', './ts-out/assets', {recursive: true});
 
-// Every preload file should be marked with "// RENDERER" on the first line so it's included
 async function searchPreloadFiles(directory, result = []) {
     await traverseDirectory(directory, async (filePath) => {
-        if (await getFirstLine(filePath) === "// RENDERER") {
+        if (filePath.endsWith("preload.ts")) {
             result.push(filePath);
         }
     });
@@ -64,19 +60,6 @@ async function deleteSourceMaps(directoryPath) {
             void fs.promises.unlink(filePath);
         }
     });
-}
-
-async function getFirstLine(pathToFile) {
-    const readable = fs.createReadStream(pathToFile);
-    const reader = readline.createInterface({ input: readable });
-    const line = await new Promise((resolve) => {
-        reader.on('line', (line) => {
-            reader.close();
-            resolve(line);
-        });
-    });
-    readable.close();
-    return line;
 }
 
 async function traverseDirectory(directory, fileHandler) {

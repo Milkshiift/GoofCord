@@ -48,9 +48,9 @@ function inferType(inputType) {
     }
 }
 
-export function generateDTSFile() {
-    const settings = JSON.parse(fs.readFileSync(settingsPath, "utf-8"));
+export async function generateDTSFile() {
+    const settings = JSON.parse(await fs.promises.readFile(settingsPath, "utf-8"));
     const dtsContent = generateType(settings);
-    fs.writeFileSync(dtsPath, dtsContent, "utf-8");
+    await fs.promises.writeFile(dtsPath, dtsContent, "utf-8");
     console.log(`Generated settings.d.ts at ${dtsPath}`);
 }

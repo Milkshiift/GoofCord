@@ -1,8 +1,8 @@
-import {app, Menu, nativeImage, Tray} from "electron";
-import {createSettingsWindow} from "./settings/main";
-import {getCustomIcon, getDisplayVersion} from "./utils";
-import {mainWindow} from "./window";
-import {i} from "./modules/localization";
+import { app, Menu, nativeImage, Tray } from "electron";
+import { createSettingsWindow } from "./settings/main";
+import { getCustomIcon, getDisplayVersion } from "./utils";
+import { mainWindow } from "./window";
+import { i } from "./modules/localization";
 
 export let tray: Tray;
 export async function createTray() {
