@@ -13,6 +13,8 @@ function generateType(settings) {
         const categorySettings = settings[category];
 
         for (const settingKey in categorySettings) {
+            if (settingKey.startsWith("button-")) continue;
+
             const setting = categorySettings[settingKey];
             let type;
             if (setting["outputType"]) {

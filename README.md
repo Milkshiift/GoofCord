@@ -84,11 +84,9 @@ If GoofCord shows a black screen, also include this flag: `--disable-gpu-sandbox
 
 ## Credits 🙌
 
+[GoofCord Cloud Server](https://github.com/Wuemeli/goofcord-cloudserver)    
 [ArmCord](https://github.com/ArmCord/ArmCord)  
 [Discord Sandboxed](https://github.com/khlam/discord-sandboxed)  
 [Vencord](https://github.com/Vendicated/Vencord)     
 [Vesktop](https://github.com/Vencord/Vesktop)    
 [WebCord](https://github.com/SpacingBat3/WebCord)
-
-## Related Projects
-[CloudServer](https://github.com/Wuemeli/goofcord-cloudserver)

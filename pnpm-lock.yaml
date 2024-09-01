@@ -23,6 +23,9 @@ importers:
       stegcloak:
         specifier: github:Milkshiift/stegcloak-node
         version: https://codeload.github.com/Milkshiift/stegcloak-node/tar.gz/be58f484c2f76d8295a297a9d76dca3b1226f594
+      true-myth:
+        specifier: ^8.0.1
+        version: 8.0.1
       v8-compile-cache:
         specifier: ^2.4.0
         version: 2.4.0
@@ -1558,6 +1561,10 @@ packages:
   tmp@0.2.3:
     resolution: {integrity: sha512-nZD7m9iCPC5g0pYmcaxogYKggSfLsdxl8of3Q/oIbqCqLLIO9IAF0GWjX1z9NZRHPiXv8Wex4yDCaZsgEw0Y8w==}
     engines: {node: '>=14.14'}
+
+  true-myth@8.0.1:
+    resolution: {integrity: sha512-/6Tga43I+LfMJmg7hiCGI8KqjjlDEa1XJnWTZOKmmyQ9s7Kv4WPmpoQT/LST0Q98GAnsB+UPtGFwVHi8h7+qFw==}
+    engines: {node: 18.* || >= 20.*}
 
   truncate-utf8-bytes@1.0.2:
     resolution: {integrity: sha512-95Pu1QXQvruGEhv62XCMO3Mm90GscOCClvrIUwCM0PYOXK3kaF3l3sIHxx71ThJfcbM2O5Au6SO3AWCSEfW4mQ==}
@@ -3438,6 +3445,8 @@ snapshots:
       tmp: 0.2.3
 
   tmp@0.2.3: {}
+
+  true-myth@8.0.1: {}
 
   truncate-utf8-bytes@1.0.2:
     dependencies:

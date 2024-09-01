@@ -1,14 +1,16 @@
-import { context } from "esbuild";
+import {context} from "esbuild";
 import fs from "fs";
 import path from "path";
 import * as readline from "readline";
-import { generateDTSFile } from "./genSettingsTypes.mjs";
+import {generateDTSFile} from "./genSettingsTypes.mjs";
+import {genSettingsLangFile} from "./genSettingsLangFile.mjs";
 
 const isDev = process.argv.some(arg => arg === "--dev" || arg === "-d");
 
 await fs.promises.rm("ts-out", { recursive: true, force: true });
 
 generateDTSFile();
+await genSettingsLangFile();
 await fixArrpc();
 
 const NodeCommonOpts = {

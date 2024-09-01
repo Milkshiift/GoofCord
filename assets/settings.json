@@ -3,13 +3,13 @@
     "customTitlebar": {
       "name": "Custom titlebar",
       "defaultValue": true,
-      "description": "Disable to use the native titlebar.",
+      "description": "Enables a Discord-like titlebar.",
       "inputType": "checkbox"
     },
     "minimizeToTray": {
       "name": "Minimize to tray",
       "defaultValue": true,
-      "description": "When disabled, GoofCord will close like any other window when closed, otherwise, it'll sit back and relax in your system tray for later.",
+      "description": "GoofCord stays open even after closing all windows.",
       "inputType": "checkbox"
     },
     "startMinimized": {
@@ -21,19 +21,19 @@
     "dynamicIcon": {
       "name": "Dynamic icon",
       "defaultValue": false,
-      "description": "When enabled shows pings/mentions count on GoofCord's icon and its tray. Overwrites the custom icon.\nOn Linux pings on the taskbar icon only show when Unity launcher is used",
+      "description": "Shows pings/mentions count on GoofCord's icon and its tray. Overwrites the custom icon.\nOn Linux pings on the taskbar icon only show when Unity launcher or unitylib is used",
       "inputType": "checkbox"
     },
     "customIconPath": {
       "name": "Custom Icon",
       "defaultValue": "",
-      "description": "Select an alternative icon for GoofCord to use. Formats with transparency are recommended.",
+      "description": "Select an alternative icon for GoofCord to use. Images with transparency are recommended.",
       "inputType": "file"
     },
     "discordUrl": {
       "name": "Discord URL",
       "defaultValue": "https://discord.com/app",
-      "description": "URL that GoofCord will load on launch. Variations: https://canary.discord.com/app, https://ptb.discord.com/app or https://discord.com/app",
+      "description": "URL that GoofCord will load on launch. Add \"canary.\" or \"ptb.\" before \"discord.com\" for respective instances.",
       "inputType": "textfield"
     }
   },
@@ -87,7 +87,7 @@
     "customFirewallRules": {
       "name": "Custom firewall rules",
       "defaultValue": false,
-      "description": "When enabled allows the modification of firewall rules, otherwise, the default rules are used.",
+      "description": "Override the default rules.",
       "inputType": "checkbox"
     },
     "blocklist": {
@@ -124,7 +124,7 @@
         "analytics",
         "doubleclick"
       ],
-      "description": "If any of those strings are in the URL, it will be blocked.",
+      "description": "If any of specified strings are in the URL, it will be blocked.",
       "inputType": "textarea",
       "showAfter": {
         "key": "customFirewallRules",
@@ -140,7 +140,7 @@
         "search",
         "api.spotify"
       ],
-      "description": "If any of those strings are in the URL and it was matched by blocked strings, it will not be blocked.",
+      "description": "If any of specified strings are in the URL, it will *not* be blocked.",
       "inputType": "textarea",
       "showAfter": {
         "key": "customFirewallRules",
@@ -158,13 +158,13 @@
     "invidiousEmbeds": {
       "name": "Invidious embeds",
       "defaultValue": true,
-      "description": "Replaces YouTube embeds with Invidious embeds.",
+      "description": "Replaces YouTube embeds with Invidious embeds. You can customize the instance from Shelter settings.",
       "inputType": "checkbox"
     },
     "messageEncryption": {
       "name": "Message encryption",
       "defaultValue": false,
-      "description": "Enables <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/Message-Encryption\">message encryption</a>.",
+      "description": "See <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/Message-Encryption\">message encryption</a>.",
       "inputType": "checkbox"
     },
     "encryptionPasswords": {
@@ -180,7 +180,7 @@
     "encryptionCover": {
       "name": "Encryption cover",
       "defaultValue": "",
-      "description": "A message that a user without the password will see. Minimum two words or empty.",
+      "description": "A message that a user without the password will see. At least two words or empty.",
       "inputType": "textfield",
       "showAfter": {
         "key": "messageEncryption",
@@ -202,37 +202,37 @@
     "arrpc": {
       "name": "Activity display",
       "defaultValue": false,
-      "description": "Enables the use of an open source reimplementation of Discord's\nrich presence called <a target=\"_blank\" href=\"https://github.com/OpenAsar/arrpc\">arRPC</a>.\nA <a target=\"_blank\" href=\"https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence\">workaround</a> is needed for arRPC to work on Flatpak",
+      "description": "Enables an open source reimplementation of Discord's\nrich presence called <a target=\"_blank\" href=\"https://github.com/OpenAsar/arrpc\">arRPC</a>.\nA <a target=\"_blank\" href=\"https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence\">workaround</a> is needed for arRPC to work on Flatpak",
       "inputType": "checkbox"
     },
     "scriptLoading": {
       "name": "Script loading",
       "defaultValue": true,
-      "description": "Enables the script loader.",
+      "description": "See <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/Script-Loader\">script loader</a>.",
       "inputType": "checkbox"
     },
     "launchWithOsBoot": {
       "name": "Launch GoofCord on startup",
       "defaultValue": false,
-      "description": "When enabled starts GoofCord on OS boot automatically.",
+      "description": "Start GoofCord automatically on system boot. May not work in some Linux environments.",
       "inputType": "checkbox"
     },
     "spellcheck": {
       "name": "Spellcheck",
       "defaultValue": true,
-      "description": "Whether to enable spellcheck for input fields or not.",
+      "description": "Enables spellcheck for input fields.",
       "inputType": "checkbox"
     },
     "popoutWindowAlwaysOnTop": {
       "name": "Pop out window always on top",
       "defaultValue": true,
-      "description": "When enabled, voice chat pop out window will always stay above other windows.",
+      "description": "Makes voice chat pop out window always stay above other windows.",
       "inputType": "checkbox"
     },
     "updateNotification": {
       "name": "Update notification",
       "defaultValue": true,
-      "description": "If enabled, when a new version releases, a notification will pop up telling you that an update is available. Pings github.com",
+      "description": "Get notified about new version releases.",
       "inputType": "checkbox"
     },
     "autoscroll": {
@@ -248,13 +248,31 @@
     "transparency": {
       "name": "Transparency",
       "defaultValue": false,
-      "description": "Makes the window transparent so it's possible to use translucent themes.",
+      "description": "Makes the window transparent for use with translucent themes.",
       "inputType": "checkbox"
     },
     "screensharePreviousSettings": {
       "defaultValue": ["720", "30", false, "motion"],
       "outputType": "[number, number, boolean, string]"
     },
+    "windowState:main": {
+      "defaultValue": [true, [0, 0], [835, 600]],
+      "outputType": "[boolean, [number, number], [number, number]]"
+    },
+    "button-openGoofCordFolder": {
+      "name": "Open GoofCord folder",
+      "onClick": "settings.openFolder('GoofCord')"
+    },
+    "button-clearCache": {
+      "name": "Clear cache",
+      "onClick": "settings.clearCache()"
+    },
+    "button-forceNativeCrash": {
+      "name": "Force native crash",
+      "onClick": "settings.crash()"
+    }
+  },
+  "Cloud Settings": {
     "cloudHost": {
       "name": "Cloud Host",
       "defaultValue": "https://goofcordcloud.wuemeli.com",
@@ -271,8 +289,17 @@
       "defaultValue": "",
       "outputType": "string"
     },
-    "windowState:main": {
-      "defaultValue": [true, [0, 0], [835, 600]]
+    "button-loadFromCloud": {
+      "name": "Load from cloud",
+      "onClick": "settings.loadCloud()"
+    },
+    "button-saveToCloud": {
+      "name": "Save to cloud",
+      "onClick": "settings.saveCloud()"
+    },
+    "button-deleteCloud": {
+      "name": "Delete cloud data",
+      "onClick": "settings.deleteCloud()"
     }
   }
 }

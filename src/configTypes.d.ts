@@ -30,10 +30,10 @@ export interface Config {
     "autoscroll": boolean;
     "transparency": boolean;
     "screensharePreviousSettings": [number, number, boolean, string];
+    "windowState:main": [boolean, [number, number], [number, number]];
     "cloudHost": string;
     "cloudEncryptionKey": string;
     "cloudToken": string;
-    "windowState:main": unknown;
 }
 
 export type ConfigKey = keyof Config;

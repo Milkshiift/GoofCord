@@ -1,19 +1,20 @@
-import { net, app, crashReporter, dialog, session, systemPreferences } from "electron";
+import {app, crashReporter, dialog, net, session, systemPreferences} from "electron";
 import "v8-compile-cache";
 import fs from "node:fs/promises";
 import path from "node:path";
 import chalk from "chalk";
-import { firstLaunch, getConfig, loadConfig } from "./config";
-import { registerIpc } from "./ipc";
-import { setMenu } from "./menu";
-import { initializeFirewall, unstrictCSP } from "./modules/firewall";
-import { initEncryption } from "./modules/messageEncryption";
-import { categorizeScripts } from "./modules/scriptLoader";
-import { checkForUpdate } from "./modules/updateCheck";
-import { createSettingsWindow } from "./settings/main";
-import { createTray } from "./tray";
-import { getCustomIcon, getGoofCordFolderPath, isDev, tryCreateFolder, userDataPath } from "./utils";
-import { createMainWindow } from "./window";
+import {firstLaunch, getConfig, loadConfig} from "./config";
+import {registerIpc} from "./ipc";
+import {setMenu} from "./menu";
+import {initializeFirewall, unstrictCSP} from "./modules/firewall";
+import {initEncryption} from "./modules/messageEncryption";
+import {categorizeScripts} from "./modules/scriptLoader";
+import {checkForUpdate} from "./modules/updateCheck";
+import {createSettingsWindow} from "./settings/main";
+import {createTray} from "./tray";
+import {getCustomIcon, getGoofCordFolderPath, isDev, tryCreateFolder, userDataPath} from "./utils";
+import {createMainWindow} from "./window";
+import {i} from "./modules/localization";
 
 setFlags();
 if (isDev()) import("source-map-support/register").catch(() => {});
@@ -53,7 +54,7 @@ function setFlags() {
 async function handleFirstLaunch() {
 	await createSettingsWindow();
 	await dialog.showMessageBox({
-		message: "Welcome to GoofCord!\nSetup the settings to your liking and restart GoofCord to access Discord.\nYou can do this with Ctrl+Shift+R or through the tray/dock menu.\nHappy chatting!",
+		message: i("welcomeMessage"),
 		type: "info",
 		icon: getCustomIcon(),
 		noLink: false,

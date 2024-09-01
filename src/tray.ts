@@ -1,22 +1,17 @@
-import { Menu, Tray, app, nativeImage } from "electron";
-import { createSettingsWindow } from "./settings/main";
-import { getCustomIcon, getDisplayVersion } from "./utils";
-import { mainWindow } from "./window";
+import {app, Menu, nativeImage, Tray} from "electron";
+import {createSettingsWindow} from "./settings/main";
+import {getCustomIcon, getDisplayVersion} from "./utils";
+import {mainWindow} from "./window";
+import {i} from "./modules/localization";
 
 export let tray: Tray;
 export async function createTray() {
 	const trayImage = nativeImage.createFromPath(getCustomIcon());
 
 	const getTrayMenuIcon = () => {
-		if (process.platform === "win32") {
-			return trayImage.resize({ height: 16 });
-		}
-		if (process.platform === "linux") {
-			return trayImage.resize({ height: 24 });
-		}
-		if (process.platform === "darwin") {
-			return trayImage.resize({ height: 18 });
-		}
+		if (process.platform === "win32") return trayImage.resize({ height: 16 });
+		if (process.platform === "linux") return trayImage.resize({ height: 24 });
+		if (process.platform === "darwin") return trayImage.resize({ height: 18 });
 		return trayImage;
 	};
 
@@ -30,13 +25,13 @@ export async function createTray() {
 			type: "separator",
 		},
 		{
-			label: "Open GoofCord",
+			label: i("tray-openGoofcord"),
 			click: () => {
 				mainWindow.show();
 			},
 		},
 		{
-			label: "Open Settings",
+			label: i("tray-openSettings"),
 			click: () => {
 				createSettingsWindow();
 			},
@@ -45,7 +40,7 @@ export async function createTray() {
 			type: "separator",
 		},
 		{
-			label: "Quit GoofCord",
+			label: i("tray-quitGoofcord"),
 			click: () => {
 				app.exit();
 			},

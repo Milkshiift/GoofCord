@@ -1,8 +1,9 @@
-import { BrowserWindow, Menu, app } from "electron";
+import {app, BrowserWindow, Menu} from "electron";
 import contextMenu from "electron-context-menu";
-import { cycleThroughPasswords } from "./modules/messageEncryption";
-import { createSettingsWindow } from "./settings/main";
-import { mainWindow } from "./window";
+import {cycleThroughPasswords} from "./modules/messageEncryption";
+import {createSettingsWindow} from "./settings/main";
+import {mainWindow} from "./window";
+import {i} from "./modules/localization";
 
 export async function setMenu() {
 	void setApplicationMenu();
@@ -14,38 +15,31 @@ export async function setApplicationMenu() {
 		{
 			label: "GoofCord",
 			submenu: [
-				{ label: "About GoofCord", role: "about" },
+				{ label: i("menu-goofcord-about"), role: "about" },
 				{ type: "separator" },
 				{
-					label: "Developer tools",
-					accelerator: "CmdOrCtrl+Shift+I",
-					click: () => {
-						BrowserWindow.getFocusedWindow()?.webContents.toggleDevTools();
-					},
-				},
-				{
-					label: "Open settings",
+					label: i("menu-goofcord-settings"),
 					accelerator: "CmdOrCtrl+Shift+'",
 					click: () => {
 						createSettingsWindow();
 					},
 				},
 				{
-					label: "Cycle through passwords",
+					label: i("menu-goofcord-cyclePasswords"),
 					accelerator: "F9",
 					click: async () => {
 						cycleThroughPasswords();
 					},
 				},
 				{
-					label: "Reload",
+					label: i("menu-goofcord-reload"),
 					accelerator: "CmdOrCtrl+R",
 					click: async () => {
 						mainWindow.reload();
 					},
 				},
 				{
-					label: "Full reload",
+					label: i("menu-goofcord-restart"),
 					accelerator: "Shift+CmdOrCtrl+R",
 					click: async () => {
 						app.relaunch();
@@ -53,11 +47,11 @@ export async function setApplicationMenu() {
 					},
 				},
 				{
-					label: "Fullscreen",
+					label: i("menu-goofcord-fullScreen"),
 					role: "togglefullscreen",
 				},
 				{
-					label: "Quit",
+					label: i("menu-goofcord-quit"),
 					accelerator: "CmdOrCtrl+Q",
 					click: () => {
 						app.exit();
@@ -66,33 +60,40 @@ export async function setApplicationMenu() {
 			],
 		},
 		{
-			label: "Edit",
+			label: i("menu-edit"),
 			submenu: [
-				{ label: "Undo", accelerator: "CmdOrCtrl+Z", role: "undo" },
-				{ label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", role: "redo" },
+				{ label: i("menu-edit-undo"), accelerator: "CmdOrCtrl+Z", role: "undo" },
+				{ label: i("menu-edit-redo"), accelerator: "Shift+CmdOrCtrl+Z", role: "redo" },
 				{ type: "separator" },
-				{ label: "Cut", accelerator: "CmdOrCtrl+X", role: "cut" },
-				{ label: "Copy", accelerator: "CmdOrCtrl+C", role: "copy" },
-				{ label: "Paste", accelerator: "CmdOrCtrl+V", role: "paste" },
-				{ label: "Select All", accelerator: "CmdOrCtrl+A", role: "selectAll" },
+				{ label: i("menu-edit-cut"), accelerator: "CmdOrCtrl+X", role: "cut" },
+				{ label: i("menu-edit-copy"), accelerator: "CmdOrCtrl+C", role: "copy" },
+				{ label: i("menu-edit-paste"), accelerator: "CmdOrCtrl+V", role: "paste" },
+				{ label: i("menu-edit-selectAll"), accelerator: "CmdOrCtrl+A", role: "selectAll" },
 			],
 		},
 		{
-			label: "Zoom",
+			label: i("menu-zoom"),
 			submenu: [
 				// Fix for zoom in on keyboards with dedicated + like QWERTZ (or numpad)
 				// See https://github.com/electron/electron/issues/14742 and https://github.com/electron/electron/issues/5256
-				{ label: "Zoom in", accelerator: "CmdOrCtrl+Plus", role: "zoomIn", visible: false },
-				{ label: "Zoom in", accelerator: "CmdOrCtrl++", role: "zoomIn" },
-				{ label: "Zoom in", accelerator: "CmdOrCtrl+=", role: "zoomIn", visible: false },
-				{ label: "Zoom out", accelerator: "CmdOrCtrl+-", role: "zoomOut" },
+				{ label: i("menu-zoom-in"), accelerator: "CmdOrCtrl+Plus", role: "zoomIn", visible: false },
+				{ label: i("menu-zoom-in"), accelerator: "CmdOrCtrl++", role: "zoomIn" },
+				{ label: i("menu-zoom-in"), accelerator: "CmdOrCtrl+=", role: "zoomIn", visible: false },
+				{ label: i("menu-zoom-out"), accelerator: "CmdOrCtrl+-", role: "zoomOut" },
 			],
 		},
 		{
-			label: "Developer",
+			label: i("menu-development"),
 			submenu: [
 				{
-					label: "Open chrome://gpu",
+					label: i("menu-development-devtools"),
+					accelerator: "CmdOrCtrl+Shift+I",
+					click: () => {
+						BrowserWindow.getFocusedWindow()?.webContents.toggleDevTools();
+					},
+				},
+				{
+					label: i("menu-development-gpuDebug"),
 					accelerator: "CmdorCtrl+Alt+G",
 					click() {
 						const gpuWindow = new BrowserWindow({
