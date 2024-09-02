@@ -172,6 +172,7 @@
       "defaultValue": [],
       "description": "Securely stored, encrypted list of passwords that will be used for encryption. A backup in a warm, safe place is recommended. Separate entries with commas.",
       "inputType": "textarea",
+      "encrypted": true,
       "showAfter": {
         "key": "messageEncryption",
         "value": "return arg === true"
@@ -284,7 +285,7 @@
       "defaultValue": "",
       "description": "Leave empty to not use encryption and not save message encryption passwords on cloud. You can't recover your password if you lose it.",
       "inputType": "textfield",
-      "encrypt": true
+      "encrypted": true
     },
     "cloudToken": {
       "defaultValue": "",

@@ -72,8 +72,16 @@ export async function registerIpc() {
 	ipcMain.on("decryptMessage", (event, message: string) => {
 		event.returnValue = decryptMessage(message);
 	});
-	ipcMain.handle("encryptSafeStorage", async (_event, plaintextPassword: string) => {
-		return safeStorage.encryptString(plaintextPassword).toString("base64");
+	ipcMain.on("encryptSafeStorage", async (event, plaintextString: string) => {
+		event.returnValue = safeStorage.encryptString(plaintextString).toString("base64");
+	});
+	ipcMain.on("decryptSafeStorage", async (event, encryptedBase64: string) => {
+		try {
+			event.returnValue = safeStorage.decryptString(Buffer.from(encryptedBase64, "base64"));
+		} catch (e) {
+			console.error(e);
+			event.returnValue = "";
+		}
 	});
 	ipcMain.handle("setBadgeCount", (_event, count) => {
 		setBadgeCount(count);

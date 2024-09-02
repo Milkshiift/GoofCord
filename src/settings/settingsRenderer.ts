@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { ipcRenderer } from "electron";
-import { evaluateShowAfter } from "./preload";
-import { i } from "../modules/localization";
 import type { Config, ConfigKey } from "../configTypes";
+import { i } from "../modules/localization";
+import { evaluateShowAfter } from "./preload";
 
 const settingsPath = path.join(__dirname, "../", "/assets/settings.json");
 export const settings = JSON.parse(fs.readFileSync(settingsPath, "utf-8"));
@@ -14,6 +14,7 @@ export interface SettingEntry {
 	description: string;
 	inputType: string;
 	defaultValue: Config[ConfigKey];
+	encrypted?: boolean;
 	options?: string[];
 	showAfter?: {
 		key: string;
@@ -56,7 +57,14 @@ function createField(setting: string, entry: SettingEntry | ButtonEntry) {
 function createSetting(setting: string, entry: SettingEntry) {
 	if (!entry.name) return "";
 
-	const value = setting === "encryptionPasswords" ? ipcRenderer.sendSync("messageEncryption:getDecryptedPasswords") : config[setting];
+	let value = config[setting];
+	if (entry.encrypted) {
+		if (typeof value === "string") {
+			value = ipcRenderer.sendSync("decryptSafeStorage", value);
+		} else if (Array.isArray(value)) {
+			value = value.map((value) => ipcRenderer.sendSync("decryptSafeStorage", value));
+		}
+	}
 	const isHidden = entry.showAfter && !evaluateShowAfter(entry.showAfter.value, config[entry.showAfter.key]);
 
 	const name = i(`opt-${setting}`);

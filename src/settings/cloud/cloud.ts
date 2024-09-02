@@ -1,17 +1,18 @@
-import { cachedConfig, getConfig, setConfigBulk } from "../../config";
-import { dialog, safeStorage } from "electron";
 import chalk from "chalk";
-import { deleteToken, getCloudHost, getCloudToken } from "./token";
-import { decryptString, encryptString } from "./encryption";
+import { dialog, safeStorage } from "electron";
+import { cachedConfig, getConfig, setConfigBulk } from "../../config";
 import { encryptionPasswords } from "../../modules/messageEncryption";
+import { decryptString, encryptString } from "./encryption";
+import { deleteToken, getCloudHost, getCloudToken } from "./token";
 
 export const LOG_PREFIX = chalk.cyanBright("[Cloud Settings]");
 
-let key = "";
 function getEncryptionKey(): string {
-	if (key) return key;
-	key = safeStorage.decryptString(Buffer.from(getConfig("cloudEncryptionKey"), "base64"));
-	return key;
+	try {
+		return safeStorage.decryptString(Buffer.from(getConfig("cloudEncryptionKey"), "base64"));
+	} catch (e) {
+		return "";
+	}
 }
 
 export async function loadCloud() {

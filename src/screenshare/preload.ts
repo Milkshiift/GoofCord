@@ -1,4 +1,3 @@
-// RENDERER
 import { ipcRenderer } from "electron";
 import { getConfig, setConfig } from "../config";
 

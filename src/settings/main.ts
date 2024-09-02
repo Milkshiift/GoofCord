@@ -1,31 +1,19 @@
-import { BrowserWindow, ipcMain, shell } from "electron";
-import { getCustomIcon, getDisplayVersion, userDataPath } from "../utils";
-import { clearCache } from "../modules/cacheManager";
-import { deleteCloud, loadCloud, saveCloud } from "./cloud/cloud";
 import path from "node:path";
+import { BrowserWindow, ipcMain, shell } from "electron";
+import { clearCache } from "../modules/cacheManager";
 import { i } from "../modules/localization";
+import { getCustomIcon, getDisplayVersion, userDataPath } from "../utils";
+import { deleteCloud, loadCloud, saveCloud } from "./cloud/cloud";
 
 let settingsWindow: BrowserWindow;
 let isOpen = false;
 
-ipcMain.handle("deleteCloud", async () => {
-	await deleteCloud();
-});
-ipcMain.handle("loadCloud", async () => {
-	await loadCloud();
-});
-ipcMain.handle("saveCloud", async () => {
-	await saveCloud();
-});
-ipcMain.handle("clearCache", async (_event) => {
-	await clearCache();
-});
-ipcMain.handle("openFolder", async (_event, folder: string) => {
-	await shell.openPath(path.join(userDataPath, `/${folder}/`));
-});
-ipcMain.handle("crash", () => {
-	process.crash();
-});
+ipcMain.handle("deleteCloud", async () => await deleteCloud());
+ipcMain.handle("loadCloud", async () => await loadCloud());
+ipcMain.handle("saveCloud", async () => await saveCloud());
+ipcMain.handle("clearCache", async (_event) => await clearCache());
+ipcMain.handle("openFolder", async (_event, folder: string) => await shell.openPath(path.join(userDataPath, `/${folder}/`)));
+ipcMain.handle("crash", () => process.crash());
 
 export async function createSettingsWindow() {
 	if (isOpen) {

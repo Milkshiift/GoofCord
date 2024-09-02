@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { renderSettings, type SettingEntry, settings } from "./settingsRenderer";
 import { findKeyAtDepth } from "../utils";
+import { type SettingEntry, renderSettings, settings } from "./settingsRenderer";
 
 console.log("GoofCord Settings");
 
@@ -39,8 +39,16 @@ async function saveSettings(changedElement: HTMLElement) {
 	const settingName = changedElement.getAttribute("setting-name");
 	if (!settingName) return;
 
-	const settingValue = await getSettingValue(changedElement, settingName);
+	const settingData = settingsData[settingName];
+	let settingValue = await getSettingValue(changedElement, settingName);
 	if (settingValue === undefined) return;
+	if (settingData.encrypted) {
+		if (typeof settingValue === "string") {
+			settingValue = ipcRenderer.sendSync("encryptSafeStorage", settingValue);
+		} else if (Array.isArray(settingValue)) {
+			settingValue = settingValue.map((value) => ipcRenderer.sendSync("encryptSafeStorage", value));
+		}
+	}
 
 	void ipcRenderer.invoke("config:setConfig", settingName, settingValue);
 	updateVisibility(settingName, settingValue);
@@ -72,7 +80,7 @@ async function getSettingValue(element: HTMLElement, settingName: string) {
 		} else if (element instanceof HTMLSelectElement) {
 			return element.multiple ? Array.from(element.selectedOptions).map((option) => option.value) : element.value;
 		} else if (element instanceof HTMLTextAreaElement) {
-			return settingName === "encryptionPasswords" ? await Promise.all(createArrayFromTextarea(element.value).map((password) => ipcRenderer.invoke("encryptSafeStorage", password))) : createArrayFromTextarea(element.value);
+			return createArrayFromTextarea(element.value);
 		}
 		throw new Error(`Unsupported element type for: ${settingName}`);
 	} catch (error) {
