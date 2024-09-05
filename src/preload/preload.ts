@@ -1,50 +1,36 @@
 import "./bridge";
-import fs from "node:fs/promises";
+import fs from "node:fs";
 import * as path from "node:path";
 import { ipcRenderer } from "electron";
-import { getConfig } from "../config";
 import { log } from "../modules/logger";
-import { initPushToTalk } from "../modules/pushToTalk";
 import { addScript, addStyle } from "../utils";
 import { addDefaultPlugins } from "./shelter";
 import { injectTitlebar } from "./titlebar";
 
+function loadAssets() {
+	const assets: Record<string, string[][]> = ipcRenderer.sendSync("getAssets");
+	for (const script of assets.scripts) {
+		void addScript(script[1]).then(() => log(`Loaded script: ${script[0]}`));
+	}
+	for (const style of assets.styles) {
+		void addStyle(style[1]).then(() => log(`Loaded style: ${style[0]}`));
+	}
+}
+loadAssets();
+
 document.addEventListener("DOMContentLoaded", async () => {
 	if (!document.location.hostname.includes("discord")) return;
 
-	const original = navigator.mediaDevices.getDisplayMedia;
-	navigator.mediaDevices.getDisplayMedia = async function (opts) {
-		const stream = await original.call(this, opts);
-		const videoTrack = stream.getVideoTracks()[0];
-		videoTrack.contentHint = "motion";
-		const audioTrack = stream.getAudioTracks()[0];
-		if (audioTrack) audioTrack.contentHint = "music";
-
-		return stream;
-	};
-
-	void loadScripts();
 	void injectTitlebar();
 	void addDefaultPlugins();
 	fixScreenShare();
 	fixNotifications();
-	initPushToTalk();
 
 	// Hide "Download Discord Desktop now!" banner
 	window.localStorage.setItem("hideNag", "true");
 
-	addStyle(await fs.readFile(path.join(__dirname, "../", "/assets/css/discord.css"), "utf8"));
+	addStyle(await fs.promises.readFile(path.join(__dirname, "../", "/assets/css/discord.css"), "utf8"));
 });
-
-async function loadScripts() {
-	if (getConfig("scriptLoading")) {
-		const scripts: string[][] = await ipcRenderer.invoke("getScripts");
-		for (const script of scripts) {
-			addScript(script[1]);
-			log(`Loaded "${script[0]}" script`);
-		}
-	}
-}
 
 function fixScreenShare() {
 	addScript(`

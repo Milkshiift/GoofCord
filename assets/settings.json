@@ -206,12 +206,6 @@
       "description": "Enables an open source reimplementation of Discord's\nrich presence called <a target=\"_blank\" href=\"https://github.com/OpenAsar/arrpc\">arRPC</a>.\nA <a target=\"_blank\" href=\"https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence\">workaround</a> is needed for arRPC to work on Flatpak",
       "inputType": "checkbox"
     },
-    "scriptLoading": {
-      "name": "Script loading",
-      "defaultValue": true,
-      "description": "See <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/Script-Loader\">script loader</a>.",
-      "inputType": "checkbox"
-    },
     "launchWithOsBoot": {
       "name": "Launch GoofCord on startup",
       "defaultValue": false,

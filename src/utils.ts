@@ -7,16 +7,18 @@ import { getConfig } from "./config";
 export const packageVersion = require("../package.json").version;
 export const userDataPath = process.type === "browser" ? app.getPath("userData") : ipcRenderer.sendSync("getUserDataPath");
 
-export function addStyle(styleString: string) {
+export async function addStyle(styleString: string) {
 	const style = document.createElement("style");
 	style.textContent = styleString;
-	document.head.append(style);
+	while (document.documentElement === null) await new Promise((resolve) => setTimeout(resolve, 1));
+	document.documentElement.appendChild(style);
 }
 
-export function addScript(scriptString: string) {
+export async function addScript(scriptString: string) {
 	const script = document.createElement("script");
 	script.textContent = scriptString;
-	document.body.append(script);
+	while (document.documentElement === null) await new Promise((resolve) => setTimeout(resolve, 1));
+	document.documentElement.appendChild(script);
 }
 
 export function getVersion() {

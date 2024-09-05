@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { dialog, ipcRenderer } from "electron";
-import { getErrorMessage, getGoofCordFolderPath, tryWithFix } from "./utils";
 import type { Config, ConfigKey } from "./configTypes";
+import { getErrorMessage, getGoofCordFolderPath, tryWithFix } from "./utils";
 
 export let cachedConfig: Config;
 export let firstLaunch = false;
@@ -61,9 +61,8 @@ export async function setConfig<K extends ConfigKey>(entry: K, value: Config[K])
 		const toSave = JSON.stringify(cachedConfig, undefined, 2);
 		void fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
 	} catch (e: unknown) {
-		const errorMessage = getErrorMessage(e);
-		console.error("setConfig function errored:", errorMessage);
-		dialog.showErrorBox("GoofCord was unable to save the settings", errorMessage);
+		console.error("setConfig function errored:", e);
+		dialog.showErrorBox("GoofCord was unable to save the settings", getErrorMessage(e));
 	}
 }
 
@@ -76,9 +75,8 @@ export async function setConfigBulk(toSet: Config) {
 		const toSave = JSON.stringify(toSet, undefined, 2);
 		await fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
 	} catch (e: unknown) {
-		const errorMessage = getErrorMessage(e);
-		console.error("setConfigBulk function errored:", errorMessage);
-		dialog.showErrorBox("GoofCord was unable to save the settings", errorMessage.toString());
+		console.error("setConfigBulk function errored:", e);
+		dialog.showErrorBox("GoofCord was unable to save the settings", getErrorMessage(e));
 	}
 }
 

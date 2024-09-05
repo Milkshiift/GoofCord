@@ -2,6 +2,7 @@ import chalk from "chalk";
 import { dialog, ipcMain, safeStorage } from "electron";
 import StegCloak from "stegcloak";
 import { getConfig } from "../config";
+import { getErrorMessage } from "../utils";
 import { mainWindow } from "../window";
 
 let stegcloak: StegCloak;
@@ -57,9 +58,9 @@ async function loadCover() {
 export function encryptMessage(message: string) {
 	try {
 		return stegcloak.hide(`${message}\u200b`, chosenPassword, cover);
-	} catch (e: any) {
-		console.error(e);
-		dialog.showErrorBox("GoofCord was unable to encrypt your message, did you setup message encryption?", e.toString());
+	} catch (e: unknown) {
+		console.error("Failed to encrypt message:", e);
+		dialog.showErrorBox("GoofCord was unable to encrypt your message, did you setup message encryption?", getErrorMessage(e));
 		return "";
 	}
 }

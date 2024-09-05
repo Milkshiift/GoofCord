@@ -1,42 +1,39 @@
-import { app, crashReporter, dialog, net, session, systemPreferences } from "electron";
+import { net, app, crashReporter, dialog, session, systemPreferences } from "electron";
 import "v8-compile-cache";
-import fs from "node:fs/promises";
-import path from "node:path";
 import chalk from "chalk";
 import { firstLaunch, getConfig, loadConfig } from "./config";
 import { registerIpc } from "./ipc";
 import { setMenu } from "./menu";
+import { categorizeAllAssets } from "./modules/assetLoader";
 import { initializeFirewall, unstrictCSP } from "./modules/firewall";
+import { i } from "./modules/localization";
 import { initEncryption } from "./modules/messageEncryption";
-import { categorizeScripts } from "./modules/scriptLoader";
 import { checkForUpdate } from "./modules/updateCheck";
 import { createSettingsWindow } from "./settings/main";
 import { createTray } from "./tray";
-import { getCustomIcon, getGoofCordFolderPath, isDev, tryCreateFolder, userDataPath } from "./utils";
+import { getCustomIcon, getGoofCordFolderPath, isDev, tryCreateFolder } from "./utils";
 import { createMainWindow } from "./window";
-import { i } from "./modules/localization";
 
 setFlags();
-if (isDev()) import("source-map-support/register").catch(() => {});
+if (isDev()) import("source-map-support/register").catch();
 if (!app.requestSingleInstanceLock()) app.exit();
 crashReporter.start({ uploadToServer: false });
 
 async function main() {
-	console.time(`${chalk.green("[Timer]")} GoofCord fully loaded in`);
+	console.time(chalk.green("[Timer]") + " GoofCord fully loaded in");
 
 	await tryCreateFolder(getGoofCordFolderPath());
-	await migrateFolders();
 	await loadConfig();
 
-	void Promise.all([setAutoLaunchState(), setMenu(), createTray(), categorizeScripts(), registerIpc()]);
-	const extensions = await import("./modules/extensions");
+	const extensions = await import("./modules/mods");
+	const preReady = Promise.all([setAutoLaunchState(), setMenu(), createTray(), registerIpc(), extensions.manageMods().then(categorizeAllAssets)]);
 
 	await app.whenReady();
 
-	await Promise.all([waitForInternetConnection(), setPermissions(), unstrictCSP(), initializeFirewall(), extensions.loadExtensions(), initEncryption()]);
+	await Promise.all([preReady, waitForInternetConnection(), setPermissions(), unstrictCSP(), initializeFirewall(), initEncryption()]);
 	firstLaunch ? await handleFirstLaunch() : await createMainWindow();
 
-	console.timeEnd(`${chalk.green("[Timer]")} GoofCord fully loaded in`);
+	console.timeEnd(chalk.green("[Timer]") + " GoofCord fully loaded in");
 
 	await extensions.updateMods();
 	await checkForUpdate();
@@ -61,14 +58,6 @@ async function handleFirstLaunch() {
 	});
 }
 
-async function migrateFolders() {
-	try {
-		await fs.rename(path.join(userDataPath, "storage/settings.json"), path.join(getGoofCordFolderPath(), "settings.json"));
-		await fs.rename(path.join(userDataPath, "extensions"), path.join(getGoofCordFolderPath(), "extensions"));
-		await fs.rename(path.join(userDataPath, "scripts"), path.join(getGoofCordFolderPath(), "scripts"));
-	} catch (e) {}
-}
-
 async function setAutoLaunchState() {
 	console.log(`Process execution path: ${process.execPath}`);
 	const { default: AutoLaunch } = await import("auto-launch");
@@ -78,11 +67,7 @@ async function setAutoLaunchState() {
 		path: isAUR ? "/bin/goofcord" : undefined,
 	});
 
-	if (getConfig("launchWithOsBoot")) {
-		await gfAutoLaunch.enable();
-	} else {
-		await gfAutoLaunch.disable();
-	}
+	getConfig("launchWithOsBoot") ? await gfAutoLaunch.enable() : await gfAutoLaunch.disable();
 }
 
 async function setPermissions() {
