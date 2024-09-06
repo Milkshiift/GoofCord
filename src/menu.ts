@@ -1,9 +1,9 @@
-import { app, BrowserWindow, Menu } from "electron";
+import { BrowserWindow, Menu, app } from "electron";
 import contextMenu from "electron-context-menu";
+import { i } from "./modules/localization";
 import { cycleThroughPasswords } from "./modules/messageEncryption";
 import { createSettingsWindow } from "./settings/main";
 import { mainWindow } from "./window";
-import { i } from "./modules/localization";
 
 export async function setMenu() {
 	void setApplicationMenu();
@@ -15,10 +15,10 @@ export async function setApplicationMenu() {
 		{
 			label: "GoofCord",
 			submenu: [
-				{ label: i("menu-goofcord-about"), role: "about" },
+				{ label: i("goofcord-about"), role: "about" },
 				{ type: "separator" },
 				{
-					label: i("menu-goofcord-settings"),
+					label: i("goofcord-settings"),
 					accelerator: "CmdOrCtrl+Shift+'",
 					click: () => {
 						createSettingsWindow();
@@ -32,14 +32,14 @@ export async function setApplicationMenu() {
 					},
 				},
 				{
-					label: i("menu-goofcord-reload"),
+					label: i("goofcord-reload"),
 					accelerator: "CmdOrCtrl+R",
 					click: async () => {
 						mainWindow.reload();
 					},
 				},
 				{
-					label: i("menu-goofcord-restart"),
+					label: i("goofcord-restart"),
 					accelerator: "Shift+CmdOrCtrl+R",
 					click: async () => {
 						app.relaunch();
@@ -47,11 +47,11 @@ export async function setApplicationMenu() {
 					},
 				},
 				{
-					label: i("menu-goofcord-fullScreen"),
+					label: i("goofcord-fullScreen"),
 					role: "togglefullscreen",
 				},
 				{
-					label: i("menu-goofcord-quit"),
+					label: i("goofcord-quit"),
 					accelerator: "CmdOrCtrl+Q",
 					click: () => {
 						app.exit();
