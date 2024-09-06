@@ -1,8 +1,8 @@
-import { app, Menu, nativeImage, Tray } from "electron";
+import { Menu, Tray, app, nativeImage } from "electron";
+import { i } from "./modules/localization";
 import { createSettingsWindow } from "./settings/main";
 import { getCustomIcon, getDisplayVersion } from "./utils";
 import { mainWindow } from "./window";
-import { i } from "./modules/localization";
 
 export let tray: Tray;
 export async function createTray() {
@@ -25,13 +25,13 @@ export async function createTray() {
 			type: "separator",
 		},
 		{
-			label: i("tray-openGoofcord"),
+			label: i("goofcord-open"),
 			click: () => {
 				mainWindow.show();
 			},
 		},
 		{
-			label: i("tray-openSettings"),
+			label: i("goofcord-settings"),
 			click: () => {
 				createSettingsWindow();
 			},
@@ -40,7 +40,7 @@ export async function createTray() {
 			type: "separator",
 		},
 		{
-			label: i("tray-quitGoofcord"),
+			label: i("goofcord-quit"),
 			click: () => {
 				app.exit();
 			},

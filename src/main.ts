@@ -26,7 +26,7 @@ async function main() {
 	await loadConfig();
 
 	const extensions = await import("./modules/mods");
-	const preReady = Promise.all([setAutoLaunchState(), setMenu(), createTray(), registerIpc(), extensions.manageMods().then(categorizeAllAssets)]);
+	const preReady = Promise.all([setAutoLaunchState(), setMenu(), createTray(), registerIpc(), extensions.manageMods().then(() => categorizeAllAssets())]);
 
 	await app.whenReady();
 

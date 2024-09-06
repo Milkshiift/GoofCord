@@ -22,7 +22,6 @@ export interface Config {
     "encryptionCover": string;
     "encryptionMark": string;
     "arrpc": boolean;
-    "scriptLoading": boolean;
     "launchWithOsBoot": boolean;
     "spellcheck": boolean;
     "popoutWindowAlwaysOnTop": boolean;
