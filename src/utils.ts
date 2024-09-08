@@ -99,8 +99,10 @@ export async function tryCreateFolder(path: string) {
 	} catch (e: unknown) {
 		if (e instanceof Error && "code" in e && e.code !== "EEXIST") {
 			console.error(e);
+			return "EEXIST";
 		}
 	}
+	return "OK";
 }
 
 type ErrorWithMessage = {

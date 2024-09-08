@@ -122,6 +122,5 @@ export function setContextMenu() {
 		showSaveLinkAs: true,
 		showInspectElement: true,
 		showSearchWithGoogle: true,
-		showSearchWithDuckDuckGo: true,
 	});
 }

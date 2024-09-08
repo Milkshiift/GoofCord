@@ -1,29 +1,58 @@
 import fs from "node:fs";
 import path from "node:path";
-import { dialog, ipcRenderer } from "electron";
+import { app, dialog, ipcRenderer, shell } from "electron";
 import type { Config, ConfigKey } from "./configTypes";
-import { getErrorMessage, getGoofCordFolderPath, tryWithFix } from "./utils";
+import { getErrorMessage, getGoofCordFolderPath, tryCreateFolder } from "./utils";
 
 export let cachedConfig: Config;
 export let firstLaunch = false;
 
-export async function loadConfig() {
-	await tryWithFix(
-		() => {
+async function handleConfigError(e: unknown) {
+	if (e instanceof Error && "code" in e && e.code === "ENOENT") {
+		// Config file does not exist
+		await tryCreateFolder(getGoofCordFolderPath());
+		await setup();
+	} else {
+		console.error("Failed to load the config:", e);
+
+		await app.whenReady();
+
+		const buttonId = dialog.showMessageBoxSync({
+			type: "question",
+			buttons: ["Try again", "Open config folder", "Reset config", "Exit"],
+			defaultId: 0,
+			title: "Failed to load configuration",
+			message: `Config loader errored:\n${getErrorMessage(e)}`,
+		});
+
+		switch (buttonId) {
+			case 1:
+				await shell.openPath(getGoofCordFolderPath());
+				break;
+			case 2:
+				await setup();
+				break;
+			case 3:
+				app.exit();
+				return true;
+		}
+	}
+}
+
+export async function loadConfig(): Promise<void> {
+	while (true) {
+		try {
 			// I don't know why but specifically in this scenario using fs.promises.readFile is whopping 180 ms compared to ~1 ms using fs.readFileSync
 			// Related? https://github.com/nodejs/performance/issues/151
 			const rawData = fs.readFileSync(getConfigLocation(), "utf-8");
 			// Read config *can* be of type other than "Config" if the user modifies it but that doesn't concern us :3
 			cachedConfig = JSON.parse(rawData);
-		},
-		tryFixErrors,
-		"GoofCord was unable to load the config: ",
-	);
-}
-
-async function tryFixErrors() {
-	// This covers: missing settings.json, missing storage folder, corrupted settings.json (parsing error)
-	await setup();
+			return; // Success, exit the function
+		} catch (e: unknown) {
+			const shouldExit = await handleConfigError(e);
+			if (shouldExit) break;
+		}
+	}
 }
 
 // Should be avoided. Use the type safe `getConfig` instead.
