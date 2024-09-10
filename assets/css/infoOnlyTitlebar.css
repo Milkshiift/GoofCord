@@ -1,13 +1,24 @@
+:root {
+    --height: 35px !important;
+}
+
 .withFrame-haYltI {
     position: absolute !important;
+    width: 100% !important;
+    z-index: 999999 !important;
 }
 
 .window-title {
-    content: none !important;
+    display: none !important;
 }
 
 .titlebar #window-controls-container {
     display: none !important;
+}
+
+.titlebar-text {
+    line-height: 210% !important;
+    background: radial-gradient(ellipse farthest-side at center top, hsl(0deg 0% 0%) 0%, #00000000 100%) !important;
 }
 
 /* https://css-tricks.com/easing-linear-gradients/ */

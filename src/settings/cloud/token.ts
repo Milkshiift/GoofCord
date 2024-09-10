@@ -1,5 +1,5 @@
-import { shell } from "electron";
 import { createServer } from "node:http";
+import { shell } from "electron";
 import { getConfig, setConfig } from "../../config";
 import { LOG_PREFIX } from "./cloud";
 

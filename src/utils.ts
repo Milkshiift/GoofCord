@@ -1,7 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import chalk from "chalk";
-import { app, dialog, ipcRenderer } from "electron";
+import { app, ipcRenderer } from "electron";
 import { getConfig } from "./config";
 
 export const packageVersion = require("../package.json").version;
@@ -67,21 +66,6 @@ export function isSemverLower(version1: string, version2: string): boolean {
 	}
 
 	return false;
-}
-
-export async function tryWithFix<T>(toDo: () => T | Promise<T>, attemptFix: () => void | Promise<void>, message: string) {
-	try {
-		return await toDo();
-	} catch (error) {
-		console.error(chalk.bgRed("[Auto Fixer]"), message, error);
-		await attemptFix();
-		try {
-			return await toDo();
-		} catch (error) {
-			console.error(chalk.bgRedBright("[Auto Fixer FAIL]"), message, error);
-			dialog.showErrorBox("Auto fixer tried to fix an issue, but failed", `${message}\n\n${getErrorMessage(error)}`);
-		}
-	}
 }
 
 export async function readOrCreateFolder(path: string) {

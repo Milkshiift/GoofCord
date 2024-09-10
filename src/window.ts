@@ -1,13 +1,13 @@
 import fs from "node:fs/promises";
 import * as path from "node:path";
-import { app, BrowserWindow, shell } from "electron";
+import chalk from "chalk";
+import { BrowserWindow, app, shell } from "electron";
 import { getConfig } from "./config";
 import { getUserAgent } from "./modules/agent";
 import { initArrpc } from "./modules/arrpc";
 import { adjustWindow } from "./modules/windowStateManager";
 import { registerCustomHandler } from "./screenshare/main";
 import { getCustomIcon } from "./utils";
-import chalk from "chalk";
 
 export let mainWindow: BrowserWindow;
 

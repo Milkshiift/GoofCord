@@ -5,13 +5,13 @@ import { mainWindow } from "../window";
 
 const badgeCache = new Map<number, NativeImage>();
 function loadBadge(index: number) {
-	index = Math.min(index, 10);
+	const clampedIndex = Math.min(index, 10);
 
-	const cached = badgeCache.get(index);
+	const cached = badgeCache.get(clampedIndex);
 	if (cached) return cached;
 
-	const img = nativeImage.createFromPath(path.join(__dirname, "assets/badges", `${index}.png`));
-	badgeCache.set(index, img);
+	const img = nativeImage.createFromPath(path.join(__dirname, "assets/badges", `${clampedIndex}.png`));
+	badgeCache.set(clampedIndex, img);
 
 	return img;
 }
@@ -38,15 +38,15 @@ export function setBadgeCount(count: number) {
 
 const trayCache = new Map<number, NativeImage>();
 function loadTrayImage(index: number) {
-	index = Math.min(index, 10);
+	const clampedIndex = Math.min(index, 10);
 
-	const cached = trayCache.get(index);
+	const cached = trayCache.get(clampedIndex);
 	if (cached) return cached;
 
-	const img = nativeImage.createFromPath(path.join(__dirname, "assets/badges", `tray${index}.png`));
+	const img = nativeImage.createFromPath(path.join(__dirname, "assets/badges", `tray${clampedIndex}.png`));
 	if (process.platform === "darwin") img.resize({ height: 22 });
 
-	trayCache.set(index, img);
+	trayCache.set(clampedIndex, img);
 
 	return img;
 }

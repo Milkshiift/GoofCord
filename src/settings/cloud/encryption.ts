@@ -1,6 +1,6 @@
+import crypto from "node:crypto";
 import util from "node:util";
 import zlib from "node:zlib";
-import crypto from "node:crypto";
 import { showDialogAndLog } from "./cloud";
 
 // Using brotli compression cuts the output in half so why not use it
