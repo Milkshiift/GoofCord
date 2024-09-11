@@ -33,16 +33,21 @@ export async function renderSettings() {
 	if (settingsDiv) settingsDiv.innerHTML = html;
 }
 
+let buttons: [string, ButtonEntry][] = [];
 function makeCategory(name: string) {
 	return `
         <h2>${i(`category-${name.toLowerCase().split(" ")[0]}`)}</h2>
         <form class='settingsContainer'>
             ${fillCategory(name)}
+            <div class="buttonContainer">
+				${buttons.map((button) => createButton(...(button as [string, ButtonEntry]))).join("")}
+            </div>
         </form>
     `;
 }
 
 function fillCategory(categoryName: string) {
+	buttons = [];
 	return Object.entries(settings[categoryName])
 		.map(([setting, entry]) => createField(setting, entry as SettingEntry | ButtonEntry))
 		.filter(Boolean) // Removing falsy items
@@ -50,7 +55,10 @@ function fillCategory(categoryName: string) {
 }
 
 function createField(setting: string, entry: SettingEntry | ButtonEntry) {
-	if (setting.startsWith("button-")) return createButton(setting, entry as ButtonEntry);
+	if (setting.startsWith("button-")) {
+		buttons.push([setting, entry as ButtonEntry]);
+		return null;
+	}
 	return createSetting(setting, entry as SettingEntry);
 }
 

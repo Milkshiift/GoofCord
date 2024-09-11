@@ -84,7 +84,7 @@ form {
     display: flex;
     flex-direction: column;
     margin: 0 40px 2em 40px;
-    padding: 10px 15px 0;
+    padding: 10px 15px 10px;
     background-color: var(--bg-secondary);
     font-size: 0.8em;
     border-radius: 5px;
@@ -210,6 +210,10 @@ button {
 
 button:hover {
     background-color: var(--color-primary-ultralight);
+}
+
+.buttonContainer {
+    display: flex;
 }
 
 input[type=file] {
