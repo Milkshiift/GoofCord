@@ -2,6 +2,7 @@ import { BrowserWindow, Menu, app } from "electron";
 import contextMenu from "electron-context-menu";
 import { i } from "./modules/localization";
 import { cycleThroughPasswords } from "./modules/messageEncryption";
+import { saveState } from "./modules/windowStateManager";
 import { createSettingsWindow } from "./settings/main";
 import { mainWindow } from "./window";
 
@@ -53,7 +54,8 @@ export async function setApplicationMenu() {
 				{
 					label: i("goofcord-quit"),
 					accelerator: "CmdOrCtrl+Q",
-					click: () => {
+					click: async () => {
+						await saveState(mainWindow, "windowState:main");
 						app.exit();
 					},
 				},

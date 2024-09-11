@@ -1,5 +1,6 @@
 import { Menu, Tray, app, dialog, nativeImage } from "electron";
 import { i } from "./modules/localization";
+import { saveState } from "./modules/windowStateManager";
 import { createSettingsWindow } from "./settings/main";
 import { getCustomIcon, getDisplayVersion } from "./utils";
 import { mainWindow } from "./window";
@@ -45,7 +46,8 @@ export async function createTray() {
 		},
 		{
 			label: i("goofcord-quit"),
-			click: () => {
+			click: async () => {
+				await saveState(mainWindow, "windowState:main");
 				app.exit();
 			},
 		},

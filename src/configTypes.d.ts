@@ -10,17 +10,17 @@ export interface Config {
     "customJsBundle": string;
     "customCssBundle": string;
     "noBundleUpdates": boolean;
-    "firewall": boolean;
-    "customFirewallRules": boolean;
-    "blocklist": string[];
-    "blockedStrings": string[];
-    "allowedStrings": string[];
     "installDefaultShelterPlugins": boolean;
     "invidiousEmbeds": boolean;
     "messageEncryption": boolean;
     "encryptionPasswords": string[];
     "encryptionCover": string;
     "encryptionMark": string;
+    "firewall": boolean;
+    "customFirewallRules": boolean;
+    "blocklist": string[];
+    "blockedStrings": string[];
+    "allowedStrings": string[];
     "arrpc": boolean;
     "launchWithOsBoot": boolean;
     "spellcheck": boolean;
@@ -31,8 +31,8 @@ export interface Config {
     "screensharePreviousSettings": [number, number, boolean, string];
     "windowState:main": [boolean, [number, number], [number, number]];
     "cloudHost": string;
-    "cloudEncryptionKey": string;
     "cloudToken": string;
+    "cloudEncryptionKey": string;
 }
 
 export type ConfigKey = keyof Config;

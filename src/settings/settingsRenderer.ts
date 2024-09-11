@@ -39,7 +39,7 @@ function makeCategory(name: string) {
         <h2>${i(`category-${name.toLowerCase().split(" ")[0]}`)}</h2>
         <form class='settingsContainer'>
             ${fillCategory(name)}
-            <div class="buttonContainer">
+            <div class="buttonContainer"> 
 				${buttons.map((button) => createButton(...(button as [string, ButtonEntry]))).join("")}
             </div>
         </form>

@@ -12,9 +12,9 @@ export async function genSettingsLangFile() {
             result[`category-${category.toLowerCase().split(" ")[0]}`] = category;
             const categorySettings = data[category];
             for (const setting in categorySettings) {
-                if (!categorySettings[setting].name) continue;
+                if (categorySettings[setting].name === undefined) continue;
                 result[`opt-${setting}`] = categorySettings[setting].name;
-                if (!categorySettings[setting].description) continue;
+                if (categorySettings[setting].description === undefined) continue;
                 result[`opt-${setting}-desc`] = categorySettings[setting].description;
             }
         }
@@ -28,6 +28,7 @@ export async function genSettingsLangFile() {
     const engLang = JSON.parse(await fs.promises.readFile(engLangPath, 'utf8'));
 
     for (const key in extractedStrings) {
+        if (key.startsWith("opt-")) delete engLang[key];
         engLang[key] = extractedStrings[key];
     }
 

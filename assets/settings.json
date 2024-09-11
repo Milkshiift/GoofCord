@@ -20,7 +20,7 @@
     },
     "dynamicIcon": {
       "name": "Dynamic icon",
-      "defaultValue": false,
+      "defaultValue": true,
       "description": "Shows pings/mentions count on GoofCord's icon and its tray. Overwrites the custom icon.\nOn Linux pings on the taskbar icon only show when Unity launcher or unitylib is used",
       "inputType": "checkbox"
     },
@@ -71,10 +71,57 @@
       }
     },
     "noBundleUpdates": {
-      "name": "No bundle updates",
       "defaultValue": false,
-      "description": "Disable automatic client mod updates.",
       "inputType": "checkbox"
+    },
+    "installDefaultShelterPlugins": {
+      "name": "Install default Shelter plugins",
+      "defaultValue": true,
+      "description": "Adds GoofCord's helper plugins to Shelter on launch. Don't disable unless facing issues.",
+      "inputType": "checkbox"
+    },
+    "invidiousEmbeds": {
+      "name": "Invidious embeds",
+      "defaultValue": true,
+      "description": "Replaces YouTube embeds with Invidious embeds. You can customize the instance from Shelter's settings.",
+      "inputType": "checkbox"
+    },
+    "messageEncryption": {
+      "name": "Message encryption",
+      "defaultValue": false,
+      "description": "See <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/Message-Encryption\">message encryption</a>.",
+      "inputType": "checkbox"
+    },
+    "encryptionPasswords": {
+      "name": "Encryption passwords",
+      "defaultValue": [],
+      "description": "Securely stored, encrypted list of passwords that will be used for encryption. A backup in a warm, safe place is recommended. Separate entries with commas.",
+      "inputType": "textarea",
+      "encrypted": true,
+      "showAfter": {
+        "key": "messageEncryption",
+        "value": "return arg === true"
+      }
+    },
+    "encryptionCover": {
+      "name": "Encryption cover",
+      "defaultValue": "",
+      "description": "A message that a user without the password will see. At least two words or empty.",
+      "inputType": "textfield",
+      "showAfter": {
+        "key": "messageEncryption",
+        "value": "return arg === true"
+      }
+    },
+    "encryptionMark": {
+      "name": "Encryption Mark",
+      "defaultValue": "| ",
+      "description": "A string that will be prepended to each decrypted message so it's easier to know what messages are encrypted.",
+      "inputType": "textfield",
+      "showAfter": {
+        "key": "messageEncryption",
+        "value": "return arg === true"
+      }
     }
   },
   "Firewall settings": {
@@ -144,57 +191,6 @@
       "inputType": "textarea",
       "showAfter": {
         "key": "customFirewallRules",
-        "value": "return arg === true"
-      }
-    }
-  },
-  "Shelter settings": {
-    "installDefaultShelterPlugins": {
-      "name": "Install default Shelter plugins",
-      "defaultValue": true,
-      "description": "Adds GoofCord's helper plugins to Shelter on launch. Don't disable unless facing issues.",
-      "inputType": "checkbox"
-    },
-    "invidiousEmbeds": {
-      "name": "Invidious embeds",
-      "defaultValue": true,
-      "description": "Replaces YouTube embeds with Invidious embeds. You can customize the instance from Shelter settings.",
-      "inputType": "checkbox"
-    },
-    "messageEncryption": {
-      "name": "Message encryption",
-      "defaultValue": false,
-      "description": "See <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/Message-Encryption\">message encryption</a>.",
-      "inputType": "checkbox"
-    },
-    "encryptionPasswords": {
-      "name": "Encryption passwords",
-      "defaultValue": [],
-      "description": "Securely stored, encrypted list of passwords that will be used for encryption. A backup in a warm, safe place is recommended. Separate entries with commas.",
-      "inputType": "textarea",
-      "encrypted": true,
-      "showAfter": {
-        "key": "messageEncryption",
-        "value": "return arg === true"
-      }
-    },
-    "encryptionCover": {
-      "name": "Encryption cover",
-      "defaultValue": "",
-      "description": "A message that a user without the password will see. At least two words or empty.",
-      "inputType": "textfield",
-      "showAfter": {
-        "key": "messageEncryption",
-        "value": "return arg === true"
-      }
-    },
-    "encryptionMark": {
-      "name": "Encryption Mark",
-      "defaultValue": "| ",
-      "description": "A string that will be prepended to each decrypted message so it's easier to know what messages are encrypted.",
-      "inputType": "textfield",
-      "showAfter": {
-        "key": "messageEncryption",
         "value": "return arg === true"
       }
     }
@@ -269,10 +265,12 @@
   },
   "Cloud Settings": {
     "cloudHost": {
-      "name": "Cloud Host",
       "defaultValue": "https://goofcordcloud.wuemeli.com",
-      "description": "DO NOT MESS WITH THIS UNLESS YOU KNOW WHAT YOU'RE DOING",
       "inputType": "textfield"
+    },
+    "cloudToken": {
+      "defaultValue": "",
+      "outputType": "string"
     },
     "cloudEncryptionKey": {
       "name": "Cloud Encryption Key",
@@ -280,10 +278,6 @@
       "description": "Leave empty to not use encryption and not save message encryption passwords on cloud. You can't recover your password if you lose it.",
       "inputType": "textfield",
       "encrypted": true
-    },
-    "cloudToken": {
-      "defaultValue": "",
-      "outputType": "string"
     },
     "button-loadFromCloud": {
       "name": "Load from cloud",
