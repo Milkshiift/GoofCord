@@ -1,4 +1,4 @@
-import { Menu, Tray, app, nativeImage } from "electron";
+import { Menu, Tray, app, dialog, nativeImage } from "electron";
 import { i } from "./modules/localization";
 import { createSettingsWindow } from "./settings/main";
 import { getCustomIcon, getDisplayVersion } from "./utils";
@@ -27,7 +27,11 @@ export async function createTray() {
 		{
 			label: i("goofcord-open"),
 			click: () => {
-				mainWindow.show();
+				if (mainWindow) {
+					mainWindow.show();
+				} else {
+					dialog.showErrorBox("Failed to open the main window", "The main window did not yet initialize. Are you connected to the internet?");
+				}
 			},
 		},
 		{

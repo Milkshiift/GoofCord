@@ -1,5 +1,4 @@
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import { ipcRenderer } from "electron";
 import { getConfig } from "../config";
@@ -77,8 +76,6 @@ export async function injectTitlebar() {
 	}
 	const titlebarCss = await fs.readFile(path.join(__dirname, "../assets/css/titlebar.css"), "utf8");
 	void addStyle(titlebarCss);
-
-	document.body.setAttribute("goofcord-platform", os.platform());
 
 	await attachTitlebarEvents(titlebar);
 }
