@@ -5,7 +5,7 @@ import { i } from "../modules/localization";
 import { getCustomIcon, getDisplayVersion, userDataPath } from "../utils";
 import { deleteCloud, loadCloud, saveCloud } from "./cloud/cloud";
 
-let settingsWindow: BrowserWindow;
+export let settingsWindow: BrowserWindow;
 let isOpen = false;
 
 ipcMain.handle("deleteCloud", async () => await deleteCloud());

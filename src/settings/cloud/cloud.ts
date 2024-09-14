@@ -6,7 +6,7 @@ import { decryptString, encryptString } from "./encryption";
 import { deleteToken, getCloudHost, getCloudToken } from "./token";
 
 export const LOG_PREFIX = chalk.cyanBright("[Cloud Settings]");
-export const ENDPOINT_VERSION = "v1/";
+export const ENDPOINT_VERSION = "v1/"; // A slash should be at the end
 
 function getEncryptionKey(): string {
 	try {

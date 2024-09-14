@@ -1,7 +1,7 @@
-import { createServer } from "node:http";
-import { shell } from "electron";
 import { getConfig, setConfig } from "../../config";
-import { ENDPOINT_VERSION, LOG_PREFIX } from "./cloud";
+import { mainWindow } from "../../window";
+import { settingsWindow } from "../main";
+import { ENDPOINT_VERSION, LOG_PREFIX, showDialogAndLog } from "./cloud";
 
 export async function getCloudToken(): Promise<string> {
 	let cloudToken = getConfig("cloudToken");
@@ -20,25 +20,44 @@ export async function deleteToken() {
 }
 
 let serverListening = false;
-async function getTokenFromServer(): Promise<string> {
+async function getTokenFromServer() {
+	if (!getConfig("modNames").includes("shelter") || !getConfig("installDefaultShelterPlugins")) {
+		await showDialogAndLog("error", "Failed to get token", "You need to enable shelter and install the default plugins to use cloud storage");
+		return "";
+	}
 	serverListening = true;
-	await shell.openExternal(`${getCloudHost()}${ENDPOINT_VERSION}login`);
-	return new Promise<string>((resolve) => {
-		const server = createServer((req, res) => {
-			const token = req.url?.split("/")[1];
-			if (token) {
-				res.writeHead(200, { "Content-Type": "text/plain" });
-				res.end("Token received, you can close this tab now.");
-				server.close();
-				serverListening = false;
-				resolve(token);
-			}
-		});
 
-		server.listen(9998, "127.0.0.1", () => {
-			console.log("Listening on", server.address());
-		});
-	});
+	mainWindow.show();
+	const callbackUrl = await mainWindow.webContents.executeJavaScript(`
+		(async () => {
+			let modalAPI = webpackMagic.findByProps("openModalLazy");
+			let { OAuth2AuthorizeModal } = webpackMagic.findByProps("OAuth2AuthorizeModal");
+			let { jsx } = webpackMagic.findByProps("jsx");
+			let callbackUrl;
+			modalAPI.openModal((props) => 
+    			jsx(OAuth2AuthorizeModal, {
+    			    ...props,
+    			    scopes: ["identify"],
+    			    responseType: "code",
+    			    redirectUri: "${getCloudHost()}${ENDPOINT_VERSION}callback",
+    			    permissions: 0n,
+    			    clientId: "${await (await fetch(getCloudHost() + ENDPOINT_VERSION + "clientid")).text()}",
+    			    cancelCompletesFlow: false,
+    			    callback: ({ location }) => {callbackUrl = location}
+    			})
+    		);
+    		while (!callbackUrl) await new Promise((resolve) => setTimeout(resolve, 100));
+			return callbackUrl;
+		})();
+	`);
+	console.log(LOG_PREFIX, "Callback URL:", callbackUrl);
+	settingsWindow.show();
+
+	const response = await fetch(callbackUrl);
+	const json = await response.json();
+
+	serverListening = false;
+	return json.token;
 }
 
 export function getCloudHost() {
