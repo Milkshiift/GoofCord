@@ -1,7 +1,7 @@
 import { createServer } from "node:http";
 import { shell } from "electron";
 import { getConfig, setConfig } from "../../config";
-import { LOG_PREFIX } from "./cloud";
+import { ENDPOINT_VERSION, LOG_PREFIX } from "./cloud";
 
 export async function getCloudToken(): Promise<string> {
 	let cloudToken = getConfig("cloudToken");
@@ -22,7 +22,7 @@ export async function deleteToken() {
 let serverListening = false;
 async function getTokenFromServer(): Promise<string> {
 	serverListening = true;
-	await shell.openExternal(`${getCloudHost()}login`);
+	await shell.openExternal(`${getCloudHost()}${ENDPOINT_VERSION}login`);
 	return new Promise<string>((resolve) => {
 		const server = createServer((req, res) => {
 			const token = req.url?.split("/")[1];

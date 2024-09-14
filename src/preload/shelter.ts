@@ -14,7 +14,8 @@ export async function addDefaultPlugins() {
             ["https://milkshiift.github.io/goofcord-shelter-plugins/console-suppressor/", true],
             ["https://milkshiift.github.io/goofcord-shelter-plugins/message-encryption/", true],
             ["https://milkshiift.github.io/goofcord-shelter-plugins/invidious-embeds/", true],
-            ["https://milkshiift.github.io/goofcord-shelter-plugins/settings-category/", true]
+            ["https://milkshiift.github.io/goofcord-shelter-plugins/settings-category/", true],
+			["https://milkshiift.github.io/goofcord-shelter-plugins/webpack-magic/", true],
         ];
         for (const plugin of defaultPlugins) {
             try {

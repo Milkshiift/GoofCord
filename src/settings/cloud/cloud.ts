@@ -6,6 +6,7 @@ import { decryptString, encryptString } from "./encryption";
 import { deleteToken, getCloudHost, getCloudToken } from "./token";
 
 export const LOG_PREFIX = chalk.cyanBright("[Cloud Settings]");
+export const ENDPOINT_VERSION = "v1/";
 
 function getEncryptionKey(): string {
 	try {
@@ -38,8 +39,7 @@ export async function saveCloud() {
 	const excludedOptions = ["cloudEncryptionKey", "cloudHost", "cloudToken"];
 	const configToSave = { ...cachedConfig };
 	if (getEncryptionKey()) {
-		// biome-ignore lint/complexity/useLiteralKeys: Config currently does not have types
-		configToSave["encryptionPasswords"] = encryptionPasswords;
+		configToSave.encryptionPasswords = encryptionPasswords;
 	} else {
 		excludedOptions.push("encryptionPasswords");
 	}
@@ -63,7 +63,7 @@ export async function deleteCloud() {
 async function callEndpoint(endpoint: string, method: string, body?: string) {
 	try {
 		console.log(LOG_PREFIX, "Calling endpoint:", endpoint);
-		const response = await fetch(getCloudHost() + endpoint, {
+		const response = await fetch(getCloudHost() + ENDPOINT_VERSION + endpoint, {
 			method,
 			headers: {
 				"Content-Type": "application/json",
