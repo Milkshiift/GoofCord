@@ -40,6 +40,9 @@ jobs:
           node-version: "22.x"
           cache: "pnpm"
 
+      - name: Set virtual store dir max length
+        run: pnpm config set virtual-store-dir-max-length 70
+
       - name: Install Node dependencies
         run: pnpm install --frozen-lockfile
 
