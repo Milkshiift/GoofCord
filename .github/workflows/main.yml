@@ -52,7 +52,19 @@ jobs:
       - name: Build GoofCord
         run: pnpm run build
 
+      - name: Load Electron Cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .cache
+          key: electron-zips.stable.${{matrix.os}}
+
       - name: Package GoofCord
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: electron-builder ${{ matrix.arch }} --${{ matrix.name }} ${{ matrix.targets }} --publish=always
+
+      - name: Save Electron Cache
+        uses: actions/cache/save@v4
+        with:
+          path: .cache
+          key: electron-zips.stable.${{matrix.os}}
