@@ -17,7 +17,7 @@ jobs:
             arch: "--x64 --arm64 --armv7l"
           - name: win
             runner: windows-latest
-            targets: "zip"
+            targets: "zip nsis"
             arch: "--x64 --ia32 --arm64"
           - name: mac
             runner: macos-latest
