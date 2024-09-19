@@ -2,5 +2,10 @@
     "goofcord-open": "Ibukas ang GoofCord",
     "goofcord-settings": "Ibukas ang Settings",
     "goofcord-reload": "I-reload",
-    "goofcord-restart": "I-restart"
+    "goofcord-restart": "I-restart",
+    "settingsWindow-title": "Mga Setting ng GoofCord | Bersyon: ",
+    "menu-edit": "I-edit",
+    "menu-edit-selectAll": "Piliin lahat",
+    "category-other": "Mga ibang setting",
+    "menu-development-gpuDebug": "Ibukas ang chrome://gpu"
 }
