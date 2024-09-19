@@ -1,1 +1,24 @@
-{}
+{
+    "goofcord-quit": "Avslutt",
+    "goofcord-open": "Åpne GoofCord",
+    "goofcord-settings": "Åpne innstillingene",
+    "goofcord-reload": "Last inn igjen",
+    "menu-zoom-in": "Forstørr",
+    "goofcord-restart": "Programomstart",
+    "goofcord-fullScreen": "Fullskjermsvining",
+    "menu-edit-redo": "Gjenta",
+    "menu-edit-cut": "Klipp ut",
+    "menu-edit-copy": "Kopier",
+    "menu-edit-paste": "Lim inn",
+    "menu-zoom-out": "Forminsk",
+    "menu-development": "Utvikling",
+    "menu-edit": "Rediger",
+    "menu-edit-undo": "Angre",
+    "menu-edit-selectAll": "Velg alle",
+    "menu-zoom": "Forstørrelse",
+    "opt-minimizeToTray": "Minimer til systemkurv",
+    "opt-minimizeToTray-desc": "GoofCord forblir åpet etter lukking av alle vinduer.",
+    "opt-startMinimized": "Start minimert",
+    "opt-dynamicIcon": "Dynamisk ikon",
+    "opt-discordUrl": "Discord-nettadresse"
+}
