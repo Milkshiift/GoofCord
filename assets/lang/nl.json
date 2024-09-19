@@ -1,1 +1,19 @@
-{}
+{
+    "goofcord-about": "Over GoofCord",
+    "goofcord-quit": "Stop",
+    "goofcord-open": "Open GoofCord",
+    "goofcord-settings": "Open Instellingen",
+    "goofcord-reload": "Herladen",
+    "goofcord-restart": "Herstart",
+    "goofcord-fullScreen": "Volledig scherm",
+    "menu-goofcord-cyclePasswords": "Door wachtwoorden scrollen",
+    "menu-edit": "Bewerken",
+    "menu-edit-undo": "Ongedaan maken",
+    "menu-edit-redo": "Heerhai",
+    "menu-edit-cut": "Snijden",
+    "menu-edit-paste": "Plak",
+    "menu-edit-selectAll": "Alles kiezen",
+    "menu-zoom": "Zoomen",
+    "welcomeMessage": "Welkom bij GoofCord!\nStel de instellingen naar wens in en start GoofCord opnieuw op om Discord te openen.\nJe kunt dit doen met Ctrl+Shift+R of via het tray/dock menu.\nVeel plezier met chatten!",
+    "menu-edit-copy": "Kopie"
+}
