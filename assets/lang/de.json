@@ -47,7 +47,7 @@
     "opt-modNames": "Client Modifikationen",
     "opt-modNames-desc": "What client mods to use. <b>You shouldn't disable Shelter</b> as it is used by many GoofCord features. Do not mix forks of the same mod (e.g. Vencord and Equicord). <a target=„_blank“ href=„https://github.com/Milkshiift/GoofCord/wiki/FAQ#how-do-i-add-a-custom-client-mod“>Client mod I want to use is not listed</a>.",
     "opt-customJsBundle": "Benutzerdefiniertes JS-Paket",
-    "opt-customJsBundle-desc": "Custom JS Bundle",
+    "opt-customJsBundle-desc": " ",
     "opt-customCssBundle": "Benutzerdefiniertes CSS-Bundle",
     "opt-customCssBundle-desc": "Ein raw Link zum JS-Bundle und CSS-Bundle eines Client-Mods, den Sie verwenden möchten.",
     "opt-installDefaultShelterPlugins": "Standard-Shelter-Plugins installieren",
