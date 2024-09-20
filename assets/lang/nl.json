@@ -15,5 +15,14 @@
     "menu-edit-selectAll": "Alles kiezen",
     "menu-zoom": "Zoomen",
     "welcomeMessage": "Welkom bij GoofCord!\nStel de instellingen naar wens in en start GoofCord opnieuw op om Discord te openen.\nJe kunt dit doen met Ctrl+Shift+R of via het tray/dock menu.\nVeel plezier met chatten!",
-    "menu-edit-copy": "Kopie"
+    "menu-edit-copy": "Kopie",
+    "menu-zoom-in": "Zoom in",
+    "menu-zoom-out": "Zoom uit",
+    "menu-development": "Ontwikkeling",
+    "menu-development-devtools": "Open DevTools",
+    "menu-development-gpuDebug": "Open chrome://gpu",
+    "settingsWindow-title": "GoofCord Instellingen | Versie: ",
+    "category-general": "Algemene instellingen",
+    "category-client": "Instellingen client mods",
+    "category-firewall": "Instellingen firewall"
 }
