@@ -1,4 +1,4 @@
-import fs from "node:fs/promises";
+import fs from "node:fs";
 import path from "node:path";
 import { app, ipcRenderer } from "electron";
 import { getConfig } from "./config";
@@ -70,16 +70,17 @@ export function isSemverLower(version1: string, version2: string): boolean {
 
 export async function readOrCreateFolder(path: string) {
 	try {
-		return await fs.readdir(path);
+		return await fs.promises.readdir(path);
 	} catch (e) {
-		await tryCreateFolder(path);
+		tryCreateFolder(path);
 		return [];
 	}
 }
 
-export async function tryCreateFolder(path: string) {
+export function tryCreateFolder(path: string) {
 	try {
-		await fs.mkdir(path, { recursive: true });
+		// Sync mkdir is literally 100 times faster than the promisified version
+		fs.mkdirSync(path, { recursive: true });
 	} catch (e: unknown) {
 		if (e instanceof Error && "code" in e && e.code !== "EEXIST") {
 			console.error(e);

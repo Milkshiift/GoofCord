@@ -21,16 +21,22 @@ crashReporter.start({ uploadToServer: false });
 
 async function main() {
 	console.time(chalk.green("[Timer]") + " GoofCord fully loaded in");
+	console.time(chalk.green("[Timer]") + " Electron loaded in");
 
-	await tryCreateFolder(getGoofCordFolderPath());
+	tryCreateFolder(getGoofCordFolderPath());
 	await loadConfig();
 
 	const extensions = await import("./modules/mods");
-	const preReady = Promise.all([setAutoLaunchState(), setMenu(), createTray(), registerIpc(), extensions.manageMods().then(() => categorizeAllAssets())]);
+	void setAutoLaunchState();
+	void setMenu();
+	void createTray();
+	const preReady = Promise.all([registerIpc(), extensions.manageMods().then(() => categorizeAllAssets())]);
 
 	await app.whenReady();
+	console.timeEnd(chalk.green("[Timer]") + " Electron loaded in");
 
-	await Promise.all([preReady, waitForInternetConnection(), setPermissions(), unstrictCSP(), initializeFirewall(), initEncryption()]);
+	initEncryption();
+	await Promise.all([preReady, waitForInternetConnection(), setPermissions(), unstrictCSP(), initializeFirewall()]);
 	firstLaunch ? await handleFirstLaunch() : await createMainWindow();
 
 	console.timeEnd(chalk.green("[Timer]") + " GoofCord fully loaded in");

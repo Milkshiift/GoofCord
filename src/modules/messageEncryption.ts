@@ -15,7 +15,7 @@ ipcMain.on("messageEncryption:getDecryptedPasswords", (event) => {
 	event.returnValue = encryptionPasswords;
 });
 
-export async function initEncryption() {
+export function initEncryption() {
 	try {
 		void loadPasswords();
 		void loadCover();
