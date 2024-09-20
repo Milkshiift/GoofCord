@@ -35,5 +35,8 @@
     "menu-development": "開發者",
     "menu-development-gpuDebug": "開啟 chrome://gpu",
     "menu-development-devtools": "開啟 DevTools",
-    "settingsWindow-title": "GoofCord 設定 | 版本： "
+    "settingsWindow-title": "GoofCord 設定 | 版本： ",
+    "opt-customIconPath-desc": "自訂 GoofCord 圖示。建議使用背景為透明的圖示。",
+    "opt-dynamicIcon-desc": "在 GoofCord 圖示上顯示通知數量。此選項將會覆寫自訂圖示。\n在 Linux 上此選項只在使用 Unity 啟動器或 unitylib 時才有效用",
+    "opt-discordUrl-desc": "網址 GoofCord"
 }
