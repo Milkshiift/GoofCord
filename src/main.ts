@@ -21,7 +21,6 @@ crashReporter.start({ uploadToServer: false });
 
 async function main() {
 	console.time(chalk.green("[Timer]") + " GoofCord fully loaded in");
-	console.time(chalk.green("[Timer]") + " Electron loaded in");
 
 	tryCreateFolder(getGoofCordFolderPath());
 	await loadConfig();
@@ -32,6 +31,7 @@ async function main() {
 	void createTray();
 	const preReady = Promise.all([registerIpc(), extensions.manageMods().then(() => categorizeAllAssets())]);
 
+	console.time(chalk.green("[Timer]") + " Electron loaded in");
 	await app.whenReady();
 	console.timeEnd(chalk.green("[Timer]") + " Electron loaded in");
 
