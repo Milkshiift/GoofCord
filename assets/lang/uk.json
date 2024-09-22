@@ -88,5 +88,12 @@
     "opt-button-forceNativeCrash": "Ініціювати нативний збій",
     "opt-cloudEncryptionKey": "Ключ хмарного шифрування",
     "opt-cloudEncryptionKey-desc": "Залиште порожнім, щоб не використовувати шифрування та не зберігати паролі шифрування повідомлень у хмарі. Ви не зможете відновити пароль, якщо його втратите.",
-    "opt-customJsBundle-desc": " "
+    "opt-customJsBundle-desc": " ",
+    "screenshare-optimization-motion": "Рух",
+    "screenshare-optimization-detail": "Деталі",
+    "screenshare-resolution": "Роздільна здатність",
+    "screenshare-framerate": "Частота кадрів",
+    "screenshare-audio": "Аудіо",
+    "screenshare-screenshare": "Демонстрація Екрана",
+    "screenshare-optimization": "Оптимізація"
 }
