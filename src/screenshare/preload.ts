@@ -1,5 +1,6 @@
 import { ipcRenderer } from "electron";
 import { getConfig, setConfig } from "../config";
+import { i } from "../modules/localization";
 
 interface IPCSources {
 	id: string;
@@ -64,7 +65,7 @@ async function addDisplays() {
 		const selectionElem = document.createElement("div");
 		selectionElem.classList.add("desktop-capturer-selection");
 		selectionElem.innerHTML = `
-            <h1 style="margin-bottom: 0">Screen Share</h1>
+            <h1 style="margin-bottom: 0">${i("screenshare-screenshare")}</h1>
             <div class="desktop-capturer-selection__scroller">
               <ul class="desktop-capturer-selection__list">
                 ${sources
@@ -76,22 +77,22 @@ async function addDisplays() {
             <div class="checkbox-container">
               <div class="subcontainer">
                 <input id="audio-checkbox" type="checkbox" ${previousSettings[2] ? "checked" : ""} />
-                <label for="audio-checkbox">Audio</label>
+                <label for="audio-checkbox">${i("screenshare-audio")}</label>
               </div>
               <div class="subcontainer">
                 <select id="content-hint-select">
-                  <option value="motion" ${previousSettings[3] !== "detail" ? "selected" : ""}>Motion</option>
-                  <option value="detail" ${previousSettings[3] === "detail" ? "selected" : ""}>Detail</option>
+                  <option value="motion" ${previousSettings[3] !== "detail" ? "selected" : ""}>${i("screenshare-optimization-motion")}</option>
+                  <option value="detail" ${previousSettings[3] === "detail" ? "selected" : ""}>${i("screenshare-optimization-detail")}</option>
                 </select>
-                <label for="audio-checkbox">Optimization</label>
+                <label for="audio-checkbox">${i("screenshare-optimization")}</label>
               </div>
               <div class="subcontainer">
                 <input id="resolution-textbox" type="text" value="${previousSettings[0]}" />
-                <label for="resolution-textbox">Resolution</label>
+                <label for="resolution-textbox">${i("screenshare-resolution")}</label>
               </div>
               <div class="subcontainer">
                 <input id="framerate-textbox" type="text" value="${previousSettings[1]}"/>
-                <label for="framerate-textbox">Framerate</label>
+                <label for="framerate-textbox">${i("screenshare-framerate")}</label>
               </div>
             </div>
         `;
