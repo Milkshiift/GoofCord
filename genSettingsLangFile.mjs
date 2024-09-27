@@ -1,9 +1,8 @@
 import path from "path";
 import fs from "fs";
+import {settingsSchema} from "./src/settingsSchema.js";
 
 export async function genSettingsLangFile() {
-    const settingsData = JSON.parse(await fs.promises.readFile(path.join(import.meta.dirname, "assets", "settings.json"), 'utf8'));
-
     function extractNames(data) {
         const result = {};
 
@@ -22,7 +21,7 @@ export async function genSettingsLangFile() {
         return result;
     }
 
-    const extractedStrings = extractNames(settingsData);
+    const extractedStrings = extractNames(settingsSchema);
 
     const engLangPath = path.join(import.meta.dirname, "assets", "lang", "en-US.json");
     const engLang = JSON.parse(await fs.promises.readFile(engLangPath, 'utf8'));

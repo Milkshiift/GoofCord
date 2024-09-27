@@ -50,6 +50,7 @@ function setFlags() {
 	const enableFeatures = ["WebRTC", "WebRtcHideLocalIpsWithMdns", "PlatformHEVCEncoderSupport", "EnableDrDc", "CanvasOopRasterization", "UseSkiaRenderer"];
 	if (process.platform === "linux") enableFeatures.push("PulseaudioLoopbackForScreenShare", "VaapiVideoDecoder", "VaapiVideoEncoder", "VaapiVideoDecodeLinuxGL");
 	app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+	app.commandLine.appendSwitch("enable-speech-dispatcher");
 	app.commandLine.appendSwitch("disable-features", disableFeatures.join(","));
 	app.commandLine.appendSwitch("enable-features", enableFeatures.join(","));
 }

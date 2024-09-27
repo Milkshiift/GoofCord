@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { app, dialog, ipcRenderer, shell } from "electron";
 import type { Config, ConfigKey } from "./configTypes";
+import { settingsSchema } from "./settingsSchema";
 import { getErrorMessage, getGoofCordFolderPath, tryCreateFolder } from "./utils";
 
 export let cachedConfig: Config;
@@ -10,7 +11,7 @@ export let firstLaunch = false;
 async function handleConfigError(e: unknown) {
 	if (e instanceof Error && "code" in e && e.code === "ENOENT") {
 		// Config file does not exist
-		await tryCreateFolder(getGoofCordFolderPath());
+		tryCreateFolder(getGoofCordFolderPath());
 		await setup();
 	} else {
 		console.error("Failed to load the config:", e);
@@ -122,11 +123,8 @@ export function getDefaults(): Config {
 		return defaults;
 	}
 
-	const settingsPath = path.join(__dirname, "/assets/settings.json");
-	const settingsFile = fs.readFileSync(settingsPath, "utf-8");
-	const settings = JSON.parse(settingsFile);
-	for (const category in settings) {
-		const categorySettings = settings[category];
+	for (const category in settingsSchema) {
+		const categorySettings = settingsSchema[category];
 		for (const setting in categorySettings) {
 			defaults[setting] = categorySettings[setting].defaultValue;
 		}

@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer } from "electron";
+import { settingsSchema } from "../settingsSchema.js";
 import { findKeyAtDepth } from "../utils";
-import { type SettingEntry, renderSettings, settings } from "./settingsRenderer";
+import { type SettingEntry, renderSettings } from "./settingsRenderer";
 
 console.log("GoofCord Settings");
 
@@ -29,7 +30,7 @@ async function initializeSettings() {
 		revertButton?.addEventListener("click", () => revertSetting(element));
 		element.addEventListener("change", () => saveSettings(element));
 
-		const settingData = findKeyAtDepth(settings, name, 2);
+		const settingData = findKeyAtDepth(settingsSchema, name, 2);
 		if (settingData?.showAfter) elementsWithShowAfter.push([name, element]);
 		settingsData[name] = settingData;
 	}
@@ -59,16 +60,14 @@ function updateVisibility(changedElementName: string, changedElementValue: unkno
 	for (const [name, element] of elementsWithShowAfter) {
 		const settingData = settingsData[name];
 		if (settingData?.showAfter && settingData.showAfter.key === changedElementName) {
-			const shouldShow = evaluateShowAfter(settingData.showAfter.value, changedElementValue);
+			const shouldShow = evaluateShowAfter(settingData.showAfter.condition, changedElementValue);
 			element.closest("fieldset")?.classList.toggle("hidden", !shouldShow);
 		}
 	}
 }
 
-export function evaluateShowAfter(condition: string, arg: unknown) {
-	// biome-ignore lint/style/noCommaOperator:
-	// biome-ignore lint/security/noGlobalEval:
-	return (0, eval)(`(arg)=>{${condition}}`)(arg);
+export function evaluateShowAfter(condition: (value: unknown) => boolean, value: unknown) {
+	return condition(value);
 }
 
 async function getSettingValue(element: HTMLElement, settingName: string) {

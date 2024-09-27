@@ -1,8 +1,6 @@
 import fs from "fs";
 import path from "path";
-
-const settingsPath = path.join(import.meta.dirname, "assets", "settings.json");
-const dtsPath = path.join(import.meta.dirname, "src", "configTypes.d.ts");
+import {settingsSchema} from "./src/settingsSchema.js";
 
 function generateType(settings) {
     const lines = [];
@@ -48,9 +46,9 @@ function inferType(inputType) {
     }
 }
 
+const dtsPath = path.join(import.meta.dirname, "src", "configTypes.d.ts");
 export async function generateDTSFile() {
-    const settings = JSON.parse(await fs.promises.readFile(settingsPath, "utf-8"));
-    const dtsContent = generateType(settings);
+    const dtsContent = generateType(settingsSchema);
     await fs.promises.writeFile(dtsPath, dtsContent, "utf-8");
     console.log(`Generated settings.d.ts at ${dtsPath}`);
 }

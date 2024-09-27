@@ -1,12 +1,9 @@
-import fs from "node:fs";
-import path from "node:path";
 import { ipcRenderer } from "electron";
 import type { Config, ConfigKey } from "../configTypes";
 import { i } from "../modules/localization";
+import { settingsSchema } from "../settingsSchema.js";
 import { evaluateShowAfter } from "./preload";
 
-const settingsPath = path.join(__dirname, "../", "/assets/settings.json");
-export const settings = JSON.parse(fs.readFileSync(settingsPath, "utf-8"));
 const config = ipcRenderer.sendSync("config:getConfigBulk");
 
 export interface SettingEntry {
@@ -18,7 +15,7 @@ export interface SettingEntry {
 	options?: string[];
 	showAfter?: {
 		key: string;
-		value: string;
+		condition: (value: unknown) => boolean;
 	};
 }
 
@@ -28,7 +25,7 @@ interface ButtonEntry {
 }
 
 export async function renderSettings() {
-	const html = Object.keys(settings).map(makeCategory).join("");
+	const html = Object.keys(settingsSchema).map(makeCategory).join("");
 	const settingsDiv = document.getElementById("settings");
 	if (settingsDiv) settingsDiv.innerHTML = html;
 }
@@ -48,7 +45,7 @@ function makeCategory(name: string) {
 
 function fillCategory(categoryName: string) {
 	buttons = [];
-	return Object.entries(settings[categoryName])
+	return Object.entries(settingsSchema[categoryName])
 		.map(([setting, entry]) => createField(setting, entry as SettingEntry | ButtonEntry))
 		.filter(Boolean) // Removing falsy items
 		.join("");
@@ -73,7 +70,7 @@ function createSetting(setting: string, entry: SettingEntry) {
 			value = value.map((value) => ipcRenderer.sendSync("decryptSafeStorage", value));
 		}
 	}
-	const isHidden = entry.showAfter && !evaluateShowAfter(entry.showAfter.value, config[entry.showAfter.key]);
+	const isHidden = entry.showAfter && !evaluateShowAfter(entry.showAfter.condition, config[entry.showAfter.key]);
 
 	const name = i(`opt-${setting}`);
 	const description = i(`opt-${setting}-desc`);

@@ -34,6 +34,7 @@
   "category-firewall": "Firewall settings",
   "category-other": "Other settings",
   "category-cloud": "Cloud Settings",
+  "opt-locale": "Language",
   "opt-customTitlebar": "Custom titlebar",
   "opt-customTitlebar-desc": "Enables a Discord-like titlebar.",
   "opt-minimizeToTray": "Minimize to tray",
