@@ -1,13 +1,15 @@
 // This is .js so it can be imported by js build scripts. It doesn't really use types anyway
+import fs from "node:fs";
 
 export const settingsSchema = {
 	"General settings": {
-		//locale: {
-		//	name: "Language",
-		//	defaultValue: "en-US",
-		//	inputType: "dropdown",
-		//	options: fs.readdirSync("assets/lang").map((file) => file.replace(".json", "")),
-		//},
+		locale: {
+			name: "Language 🌍",
+			defaultValue: "en-US",
+			description: "This is different from Discord's language.",
+			inputType: "dropdown",
+			options: fs.readdirSync("assets/lang").map((file) => file.replace(".json", "")),
+		},
 		customTitlebar: {
 			name: "Custom titlebar",
 			defaultValue: true,

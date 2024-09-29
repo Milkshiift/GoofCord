@@ -41,7 +41,7 @@ async function handleConfigError(e: unknown) {
 }
 
 export async function loadConfig(): Promise<void> {
-	while (true) {
+	while (!cachedConfig) {
 		try {
 			// I don't know why but specifically in this scenario using fs.promises.readFile is whopping 180 ms compared to ~1 ms using fs.readFileSync
 			// Related? https://github.com/nodejs/performance/issues/151
@@ -57,24 +57,22 @@ export async function loadConfig(): Promise<void> {
 }
 
 // Should be avoided. Use the type safe `getConfig` instead.
-export function getConfigDynamic(toGet: string): unknown {
-	if (process.type !== "browser") return ipcRenderer.sendSync("config:getConfig", toGet);
+export function getConfigDynamic(key: string): unknown {
+	if (process.type !== "browser") {
+		return ipcRenderer.sendSync("config:getConfig", key);
+	}
 
-	const result = cachedConfig[toGet];
+	const result = cachedConfig[key as keyof Config];
 	if (result !== undefined) return result;
-	console.log("Missing config parameter:", toGet);
-	void setConfigDynamic(toGet, getDefaultValue(toGet));
-	return cachedConfig[toGet];
+
+	console.log("Missing config parameter:", key);
+	const defaultValue = getDefaultValue(key);
+	void setConfigDynamic(key, defaultValue);
+	return defaultValue;
 }
 
-export function getConfig<K extends ConfigKey>(toGet: K): Config[K] {
-	if (process.type !== "browser") return ipcRenderer.sendSync("config:getConfig", toGet) as Config[K];
-
-	const result = cachedConfig[toGet];
-	if (result !== undefined) return result;
-	console.log("Missing config parameter:", toGet);
-	void setConfig(toGet, getDefaultValue(toGet));
-	return cachedConfig[toGet] as Config[K];
+export function getConfig<K extends ConfigKey>(key: K): Config[K] {
+	return getConfigDynamic(key) as Config[K];
 }
 
 // Should be avoided. Use the type safe `setConfig` instead.

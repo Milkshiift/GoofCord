@@ -1,18 +1,13 @@
-import { net, app, crashReporter, dialog, session, systemPreferences } from "electron";
+import { app, crashReporter } from "electron";
 import "v8-compile-cache";
 import chalk from "chalk";
-import { firstLaunch, getConfig, loadConfig } from "./config";
-import { registerIpc } from "./ipc";
-import { setMenu } from "./menu";
-import { categorizeAllAssets } from "./modules/assetLoader";
-import { initializeFirewall, unstrictCSP } from "./modules/firewall";
-import { i } from "./modules/localization";
-import { initEncryption } from "./modules/messageEncryption";
-import { checkForUpdate } from "./modules/updateCheck";
-import { createSettingsWindow } from "./settings/main";
-import { createTray } from "./tray";
-import { getCustomIcon, getGoofCordFolderPath, isDev, tryCreateFolder } from "./utils";
-import { createMainWindow } from "./window";
+import { loadConfig } from "./config";
+import { initLocalization } from "./modules/localization";
+import { getGoofCordFolderPath, isDev, tryCreateFolder } from "./utils";
+
+/*
+   ! Do not use getConfig or i (localization) in this file
+ */
 
 setFlags();
 if (isDev()) import("source-map-support/register").catch();
@@ -24,25 +19,10 @@ async function main() {
 
 	tryCreateFolder(getGoofCordFolderPath());
 	await loadConfig();
+	initLocalization();
 
-	const extensions = await import("./modules/mods");
-	void setAutoLaunchState();
-	void setMenu();
-	void createTray();
-	const preReady = Promise.all([registerIpc(), extensions.manageMods().then(() => categorizeAllAssets())]);
-
-	console.time(chalk.green("[Timer]") + " Electron loaded in");
-	await app.whenReady();
-	console.timeEnd(chalk.green("[Timer]") + " Electron loaded in");
-
-	initEncryption();
-	await Promise.all([preReady, waitForInternetConnection(), setPermissions(), unstrictCSP(), initializeFirewall()]);
-	firstLaunch ? await handleFirstLaunch() : await createMainWindow();
-
-	console.timeEnd(chalk.green("[Timer]") + " GoofCord fully loaded in");
-
-	await extensions.updateMods();
-	await checkForUpdate();
+	const loader = await import("./loader");
+	await loader.load();
 }
 
 function setFlags() {
@@ -53,49 +33,6 @@ function setFlags() {
 	app.commandLine.appendSwitch("enable-speech-dispatcher");
 	app.commandLine.appendSwitch("disable-features", disableFeatures.join(","));
 	app.commandLine.appendSwitch("enable-features", enableFeatures.join(","));
-}
-
-async function handleFirstLaunch() {
-	await createSettingsWindow();
-	await dialog.showMessageBox({
-		message: i("welcomeMessage"),
-		type: "info",
-		icon: getCustomIcon(),
-		noLink: false,
-	});
-}
-
-async function setAutoLaunchState() {
-	console.log(`Process execution path: ${process.execPath}`);
-	const { default: AutoLaunch } = await import("auto-launch");
-	const isAUR = process.execPath.endsWith("electron") && !isDev();
-	const gfAutoLaunch = new AutoLaunch({
-		name: "GoofCord",
-		path: isAUR ? "/bin/goofcord" : undefined,
-	});
-
-	getConfig("launchWithOsBoot") ? await gfAutoLaunch.enable() : await gfAutoLaunch.disable();
-}
-
-async function setPermissions() {
-	session.defaultSession.setPermissionRequestHandler(async (_webContents, permission, callback, details) => {
-		if (process.platform === "darwin" && "mediaTypes" in details) {
-			if (details.mediaTypes?.includes("audio")) {
-				callback(await systemPreferences.askForMediaAccess("microphone"));
-			}
-			if (details.mediaTypes?.includes("video")) {
-				callback(await systemPreferences.askForMediaAccess("camera"));
-			}
-		} else if (["media", "notifications", "fullscreen", "clipboard-sanitized-write", "openExternal"].includes(permission)) {
-			callback(true);
-		}
-	});
-}
-
-async function waitForInternetConnection() {
-	while (!net.isOnline()) {
-		await new Promise((resolve) => setTimeout(resolve, 1000));
-	}
 }
 
 main().catch(console.error);

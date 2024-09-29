@@ -1,5 +1,6 @@
 // This file is auto-generated. Any changes will be lost. See genSettingsTypes.mjs script
 export interface Config {
+    "locale": string;
     "customTitlebar": boolean;
     "minimizeToTray": boolean;
     "startMinimized": boolean;
