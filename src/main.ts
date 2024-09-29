@@ -19,7 +19,7 @@ async function main() {
 
 	tryCreateFolder(getGoofCordFolderPath());
 	await loadConfig();
-	initLocalization();
+	await initLocalization();
 
 	const loader = await import("./loader");
 	await loader.load();

@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
-import { ipcMain, ipcRenderer } from "electron";
-import { getConfig } from "../config";
+import { app, ipcMain, ipcRenderer } from "electron";
+import { cachedConfig, setConfig } from "../config";
 
 let localization: object;
 let defaultLang: object;
@@ -13,8 +13,15 @@ if (process.type === "browser") {
 	[localization, defaultLang] = ipcRenderer.sendSync("localization:getObjects");
 }
 
-export function initLocalization() {
-	const lang = getConfig("locale");
+export async function initLocalization() {
+	let lang = cachedConfig.locale;
+	if (!lang) {
+		const possibleLocales = fs.readdirSync("assets/lang").map((file) => file.replace(".json", ""));
+		await app.whenReady();
+		lang = app.getPreferredSystemLanguages()[0];
+		if (!possibleLocales.includes(lang)) lang = "en-US";
+		void setConfig("locale", lang);
+	}
 	localization = JSON.parse(fs.readFileSync(path.join(__dirname, "assets", "lang", lang + ".json"), "utf-8"));
 	defaultLang = JSON.parse(fs.readFileSync(path.join(__dirname, "assets", "lang", "en-US.json"), "utf-8"));
 }
