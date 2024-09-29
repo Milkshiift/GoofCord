@@ -40,7 +40,7 @@
     "category-other": "Інші налаштування",
     "category-cloud": "Хмарне зберігання",
     "opt-customTitlebar": "Особливий рядок заголовка",
-    "opt-customTitlebar-desc": "Робить рядок заголовка схожим на рядок заголовка в офіційному клієнту Discord.",
+    "opt-customTitlebar-desc": "Робить рядок заголовка схожим на рядок заголовка офіційного клієнта Discord.",
     "opt-minimizeToTray": "Мінімізувати у трей",
     "opt-minimizeToTray-desc": "GoofCord буде залишатися відкритим у треї навіть після закриття всіх вікон.",
     "opt-startMinimized-desc": "GoofCord буде запускатися в фоні.",
