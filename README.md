@@ -3,7 +3,10 @@
 <h2>Take control of your Discord experience with GoofCord – the highly configurable and privacy-focused Discord client.<br>Based on <a href="https://github.com/ArmCord/ArmCord">ArmCord</a>.</h2>
 <img src="https://img.shields.io/github/downloads/Milkshiift/GoofCord/total">
 <a href="https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md"><img src="https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg"></a>
-<img src="https://img.shields.io/github/license/Milkshiift/GoofCord"><br>
+<img src="https://img.shields.io/github/license/Milkshiift/GoofCord">
+<a href="https://hosted.weblate.org/engage/goofcord/">
+<img src="https://hosted.weblate.org/widget/goofcord/goofcord/svg-badge.svg" alt="Translation status" />
+</a><br>
 <img src="assetsDev/screenshot1_rounded.png" width="520" alt="Screenshot of GoofCord">
 </div>
 
