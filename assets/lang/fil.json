@@ -88,5 +88,12 @@
     "opt-transparency": "Transparency",
     "opt-transparency-desc": "Ginagawang transparent ang window para magamit kasama sa mga translucent na tema.",
     "opt-button-openGoofCordFolder": "Ibukas ang folder ng GoofCord",
-    "opt-allowedStrings-desc": "Kung ang teksto na nakalagay dito ay nakita sa loob ng URL, hindi siya ipapagbawalan."
+    "opt-allowedStrings-desc": "Kung ang teksto na nakalagay dito ay nakita sa loob ng URL, hindi siya ipapagbawalan.",
+    "screenshare-audio": "Odyo",
+    "screenshare-screenshare": "Ibahagi ang Screen",
+    "screenshare-optimization": "Optimization",
+    "screenshare-optimization-motion": "Galaw",
+    "screenshare-optimization-detail": "Detalye",
+    "screenshare-resolution": "Resolution",
+    "screenshare-framerate": "Framerate"
 }
