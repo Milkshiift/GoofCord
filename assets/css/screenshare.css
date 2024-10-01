@@ -25,7 +25,7 @@ html {
     border-radius: 4px;
     color: #ffffff;
     display: flex;
-    font-family: "Ubuntu", sans-serif;
+    font-family: "InterVariable", sans-serif;
     align-items: center;
     justify-content: center;
     flex-direction: column;
@@ -191,6 +191,8 @@ select {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
+    max-width: 20%;
 }
 
 ::-webkit-scrollbar {
