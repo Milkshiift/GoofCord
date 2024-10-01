@@ -35,7 +35,7 @@
   "category-other": "Other settings",
   "category-cloud": "Cloud Settings",
   "opt-locale": "Language 🌍",
-  "opt-locale-desc": "This is different from Discord's language.",
+  "opt-locale-desc": "This is different from Discord's language. You can translate GoofCord <a target=\"_blank\" href=\"https://hosted.weblate.org/projects/goofcord/goofcord/\">here</a>.",
   "opt-customTitlebar": "Custom titlebar",
   "opt-customTitlebar-desc": "Enables a Discord-like titlebar.",
   "opt-minimizeToTray": "Minimize to tray",

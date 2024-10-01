@@ -6,7 +6,7 @@ export const settingsSchema = {
 		locale: {
 			name: "Language 🌍",
 			defaultValue: "en-US",
-			description: "This is different from Discord's language.",
+			description: 'This is different from Discord\'s language. You can translate GoofCord <a target="_blank" href="https://hosted.weblate.org/projects/goofcord/goofcord/">here</a>.',
 			inputType: "dropdown",
 			options: fs.readdirSync("assets/lang").map((file) => file.replace(".json", "")),
 		},

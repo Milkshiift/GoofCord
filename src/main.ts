@@ -3,7 +3,7 @@ import "v8-compile-cache";
 import chalk from "chalk";
 import { loadConfig } from "./config";
 import { initLocalization } from "./modules/localization";
-import { getGoofCordFolderPath, isDev, tryCreateFolder } from "./utils";
+import { isDev } from "./utils";
 
 /*
    ! Do not use getConfig or i (localization) in this file
@@ -17,7 +17,6 @@ crashReporter.start({ uploadToServer: false });
 async function main() {
 	console.time(chalk.green("[Timer]") + " GoofCord fully loaded in");
 
-	tryCreateFolder(getGoofCordFolderPath());
 	await loadConfig();
 	await initLocalization();
 
