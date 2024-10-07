@@ -3,12 +3,13 @@ import "v8-compile-cache";
 import chalk from "chalk";
 import { loadConfig } from "./config";
 import { initLocalization } from "./modules/localization";
-import { isDev } from "./utils";
+import { getDisplayVersion, isDev } from "./utils";
+
+console.log("GoofCord", getDisplayVersion());
 
 /*
    ! Do not use getConfig or i (localization) in this file
  */
-
 setFlags();
 if (isDev()) import("source-map-support/register").catch();
 if (!app.requestSingleInstanceLock()) app.exit();

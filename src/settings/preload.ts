@@ -1,7 +1,8 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { settingsSchema } from "../settingsSchema.js";
 import { findKeyAtDepth } from "../utils";
 import { type SettingEntry, renderSettings } from "./settingsRenderer";
+
+const settingsSchema = require("../settingsSchema.cjs");
 
 console.log("GoofCord Settings");
 

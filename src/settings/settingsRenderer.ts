@@ -1,9 +1,9 @@
 import { ipcRenderer } from "electron";
 import type { Config, ConfigKey } from "../configTypes";
 import { i } from "../modules/localization";
-import { settingsSchema } from "../settingsSchema.js";
 import { evaluateShowAfter } from "./preload";
 
+const settingsSchema = require("../settingsSchema.cjs");
 const config = ipcRenderer.sendSync("config:getConfigBulk");
 
 export interface SettingEntry {

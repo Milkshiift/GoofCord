@@ -4,7 +4,7 @@
 	"description": "Take control of your Discord experience with GoofCord – the highly configurable and privacy-minded discord client.",
 	"main": "ts-out/main.js",
 	"scripts": {
-		"build": "node build.mjs",
+		"build": "node --experimental-strip-types src/build/build.cts",
 		"start": "pnpm run build --dev && electron ./ts-out/main.js --dev --ozone-platform-hint=auto",
 		"startWithLoginFix": "pnpm run fixLogin && pnpm run build --dev && electron ./ts-out/main.js --dev --ozone-platform-hint=auto",
 		"packageLinux": "pnpm run build && electron-builder --linux",
@@ -23,12 +23,12 @@
 	},
 	"homepage": "https://github.com/Milkshiift/GoofCord",
 	"devDependencies": {
-		"@biomejs/biome": "^1.9.2",
-		"@types/node": "^22.5.5",
+		"@biomejs/biome": "^1.9.3",
+		"@types/node": "^22.7.4",
 		"@types/stegcloak": "^1.0.2",
 		"electron": "^32.1.2",
-		"electron-builder": "^25.0.5",
-		"esbuild": "^0.23.1",
+		"electron-builder": "^25.1.7",
+		"esbuild": "^0.24.0",
 		"source-map-support": "^0.5.21",
 		"typescript": "^5.6.2"
 	},
@@ -55,6 +55,12 @@
 			"package.json",
 			"LICENSE"
 		],
+		"protocols": {
+			"name": "Discord",
+			"schemes": [
+				"discord"
+			]
+		},
 		"linux": {
 			"icon": "build/icon.icns",
 			"category": "Network",
@@ -72,7 +78,15 @@
 			"executableArgs": [
 				"--enable-features=UseOzonePlatform,WaylandWindowDecorations",
 				"--ozone-platform-hint=auto"
-			]
+			],
+			"desktop": {
+				"Name": "GoofCord",
+				"GenericName": "Internet Messenger",
+				"Type": "Application",
+				"Categories": "Network;InstantMessaging;Chat;",
+				"Keywords": "discord;goofcord;electron;chat;",
+				"MimeType": "x-scheme-handler/discord"
+			}
 		},
 		"win": {
 			"icon": "build/icon.ico",

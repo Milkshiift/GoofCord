@@ -2,8 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { app, dialog, ipcRenderer, shell } from "electron";
 import type { Config, ConfigKey } from "./configTypes";
-import { settingsSchema } from "./settingsSchema";
 import { getErrorMessage, getGoofCordFolderPath, tryCreateFolder } from "./utils";
+
+const settingsSchema = require("./settingsSchema.cjs");
 
 export let cachedConfig: Config;
 export let firstLaunch = false;

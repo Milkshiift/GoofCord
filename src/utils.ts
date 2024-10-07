@@ -42,6 +42,11 @@ export function getDisplayVersion() {
 	return packageVersion;
 }
 
+export function getAsset(assetName: string) {
+	if (process.type === "browser") return path.join(__dirname, "/assets/", assetName);
+	return path.join(__dirname, "..", "/assets/", assetName);
+}
+
 export function getCustomIcon() {
 	const customIconPath = getConfig("customIconPath");
 	if (customIconPath !== "") return customIconPath;

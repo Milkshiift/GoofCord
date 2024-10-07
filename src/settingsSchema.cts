@@ -1,14 +1,20 @@
-// This is .js so it can be imported by js build scripts. It doesn't really use types anyway
-import fs from "node:fs";
+// This file is a little weird because it's used by build scripts, you need to require() it, not import
+const fs = require("node:fs");
+const path = require("node:path");
 
-export const settingsSchema = {
+function getAsset(assetName: string) {
+	if (process.type === "browser") return path.join(__dirname, "/assets/", assetName);
+	return path.join(__dirname, "..", "/assets/", assetName);
+}
+
+const settingsSchema = {
 	"General settings": {
 		locale: {
 			name: "Language 🌍",
 			defaultValue: "en-US",
 			description: 'This is different from Discord\'s language. You can translate GoofCord <a target="_blank" href="https://hosted.weblate.org/projects/goofcord/goofcord/">here</a>.',
 			inputType: "dropdown",
-			options: fs.readdirSync("assets/lang").map((file) => file.replace(".json", "")),
+			options: fs.readdirSync(getAsset("lang")).map((file: string) => file.replace(".json", "")),
 		},
 		customTitlebar: {
 			name: "Custom titlebar",
@@ -303,3 +309,5 @@ export const settingsSchema = {
 		},
 	},
 };
+
+module.exports = settingsSchema;
