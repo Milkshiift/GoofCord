@@ -71,7 +71,6 @@ function subscribeToAppEvents() {
 	app.on("activate", () => {
 		mainWindow.show();
 	});
-	async () => app.setAsDefaultProtocolClient("discord");
 }
 
 function setWindowOpenHandler() {

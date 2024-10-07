@@ -11,7 +11,6 @@ const generateDTSFile = require("./genSettingsTypes.cts");
 
 	await generateDTSFile();
 	await genSettingsLangFile();
-	await fixArrpc();
 
 	const NodeCommonOpts = {
 		minify: true,
@@ -43,20 +42,6 @@ const generateDTSFile = require("./genSettingsTypes.cts");
 			}
 		});
 		return result;
-	}
-
-	async function fixArrpc() {
-		const file = await fs.promises.readFile("./node_modules/arrpc/src/process/index.js", { encoding: "utf8" });
-		const modifiedFile = file.replaceAll(
-			`import fs from 'node:fs';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const DetectableDB = JSON.parse(fs.readFileSync(join(__dirname, 'detectable.json'), 'utf8'));`,
-			`import DetectableDB from "./detectable.json" assert { type: "json" };`,
-		);
-		await fs.promises.writeFile("./node_modules/arrpc/src/process/index.js", modifiedFile, { encoding: "utf8" });
 	}
 
 	async function deleteSourceMaps(directoryPath: string) {

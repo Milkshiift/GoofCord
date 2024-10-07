@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       arrpc:
-        specifier: github:OpenAsar/arrpc
-        version: https://codeload.github.com/OpenAsar/arrpc/tar.gz/5aadc307cb9bf4479f0a12364a253b07a77ace22
+        specifier: github:Milkshiift/arrpc
+        version: https://codeload.github.com/Milkshiift/arrpc/tar.gz/85efba94ab93f06bc65d0013adb9c87d5c40aa23
       auto-launch:
         specifier: ^5.0.6
         version: 5.0.6
@@ -457,8 +457,8 @@ packages:
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
 
-  arrpc@https://codeload.github.com/OpenAsar/arrpc/tar.gz/5aadc307cb9bf4479f0a12364a253b07a77ace22:
-    resolution: {tarball: https://codeload.github.com/OpenAsar/arrpc/tar.gz/5aadc307cb9bf4479f0a12364a253b07a77ace22}
+  arrpc@https://codeload.github.com/Milkshiift/arrpc/tar.gz/85efba94ab93f06bc65d0013adb9c87d5c40aa23:
+    resolution: {tarball: https://codeload.github.com/Milkshiift/arrpc/tar.gz/85efba94ab93f06bc65d0013adb9c87d5c40aa23}
     version: 3.5.0
     hasBin: true
 
@@ -2113,7 +2113,7 @@ snapshots:
 
   argparse@2.0.1: {}
 
-  arrpc@https://codeload.github.com/OpenAsar/arrpc/tar.gz/5aadc307cb9bf4479f0a12364a253b07a77ace22:
+  arrpc@https://codeload.github.com/Milkshiift/arrpc/tar.gz/85efba94ab93f06bc65d0013adb9c87d5c40aa23:
     dependencies:
       ws: 8.18.0
     transitivePeerDependencies:
