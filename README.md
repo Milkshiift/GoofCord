@@ -49,11 +49,11 @@ To explore plugins and themes, head over to the Vencord category in the Discord 
 Have fun!
     
 And if you want to compile it yourself, here's how:
-1. Install [Node.js](https://nodejs.dev) and [pnpm](https://pnpm.io/installation#using-npm)
+1. Install [Node.js](https://nodejs.dev) and [Bun](https://bun.sh/package-manager) for package management. You can use any package manager if you really want to, but Bun is recommended.
 2. Grab the source code from the latest release. Getting it from the main branch is not recommended for a stable experience.
 3. Open a command line in the directory of the source code
-4. Install the dependencies with `pnpm install`
-5. Package GoofCord with either `pnpm run packageWindows`, `pnpm run packageLinux` or `pnpm run packageMac`
+4. Install the dependencies with `bun install`
+5. Package GoofCord with either `bun run packageWindows`, `bun run packageLinux` or `bun run packageMac`
 6. Find your freshly compiled app in the `dist` folder.
 
 ## Short FAQ
