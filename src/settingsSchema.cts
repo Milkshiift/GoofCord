@@ -262,9 +262,9 @@ const settingsSchema = {
 			defaultValue: ["720", "30", false, "motion"],
 			outputType: "[number, number, boolean, string]",
 		},
-		"windowState:main": {
-			defaultValue: [true, [0, 0], [835, 600]],
-			outputType: "[boolean, [number, number], [number, number]]",
+		"windowState:main1": {
+			defaultValue: [true, [835, 600]],
+			outputType: "[boolean, [number, number]]",
 		},
 		"button-openGoofCordFolder": {
 			name: "Open GoofCord folder",

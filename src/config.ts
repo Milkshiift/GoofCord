@@ -88,7 +88,7 @@ export async function setConfig<K extends ConfigKey>(entry: K, value: Config[K])
 		}
 		cachedConfig[entry] = value;
 		const toSave = JSON.stringify(cachedConfig, undefined, 2);
-		void fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
+		await fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
 	} catch (e: unknown) {
 		console.error("setConfig function errored:", e);
 		dialog.showErrorBox("GoofCord was unable to save the settings", getErrorMessage(e));

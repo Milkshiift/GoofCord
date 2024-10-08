@@ -2,32 +2,41 @@ import type { BrowserWindow } from "electron";
 import { getConfigDynamic, setConfigDynamic } from "../config";
 
 type NumberPair = [number, number];
-type WindowState = [boolean, NumberPair, NumberPair];
+type WindowState = [boolean, NumberPair];
 
 export function adjustWindow(window: BrowserWindow, configEntry: string) {
 	const previousWindowState = getConfigDynamic(configEntry) as WindowState;
-	const [osMaximized, [x, y], [width, height]] = previousWindowState;
-	window.setPosition(x, y);
+	const [osMaximized, [width, height]] = previousWindowState;
 	window.setSize(width, height);
 	if (osMaximized) window.maximize();
 
-	window.on("close", async (_) => await saveState(window, configEntry));
+	const debouncedSaveState = debounce(async () => await saveState(window, configEntry), 500);
+
+	for (const event of ["resize", "maximize", "unmaximize"]) {
+		// @ts-ignore
+		window.on(event, debouncedSaveState);
+	}
 }
 
 export async function saveState(window: BrowserWindow, configEntry: string) {
 	const previousWindowState = getConfigDynamic(configEntry) as WindowState;
 
 	const isMaximized = window.isMaximized();
-	let position: NumberPair;
 	let size: NumberPair;
 	if (isMaximized) {
-		position = previousWindowState[1];
-		size = previousWindowState[2];
+		size = previousWindowState[1];
 	} else {
-		position = window.getPosition() as NumberPair;
 		size = window.getSize() as NumberPair;
 	}
 
-	const windowState: WindowState = [isMaximized, position, size];
+	const windowState: [boolean, [number, number]] = [isMaximized, size];
 	await setConfigDynamic(configEntry, windowState);
+}
+
+function debounce<T extends (...args: Parameters<T>) => void>(func: T, timeout = 300) {
+	let timer: NodeJS.Timeout;
+	return (...args: Parameters<T>): void => {
+		clearTimeout(timer);
+		timer = setTimeout(() => func(...args), timeout);
+	};
 }

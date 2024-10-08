@@ -30,7 +30,7 @@ export interface Config {
     "autoscroll": boolean;
     "transparency": boolean;
     "screensharePreviousSettings": [number, number, boolean, string];
-    "windowState:main": [boolean, [number, number], [number, number]];
+    "windowState:main1": [boolean, [number, number]];
     "cloudHost": string;
     "cloudToken": string;
     "cloudEncryptionKey": string;

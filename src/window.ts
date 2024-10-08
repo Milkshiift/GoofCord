@@ -34,7 +34,7 @@ export async function createMainWindow() {
 		},
 	});
 
-	adjustWindow(mainWindow, "windowState:main");
+	adjustWindow(mainWindow, "windowState:main1");
 	if (getConfig("startMinimized")) mainWindow.hide();
 	await doAfterDefiningTheWindow();
 }
