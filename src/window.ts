@@ -7,7 +7,7 @@ import { getUserAgent } from "./modules/agent";
 import { initArrpc } from "./modules/arrpc";
 import { adjustWindow } from "./modules/windowStateManager";
 import { registerCustomHandler } from "./screenshare/main";
-import { getCustomIcon } from "./utils";
+import { getAsset, getCustomIcon } from "./utils";
 
 export let mainWindow: BrowserWindow;
 
@@ -99,7 +99,7 @@ function setWindowOpenHandler() {
 }
 
 async function initYoutubeAdblocker() {
-	const adblocker = await fs.readFile(path.join(__dirname, "/assets/adblocker.js"), "utf8");
+	const adblocker = await fs.readFile(getAsset("adblocker.js"), "utf8");
 	mainWindow.webContents.on("frame-created", (_, { frame }) => {
 		frame.once("dom-ready", () => {
 			if (frame.url.includes("youtube.com/embed/") || (frame.url.includes("discordsays") && frame.url.includes("youtube.com"))) {

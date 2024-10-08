@@ -2,7 +2,7 @@ import path from "node:path";
 import { BrowserWindow, ipcMain, shell } from "electron";
 import { clearCache } from "../modules/cacheManager";
 import { i } from "../modules/localization";
-import { getCustomIcon, getDisplayVersion, userDataPath } from "../utils";
+import { getAsset, getCustomIcon, getDisplayVersion, userDataPath } from "../utils";
 import { deleteCloud, loadCloud, saveCloud } from "./cloud/cloud";
 
 export let settingsWindow: BrowserWindow;
@@ -45,7 +45,7 @@ export async function createSettingsWindow() {
 		return { action: "deny" };
 	});
 
-	await settingsWindow.loadURL(`file://${path.join(__dirname, "/assets/html/settings.html")}`);
+	await settingsWindow.loadURL(`file://${getAsset("html/settings.html")}`);
 
 	settingsWindow.on("close", () => {
 		isOpen = false;

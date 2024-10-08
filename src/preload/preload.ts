@@ -1,9 +1,8 @@
 import "./bridge";
 import fs from "node:fs";
-import * as path from "node:path";
 import { ipcRenderer } from "electron";
 import { log } from "../modules/logger";
-import { addScript, addStyle } from "../utils";
+import { addScript, addStyle, getAsset } from "../utils";
 import { addDefaultPlugins } from "./shelter";
 import { injectTitlebar } from "./titlebar";
 
@@ -29,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	// Hide "Download Discord Desktop now!" banner
 	window.localStorage.setItem("hideNag", "true");
 
-	addStyle(await fs.promises.readFile(path.join(__dirname, "../", "/assets/css/discord.css"), "utf8"));
+	addStyle(await fs.promises.readFile(getAsset("css/discord.css"), "utf8"));
 });
 
 function fixScreenShare() {

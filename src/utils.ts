@@ -50,8 +50,8 @@ export function getAsset(assetName: string) {
 export function getCustomIcon() {
 	const customIconPath = getConfig("customIconPath");
 	if (customIconPath !== "") return customIconPath;
-	if (process.platform === "win32") return path.join(__dirname, "/assets/gf_icon.ico");
-	return path.join(__dirname, "/assets/gf_icon.png");
+	if (process.platform === "win32") return getAsset("gf_icon.ico");
+	return getAsset("gf_icon.png");
 }
 
 export function isSemverLower(version1: string, version2: string): boolean {

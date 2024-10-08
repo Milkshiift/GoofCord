@@ -1,6 +1,6 @@
-import path from "node:path";
 import { type NativeImage, app, nativeImage } from "electron";
 import { tray } from "../tray";
+import { getAsset } from "../utils.ts";
 import { mainWindow } from "../window";
 
 const badgeCache = new Map<number, NativeImage>();
@@ -10,7 +10,7 @@ function loadBadge(index: number) {
 	const cached = badgeCache.get(clampedIndex);
 	if (cached) return cached;
 
-	const img = nativeImage.createFromPath(path.join(__dirname, "assets/badges", `${clampedIndex}.png`));
+	const img = nativeImage.createFromPath(getAsset(`badges/${clampedIndex}.png`));
 	badgeCache.set(clampedIndex, img);
 
 	return img;
@@ -43,7 +43,7 @@ function loadTrayImage(index: number) {
 	const cached = trayCache.get(clampedIndex);
 	if (cached) return cached;
 
-	const img = nativeImage.createFromPath(path.join(__dirname, "assets/badges", `tray${clampedIndex}.png`));
+	const img = nativeImage.createFromPath(getAsset(`badges/tray${clampedIndex}.png`));
 	if (process.platform === "darwin") img.resize({ height: 22 });
 
 	trayCache.set(clampedIndex, img);

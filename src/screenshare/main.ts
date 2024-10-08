@@ -1,5 +1,6 @@
 import path from "node:path";
 import { BrowserWindow, desktopCapturer, ipcMain, screen, session } from "electron";
+import { getAsset } from "../utils.ts";
 import { mainWindow } from "../window";
 
 let capturerWindow: BrowserWindow;
@@ -30,7 +31,7 @@ export async function registerCustomHandler() {
 		capturerWindow.center();
 		capturerWindow.maximize();
 
-		await capturerWindow.loadURL(`file://${path.join(__dirname, "/assets/html/picker.html")}`);
+		await capturerWindow.loadURL(`file://${getAsset("html/picker.html")}`);
 		capturerWindow.webContents.send("getSources", sources);
 
 		ipcMain.handleOnce("selectScreenshareSource", async (_event, id, name, audio, contentHint, resolution, framerate) => {
