@@ -1,6 +1,6 @@
 <div align="center">
 <img src="assetsDev/gf_logo_full.png" width="520" alt="GoofCord logo">
-<h2>Take control of your Discord experience with GoofCord – the highly configurable and privacy-focused Discord client.<br>Based on <a href="https://github.com/ArmCord/ArmCord">ArmCord</a>.</h2>
+<h2>Take control of your Discord experience with GoofCord – the highly configurable and privacy-focused Discord client.<br>Based on <a href="https://github.com/Legcord/Legcord">Legcord</a>.</h2>
 <img src="https://img.shields.io/github/downloads/Milkshiift/GoofCord/total">
 <a href="https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md"><img src="https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg"></a>
 <img src="https://img.shields.io/github/license/Milkshiift/GoofCord">
@@ -88,7 +88,7 @@ If GoofCord shows a black screen, also include this flag: `--disable-gpu-sandbox
 ## Credits 🙌
 
 [GoofCord Cloud Server](https://github.com/Wuemeli/goofcord-cloudserver)    
-[ArmCord](https://github.com/ArmCord/ArmCord)  
+[LegCord](https://github.com/Legcord/Legcord)  
 [Discord Sandboxed](https://github.com/khlam/discord-sandboxed)  
 [Vencord](https://github.com/Vendicated/Vencord)     
 [Vesktop](https://github.com/Vencord/Vesktop)    
