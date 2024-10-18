@@ -1,11 +1,11 @@
 // Reference: https://www.typescriptlang.org/tsconfig
 {
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "build/**/*"],
     //"exclude": ["src/**/*.test.ts"],
     "compilerOptions": {
-        "rootDir": "src",
+        "rootDir": "./",
         "outDir": "ts-out",
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
 
         "strict": true,
         "noImplicitAny": false,
@@ -17,7 +17,7 @@
         "allowImportingTsExtensions": true,
         "lib": ["ESNext", "dom", "dom.Iterable"],
 
-        "module": "commonjs",
+        "module": "esnext",
         "removeComments": true,
         "sourceMap": true,
 

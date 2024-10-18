@@ -1,7 +1,7 @@
 import { type NativeImage, app, nativeImage } from "electron";
-import { tray } from "../tray";
+import { tray } from "../tray.ts";
 import { getAsset } from "../utils.ts";
-import { mainWindow } from "../window";
+import { mainWindow } from "../windows/main/main.ts";
 
 const badgeCache = new Map<number, NativeImage>();
 function loadBadge(index: number) {
@@ -16,7 +16,7 @@ function loadBadge(index: number) {
 	return img;
 }
 
-export function setBadgeCount(count: number) {
+export function setBadgeCount<IPCHandle>(count: number) {
 	switch (process.platform) {
 		case "linux":
 			app.setBadgeCount(count);

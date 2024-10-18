@@ -1,10 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
-import { app, dialog, ipcRenderer, shell } from "electron";
-import type { Config, ConfigKey } from "./configTypes";
-import { getErrorMessage, getGoofCordFolderPath, tryCreateFolder } from "./utils";
-
-const settingsSchema = require("./settingsSchema.cjs");
+import { app, dialog, shell } from "electron";
+import type { Config, ConfigKey } from "./configTypes.d.ts";
+import { settingsSchema } from "./settingsSchema.ts";
+import { getErrorMessage, getGoofCordFolderPath, tryCreateFolder } from "./utils.ts";
 
 export let cachedConfig: Config;
 export let firstLaunch = false;
@@ -59,10 +58,6 @@ export async function loadConfig(): Promise<void> {
 
 // Should be avoided. Use the type safe `getConfig` instead.
 export function getConfigDynamic(key: string): unknown {
-	if (process.type !== "browser") {
-		return ipcRenderer.sendSync("config:getConfig", key);
-	}
-
 	const result = cachedConfig[key as keyof Config];
 	if (result !== undefined) return result;
 
@@ -72,8 +67,12 @@ export function getConfigDynamic(key: string): unknown {
 	return defaultValue;
 }
 
-export function getConfig<K extends ConfigKey>(key: K): Config[K] {
+export function getConfig<K extends ConfigKey, IPCOn>(key: K): Config[K] {
 	return getConfigDynamic(key) as Config[K];
+}
+
+export function getConfigBulk<IPCOn>() {
+	return cachedConfig;
 }
 
 // Should be avoided. Use the type safe `setConfig` instead.
@@ -81,11 +80,8 @@ export async function setConfigDynamic(entry: string, value: unknown) {
 	await setConfig(entry as ConfigKey, value as Config[ConfigKey]);
 }
 
-export async function setConfig<K extends ConfigKey>(entry: K, value: Config[K]) {
+export async function setConfig<K extends ConfigKey, IPCHandle>(entry: K, value: Config[K]) {
 	try {
-		if (process.type !== "browser") {
-			await ipcRenderer.invoke("config:setConfig", entry, value);
-		}
 		cachedConfig[entry] = value;
 		const toSave = JSON.stringify(cachedConfig, undefined, 2);
 		await fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
@@ -95,11 +91,8 @@ export async function setConfig<K extends ConfigKey>(entry: K, value: Config[K])
 	}
 }
 
-export async function setConfigBulk(toSet: Config) {
+export async function setConfigBulk<IPCHandle>(toSet: Config) {
 	try {
-		if (process.type !== "browser") {
-			return await ipcRenderer.invoke("config:setConfigBulk", toSet);
-		}
 		cachedConfig = toSet;
 		const toSave = JSON.stringify(toSet, undefined, 2);
 		await fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
@@ -132,7 +125,7 @@ export function getDefaults(): Config {
 	return defaults;
 }
 
-export function getDefaultValue<K extends ConfigKey>(entry: K): Config[K];
+export function getDefaultValue<K extends ConfigKey, IPCOn>(entry: K): Config[K];
 export function getDefaultValue(entry: string): unknown;
 export function getDefaultValue(entry: string): unknown {
 	return getDefaults()[entry];

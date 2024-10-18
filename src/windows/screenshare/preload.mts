@@ -1,6 +1,4 @@
 import { ipcRenderer } from "electron";
-import { getConfig, setConfig } from "../config";
-import { i } from "../modules/localization";
 
 interface IPCSources {
 	id: string;
@@ -41,7 +39,7 @@ async function selectSource(id: string | null, title: string | null) {
 		const framerate = (document.getElementById("framerate-textbox") as HTMLInputElement).value;
 		void ipcRenderer.invoke("flashTitlebar", "#5865F2");
 
-		void setConfig("screensharePreviousSettings", [+resolution, +framerate, audio, contentHint]);
+		void ipcRenderer.invoke("config:setConfig", "screensharePreviousSettings", [+resolution, +framerate, audio, contentHint]);
 
 		void ipcRenderer.invoke("selectScreenshareSource", id, title, audio, contentHint, resolution, framerate);
 	} catch (err) {
@@ -60,12 +58,12 @@ async function addDisplays() {
 			ipcRenderer.invoke("selectScreenshareSource", "window:000000:0", "Close", false, true);
 		});
 
-		const previousSettings = getConfig("screensharePreviousSettings");
+		const previousSettings = ipcRenderer.sendSync("config:getConfig", "screensharePreviousSettings");
 
 		const selectionElem = document.createElement("div");
 		selectionElem.classList.add("desktop-capturer-selection");
 		selectionElem.innerHTML = `
-            <h1 style="margin-bottom: 0">${i("screenshare-screenshare")}</h1>
+            <h1 style="margin-bottom: 0">${ipcRenderer.sendSync("localization:i", "screenshare-screenshare")}</h1>
             <div class="desktop-capturer-selection__scroller">
               <ul class="desktop-capturer-selection__list">
                 ${sources
@@ -77,22 +75,22 @@ async function addDisplays() {
             <div class="checkbox-container">
               <div class="subcontainer">
                 <input id="audio-checkbox" type="checkbox" ${previousSettings[2] ? "checked" : ""} />
-                <label for="audio-checkbox">${i("screenshare-audio")}</label>
+                <label for="audio-checkbox">${ipcRenderer.sendSync("localization:i", "screenshare-audio")}</label>
               </div>
               <div class="subcontainer">
                 <select id="content-hint-select">
-                  <option value="motion" ${previousSettings[3] !== "detail" ? "selected" : ""}>${i("screenshare-optimization-motion")}</option>
-                  <option value="detail" ${previousSettings[3] === "detail" ? "selected" : ""}>${i("screenshare-optimization-detail")}</option>
+                  <option value="motion" ${previousSettings[3] !== "detail" ? "selected" : ""}>${ipcRenderer.sendSync("localization:i", "screenshare-optimization-motion")}</option>
+                  <option value="detail" ${previousSettings[3] === "detail" ? "selected" : ""}>${ipcRenderer.sendSync("localization:i", "screenshare-optimization-detail")}</option>
                 </select>
-                <label for="audio-checkbox">${i("screenshare-optimization")}</label>
+                <label for="audio-checkbox">${ipcRenderer.sendSync("localization:i", "screenshare-optimization")}</label>
               </div>
               <div class="subcontainer">
                 <input id="resolution-textbox" type="text" value="${previousSettings[0]}" />
-                <label for="resolution-textbox">${i("screenshare-resolution")}</label>
+                <label for="resolution-textbox">${ipcRenderer.sendSync("localization:i", "screenshare-resolution")}</label>
               </div>
               <div class="subcontainer">
                 <input id="framerate-textbox" type="text" value="${previousSettings[1]}"/>
-                <label for="framerate-textbox">${i("screenshare-framerate")}</label>
+                <label for="framerate-textbox">${ipcRenderer.sendSync("localization:i", "screenshare-framerate")}</label>
               </div>
             </div>
         `;

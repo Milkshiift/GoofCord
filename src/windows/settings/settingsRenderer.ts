@@ -1,9 +1,8 @@
 import { ipcRenderer } from "electron";
-import type { Config, ConfigKey } from "../configTypes";
-import { i } from "../modules/localization";
-import { evaluateShowAfter } from "./preload";
+import type { Config, ConfigKey } from "../../configTypes.d.ts";
+import { settingsSchema } from "../../settingsSchema.ts";
+import { evaluateShowAfter } from "./preload.mts";
 
-const settingsSchema = require("../settingsSchema.cjs");
 const config = ipcRenderer.sendSync("config:getConfigBulk");
 
 export interface SettingEntry {
@@ -11,6 +10,7 @@ export interface SettingEntry {
 	description: string;
 	inputType: string;
 	defaultValue: Config[ConfigKey];
+	accept?: string;
 	encrypted?: boolean;
 	options?: string[];
 	showAfter?: {
@@ -33,7 +33,7 @@ export async function renderSettings() {
 let buttons: [string, ButtonEntry][] = [];
 function makeCategory(name: string) {
 	return `
-        <h2>${i(`category-${name.toLowerCase().split(" ")[0]}`)}</h2>
+        <h2>${ipcRenderer.sendSync("localization:i", `category-${name.toLowerCase().split(" ")[0]}`)}</h2>
         <form class='settingsContainer'>
             ${fillCategory(name)}
             <div class="buttonContainer"> 
@@ -65,15 +65,15 @@ function createSetting(setting: string, entry: SettingEntry) {
 	let value = config[setting];
 	if (entry.encrypted) {
 		if (typeof value === "string") {
-			value = ipcRenderer.sendSync("decryptSafeStorage", value);
+			value = ipcRenderer.sendSync("utils:decryptSafeStorage", value);
 		} else if (Array.isArray(value)) {
-			value = value.map((value) => ipcRenderer.sendSync("decryptSafeStorage", value));
+			value = value.map((element) => ipcRenderer.sendSync("utils:decryptSafeStorage", element));
 		}
 	}
 	const isHidden = entry.showAfter && !evaluateShowAfter(entry.showAfter.condition, config[entry.showAfter.key]);
 
-	const name = i(`opt-${setting}`);
-	const description = i(`opt-${setting}-desc`);
+	const name = ipcRenderer.sendSync("localization:i", `opt-${setting}`);
+	const description = ipcRenderer.sendSync("localization:i", `opt-${setting}-desc`);
 
 	return `
         <fieldset class="${isHidden ? "hidden" : ""}">
@@ -88,7 +88,7 @@ function createSetting(setting: string, entry: SettingEntry) {
 }
 
 function createButton(setting: string, entry: ButtonEntry) {
-	return `<button onclick="${entry.onClick}">${i(`opt-${setting}`)}</button>`;
+	return `<button onclick="${entry.onClick}">${ipcRenderer.sendSync("localization:i", `opt-${setting}`)}</button>`;
 }
 
 function getInputElement<K extends ConfigKey>(entry: SettingEntry, setting: string, value: K) {

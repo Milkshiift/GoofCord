@@ -1,10 +1,10 @@
-import "./bridge";
+import "./bridge.ts";
 import fs from "node:fs";
 import { ipcRenderer } from "electron";
-import { log } from "../modules/logger";
-import { addScript, addStyle, getAsset } from "../utils";
-import { addDefaultPlugins } from "./shelter";
-import { injectTitlebar } from "./titlebar";
+import { log } from "../../modules/logger.ts";
+import { addDefaultPlugins } from "./shelter.ts";
+import { injectTitlebar } from "./titlebar.ts";
+import { addScript, addStyle } from "../preloadUtils.ts";
 
 function loadAssets() {
 	const assets: Record<string, string[][]> = ipcRenderer.sendSync("getAssets");
@@ -25,14 +25,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 	fixScreenShare();
 	fixNotifications();
 
-	// Hide "Download Discord Desktop now!" banner
-	window.localStorage.setItem("hideNag", "true");
+	window.localStorage.setItem("hideNag", "true"); // Hide "Download Discord Desktop now!" banner
 
-	addStyle(await fs.promises.readFile(getAsset("css/discord.css"), "utf8"));
+	await addStyle(await fs.promises.readFile(ipcRenderer.sendSync("utils:getAsset", "css/discord.css"), "utf8"));
 });
 
 function fixScreenShare() {
-	addScript(`
+	// Content hint setting
+	void addScript(`
         (() => {
         const original = navigator.mediaDevices.getDisplayMedia;
         navigator.mediaDevices.getDisplayMedia = async function (opts) {
@@ -53,7 +53,7 @@ function fixScreenShare() {
 
 function fixNotifications() {
 	// hack to make clicking notifications focus GoofCord
-	addScript(`
+	void addScript(`
         (() => {
         const originalSetter = Object.getOwnPropertyDescriptor(Notification.prototype, "onclick").set;
         Object.defineProperty(Notification.prototype, "onclick", {

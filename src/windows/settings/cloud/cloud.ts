@@ -1,16 +1,17 @@
-import chalk from "chalk";
-import { dialog, safeStorage } from "electron";
-import { cachedConfig, getConfig, setConfigBulk } from "../../config";
-import { encryptionPasswords } from "../../modules/messageEncryption";
-import { decryptString, encryptString } from "./encryption";
-import { deleteToken, getCloudHost, getCloudToken } from "./token";
+import { dialog } from "electron";
+import pc from "picocolors";
+import { cachedConfig, getConfig, setConfigBulk } from "../../../config.ts";
+import { encryptionPasswords } from "../../../modules/messageEncryption.ts";
+import { decryptSafeStorage } from "../../../utils.ts";
+import { decryptString, encryptString } from "./encryption.ts";
+import { deleteToken, getCloudHost, getCloudToken } from "./token.ts";
 
-export const LOG_PREFIX = chalk.cyanBright("[Cloud Settings]");
+export const LOG_PREFIX = pc.cyanBright("[Cloud Settings]");
 export const ENDPOINT_VERSION = "v1/"; // A slash should be at the end
 
 function getEncryptionKey(): string {
 	try {
-		return safeStorage.decryptString(Buffer.from(getConfig("cloudEncryptionKey"), "base64"));
+		return decryptSafeStorage(getConfig("cloudEncryptionKey"));
 	} catch (e) {
 		return "";
 	}

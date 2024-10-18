@@ -1,8 +1,7 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { findKeyAtDepth } from "../utils";
-import { type SettingEntry, renderSettings } from "./settingsRenderer";
-
-const settingsSchema = require("../settingsSchema.cjs");
+import { settingsSchema } from "../../settingsSchema.ts";
+import { renderSettings, type SettingEntry } from "./settingsRenderer.ts";
+import { findKeyAtDepth } from "../preloadUtils.ts";
 
 console.log("GoofCord Settings");
 
@@ -46,9 +45,9 @@ async function saveSettings(changedElement: HTMLElement) {
 	if (settingValue === undefined) return;
 	if (settingData.encrypted) {
 		if (typeof settingValue === "string") {
-			settingValue = ipcRenderer.sendSync("encryptSafeStorage", settingValue);
+			settingValue = ipcRenderer.sendSync("utils:encryptSafeStorage", settingValue);
 		} else if (Array.isArray(settingValue)) {
-			settingValue = settingValue.map((value) => ipcRenderer.sendSync("encryptSafeStorage", value));
+			settingValue = settingValue.map((value) => ipcRenderer.sendSync("utils:encryptSafeStorage", value));
 		}
 	}
 
@@ -76,7 +75,10 @@ async function getSettingValue(element: HTMLElement, settingName: string) {
 		if (element instanceof HTMLInputElement) {
 			if (element.type === "checkbox") return element.checked;
 			if (element.type === "text") return element.value;
-			if (element.type === "file") return element.files?.[0]?.path || "";
+			if (element.type === "file") {
+				console.log(element.files);
+				return element.files?.[0]?.path || "";
+			}
 		} else if (element instanceof HTMLSelectElement) {
 			return element.multiple ? Array.from(element.selectedOptions).map((option) => option.value) : element.value;
 		} else if (element instanceof HTMLTextAreaElement) {

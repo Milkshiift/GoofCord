@@ -1,22 +1,22 @@
 import { app, crashReporter } from "electron";
 import "v8-compile-cache";
-import chalk from "chalk";
-import { loadConfig } from "./config";
-import { initLocalization } from "./modules/localization";
-import { getDisplayVersion, isDev } from "./utils";
+import pc from "picocolors";
+import { loadConfig } from "./config.ts";
+import { initLocalization } from "./modules/localization.ts";
+import { getDisplayVersion, isDev } from "./utils.ts";
 
 console.log("GoofCord", getDisplayVersion());
 
 /*
    ! Do not use getConfig or i (localization) in this file
- */
+*/
 setFlags();
 if (isDev()) import("source-map-support/register").catch();
 if (!app.requestSingleInstanceLock()) app.exit();
 crashReporter.start({ uploadToServer: false });
 
 async function main() {
-	console.time(chalk.green("[Timer]") + " GoofCord fully loaded in");
+	console.time(pc.green("[Timer]") + " GoofCord fully loaded in");
 
 	await loadConfig();
 	await initLocalization();

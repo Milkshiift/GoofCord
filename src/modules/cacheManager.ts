@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { app } from "electron";
-import { mainWindow } from "../window";
+import { mainWindow } from "../windows/main/main.ts";
 
 export async function clearCache() {
 	console.log("Clearing cache");

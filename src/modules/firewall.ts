@@ -1,8 +1,8 @@
-import chalk from "chalk";
-// This file contains everything that uses session.defaultSession.webRequest
 import { session } from "electron";
-import { getConfig, getDefaultValue } from "../config";
-import type { Config, ConfigKey } from "../configTypes";
+// This file contains everything that uses session.defaultSession.webRequest
+import pc from "picocolors";
+import { getConfig, getDefaultValue } from "../config.ts";
+import type { Config, ConfigKey } from "../configTypes.d.ts";
 
 function getConfigOrDefault<K extends ConfigKey>(toGet: K): Config[K] {
 	return getConfig("customFirewallRules") ? getConfig(toGet) : getDefaultValue(toGet);
@@ -47,7 +47,7 @@ export async function initializeFirewall() {
 		callback({ cancel: false });
 	});
 
-	console.log(chalk.red("[Firewall]"), "Firewall initialized");
+	console.log(pc.red("[Firewall]"), "Firewall initialized");
 }
 
 export async function unstrictCSP() {
@@ -64,5 +64,5 @@ export async function unstrictCSP() {
 		}
 		done({ responseHeaders });
 	});
-	console.log(chalk.red("[Firewall]"), "Set up CSP unstricter");
+	console.log(pc.red("[Firewall]"), "Set up CSP unstricter");
 }

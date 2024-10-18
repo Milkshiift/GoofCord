@@ -1,12 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
-import chalk from "chalk";
 import { Notification } from "electron";
-import { getConfig } from "../config";
-import { getErrorMessage } from "../utils";
-import { assetsFolder } from "./assetLoader";
+import pc from "picocolors";
+import { getConfig } from "../config.ts";
+import { getErrorMessage } from "../utils.ts";
+import { assetsFolder } from "./assetLoader.ts";
 
-export const LOG_PREFIX = chalk.yellow("[Mod Loader]");
+export const LOG_PREFIX = pc.yellow("[Mod Loader]");
 
 interface ModBundleUrls {
 	[key: string]: [string | undefined, string | undefined];

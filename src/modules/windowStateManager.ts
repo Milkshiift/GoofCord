@@ -1,5 +1,5 @@
 import type { BrowserWindow } from "electron";
-import { getConfigDynamic, setConfigDynamic } from "../config";
+import { getConfigDynamic, setConfigDynamic } from "../config.ts";
 
 type NumberPair = [number, number];
 type WindowState = [boolean, NumberPair];

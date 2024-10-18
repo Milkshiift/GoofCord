@@ -1,6 +1,9 @@
-const fs = require("node:fs");
-const path = require("node:path");
-const settingsSchema = require("../settingsSchema.cts");
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { settingsSchema } from "../src/settingsSchema.ts";
+
+const dirname = () => path.dirname(fileURLToPath(import.meta.url));
 
 function generateType(settings: object) {
 	const lines: string[] = [];
@@ -46,12 +49,10 @@ function inferType(inputType: string) {
 	}
 }
 
-const dtsPath = path.join(__dirname, "..", "configTypes.d.ts");
+const dtsPath = path.join(dirname(), "..", "src", "configTypes.d.ts");
 
-async function generateDTSFile() {
+export async function generateDTSFile() {
 	const dtsContent = generateType(settingsSchema);
 	await fs.promises.writeFile(dtsPath, dtsContent, "utf-8");
 	console.log(`Generated settings.d.ts at ${dtsPath}`);
 }
-
-module.exports = generateDTSFile;

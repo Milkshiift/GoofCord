@@ -1,9 +1,9 @@
-import { getConfig } from "../config";
-import { addScript } from "../utils";
+import { ipcRenderer } from "electron";
+import { addScript } from "../preloadUtils.ts";
 
 export async function addDefaultPlugins() {
-	if (!getConfig("modNames").includes("shelter") || !getConfig("installDefaultShelterPlugins")) return;
-	addScript(`(async()=>{
+	if (!ipcRenderer.sendSync("config:getConfig", "modNames").includes("shelter") || !ipcRenderer.sendSync("config:getConfig", "installDefaultShelterPlugins")) return;
+	await addScript(`(async()=>{
         while(!window.shelter?.plugins?.addRemotePlugin) await new Promise(resolve => setTimeout(resolve, 500));
         const defaultPlugins = [
             ["https://yellowsink.github.io/shelter-plugins/crisp-img/", true],

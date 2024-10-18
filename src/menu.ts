@@ -1,10 +1,10 @@
 import { BrowserWindow, Menu, app } from "electron";
 import contextMenu from "electron-context-menu";
-import { i } from "./modules/localization";
-import { cycleThroughPasswords } from "./modules/messageEncryption";
-import { saveState } from "./modules/windowStateManager";
-import { createSettingsWindow } from "./settings/main";
-import { mainWindow } from "./window";
+import { i } from "./modules/localization.ts";
+import { cycleThroughPasswords } from "./modules/messageEncryption.ts";
+import { saveState } from "./modules/windowStateManager.ts";
+import { mainWindow } from "./windows/main/main.ts";
+import { createSettingsWindow } from "./windows/settings/main.ts";
 
 export async function setMenu() {
 	void setApplicationMenu();

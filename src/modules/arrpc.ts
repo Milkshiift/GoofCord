@@ -1,5 +1,5 @@
-import { getConfig } from "../config";
-import { mainWindow } from "../window";
+import { getConfig } from "../config.ts";
+import { mainWindow } from "../windows/main/main.ts";
 
 export async function initArrpc() {
 	if (!getConfig("arrpc")) return;

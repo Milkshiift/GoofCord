@@ -1,9 +1,9 @@
-import chalk from "chalk";
-import { dialog, ipcMain, safeStorage } from "electron";
+import { dialog, ipcMain } from "electron";
+import pc from "picocolors";
 import StegCloak from "stegcloak";
-import { getConfig } from "../config";
-import { getErrorMessage } from "../utils";
-import { mainWindow } from "../window";
+import { getConfig } from "../config.ts";
+import { decryptSafeStorage, getErrorMessage } from "../utils.ts";
+import { mainWindow } from "../windows/main/main.ts";
 
 let stegcloak: StegCloak;
 export const encryptionPasswords: string[] = [];
@@ -34,17 +34,13 @@ async function loadPasswords() {
 	try {
 		for (const password of encryptedPasswords) {
 			if (!password) continue;
-			encryptionPasswords.push(await decryptString(password));
+			encryptionPasswords.push(decryptSafeStorage(password));
 		}
 		chosenPassword = encryptionPasswords[0];
-		console.log(chalk.magenta("[Message Encryption]"), "Loaded encryption passwords");
+		console.log(pc.magenta("[Message Encryption]"), "Loaded encryption passwords");
 	} catch (error) {
 		console.error("Failed to load encryption passwords:", error);
 	}
-}
-
-async function decryptString(encryptedString: string): Promise<string> {
-	return safeStorage.decryptString(Buffer.from(encryptedString, "base64"));
 }
 
 async function loadCover() {
@@ -55,7 +51,7 @@ async function loadCover() {
 	}
 }
 
-export function encryptMessage(message: string) {
+export function encryptMessage<IPCOn>(message: string) {
 	try {
 		return stegcloak.hide(`${message}\u200b`, chosenPassword, cover);
 	} catch (e: unknown) {
@@ -65,7 +61,7 @@ export function encryptMessage(message: string) {
 	}
 }
 
-export function decryptMessage(message: string) {
+export function decryptMessage<IPCOn>(message: string) {
 	// A quick way to check if the message was encrypted.
 	// Character \u200c is present in every stegcloaked message
 	try {
@@ -87,12 +83,8 @@ export function decryptMessage(message: string) {
 }
 
 let currentIndex = 0;
-export function cycleThroughPasswords() {
+export function cycleThroughPasswords<IPCHandle>() {
 	currentIndex = (currentIndex + 1) % encryptionPasswords.length;
 	chosenPassword = encryptionPasswords[currentIndex];
 	void mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebarWithText("#f9c23c", "Chosen password: ${chosenPassword.slice(0, 2)}...")`);
 }
-
-ipcMain.handle("messageEncryption:cycleThroughPasswords", () => {
-	cycleThroughPasswords();
-});

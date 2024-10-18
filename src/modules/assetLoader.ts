@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import chalk from "chalk";
 import { ipcMain } from "electron";
-import { getGoofCordFolderPath, readOrCreateFolder } from "../utils";
-import { error } from "./logger";
+import pc from "picocolors";
+import { getGoofCordFolderPath, readOrCreateFolder } from "../utils.ts";
+import { error } from "./logger.ts";
 
 export const enabledAssets: Record<string, string[][]> = {
 	scripts: [],
@@ -30,7 +30,7 @@ async function categorizeAssetsByExtension(extension: string) {
 			categorizedAssets.push([file, content]);
 		}
 
-		console.log(chalk.yellowBright(`[Asset Loader] Categorized files with extension ${extension}`));
+		console.log(pc.yellowBright(`[Asset Loader] Categorized files with extension ${extension}`));
 		return categorizedAssets;
 	} catch (err) {
 		error(`An error occurred while categorizing files with extension ${extension}: ${err}`);

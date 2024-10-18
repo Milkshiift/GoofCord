@@ -1,8 +1,11 @@
-const fs = require("node:fs");
-const path = require("node:path");
-const settingsSchema = require("../settingsSchema.cts");
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { settingsSchema } from "../src/settingsSchema.ts";
 
-async function genSettingsLangFile() {
+const dirname = () => path.dirname(fileURLToPath(import.meta.url));
+
+export async function genSettingsLangFile() {
 	function extractNames(data: object) {
 		const result = {};
 
@@ -23,7 +26,7 @@ async function genSettingsLangFile() {
 
 	const extractedStrings = extractNames(settingsSchema);
 
-	const engLangPath = path.join(__dirname, "..", "..", "assets", "lang", "en-US.json");
+	const engLangPath = path.join(dirname(), "..", "assets", "lang", "en-US.json");
 	const engLang = JSON.parse(await fs.promises.readFile(engLangPath, "utf8"));
 
 	for (const key in extractedStrings) {
@@ -35,5 +38,3 @@ async function genSettingsLangFile() {
 
 	console.log("Updated language file");
 }
-
-module.exports = genSettingsLangFile;

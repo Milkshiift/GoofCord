@@ -1,26 +1,15 @@
 import fs from "node:fs";
 import path from "node:path";
-import { app, ipcRenderer } from "electron";
-import { getConfig } from "./config";
+import { fileURLToPath } from "node:url";
+import { app, safeStorage } from "electron";
+import packageInfo from "../package.json" assert { type: "json" };
+import { getConfig } from "./config.ts";
 
-export const packageVersion = require("../package.json").version;
-export const userDataPath = process.type === "browser" ? app.getPath("userData") : ipcRenderer.sendSync("getUserDataPath");
+export const dirname = () => path.dirname(fileURLToPath(import.meta.url));
+export const packageVersion = packageInfo.version;
+export const userDataPath = app.getPath("userData");
 
-export async function addStyle(styleString: string) {
-	const style = document.createElement("style");
-	style.textContent = styleString;
-	while (document.documentElement === null) await new Promise((resolve) => setTimeout(resolve, 1));
-	document.documentElement.appendChild(style);
-}
-
-export async function addScript(scriptString: string) {
-	const script = document.createElement("script");
-	script.textContent = scriptString;
-	while (document.documentElement === null) await new Promise((resolve) => setTimeout(resolve, 1));
-	document.documentElement.appendChild(script);
-}
-
-export function getVersion() {
+export function getVersion<IPCOn>() {
 	return packageVersion;
 }
 
@@ -32,7 +21,7 @@ export function getGoofCordFolderPath() {
 	return path.join(userDataPath, "/GoofCord/");
 }
 
-export function getDisplayVersion() {
+export function getDisplayVersion<IPCOn>() {
 	if (!(app.getVersion() === packageVersion)) {
 		if (app.getVersion() === process.versions.electron) {
 			return `Dev Build (${packageVersion})`;
@@ -42,9 +31,8 @@ export function getDisplayVersion() {
 	return packageVersion;
 }
 
-export function getAsset(assetName: string) {
-	if (process.type === "browser") return path.join(__dirname, "/assets/", assetName);
-	return path.join(__dirname, "..", "/assets/", assetName);
+export function getAsset<IPCOn>(assetName: string) {
+	return path.join(dirname(), "/assets/", assetName);
 }
 
 export function getCustomIcon() {
@@ -52,25 +40,6 @@ export function getCustomIcon() {
 	if (customIconPath !== "") return customIconPath;
 	if (process.platform === "win32") return getAsset("gf_icon.ico");
 	return getAsset("gf_icon.png");
-}
-
-export function isSemverLower(version1: string, version2: string): boolean {
-	const v1Parts = version1.split(".").map(Number);
-	const v2Parts = version2.split(".").map(Number);
-
-	for (let i = 0; i < v1Parts.length; i++) {
-		const v1Part = v1Parts[i];
-		const v2Part = v2Parts[i];
-
-		if (v1Part < v2Part) {
-			return true;
-		}
-		if (v1Part > v2Part) {
-			return false;
-		}
-	}
-
-	return false;
 }
 
 export async function readOrCreateFolder(path: string) {
@@ -84,7 +53,7 @@ export async function readOrCreateFolder(path: string) {
 
 export function tryCreateFolder(path: string) {
 	try {
-		// Sync mkdir is literally 100 times faster than the promisified version
+		// Synchronous mkdir is literally 100 times faster than the promisified version
 		fs.mkdirSync(path, { recursive: true });
 	} catch (e: unknown) {
 		if (e instanceof Error && "code" in e && e.code !== "EEXIST") {
@@ -121,19 +90,10 @@ export function getErrorMessage(error: unknown): string {
 	return toErrorWithMessage(error).message;
 }
 
-export function findKeyAtDepth(obj: object, targetKey: string, depth: number) {
-	if (depth === 1) {
-		return obj[targetKey] || undefined;
-	}
+export function encryptSafeStorage<IPCOn>(plaintextString: string) {
+	return safeStorage.encryptString(plaintextString).toString("base64");
+}
 
-	for (const key in obj) {
-		if (typeof obj[key] === "object" && obj[key] !== null) {
-			const result = findKeyAtDepth(obj[key], targetKey, depth - 1);
-			if (result !== undefined) {
-				return result;
-			}
-		}
-	}
-
-	return undefined;
+export function decryptSafeStorage<IPCOn>(encryptedBase64: string) {
+	return safeStorage.decryptString(Buffer.from(encryptedBase64, "base64"));
 }

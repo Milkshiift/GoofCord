@@ -1,18 +1,18 @@
 import fs from "node:fs/promises";
 import * as path from "node:path";
-import chalk from "chalk";
-import { BrowserWindow, app, shell } from "electron";
-import { getConfig } from "./config";
-import { getUserAgent } from "./modules/agent";
-import { initArrpc } from "./modules/arrpc";
-import { adjustWindow } from "./modules/windowStateManager";
-import { registerCustomHandler } from "./screenshare/main";
-import { getAsset, getCustomIcon } from "./utils";
+import { BrowserWindow, app, ipcMain, shell } from "electron";
+import pc from "picocolors";
+import { getConfig } from "../../config.ts";
+import { getUserAgent } from "../../modules/agent.ts";
+import { initArrpc } from "../../modules/arrpc.ts";
+import { adjustWindow } from "../../modules/windowStateManager.ts";
+import { dirname, getAsset, getCustomIcon } from "../../utils.ts";
+import { registerCustomHandler } from "../screenshare/main.ts";
 
 export let mainWindow: BrowserWindow;
 
 export async function createMainWindow() {
-	console.log(`${chalk.blue("[Window]")} Opening window...`);
+	console.log(`${pc.blue("[Window]")} Opening window...`);
 	const transparency: boolean = getConfig("transparency");
 	mainWindow = new BrowserWindow({
 		title: "GoofCord",
@@ -26,7 +26,7 @@ export async function createMainWindow() {
 		backgroundMaterial: transparency ? "acrylic" : "none",
 		webPreferences: {
 			sandbox: false,
-			preload: path.join(__dirname, "preload/preload.js"),
+			preload: path.join(dirname(), "windows/main/preload.mjs"),
 			nodeIntegrationInSubFrames: false,
 			enableWebSQL: false,
 			spellcheck: getConfig("spellcheck"),
@@ -40,7 +40,7 @@ export async function createMainWindow() {
 }
 
 async function doAfterDefiningTheWindow() {
-	console.log(`${chalk.blue("[Window]")} Setting up window...`);
+	console.log(`${pc.blue("[Window]")} Setting up window...`);
 
 	// Set the user agent for the web contents based on the Chrome version.
 	mainWindow.webContents.userAgent = getUserAgent(process.versions.chrome);
@@ -55,7 +55,7 @@ async function doAfterDefiningTheWindow() {
 	});
 	subscribeToAppEvents();
 	setWindowOpenHandler();
-	void registerCustomHandler();
+	registerCustomHandler();
 	void initArrpc();
 	void initYoutubeAdblocker();
 }
@@ -70,6 +70,19 @@ function subscribeToAppEvents() {
 	});
 	app.on("activate", () => {
 		mainWindow.show();
+	});
+	ipcMain.handle("window:Maximize", () => mainWindow.maximize());
+	ipcMain.handle("window:IsMaximized", () => mainWindow.isMaximized());
+	ipcMain.handle("window:Minimize", () => mainWindow.minimize());
+	ipcMain.handle("window:Unmaximize", () => mainWindow.unmaximize());
+	ipcMain.handle("window:Show", () => mainWindow.show());
+	ipcMain.handle("window:Hide", () => mainWindow.hide());
+	ipcMain.handle("window:Quit", () => mainWindow.close());
+	ipcMain.handle("flashTitlebar", (_event, color: string) => {
+		void mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebar("${color}")`);
+	});
+	ipcMain.handle("flashTitlebarWithText", (_event, color: string, text: string) => {
+		void mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebarWithText("${color}", "${text}")`);
 	});
 }
 

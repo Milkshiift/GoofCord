@@ -1,7 +1,7 @@
-import { getConfig, setConfig } from "../../config";
-import { mainWindow } from "../../window";
-import { settingsWindow } from "../main";
-import { ENDPOINT_VERSION, LOG_PREFIX, showDialogAndLog } from "./cloud";
+import { getConfig, setConfig } from "../../../config.ts";
+import { mainWindow } from "../../main/main.ts";
+import { settingsWindow } from "../main.ts";
+import { ENDPOINT_VERSION, LOG_PREFIX, showDialogAndLog } from "./cloud.ts";
 
 export async function getCloudToken(): Promise<string> {
 	let cloudToken = getConfig("cloudToken");

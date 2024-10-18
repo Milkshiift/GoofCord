@@ -1,13 +1,14 @@
-// This file is a little weird because it's used by build scripts, you need to require() it, not import
-const fs = require("node:fs");
-const path = require("node:path");
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
+const dirname = () => path.dirname(fileURLToPath(import.meta.url));
 function getAsset(assetName: string) {
-	if (process.type === "browser") return path.join(__dirname, "/assets/", assetName);
-	return path.join(__dirname, "..", "/assets/", assetName);
+	if (process.type === "browser") return path.join(dirname(), "/assets/", assetName);
+	return path.join(dirname(), "..", "/assets/", assetName);
 }
 
-const settingsSchema = {
+export const settingsSchema = {
 	"General settings": {
 		locale: {
 			name: "Language 🌍",
@@ -45,6 +46,7 @@ const settingsSchema = {
 			defaultValue: "",
 			description: "Select an alternative icon for GoofCord to use. Images with transparency are recommended.",
 			inputType: "file",
+			accept: "image/*",
 		},
 		discordUrl: {
 			name: "Discord URL",
@@ -309,5 +311,3 @@ const settingsSchema = {
 		},
 	},
 };
-
-module.exports = settingsSchema;

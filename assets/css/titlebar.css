@@ -5,6 +5,7 @@
 
 .withFrame-haYltI {
     height: var(--height);
+    z-index: 9999;
 }
 
 .titlebar {

@@ -1,34 +1,33 @@
-import chalk from "chalk";
 import { net, app, dialog, session, systemPreferences } from "electron";
-import { firstLaunch, getConfig } from "./config";
-import { registerIpc } from "./ipc";
-import { setMenu } from "./menu";
-import { categorizeAllAssets } from "./modules/assetLoader";
-import { initializeFirewall, unstrictCSP } from "./modules/firewall";
-import { i } from "./modules/localization";
-import { initEncryption } from "./modules/messageEncryption";
-import { manageMods, updateMods } from "./modules/mods";
-import { checkForUpdate } from "./modules/updateCheck";
-import { createSettingsWindow } from "./settings/main";
-import { createTray } from "./tray";
-import { getCustomIcon, isDev } from "./utils";
-import { createMainWindow } from "./window";
+import pc from "picocolors";
+import { firstLaunch, getConfig } from "./config.ts";
+import { setMenu } from "./menu.ts";
+import { categorizeAllAssets } from "./modules/assetLoader.ts";
+import { initializeFirewall, unstrictCSP } from "./modules/firewall.ts";
+import { i } from "./modules/localization.ts";
+import { initEncryption } from "./modules/messageEncryption.ts";
+import { manageMods, updateMods } from "./modules/mods.ts";
+import { checkForUpdate } from "./modules/updateCheck.ts";
+import { createTray } from "./tray.ts";
+import { getCustomIcon, isDev } from "./utils.ts";
+import { createMainWindow } from "./windows/main/main.ts";
+import { createSettingsWindow } from "./windows/settings/main.ts";
 
 export async function load() {
 	void setAutoLaunchState();
 	void setMenu();
 	void createTray();
-	const preReady = Promise.all([registerIpc(), manageMods().then(() => categorizeAllAssets())]);
+	const preReady = Promise.all([import("./ipcGen.ts"), manageMods().then(() => categorizeAllAssets())]);
 
-	console.time(chalk.green("[Timer]") + " Electron loaded in");
+	console.time(pc.green("[Timer]") + " Electron loaded in");
 	await app.whenReady();
-	console.timeEnd(chalk.green("[Timer]") + " Electron loaded in");
+	console.timeEnd(pc.green("[Timer]") + " Electron loaded in");
 
 	initEncryption();
 	await Promise.all([preReady, waitForInternetConnection(), setPermissions(), unstrictCSP(), initializeFirewall()]);
 	firstLaunch ? await handleFirstLaunch() : await createMainWindow();
 
-	console.timeEnd(chalk.green("[Timer]") + " GoofCord fully loaded in");
+	console.timeEnd(pc.green("[Timer]") + " GoofCord fully loaded in");
 
 	await updateMods();
 	await checkForUpdate();
@@ -51,7 +50,6 @@ async function handleFirstLaunch() {
 }
 
 async function setAutoLaunchState() {
-	console.log(`Process execution path: ${process.execPath}`);
 	const { default: AutoLaunch } = await import("auto-launch");
 	const isAUR = process.execPath.endsWith("electron") && !isDev();
 	const gfAutoLaunch = new AutoLaunch({

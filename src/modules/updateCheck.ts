@@ -1,6 +1,6 @@
 import { Notification, shell } from "electron";
-import { getConfig } from "../config";
-import { isSemverLower, packageVersion } from "../utils";
+import { getConfig } from "../config.ts";
+import { getVersion } from "../utils.ts";
 
 async function getLatestVersion(): Promise<string> {
 	try {
@@ -9,14 +9,14 @@ async function getLatestVersion(): Promise<string> {
 		return data.tag_name.replace("v", "");
 	} catch (e) {
 		console.error("Failed to fetch the latest GitHub release information. Possibly API rate limit exceeded or timeout reached");
-		return packageVersion;
+		return getVersion();
 	}
 }
 
 export async function checkForUpdate() {
 	if (!getConfig("updateNotification")) return;
 
-	if (isSemverLower(packageVersion, await getLatestVersion())) {
+	if (isSemverLower(getVersion(), await getLatestVersion())) {
 		const notification = new Notification({
 			title: "A new update is available ✨",
 			body: "Click on the notification to download",
@@ -29,4 +29,23 @@ export async function checkForUpdate() {
 
 		notification.show();
 	}
+}
+
+function isSemverLower(version1: string, version2: string): boolean {
+	const v1Parts = version1.split(".").map(Number);
+	const v2Parts = version2.split(".").map(Number);
+
+	for (let i = 0; i < v1Parts.length; i++) {
+		const v1Part = v1Parts[i];
+		const v2Part = v2Parts[i];
+
+		if (v1Part < v2Part) {
+			return true;
+		}
+		if (v1Part > v2Part) {
+			return false;
+		}
+	}
+
+	return false;
 }
