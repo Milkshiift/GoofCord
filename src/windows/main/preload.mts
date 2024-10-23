@@ -1,23 +1,21 @@
 import "./bridge.ts";
 import fs from "node:fs";
-import { ipcRenderer } from "electron";
+import { ipcRenderer, webFrame } from "electron";
 import { log } from "../../modules/logger.ts";
 import { addDefaultPlugins } from "./shelter.ts";
 import { injectTitlebar } from "./titlebar.ts";
-import { addScript, addStyle } from "../preloadUtils.ts";
 
-function loadAssets() {
-	const assets: Record<string, string[][]> = ipcRenderer.sendSync("getAssets");
-	for (const script of assets.scripts) {
-		void addScript(script[1]).then(() => log(`Loaded script: ${script[0]}`));
-	}
-	for (const style of assets.styles) {
-		void addStyle(style[1]).then(() => log(`Loaded style: ${style[0]}`));
-	}
+console.log("Loading assets...");
+const assets: Record<string, string[][]> = ipcRenderer.sendSync("assetLoader:getAssets");
+for (const script of assets.scripts) {
+	webFrame.executeJavaScript(script[1]).then(() => log(`Loaded script: ${script[0]}`));
 }
-loadAssets();
+for (const style of assets.styles) {
+	webFrame.insertCSS(style[1]);
+	log(`Loaded style: ${style[0]}`);
+}
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
 	if (!document.location.hostname.includes("discord")) return;
 
 	void injectTitlebar();
@@ -27,12 +25,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	window.localStorage.setItem("hideNag", "true"); // Hide "Download Discord Desktop now!" banner
 
-	await addStyle(await fs.promises.readFile(ipcRenderer.sendSync("utils:getAsset", "css/discord.css"), "utf8"));
+	webFrame.insertCSS(fs.readFileSync(ipcRenderer.sendSync("utils:getAsset", "css/discord.css"), "utf8"));
 });
 
 function fixScreenShare() {
 	// Content hint setting
-	void addScript(`
+	void webFrame.executeJavaScript(`
         (() => {
         const original = navigator.mediaDevices.getDisplayMedia;
         navigator.mediaDevices.getDisplayMedia = async function (opts) {
@@ -53,7 +51,7 @@ function fixScreenShare() {
 
 function fixNotifications() {
 	// hack to make clicking notifications focus GoofCord
-	void addScript(`
+	void webFrame.executeJavaScript(`
         (() => {
         const originalSetter = Object.getOwnPropertyDescriptor(Notification.prototype, "onclick").set;
         Object.defineProperty(Notification.prototype, "onclick", {

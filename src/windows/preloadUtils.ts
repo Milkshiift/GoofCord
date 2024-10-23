@@ -1,19 +1,5 @@
 // Utilities specific to preload scripts
 
-export async function addStyle(styleString: string) {
-	const style = document.createElement("style");
-	style.textContent = styleString;
-	while (document.documentElement === null) await new Promise((resolve) => setTimeout(resolve, 1));
-	document.documentElement.appendChild(style);
-}
-
-export async function addScript(scriptString: string) {
-	const script = document.createElement("script");
-	script.textContent = scriptString;
-	while (document.documentElement === null) await new Promise((resolve) => setTimeout(resolve, 1));
-	document.documentElement.appendChild(script);
-}
-
 export function findKeyAtDepth(obj: object, targetKey: string, depth: number) {
 	if (depth === 1) {
 		return obj[targetKey] || undefined;

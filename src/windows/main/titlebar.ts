@@ -1,6 +1,5 @@
 import fs from "node:fs/promises";
-import { ipcRenderer } from "electron";
-import { addStyle } from "../preloadUtils.ts";
+import { ipcRenderer, webFrame } from "electron";
 
 let titlebar: HTMLDivElement;
 function createTitlebar() {
@@ -70,10 +69,10 @@ export async function injectTitlebar() {
 
 	if (!ipcRenderer.sendSync("config:getConfig", "customTitlebar")) {
 		const infoOnlyTitlebarCss = await fs.readFile(ipcRenderer.sendSync("utils:getAsset", "css/infoOnlyTitlebar.css"), "utf8");
-		void addStyle(infoOnlyTitlebarCss);
+		webFrame.insertCSS(infoOnlyTitlebarCss);
 	}
 	const titlebarCss = await fs.readFile(ipcRenderer.sendSync("utils:getAsset", "css/titlebar.css"), "utf8");
-	void addStyle(titlebarCss);
+	webFrame.insertCSS(titlebarCss);
 
 	await attachTitlebarEvents(titlebar);
 }

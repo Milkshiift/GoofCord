@@ -1,6 +1,5 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { ipcMain } from "electron";
 import pc from "picocolors";
 import { getGoofCordFolderPath, readOrCreateFolder } from "../utils.ts";
 import { error } from "./logger.ts";
@@ -10,9 +9,9 @@ export const enabledAssets: Record<string, string[][]> = {
 	styles: [],
 };
 
-ipcMain.on("getAssets", (event) => {
-	event.returnValue = enabledAssets;
-});
+export function getAssets<IPCOn>() {
+	return enabledAssets;
+}
 
 export const assetsFolder = path.join(getGoofCordFolderPath(), "assets/");
 

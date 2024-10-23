@@ -54,5 +54,4 @@ const dtsPath = path.join(dirname(), "..", "src", "configTypes.d.ts");
 export async function generateDTSFile() {
 	const dtsContent = generateType(settingsSchema);
 	await fs.promises.writeFile(dtsPath, dtsContent, "utf-8");
-	console.log(`Generated settings.d.ts at ${dtsPath}`);
 }

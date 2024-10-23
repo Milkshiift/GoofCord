@@ -35,6 +35,4 @@ export async function genSettingsLangFile() {
 	}
 
 	await fs.promises.writeFile(engLangPath, JSON.stringify(engLang, null, 2), "utf8");
-
-	console.log("Updated language file");
 }

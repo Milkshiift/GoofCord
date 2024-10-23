@@ -3,17 +3,21 @@ import path from "node:path";
 import { genIpcHandlers } from "./genIpcHandlers.ts";
 import { genSettingsLangFile } from "./genSettingsLangFile.ts";
 import { generateDTSFile } from "./genSettingsTypes.ts";
+import pc from "picocolors";
 
 const isDev = process.argv.some((arg) => arg === "--dev" || arg === "-d");
 
 await fs.promises.rm("ts-out", { recursive: true, force: true });
 
+console.log("Preprocessing...");
 await generateDTSFile();
 await genSettingsLangFile();
 await genIpcHandlers();
 
-await Bun.build({
-	minify: false,
+console.log("Building...");
+await fs.promises.mkdir("ts-out"); // Bun doesn't create outdir if it doesn't exist for some reason
+const bundleResult = await Bun.build({
+	minify: true,
 	sourcemap: isDev ? "linked" : "external",
 	format: "esm",
 	external: ["electron"],
@@ -23,6 +27,7 @@ await Bun.build({
 	outdir: "ts-out",
 	packages: "bundle",
 });
+if (bundleResult.logs.length) console.log(bundleResult.logs);
 
 if (!isDev) await deleteSourceMaps("./ts-out");
 await renamePreloadFiles("./ts-out");
@@ -70,3 +75,5 @@ async function traverseDirectory(directory: string, fileHandler: (filePath: stri
 		}
 	}
 }
+
+console.log(pc.green("✅ Build completed! 🎉"));
