@@ -8,6 +8,7 @@ import { getDisplayVersion } from "./utils.ts";
 import { getAsset } from "./utils.ts";
 import { encryptSafeStorage } from "./utils.ts";
 import { decryptSafeStorage } from "./utils.ts";
+import { saveFileToGCFolder } from "./utils.ts";
 import { getAssets } from "./modules/assetLoader.ts";
 import { setBadgeCount } from "./modules/dynamicIcon.ts";
 import { i } from "./modules/localization.ts";
@@ -26,6 +27,7 @@ ipcMain.on("utils:getDisplayVersion", (event, ) => { event.returnValue = getDisp
 ipcMain.on("utils:getAsset", (event, assetName) => { event.returnValue = getAsset(assetName); });
 ipcMain.on("utils:encryptSafeStorage", (event, plaintextString) => { event.returnValue = encryptSafeStorage(plaintextString); });
 ipcMain.on("utils:decryptSafeStorage", (event, encryptedBase64) => { event.returnValue = decryptSafeStorage(encryptedBase64); });
+ipcMain.handle("utils:saveFileToGCFolder", async (event, filePath, content) => { return await saveFileToGCFolder(filePath, content); });
 ipcMain.on("assetLoader:getAssets", (event, ) => { event.returnValue = getAssets(); });
 ipcMain.handle("dynamicIcon:setBadgeCount", (event, count) => { return setBadgeCount(count); });
 ipcMain.on("localization:i", (event, key) => { event.returnValue = i(key); });

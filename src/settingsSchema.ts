@@ -1,11 +1,31 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import type { Config, ConfigKey } from "./configTypes";
 
 const dirname = () => path.dirname(fileURLToPath(import.meta.url));
 function getAsset(assetName: string) {
 	if (process.type === "browser") return path.join(dirname(), "/assets/", assetName);
 	return path.join(dirname(), "..", "/assets/", assetName);
+}
+
+export interface SettingEntry {
+	name: ConfigKey;
+	description: string;
+	inputType: string;
+	defaultValue: Config[ConfigKey];
+	accept?: string;
+	encrypted?: boolean;
+	options?: string[];
+	showAfter?: {
+		key: string;
+		condition: (value: unknown) => boolean;
+	};
+}
+
+export interface ButtonEntry {
+	name: string;
+	onClick: string;
 }
 
 export const settingsSchema = {
@@ -71,7 +91,7 @@ export const settingsSchema = {
 			inputType: "textfield",
 			showAfter: {
 				key: "modNames",
-				condition: (value) => {
+				condition: (value: string[]) => {
 					return value.includes("custom");
 				},
 			},
@@ -83,7 +103,7 @@ export const settingsSchema = {
 			inputType: "textfield",
 			showAfter: {
 				key: "modNames",
-				condition: (value) => {
+				condition: (value: string[]) => {
 					return value.includes("custom");
 				},
 			},
@@ -118,7 +138,7 @@ export const settingsSchema = {
 			encrypted: true,
 			showAfter: {
 				key: "messageEncryption",
-				condition: (value) => {
+				condition: (value: boolean) => {
 					return value === true;
 				},
 			},
@@ -130,7 +150,7 @@ export const settingsSchema = {
 			inputType: "textfield",
 			showAfter: {
 				key: "messageEncryption",
-				condition: (value) => {
+				condition: (value: boolean) => {
 					return value === true;
 				},
 			},
@@ -142,7 +162,7 @@ export const settingsSchema = {
 			inputType: "textfield",
 			showAfter: {
 				key: "messageEncryption",
-				condition: (value) => {
+				condition: (value: boolean) => {
 					return value === true;
 				},
 			},
@@ -180,7 +200,7 @@ export const settingsSchema = {
 			inputType: "textarea",
 			showAfter: {
 				key: "customFirewallRules",
-				condition: (value) => {
+				condition: (value: boolean) => {
 					return value === true;
 				},
 			},
@@ -192,7 +212,7 @@ export const settingsSchema = {
 			inputType: "textarea",
 			showAfter: {
 				key: "customFirewallRules",
-				condition: (value) => {
+				condition: (value: boolean) => {
 					return value === true;
 				},
 			},
@@ -204,7 +224,7 @@ export const settingsSchema = {
 			inputType: "textarea",
 			showAfter: {
 				key: "customFirewallRules",
-				condition: (value) => {
+				condition: (value: boolean) => {
 					return value === true;
 				},
 			},

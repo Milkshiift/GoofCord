@@ -75,9 +75,28 @@ async function getSettingValue(element: HTMLElement, settingName: string) {
 		if (element instanceof HTMLInputElement) {
 			if (element.type === "checkbox") return element.checked;
 			if (element.type === "text") return element.value;
+			// Horror
 			if (element.type === "file") {
-				console.log(element.files);
-				return element.files?.[0]?.path || "";
+				const file = element.files![0];
+				if (!file) throw new Error("No file selected");
+
+				return await new Promise((resolve, reject) => {
+					const reader = new FileReader();
+					reader.onload = async (event) => {
+						const fileContent = event.target?.result;
+						if (!fileContent) return reject(new Error("No file content"));
+						if (typeof fileContent === "string") return reject(new Error("File content is a string"));
+
+						try {
+							const result = await ipcRenderer.invoke("utils:saveFileToGCFolder", settingName, Buffer.from(new Uint8Array(fileContent)));
+							resolve(result);
+						} catch (ipcError) {
+							reject(ipcError);
+						}
+					};
+					reader.onerror = (error) => reject(new Error("Error reading file: " + error));
+					reader.readAsArrayBuffer(file);
+				});
 			}
 		} else if (element instanceof HTMLSelectElement) {
 			return element.multiple ? Array.from(element.selectedOptions).map((option) => option.value) : element.value;

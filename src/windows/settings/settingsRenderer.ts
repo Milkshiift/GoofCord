@@ -1,28 +1,9 @@
 import { ipcRenderer } from "electron";
-import type { Config, ConfigKey } from "../../configTypes.d.ts";
-import { settingsSchema } from "../../settingsSchema.ts";
+import type { ConfigKey } from "../../configTypes.d.ts";
+import { type ButtonEntry, type SettingEntry, settingsSchema } from "../../settingsSchema.ts";
 import { evaluateShowAfter } from "./preload.mts";
 
 const config = ipcRenderer.sendSync("config:getConfigBulk");
-
-export interface SettingEntry {
-	name: ConfigKey;
-	description: string;
-	inputType: string;
-	defaultValue: Config[ConfigKey];
-	accept?: string;
-	encrypted?: boolean;
-	options?: string[];
-	showAfter?: {
-		key: string;
-		condition: (value: unknown) => boolean;
-	};
-}
-
-interface ButtonEntry {
-	name: string;
-	onClick: string;
-}
 
 export async function renderSettings() {
 	const html = Object.keys(settingsSchema).map(makeCategory).join("");
@@ -100,12 +81,12 @@ function getInputElement<K extends ConfigKey>(entry: SettingEntry, setting: stri
 		case "textarea":
 			return `<textarea setting-name="${setting}" >${Array.isArray(value) ? value.join(",\n") : value}</textarea>`;
 		case "file":
-			return `<input setting-name="${setting}" id="${setting}" type="file"/>`;
+			return `<input setting-name="${setting}" id="${setting}" accept="${entry.accept}" type="file"/>`;
 		case "dropdown":
 		case "dropdown-multiselect":
 			return `
                 <select setting-name="${setting}" class="left dropdown" id="${setting}" name="${setting}" ${entry.inputType === "dropdown-multiselect" ? "multiple" : ""}>
-                    ${entry.options
+                    ${entry.options // Silly biome formater 🤪
 											?.map(
 												(option) => `
                         <option value="${option}" ${option === value || (Array.isArray(value) && value.includes(option)) ? "selected" : ""}>
