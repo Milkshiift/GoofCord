@@ -1,4 +1,4 @@
-import { app, crashReporter } from "electron";
+import { app } from "electron";
 import "v8-compile-cache";
 import pc from "picocolors";
 import { loadConfig } from "./config.ts";
@@ -13,7 +13,6 @@ console.log("GoofCord", getDisplayVersion());
 setFlags();
 if (isDev()) import("source-map-support/register").catch();
 if (!app.requestSingleInstanceLock()) app.exit();
-crashReporter.start({ uploadToServer: false });
 
 async function main() {
 	console.time(pc.green("[Timer]") + " GoofCord fully loaded in");
