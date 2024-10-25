@@ -1,11 +1,12 @@
 import type { BrowserWindow } from "electron";
-import { getConfigDynamic, setConfigDynamic } from "../config.ts";
+import { getConfig, setConfig } from "../config.ts";
+import type { ConfigKey } from "../configTypes";
 
 type NumberPair = [number, number];
 type WindowState = [boolean, NumberPair];
 
 export function adjustWindow(window: BrowserWindow, configEntry: string) {
-	const previousWindowState = getConfigDynamic(configEntry) as WindowState;
+	const previousWindowState = getConfig(configEntry as ConfigKey) as WindowState;
 	const [osMaximized, [width, height]] = previousWindowState;
 	window.setSize(width, height);
 	if (osMaximized) window.maximize();
@@ -19,7 +20,7 @@ export function adjustWindow(window: BrowserWindow, configEntry: string) {
 }
 
 export async function saveState(window: BrowserWindow, configEntry: string) {
-	const previousWindowState = getConfigDynamic(configEntry) as WindowState;
+	const previousWindowState = getConfig(configEntry as ConfigKey) as WindowState;
 
 	const isMaximized = window.isMaximized();
 	let size: NumberPair;
@@ -30,11 +31,11 @@ export async function saveState(window: BrowserWindow, configEntry: string) {
 	}
 
 	const windowState: [boolean, [number, number]] = [isMaximized, size];
-	await setConfigDynamic(configEntry, windowState);
+	await setConfig(configEntry as ConfigKey, windowState);
 }
 
 function debounce<T extends (...args: Parameters<T>) => void>(func: T, timeout = 300) {
-	let timer: NodeJS.Timeout;
+	let timer: Timer;
 	return (...args: Parameters<T>): void => {
 		clearTimeout(timer);
 		timer = setTimeout(() => func(...args), timeout);

@@ -1,14 +1,15 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { settingsSchema } from "../../settingsSchema.ts";
-import { renderSettings, type SettingEntry } from "./settingsRenderer.ts";
+import { SettingEntry, settingsSchema } from "../../settingsSchema.ts";
+import { renderSettings } from "./settingsRenderer.ts";
 import { findKeyAtDepth } from "../preloadUtils.ts";
+import { ConfigKey, ConfigValue } from "../../configTypes";
 
 console.log("GoofCord Settings");
 
 contextBridge.exposeInMainWorld("settings", {
-	loadCloud: () => ipcRenderer.invoke("loadCloud"),
-	deleteCloud: () => ipcRenderer.invoke("deleteCloud"),
-	saveCloud: () => ipcRenderer.invoke("saveCloud"),
+	loadCloud: () => ipcRenderer.invoke("cloud:loadCloud"),
+	deleteCloud: () => ipcRenderer.invoke("cloud:deleteCloud"),
+	saveCloud: () => ipcRenderer.invoke("cloud:saveCloud"),
 	openFolder: (folder: string) => ipcRenderer.invoke("openFolder", folder),
 	clearCache: () => ipcRenderer.invoke("clearCache"),
 	crash: () => ipcRenderer.invoke("crash"),
@@ -41,15 +42,9 @@ async function saveSettings(changedElement: HTMLElement) {
 	if (!settingName) return;
 
 	const settingData = settingsData[settingName];
-	let settingValue = await getSettingValue(changedElement, settingName);
+	let settingValue = await getSettingValue(changedElement, settingName as ConfigKey);
 	if (settingValue === undefined) return;
-	if (settingData.encrypted) {
-		if (typeof settingValue === "string") {
-			settingValue = ipcRenderer.sendSync("utils:encryptSafeStorage", settingValue);
-		} else if (Array.isArray(settingValue)) {
-			settingValue = settingValue.map((value) => ipcRenderer.sendSync("utils:encryptSafeStorage", value));
-		}
-	}
+	if (settingData.encrypted) settingValue = encryptSetting(settingValue);
 
 	void ipcRenderer.invoke("config:setConfig", settingName, settingValue);
 	updateVisibility(settingName, settingValue);
@@ -70,11 +65,11 @@ export function evaluateShowAfter(condition: (value: unknown) => boolean, value:
 	return condition(value);
 }
 
-async function getSettingValue(element: HTMLElement, settingName: string) {
+async function getSettingValue<K extends ConfigKey>(element: HTMLElement, settingName: K): Promise<ConfigValue<K> | undefined> {
 	try {
 		if (element instanceof HTMLInputElement) {
-			if (element.type === "checkbox") return element.checked;
-			if (element.type === "text") return element.value;
+			if (element.type === "checkbox") return element.checked as ConfigValue<K>;
+			if (element.type === "text") return element.value as ConfigValue<K>;
 			// Horror
 			if (element.type === "file") {
 				const file = element.files![0];
@@ -89,7 +84,7 @@ async function getSettingValue(element: HTMLElement, settingName: string) {
 
 						try {
 							const result = await ipcRenderer.invoke("utils:saveFileToGCFolder", settingName, Buffer.from(new Uint8Array(fileContent)));
-							resolve(result);
+							resolve(result as ConfigValue<K>);
 						} catch (ipcError) {
 							reject(ipcError);
 						}
@@ -99,9 +94,9 @@ async function getSettingValue(element: HTMLElement, settingName: string) {
 				});
 			}
 		} else if (element instanceof HTMLSelectElement) {
-			return element.multiple ? Array.from(element.selectedOptions).map((option) => option.value) : element.value;
+			return (element.multiple ? Array.from(element.selectedOptions).map((option) => option.value) : element.value) as ConfigValue<K>;
 		} else if (element instanceof HTMLTextAreaElement) {
-			return createArrayFromTextarea(element.value);
+			return createArrayFromTextarea(element.value) as ConfigValue<K>;
 		}
 		throw new Error(`Unsupported element type for: ${settingName}`);
 	} catch (error) {
@@ -136,6 +131,22 @@ function createArrayFromTextarea(input: string): string[] {
 		.split(/[\r\n,]+/)
 		.map((item) => item.trim())
 		.filter(Boolean);
+}
+
+export function encryptSetting(settingValue: ConfigValue<ConfigKey>) {
+	if (typeof settingValue === "string") {
+		return ipcRenderer.sendSync("utils:encryptSafeStorage", settingValue);
+	} else if (Array.isArray(settingValue)) {
+		return settingValue.map((value: unknown) => ipcRenderer.sendSync("utils:encryptSafeStorage", value));
+	}
+}
+
+export function decryptSetting(settingValue: ConfigValue<ConfigKey>) {
+	if (typeof settingValue === "string") {
+		return ipcRenderer.sendSync("utils:decryptSafeStorage", settingValue);
+	} else if (Array.isArray(settingValue)) {
+		return settingValue.map((value: unknown) => ipcRenderer.sendSync("utils:decryptSafeStorage", value));
+	}
 }
 
 initializeSettings().catch(console.error);

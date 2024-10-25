@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Config, ConfigKey } from "./configTypes";
+import type { ConfigKey, ConfigValue } from "./configTypes";
 
 const dirname = () => path.dirname(fileURLToPath(import.meta.url));
 function getAsset(assetName: string) {
@@ -13,7 +13,7 @@ export interface SettingEntry {
 	name: ConfigKey;
 	description: string;
 	inputType: string;
-	defaultValue: Config[ConfigKey];
+	defaultValue: ConfigValue<ConfigKey>;
 	accept?: string;
 	encrypted?: boolean;
 	options?: string[];

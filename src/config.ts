@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { app, dialog, shell } from "electron";
-import type { Config, ConfigKey } from "./configTypes.d.ts";
+import type { Config, ConfigKey, ConfigValue } from "./configTypes.d.ts";
 import { settingsSchema } from "./settingsSchema.ts";
 import { getErrorMessage, getGoofCordFolderPath, tryCreateFolder } from "./utils.ts";
 
@@ -46,8 +46,8 @@ export async function loadConfig(): Promise<void> {
 			// I don't know why but specifically in this scenario using fs.promises.readFile is whopping 180 ms compared to ~1 ms using fs.readFileSync
 			// Related? https://github.com/nodejs/performance/issues/151
 			const rawData = fs.readFileSync(getConfigLocation(), "utf-8");
-			// Read config *can* be of type other than "Config" if the user modifies it but that doesn't concern us :3
-			cachedConfig = JSON.parse(rawData);
+
+			cachedConfig = new Map(Object.entries(JSON.parse(rawData))) as Config;
 			return; // Success, exit the function
 		} catch (e: unknown) {
 			const shouldExit = await handleConfigError(e);
@@ -56,34 +56,24 @@ export async function loadConfig(): Promise<void> {
 	}
 }
 
-// Should be avoided. Use the type safe `getConfig` instead.
-export function getConfigDynamic(key: string): unknown {
-	const result = cachedConfig[key as keyof Config];
-	if (result !== undefined) return result;
+export function getConfig<K extends ConfigKey, IPCOn>(key: K, bypassDefault = false): ConfigValue<K> {
+	const value = cachedConfig.get(key as ConfigKey);
+	if (value !== undefined || bypassDefault) return value as ConfigValue<K>;
 
 	console.log("Missing config parameter:", key);
 	const defaultValue = getDefaultValue(key);
-	void setConfigDynamic(key, defaultValue);
+	void setConfig(key, defaultValue);
 	return defaultValue;
-}
-
-export function getConfig<K extends ConfigKey, IPCOn>(key: K): Config[K] {
-	return getConfigDynamic(key) as Config[K];
 }
 
 export function getConfigBulk<IPCOn>() {
 	return cachedConfig;
 }
 
-// Should be avoided. Use the type safe `setConfig` instead.
-export async function setConfigDynamic(entry: string, value: unknown) {
-	await setConfig(entry as ConfigKey, value as Config[ConfigKey]);
-}
-
-export async function setConfig<K extends ConfigKey, IPCHandle>(entry: K, value: Config[K]) {
+export async function setConfig<K extends ConfigKey, IPCHandle>(entry: K, value: ConfigValue<K>) {
 	try {
-		cachedConfig[entry] = value;
-		const toSave = JSON.stringify(cachedConfig, undefined, 2);
+		cachedConfig.set(entry, value);
+		const toSave = JSON.stringify(Object.fromEntries(cachedConfig), undefined, 2);
 		await fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
 	} catch (e: unknown) {
 		console.error("setConfig function errored:", e);
@@ -94,7 +84,7 @@ export async function setConfig<K extends ConfigKey, IPCHandle>(entry: K, value:
 export async function setConfigBulk<IPCHandle>(toSet: Config) {
 	try {
 		cachedConfig = toSet;
-		const toSave = JSON.stringify(toSet, undefined, 2);
+		const toSave = JSON.stringify(Object.fromEntries(cachedConfig), undefined, 2);
 		await fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
 	} catch (e: unknown) {
 		console.error("setConfigBulk function errored:", e);
@@ -108,27 +98,24 @@ export async function setup() {
 	await setConfigBulk(getDefaults());
 }
 
-const defaults: Config = {} as Config;
+const defaults: Config = new Map();
 export function getDefaults(): Config {
-	// Caching
-	if (Object.keys(defaults).length !== 0) {
-		return defaults;
-	}
+	if (defaults.size > 0) return defaults; // Caching
 
 	for (const category in settingsSchema) {
 		const categorySettings = settingsSchema[category];
 		for (const setting in categorySettings) {
-			defaults[setting] = categorySettings[setting].defaultValue;
+			defaults.set(setting as ConfigKey, categorySettings[setting].defaultValue);
 		}
 	}
 
 	return defaults;
 }
 
-export function getDefaultValue<K extends ConfigKey, IPCOn>(entry: K): Config[K];
+export function getDefaultValue<K extends ConfigKey, IPCOn>(entry: K): ConfigValue<K>;
 export function getDefaultValue(entry: string): unknown;
 export function getDefaultValue(entry: string): unknown {
-	return getDefaults()[entry];
+	return getDefaults().get(entry as ConfigKey);
 }
 
 export function getConfigLocation(): string {

@@ -8,8 +8,33 @@ const dirname = () => path.dirname(fileURLToPath(import.meta.url));
 function generateType(settings: object) {
 	const lines: string[] = [];
 	lines.push("// This file is auto-generated. Any changes will be lost. See genSettingsTypes.mjs script");
-	lines.push("export interface Config {");
 
+	// Generate the value types for the Map
+	const valueTypes: string[] = [];
+
+	for (const category in settings) {
+		const categorySettings = settings[category];
+
+		for (const settingKey in categorySettings) {
+			if (settingKey.startsWith("button-")) continue;
+
+			const setting = categorySettings[settingKey];
+			let type: string;
+			if (setting.outputType) {
+				type = setting.outputType;
+			} else {
+				type = inferType(setting.inputType);
+			}
+			valueTypes.push(`"${settingKey}"`);
+		}
+	}
+
+	// Generate the Config type as a Map
+	lines.push(`export type ConfigKey = ${valueTypes.join(" | ")};`);
+	lines.push("");
+	lines.push("export type ConfigValue<K extends ConfigKey> = K extends keyof {");
+
+	// Generate the value type mappings
 	for (const category in settings) {
 		const categorySettings = settings[category];
 
@@ -27,8 +52,29 @@ function generateType(settings: object) {
 		}
 	}
 
-	lines.push("}");
-	lines.push("\nexport type ConfigKey = keyof Config;");
+	lines.push("} ? {");
+
+	// Repeat the mappings for the conditional type
+	for (const category in settings) {
+		const categorySettings = settings[category];
+
+		for (const settingKey in categorySettings) {
+			if (settingKey.startsWith("button-")) continue;
+
+			const setting = categorySettings[settingKey];
+			let type: string;
+			if (setting.outputType) {
+				type = setting.outputType;
+			} else {
+				type = inferType(setting.inputType);
+			}
+			lines.push(`    "${settingKey}": ${type};`);
+		}
+	}
+	lines.push(`}[K] : never;`);
+
+	// Define the Config type as a Map
+	lines.push("\nexport type Config = Map<ConfigKey, ConfigValue<ConfigKey>>;");
 
 	return lines.join("\n");
 }

@@ -3,7 +3,7 @@ import "v8-compile-cache";
 import pc from "picocolors";
 import { loadConfig } from "./config.ts";
 import { initLocalization } from "./modules/localization.ts";
-import { getDisplayVersion, isDev } from "./utils.ts";
+import { getDisplayVersion } from "./utils.ts";
 
 console.log("GoofCord", getDisplayVersion());
 
@@ -11,7 +11,6 @@ console.log("GoofCord", getDisplayVersion());
    ! Do not use getConfig or i (localization) in this file
 */
 setFlags();
-if (isDev()) import("source-map-support/register").catch();
 if (!app.requestSingleInstanceLock()) app.exit();
 
 async function main() {

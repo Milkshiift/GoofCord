@@ -1,6 +1,7 @@
 import { dialog } from "electron";
 import pc from "picocolors";
 import { cachedConfig, getConfig, setConfigBulk } from "../../../config.ts";
+import type { ConfigKey, ConfigValue } from "../../../configTypes";
 import { encryptionPasswords } from "../../../modules/messageEncryption.ts";
 import { decryptSafeStorage } from "../../../utils.ts";
 import { decryptString, encryptString } from "./encryption.ts";
@@ -17,7 +18,7 @@ function getEncryptionKey(): string {
 	}
 }
 
-export async function loadCloud() {
+export async function loadCloud<IPCHandle>() {
 	const response = await callEndpoint("load", "GET");
 	if (!response?.settings || response.settings.length < 50) {
 		await showDialogAndLog("info", "Cloud Settings", "Nothing to load");
@@ -28,24 +29,26 @@ export async function loadCloud() {
 	if (!cloudSettings) return;
 	console.log(LOG_PREFIX, "Loading cloud settings:", cloudSettings);
 
-	const configToSet = { ...cachedConfig };
+	const configToSet = new Map(cachedConfig);
 	for (const [key, value] of Object.entries(cloudSettings)) {
-		configToSet[key] = value;
+		configToSet.set(key as ConfigKey, value as ConfigValue<ConfigKey>);
 	}
 	await setConfigBulk(configToSet);
 	await showDialogAndLog("info", "Settings loaded", "Settings loaded from cloud successfully. Please restart GoofCord to apply the changes.");
 }
 
-export async function saveCloud() {
+export async function saveCloud<IPCHandle>() {
 	const excludedOptions = ["cloudEncryptionKey", "cloudHost", "cloudToken"];
-	const configToSave = { ...cachedConfig };
+	const configToSave = new Map(cachedConfig);
 	if (getEncryptionKey()) {
-		configToSave.encryptionPasswords = encryptionPasswords;
+		configToSave.set("encryptionPasswords", encryptionPasswords);
 	} else {
 		excludedOptions.push("encryptionPasswords");
 	}
 
-	const settings = Object.fromEntries(Object.entries(configToSave).filter(([key]) => !excludedOptions.includes(key)));
+	const settings = Object.fromEntries(
+		[...configToSave].filter(([key]) => !excludedOptions.includes(key)), // Removing excluded options
+	);
 	const encryptedSettings = await encryptString(JSON.stringify(settings), getEncryptionKey());
 	if (!encryptedSettings) return;
 
@@ -54,7 +57,7 @@ export async function saveCloud() {
 	await showDialogAndLog("info", "Settings saved", "Settings saved successfully on cloud.");
 }
 
-export async function deleteCloud() {
+export async function deleteCloud<IPCHandle>() {
 	const response = await callEndpoint("delete", "GET");
 	if (!response) return;
 	await deleteToken();

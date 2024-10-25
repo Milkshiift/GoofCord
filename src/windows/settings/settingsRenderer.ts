@@ -1,9 +1,7 @@
 import { ipcRenderer } from "electron";
-import type { ConfigKey } from "../../configTypes.d.ts";
+import type { ConfigKey, ConfigValue } from "../../configTypes.d.ts";
 import { type ButtonEntry, type SettingEntry, settingsSchema } from "../../settingsSchema.ts";
-import { evaluateShowAfter } from "./preload.mts";
-
-const config = ipcRenderer.sendSync("config:getConfigBulk");
+import { decryptSetting, evaluateShowAfter } from "./preload.mts";
 
 export async function renderSettings() {
 	const html = Object.keys(settingsSchema).map(makeCategory).join("");
@@ -27,12 +25,12 @@ function makeCategory(name: string) {
 function fillCategory(categoryName: string) {
 	buttons = [];
 	return Object.entries(settingsSchema[categoryName])
-		.map(([setting, entry]) => createField(setting, entry as SettingEntry | ButtonEntry))
+		.map(([setting, entry]) => createField(setting as ConfigKey, entry as SettingEntry | ButtonEntry))
 		.filter(Boolean) // Removing falsy items
 		.join("");
 }
 
-function createField(setting: string, entry: SettingEntry | ButtonEntry) {
+function createField(setting: ConfigKey, entry: SettingEntry | ButtonEntry) {
 	if (setting.startsWith("button-")) {
 		buttons.push([setting, entry as ButtonEntry]);
 		return null;
@@ -40,18 +38,13 @@ function createField(setting: string, entry: SettingEntry | ButtonEntry) {
 	return createSetting(setting, entry as SettingEntry);
 }
 
-function createSetting(setting: string, entry: SettingEntry) {
+function createSetting(setting: ConfigKey, entry: SettingEntry) {
 	if (!entry.name) return "";
 
-	let value = config[setting];
-	if (entry.encrypted) {
-		if (typeof value === "string") {
-			value = ipcRenderer.sendSync("utils:decryptSafeStorage", value);
-		} else if (Array.isArray(value)) {
-			value = value.map((element) => ipcRenderer.sendSync("utils:decryptSafeStorage", element));
-		}
-	}
-	const isHidden = entry.showAfter && !evaluateShowAfter(entry.showAfter.condition, config[entry.showAfter.key]);
+	let value = ipcRenderer.sendSync("config:getConfig", setting) as ConfigValue<ConfigKey>;
+	if (entry.encrypted) value = decryptSetting(value);
+
+	const isHidden = entry.showAfter && !evaluateShowAfter(entry.showAfter.condition, ipcRenderer.sendSync("config:getConfig", entry.showAfter.key as ConfigKey));
 
 	const name = ipcRenderer.sendSync("localization:i", `opt-${setting}`);
 	const description = ipcRenderer.sendSync("localization:i", `opt-${setting}-desc`);
@@ -72,7 +65,7 @@ function createButton(setting: string, entry: ButtonEntry) {
 	return `<button onclick="${entry.onClick}">${ipcRenderer.sendSync("localization:i", `opt-${setting}`)}</button>`;
 }
 
-function getInputElement<K extends ConfigKey>(entry: SettingEntry, setting: string, value: K) {
+function getInputElement(entry: SettingEntry, setting: ConfigKey, value: ConfigValue<ConfigKey>) {
 	switch (entry.inputType) {
 		case "checkbox":
 			return `<input setting-name="${setting}" id="${setting}" type="checkbox" ${value ? "checked" : ""}/>`;
@@ -84,12 +77,16 @@ function getInputElement<K extends ConfigKey>(entry: SettingEntry, setting: stri
 			return `<input setting-name="${setting}" id="${setting}" accept="${entry.accept}" type="file"/>`;
 		case "dropdown":
 		case "dropdown-multiselect":
+			// If this looks weird it's a silly biome formater moment
 			return `
                 <select setting-name="${setting}" class="left dropdown" id="${setting}" name="${setting}" ${entry.inputType === "dropdown-multiselect" ? "multiple" : ""}>
-                    ${entry.options // Silly biome formater 🤪
+                    ${entry.options
 											?.map(
 												(option) => `
-                        <option value="${option}" ${option === value || (Array.isArray(value) && value.includes(option)) ? "selected" : ""}>
+                        <option value="${option}" ${
+													// @ts-ignore
+													option === value || (Array.isArray(value) && value.includes(option)) ? "selected" : ""
+												}>
                             ${option}
                         </option>
                     `,

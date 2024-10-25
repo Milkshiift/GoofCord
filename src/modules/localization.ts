@@ -1,13 +1,13 @@
 import fs from "node:fs";
 import { app } from "electron";
-import { cachedConfig, setConfig } from "../config.ts";
+import { getConfig, setConfig } from "../config.ts";
 import { getAsset } from "../utils.ts";
 
 let localization: object;
 let defaultLang: object;
 
 export async function initLocalization() {
-	let lang = cachedConfig.locale;
+	let lang = getConfig("locale", true);
 	if (!lang) {
 		const possibleLocales = fs.readdirSync(getAsset("lang")).map((file) => file.replace(".json", ""));
 		await app.whenReady();

@@ -15,10 +15,10 @@ await genSettingsLangFile();
 await genIpcHandlers();
 
 console.log("Building...");
-await fs.promises.mkdir("ts-out"); // Bun doesn't create outdir if it doesn't exist for some reason
+await fs.promises.mkdir("ts-out");
 const bundleResult = await Bun.build({
 	minify: true,
-	sourcemap: isDev ? "linked" : "external",
+	sourcemap: isDev ? "inline" : "none",
 	format: "esm",
 	external: ["electron"],
 	target: "node",
@@ -29,9 +29,7 @@ const bundleResult = await Bun.build({
 });
 if (bundleResult.logs.length) console.log(bundleResult.logs);
 
-if (!isDev) await deleteSourceMaps("./ts-out");
 await renamePreloadFiles("./ts-out");
-
 await fs.promises.cp("./assets/", "./ts-out/assets", { recursive: true });
 
 async function searchPreloadFiles(directory: string, result: string[] = []) {

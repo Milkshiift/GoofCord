@@ -5,8 +5,8 @@
   "main": "ts-out/main.js",
   "scripts": {
     "build": "bun build/build.ts",
-    "start": "bun run build --dev && electron ./ts-out/main.js --dev --ozone-platform-hint=auto",
-    "startWithLoginFix": "bun run fixLogin && pnpm run build --dev && electron ./ts-out/main.js --dev --ozone-platform-hint=auto",
+    "start": "bun run build --dev && electron ./ts-out/main.js --dev --enable-source-maps --ozone-platform-hint=auto",
+    "startWithLoginFix": "bun run fixLogin && bun run start",
     "packageLinux": "bun run build && electron-builder --linux",
     "packageWindows": "bun run build && electron-builder --win",
     "packageMac": "bun run build && electron-builder --mac",
@@ -23,15 +23,14 @@
   },
   "homepage": "https://github.com/Milkshiift/GoofCord",
   "devDependencies": {
-    "@types/bun": "^1.1.12",
-    "@types/node": "^22.7.9",
-    "@types/stegcloak": "^1.0.2",
     "@biomejs/biome": "^1.9.4",
+    "@types/bun": "^1.1.12",
+    "@types/node": "^22.8.0",
+    "@types/stegcloak": "^1.0.2",
     "electron": "^33.0.2",
     "electron-builder": "^25.1.8",
-    "source-map-support": "^0.5.21",
-    "typescript": "^5.6.3",
-    "ts-morph": "^24.0.0"
+    "ts-morph": "^24.0.0",
+    "typescript": "^5.6.3"
   },
   "dependencies": {
     "arrpc": "github:Milkshiift/arrpc",
