@@ -32,19 +32,35 @@ export async function checkForUpdate() {
 }
 
 function isSemverLower(version1: string, version2: string): boolean {
-	const v1Parts = version1.split(".").map(Number);
-	const v2Parts = version2.split(".").map(Number);
+	const parseVersion = (version: string) => {
+		const [main, preRelease] = version.split("-");
+		const mainParts = main.split(".").map(Number);
+		const preReleaseParts = preRelease ? preRelease.split(".").map((p) => (Number.isNaN(Number(p)) ? p : Number(p))) : [];
 
-	for (let i = 0; i < v1Parts.length; i++) {
-		const v1Part = v1Parts[i];
-		const v2Part = v2Parts[i];
+		return { mainParts, preReleaseParts };
+	};
 
-		if (v1Part < v2Part) {
-			return true;
-		}
-		if (v1Part > v2Part) {
-			return false;
-		}
+	const compareParts = (part1: string | number, part2: string | number) => {
+		if (typeof part1 === "number" && typeof part2 === "number") return part1 - part2;
+		if (typeof part1 === "number") return -1;
+		if (typeof part2 === "number") return 1;
+		return part1.localeCompare(part2);
+	};
+
+	const { mainParts: v1Main, preReleaseParts: v1Pre } = parseVersion(version1);
+	const { mainParts: v2Main, preReleaseParts: v2Pre } = parseVersion(version2);
+
+	for (let i = 0; i < Math.max(v1Main.length, v2Main.length); i++) {
+		const cmp = (v1Main[i] || 0) - (v2Main[i] || 0);
+		if (cmp !== 0) return cmp < 0;
+	}
+
+	if (v1Pre.length === 0 && v2Pre.length > 0) return false;
+	if (v1Pre.length > 0 && v2Pre.length === 0) return true;
+
+	for (let i = 0; i < Math.max(v1Pre.length, v2Pre.length); i++) {
+		const cmp = compareParts(v1Pre[i] || "", v2Pre[i] || "");
+		if (cmp !== 0) return cmp < 0;
 	}
 
 	return false;
