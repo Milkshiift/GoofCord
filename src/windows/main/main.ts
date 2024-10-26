@@ -56,8 +56,8 @@ async function doAfterDefiningTheWindow() {
 	subscribeToAppEvents();
 	setWindowOpenHandler();
 	registerCustomHandler();
-	void initArrpc();
 	void initYoutubeAdblocker();
+	void initArrpc();
 }
 
 let subscribed = false;

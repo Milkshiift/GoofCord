@@ -31,6 +31,7 @@ function setFlags() {
 	app.commandLine.appendSwitch("enable-speech-dispatcher");
 	app.commandLine.appendSwitch("disable-features", disableFeatures.join(","));
 	app.commandLine.appendSwitch("enable-features", enableFeatures.join(","));
+	app.commandLine.appendSwitch("disable-http-cache");
 }
 
 main().catch(console.error);
