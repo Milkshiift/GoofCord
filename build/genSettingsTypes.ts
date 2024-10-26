@@ -5,94 +5,64 @@ import { settingsSchema } from "../src/settingsSchema.ts";
 
 const dirname = () => path.dirname(fileURLToPath(import.meta.url));
 
-function generateType(settings: object) {
-	const lines: string[] = [];
-	lines.push("// This file is auto-generated. Any changes will be lost. See genSettingsTypes.mjs script");
-
-	// Generate the value types for the Map
-	const valueTypes: string[] = [];
-
-	for (const category in settings) {
-		const categorySettings = settings[category];
-
-		for (const settingKey in categorySettings) {
-			if (settingKey.startsWith("button-")) continue;
-
-			const setting = categorySettings[settingKey];
-			let type: string;
-			if (setting.outputType) {
-				type = setting.outputType;
-			} else {
-				type = inferType(setting.inputType);
-			}
-			valueTypes.push(`"${settingKey}"`);
-		}
-	}
-
-	// Generate the Config type as a Map
-	lines.push(`export type ConfigKey = ${valueTypes.join(" | ")};`);
-	lines.push("");
-	lines.push("export type ConfigValue<K extends ConfigKey> = K extends keyof {");
-
-	// Generate the value type mappings
-	for (const category in settings) {
-		const categorySettings = settings[category];
-
-		for (const settingKey in categorySettings) {
-			if (settingKey.startsWith("button-")) continue;
-
-			const setting = categorySettings[settingKey];
-			let type: string;
-			if (setting.outputType) {
-				type = setting.outputType;
-			} else {
-				type = inferType(setting.inputType);
-			}
-			lines.push(`    "${settingKey}": ${type};`);
-		}
-	}
-
-	lines.push("} ? {");
-
-	// Repeat the mappings for the conditional type
-	for (const category in settings) {
-		const categorySettings = settings[category];
-
-		for (const settingKey in categorySettings) {
-			if (settingKey.startsWith("button-")) continue;
-
-			const setting = categorySettings[settingKey];
-			let type: string;
-			if (setting.outputType) {
-				type = setting.outputType;
-			} else {
-				type = inferType(setting.inputType);
-			}
-			lines.push(`    "${settingKey}": ${type};`);
-		}
-	}
-	lines.push(`}[K] : never;`);
-
-	// Define the Config type as a Map
-	lines.push("\nexport type Config = Map<ConfigKey, ConfigValue<ConfigKey>>;");
-
-	return lines.join("\n");
-}
+// Simple mapping of input types to TypeScript types
+const TYPE_MAPPING = {
+	checkbox: "boolean",
+	textfield: "string",
+	dropdown: "string",
+	file: "string",
+	textarea: "string[]",
+	"dropdown-multiselect": "string[]"
+};
 
 function inferType(inputType: string) {
-	switch (inputType) {
-		case "checkbox":
-			return "boolean";
-		case "textfield":
-		case "dropdown":
-		case "file":
-			return "string";
-		case "textarea":
-		case "dropdown-multiselect":
-			return "string[]";
-		default:
-			return "unknown";
+	return TYPE_MAPPING[inputType] ?? "unknown";
+}
+
+function generateSettingsMappings(settings: { [x: string]: any; }) {
+	const lines: string[] = [];
+
+	for (const category in settings) {
+		const categorySettings = settings[category];
+		for (const [key, setting] of Object.entries(categorySettings)) {
+			if (!key.startsWith("button-")) {
+				// @ts-ignore
+				const type = setting.outputType ?? inferType(setting.inputType);
+				lines.push(`    "${key}": ${type};`);
+			}
+		}
 	}
+
+	return lines;
+}
+
+function generateType(settings) {
+	// Collect all valid setting keys
+	const valueTypes: string[] = [];
+	for (const category in settings) {
+		const categorySettings = settings[category];
+		for (const key in categorySettings) {
+			if (!key.startsWith("button-")) {
+				valueTypes.push(`"${key}"`);
+			}
+		}
+	}
+
+	const lines = [
+		"// This file is auto-generated. Any changes will be lost. See genSettingsTypes.mjs script",
+		"",
+		`export type ConfigKey = ${valueTypes.join(" | ")};`,
+		"",
+		"export type ConfigValue<K extends ConfigKey> = K extends keyof {",
+		...generateSettingsMappings(settings),
+		"} ? {",
+		...generateSettingsMappings(settings),
+		"}[K] : never;",
+		"",
+		"export type Config = Map<ConfigKey, ConfigValue<ConfigKey>>;"
+	];
+
+	return lines.join("\n");
 }
 
 const dtsPath = path.join(dirname(), "..", "src", "configTypes.d.ts");
