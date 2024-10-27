@@ -60,6 +60,9 @@
       "package.json",
       "LICENSE"
     ],
+    "extraMetadata": {
+      "main": "ts-out/main.js"
+    },
     "extends": null,
     "linux": {
       "icon": "build/icon.icns",
