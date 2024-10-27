@@ -4,9 +4,26 @@ import { fileURLToPath } from "node:url";
 import type { ConfigKey, ConfigValue } from "./configTypes";
 
 const dirname = () => path.dirname(fileURLToPath(import.meta.url));
-function getAsset(assetName: string) {
-	if (process.type === "browser") return path.join(dirname(), "/assets/", assetName);
-	return path.join(dirname(), "..", "/assets/", assetName);
+async function getAsset(assetName: string) {
+	const assetsPath = await findAssetsDirectory();
+	if (!assetsPath) return;
+	return path.join(assetsPath, "/assets/", assetName);
+}
+
+async function findAssetsDirectory(startDir = dirname()) {
+	let currentDir = path.resolve(startDir);
+
+	while (currentDir !== path.dirname(currentDir)) {
+		const assetsPath = path.join(currentDir, "assets");
+
+		if (fs.existsSync(assetsPath) && (await fs.promises.stat(assetsPath)).isDirectory()) {
+			return currentDir;
+		}
+
+		currentDir = path.dirname(currentDir);
+	}
+
+	return null;
 }
 
 export interface SettingEntry {
@@ -35,7 +52,13 @@ export const settingsSchema = {
 			defaultValue: "en-US",
 			description: 'This is different from Discord\'s language. You can translate GoofCord <a target="_blank" href="https://hosted.weblate.org/projects/goofcord/goofcord/">here</a>.',
 			inputType: "dropdown",
-			options: fs.readdirSync(getAsset("lang")).map((file: string) => file.replace(".json", "")),
+			options: await (async () => {
+				const langPath = await getAsset("lang");
+				if (!langPath) return ["No language files found!"];
+				const files = await fs.promises.readdir(langPath);
+				if (!files.length) return ["No language files found!"];
+				return files.map((file: string) => file.replace(".json", ""));
+			})(),
 		},
 		customTitlebar: {
 			name: "Custom titlebar",
