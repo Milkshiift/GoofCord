@@ -60,6 +60,7 @@
       "package.json",
       "LICENSE"
     ],
+    "extends": null,
     "linux": {
       "icon": "build/icon.icns",
       "category": "Network",
