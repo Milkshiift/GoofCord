@@ -23,7 +23,7 @@ const bundleResult = await Bun.build({
 	external: ["electron"],
 	target: "node",
 	splitting: true,
-	entrypoints: await searchPreloadFiles("src", ["src/main.ts"]),
+	entrypoints: await searchPreloadFiles("src", [path.join("src", "main.ts")]),
 	outdir: "ts-out",
 	packages: "bundle",
 });
