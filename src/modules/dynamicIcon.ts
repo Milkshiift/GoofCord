@@ -1,6 +1,7 @@
 import { type NativeImage, app, nativeImage } from "electron";
+import sharp from "sharp";
 import { tray } from "../tray.ts";
-import { getAsset } from "../utils.ts";
+import { getAsset, getCustomIcon } from "../utils.ts";
 import { mainWindow } from "../windows/main/main.ts";
 
 const badgeCache = new Map<number, NativeImage>();
@@ -16,7 +17,7 @@ function loadBadge(index: number) {
 	return img;
 }
 
-export function setBadgeCount<IPCHandle>(count: number) {
+export async function setBadgeCount<IPCHandle>(count: number) {
 	switch (process.platform) {
 		case "linux":
 			app.setBadgeCount(count);
@@ -33,20 +34,40 @@ export function setBadgeCount<IPCHandle>(count: number) {
 			break;
 	}
 	if (process.platform === "darwin") return;
-	tray.setImage(loadTrayImage(count));
+	tray.setImage(await loadTrayImage(count));
 }
 
 const trayCache = new Map<number, NativeImage>();
-function loadTrayImage(index: number) {
+async function loadTrayImage(index: number) {
 	const clampedIndex = Math.min(index, 10);
+	if (clampedIndex === 0) return nativeImage.createFromPath(getCustomIcon());
 
 	const cached = trayCache.get(clampedIndex);
 	if (cached) return cached;
 
-	const img = nativeImage.createFromPath(getAsset(`badges/tray${clampedIndex}.png`));
-	if (process.platform === "darwin") img.resize({ height: 22 });
+	const baseImage = sharp(getCustomIcon());
+	const { width, height } = await baseImage.metadata();
+	if (!width || !height) return nativeImage.createFromPath(getCustomIcon());
 
-	trayCache.set(clampedIndex, img);
+	const overlaySize = Math.round(width * 0.6);
+	const overlayImage = await sharp(getAsset(`badges/${clampedIndex}.png`))
+		.resize(overlaySize, overlaySize)
+		.toBuffer();
 
-	return img;
+	const final = baseImage
+		.composite([
+			{
+				input: overlayImage,
+				top: height - overlaySize,
+				left: width - overlaySize,
+			},
+		])
+		.png();
+	if (process.platform === "darwin") final.resize(22, 22);
+
+	const finalNativeImage = nativeImage.createFromBuffer(await final.toBuffer());
+
+	trayCache.set(clampedIndex, finalNativeImage);
+
+	return finalNativeImage;
 }

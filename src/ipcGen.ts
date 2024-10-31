@@ -32,7 +32,7 @@ ipcMain.on("utils:encryptSafeStorage", (event, plaintextString) => { event.retur
 ipcMain.on("utils:decryptSafeStorage", (event, encryptedBase64) => { event.returnValue = decryptSafeStorage(encryptedBase64); });
 ipcMain.handle("utils:saveFileToGCFolder", async (event, filePath, content) => { return await saveFileToGCFolder(filePath, content); });
 ipcMain.on("assetLoader:getAssets", (event, ) => { event.returnValue = getAssets(); });
-ipcMain.handle("dynamicIcon:setBadgeCount", (event, count) => { return setBadgeCount(count); });
+ipcMain.handle("dynamicIcon:setBadgeCount", async (event, count) => { return await setBadgeCount(count); });
 ipcMain.on("localization:i", (event, key) => { event.returnValue = i(key); });
 ipcMain.on("messageEncryption:encryptMessage", (event, message) => { event.returnValue = encryptMessage(message); });
 ipcMain.on("messageEncryption:decryptMessage", (event, message) => { event.returnValue = decryptMessage(message); });

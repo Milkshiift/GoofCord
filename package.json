@@ -5,7 +5,7 @@
   "main": "ts-out/main.js",
   "scripts": {
     "build": "bun build/build.ts",
-    "start": "bun run build --dev && electron ./ts-out/main.js --dev --enable-source-maps --ozone-platform-hint=auto",
+    "start": "bun run build --dev && electron ./ts-out/main.js --dev --enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform-hint=auto",
     "startWithLoginFix": "bun run fixLogin && bun run start",
     "packageLinux": "bun run build && electron-builder --linux",
     "packageWindows": "bun run build && electron-builder --win",
@@ -25,7 +25,7 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/bun": "^1.1.12",
-    "@types/node": "^22.8.1",
+    "@types/node": "^22.8.5",
     "@types/stegcloak": "^1.0.2",
     "electron": "^33.0.2",
     "electron-builder": "^25.1.8",
@@ -37,6 +37,7 @@
     "auto-launch": "^5.0.6",
     "electron-context-menu": "github:Milkshiift/electron-context-menu",
     "picocolors": "^1.1.1",
+    "sharp": "^0.33.5",
     "stegcloak": "github:Milkshiift/stegcloak-node",
     "v8-compile-cache": "^2.4.0"
   },
