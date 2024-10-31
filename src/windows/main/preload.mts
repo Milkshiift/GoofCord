@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	void addDefaultPlugins();
 	fixScreenShare();
 	fixNotifications();
+	domOptimizer();
 
 	window.localStorage.setItem("hideNag", "true"); // Hide "Download Discord Desktop now!" banner
 
@@ -64,5 +65,29 @@ function fixNotifications() {
             configurable: true
         });
         })();
+    `);
+}
+
+function domOptimizer() {
+	if (!ipcRenderer.sendSync("config:getConfig", "domOptimizer")) return;
+	void webFrame.executeJavaScript(`
+        function optimize(orig) {
+		    const delayedClasses = ["activity", "gif", "avatar", "imagePlaceholder", "emoji", "reaction", "hoverBar"];
+		
+		    return function (...args) {
+		        const element = args[0];
+		        //console.log(element);
+		
+		        if (typeof element?.className === "string") {
+		            if (delayedClasses.some(partial => element.className.includes(partial))) {
+		                //console.log("DELAYED", element.className);
+		                setTimeout(() => orig.apply(this, args), 100 - Math.random() * 50);
+		                return;
+		            }
+		        }
+		        return orig.apply(this, args);
+		    };
+		}
+		Element.prototype.removeChild = optimize(Element.prototype.removeChild);
     `);
 }

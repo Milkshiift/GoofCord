@@ -4,6 +4,10 @@
     scrollbar-color: unset !important;
 }
 
+[class^="scrollerBase"] {
+    will-change: transform;
+}
+
 [class^="socialLinks-"] + [class^="info-"] {
     padding-right: 0;
 }

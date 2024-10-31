@@ -261,6 +261,12 @@ export const settingsSchema = {
 				'Enables an open source reimplementation of Discord\'s\nrich presence called <a target="_blank" href="https://github.com/OpenAsar/arrpc">arRPC</a>.\nA <a target="_blank" href="https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence">workaround</a> is needed for arRPC to work on Flatpak',
 			inputType: "checkbox",
 		},
+		domOptimizer: {
+			name: "DOM optimizer",
+			defaultValue: true,
+			description: "Defers DOM updates to possibly improve performance. May cause visual artifacts.",
+			inputType: "checkbox",
+		},
 		launchWithOsBoot: {
 			name: "Launch GoofCord on startup",
 			defaultValue: false,
