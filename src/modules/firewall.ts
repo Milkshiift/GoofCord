@@ -1,10 +1,10 @@
-import { session } from "electron";
 // This file contains everything that uses session.defaultSession.webRequest
+import { session } from "electron";
 import pc from "picocolors";
 import { getConfig, getDefaultValue } from "../config.ts";
-import type { Config, ConfigKey } from "../configTypes.d.ts";
+import type { ConfigKey, ConfigValue } from "../configTypes.d.ts";
 
-function getConfigOrDefault<K extends ConfigKey>(toGet: K): Config[K] {
+function getConfigOrDefault<K extends ConfigKey>(toGet: K): ConfigValue<K> {
 	return getConfig("customFirewallRules") ? getConfig(toGet) : getDefaultValue(toGet);
 }
 

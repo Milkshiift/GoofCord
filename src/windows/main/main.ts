@@ -106,7 +106,7 @@ function setWindowOpenHandler() {
 				},
 			};
 		}
-		if (url.startsWith("http") || url.startsWith("mailto:")) void shell.openExternal(url);
+		if (["http", "mailto:", "spotify:", "steam:", "com.epicgames.launcher:", "tidal:", "itunes:"].some((prefix) => url.startsWith(prefix))) void shell.openExternal(url);
 		return { action: "deny" };
 	});
 }
