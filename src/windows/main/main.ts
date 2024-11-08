@@ -114,6 +114,7 @@ function setWindowOpenHandler() {
 async function initYoutubeAdblocker() {
 	const adblocker = await fs.readFile(getAsset("adblocker.js"), "utf8");
 	mainWindow.webContents.on("frame-created", (_, { frame }) => {
+		if (!frame) return;
 		frame.once("dom-ready", () => {
 			if (frame.url.includes("youtube.com/embed/") || (frame.url.includes("discordsays") && frame.url.includes("youtube.com"))) {
 				frame.executeJavaScript(adblocker);
