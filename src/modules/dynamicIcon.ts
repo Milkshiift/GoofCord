@@ -1,5 +1,5 @@
 import { type NativeImage, app, nativeImage } from "electron";
-import { Jimp } from "jimp";
+import sharp from "sharp";
 import { tray } from "../tray.ts";
 import { getAsset, getCustomIcon } from "../utils.ts";
 import { mainWindow } from "../windows/main/main.ts";
@@ -45,31 +45,27 @@ async function loadTrayImage(index: number) {
 	const cached = trayCache.get(clampedIndex);
 	if (cached) return cached;
 
-	// Load base image
-	const baseImage = await Jimp.read(getCustomIcon());
-	const width = baseImage.width;
-	const height = baseImage.height;
+	const baseImage = sharp(getCustomIcon());
+	const { width, height } = await baseImage.metadata();
+	if (!width || !height) return nativeImage.createFromPath(getCustomIcon());
 
-	// Load and resize overlay
 	const overlaySize = Math.round(width * 0.6);
-	const overlay = await Jimp.read(getAsset(`badges/${clampedIndex}.png`));
-	overlay.resize({ w: overlaySize, h: overlaySize });
+	const overlayImage = await sharp(getAsset(`badges/${clampedIndex}.png`))
+		.resize(overlaySize, overlaySize)
+		.toBuffer();
 
-	// Composite images
-	baseImage.composite(
-		overlay,
-		width - overlaySize, // left
-		height - overlaySize, // top
-	);
+	const final = baseImage
+		.composite([
+			{
+				input: overlayImage,
+				top: height - overlaySize,
+				left: width - overlaySize,
+			},
+		])
+		.png();
+	if (process.platform === "darwin") final.resize(22, 22);
 
-	// Resize for macOS if needed
-	if (process.platform === "darwin") {
-		baseImage.resize({ w: 22, h: 22 });
-	}
-
-	// Convert to buffer and create native image
-	const buffer = await baseImage.getBuffer("image/png");
-	const finalNativeImage = nativeImage.createFromBuffer(buffer);
+	const finalNativeImage = nativeImage.createFromBuffer(await final.toBuffer());
 
 	trayCache.set(clampedIndex, finalNativeImage);
 
