@@ -1,7 +1,8 @@
+import fs from "node:fs";
 import { type NativeImage, app, nativeImage } from "electron";
-import sharp from "sharp";
+import { Jimp } from "jimp";
 import { tray } from "../tray.ts";
-import { getAsset, getCustomIcon } from "../utils.ts";
+import { getAsset, getTrayIcon } from "../utils.ts";
 import { mainWindow } from "../windows/main/main.ts";
 
 const badgeCache = new Map<number, NativeImage>();
@@ -39,33 +40,28 @@ export async function setBadgeCount<IPCHandle>(count: number) {
 
 const trayCache = new Map<number, NativeImage>();
 async function loadTrayImage(index: number) {
+	const trayImagePath = await getTrayIcon();
+
 	const clampedIndex = Math.min(index, 10);
-	if (clampedIndex === 0) return nativeImage.createFromPath(getCustomIcon());
+	if (clampedIndex === 0) return nativeImage.createFromPath(trayImagePath);
 
 	const cached = trayCache.get(clampedIndex);
 	if (cached) return cached;
 
-	const baseImage = sharp(getCustomIcon());
-	const { width, height } = await baseImage.metadata();
-	if (!width || !height) return nativeImage.createFromPath(getCustomIcon());
+	const baseImage = await Jimp.read(trayImagePath);
+	const { width, height } = baseImage.bitmap;
+	if (!width || !height) return nativeImage.createFromPath(trayImagePath);
 
 	const overlaySize = Math.round(width * 0.6);
-	const overlayImage = await sharp(getAsset(`badges/${clampedIndex}.png`))
-		.resize(overlaySize, overlaySize)
-		.toBuffer();
+	const overlayImage = await Jimp.read(await fs.promises.readFile(getAsset(`badges/${clampedIndex}.png`)));
+	overlayImage.resize({ w: overlaySize, h: overlaySize });
 
-	const final = baseImage
-		.composite([
-			{
-				input: overlayImage,
-				top: height - overlaySize,
-				left: width - overlaySize,
-			},
-		])
-		.png();
-	if (process.platform === "darwin") final.resize(22, 22);
+	baseImage.composite(overlayImage, width - overlaySize, height - overlaySize);
 
-	const finalNativeImage = nativeImage.createFromBuffer(await final.toBuffer());
+	if (process.platform === "darwin") baseImage.resize({ w: 22, h: 22 });
+
+	const finalBuffer = await baseImage.getBuffer("image/png");
+	const finalNativeImage = nativeImage.createFromBuffer(finalBuffer);
 
 	trayCache.set(clampedIndex, finalNativeImage);
 

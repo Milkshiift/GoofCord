@@ -1,13 +1,13 @@
 import { Menu, Tray, app, dialog, nativeImage } from "electron";
 import { i } from "./modules/localization.ts";
 import { saveState } from "./modules/windowStateManager.ts";
-import { getCustomIcon, getDisplayVersion } from "./utils.ts";
+import { getDisplayVersion, getTrayIcon } from "./utils.ts";
 import { mainWindow } from "./windows/main/main.ts";
 import { createSettingsWindow } from "./windows/settings/main.ts";
 
 export let tray: Tray;
 export async function createTray() {
-	const trayImage = nativeImage.createFromPath(getCustomIcon());
+	const trayImage = nativeImage.createFromPath(await getTrayIcon());
 
 	const getTrayMenuIcon = () => {
 		if (process.platform === "win32") return trayImage.resize({ height: 16 });

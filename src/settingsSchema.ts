@@ -317,6 +317,10 @@ export const settingsSchema = {
 			defaultValue: [true, [835, 600]],
 			outputType: "[boolean, [number, number]]",
 		},
+		trayIcon: {
+			defaultValue: "default",
+			outputType: "string",
+		},
 		"button-openGoofCordFolder": {
 			name: "Open GoofCord folder",
 			onClick: "settings.openFolder('GoofCord')",

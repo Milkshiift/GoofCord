@@ -18,7 +18,7 @@ console.log("Building...");
 await fs.promises.mkdir("ts-out");
 const bundleResult = await Bun.build({
 	minify: true,
-	sourcemap: isDev ? "inline" : "none",
+	sourcemap: "none",
 	format: "esm",
 	external: ["electron"],
 	target: "node",

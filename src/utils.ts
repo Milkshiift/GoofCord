@@ -42,6 +42,11 @@ export function getCustomIcon() {
 	return getAsset("gf_icon.png");
 }
 
+export async function getTrayIcon() {
+	if (getConfig("trayIcon") === "default") return getCustomIcon();
+	return getAsset(getConfig("trayIcon"));
+}
+
 export async function readOrCreateFolder(path: string) {
 	try {
 		return await fs.promises.readdir(path);

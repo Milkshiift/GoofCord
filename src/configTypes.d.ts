@@ -1,6 +1,6 @@
 // This file is auto-generated. Any changes will be lost. See genSettingsTypes.mjs script
 
-export type ConfigKey = "locale" | "customTitlebar" | "minimizeToTray" | "startMinimized" | "dynamicIcon" | "customIconPath" | "discordUrl" | "modNames" | "customJsBundle" | "customCssBundle" | "noBundleUpdates" | "installDefaultShelterPlugins" | "invidiousEmbeds" | "messageEncryption" | "encryptionPasswords" | "encryptionCover" | "encryptionMark" | "firewall" | "customFirewallRules" | "blocklist" | "blockedStrings" | "allowedStrings" | "arrpc" | "domOptimizer" | "launchWithOsBoot" | "spellcheck" | "popoutWindowAlwaysOnTop" | "updateNotification" | "autoscroll" | "transparency" | "screensharePreviousSettings" | "windowState:main1" | "cloudHost" | "cloudToken" | "cloudEncryptionKey";
+export type ConfigKey = "locale" | "customTitlebar" | "minimizeToTray" | "startMinimized" | "dynamicIcon" | "customIconPath" | "discordUrl" | "modNames" | "customJsBundle" | "customCssBundle" | "noBundleUpdates" | "installDefaultShelterPlugins" | "invidiousEmbeds" | "messageEncryption" | "encryptionPasswords" | "encryptionCover" | "encryptionMark" | "firewall" | "customFirewallRules" | "blocklist" | "blockedStrings" | "allowedStrings" | "arrpc" | "domOptimizer" | "launchWithOsBoot" | "spellcheck" | "popoutWindowAlwaysOnTop" | "updateNotification" | "autoscroll" | "transparency" | "screensharePreviousSettings" | "windowState:main1" | "trayIcon" | "cloudHost" | "cloudToken" | "cloudEncryptionKey";
 
 export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "locale": string;
@@ -35,6 +35,7 @@ export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "transparency": boolean;
     "screensharePreviousSettings": [number, number, boolean, string];
     "windowState:main1": [boolean, [number, number]];
+    "trayIcon": string;
     "cloudHost": string;
     "cloudToken": string;
     "cloudEncryptionKey": string;
@@ -71,6 +72,7 @@ export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "transparency": boolean;
     "screensharePreviousSettings": [number, number, boolean, string];
     "windowState:main1": [boolean, [number, number]];
+    "trayIcon": string;
     "cloudHost": string;
     "cloudToken": string;
     "cloudEncryptionKey": string;
