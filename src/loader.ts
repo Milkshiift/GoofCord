@@ -41,6 +41,7 @@ async function waitForInternetConnection() {
 
 async function handleFirstLaunch() {
 	await createSettingsWindow();
+	await new Promise((resolve) => setTimeout(resolve, 1000));
 	await dialog.showMessageBox({
 		message: i("welcomeMessage"),
 		type: "info",
