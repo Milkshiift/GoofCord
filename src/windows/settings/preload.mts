@@ -115,7 +115,9 @@ export async function revertSetting(setting: HTMLElement) {
 		if (setting.type === "checkbox" && typeof defaultValue === "boolean") {
 			setting.checked = defaultValue;
 		} else if (setting.type === "file") {
-			setting.value = "";
+			void ipcRenderer.invoke("config:setConfig", elementName, defaultValue);
+			void ipcRenderer.invoke("flashTitlebar", "#5865F2");
+			return;
 		} else if (typeof defaultValue === "string") {
 			setting.value = defaultValue;
 		}
