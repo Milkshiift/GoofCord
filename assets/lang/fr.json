@@ -2,5 +2,6 @@
     "goofcord-open": "Ouvert GoofCord",
     "welcomeMessage": "Bienvenue à GoofCord !\nConfigurez les paramètres à votre convenance et redémarrez GoofCord pour accéder à Discord.\nVous pouvez le faire avec Ctrl+Shift+R ou par le menu tray/dock.\nBonne discussion !",
     "goofcord-about": "À propos GoofCord",
-    "goofcord-quit": "Abandon"
+    "goofcord-quit": "Abandon",
+    "goofcord-settings": "Ouvrir les paramètres"
 }
