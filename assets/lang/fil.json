@@ -95,5 +95,9 @@
     "screenshare-optimization-motion": "Galaw",
     "screenshare-optimization-detail": "Detalye",
     "screenshare-resolution": "Resolution",
-    "screenshare-framerate": "Framerate"
+    "screenshare-framerate": "Framerate",
+    "opt-locale": "Wika 🌍",
+    "opt-locale-desc": "Ito ay naiiba sa wika ng Discord. Pwede ninyo isalin ang GoofCord <a target=\"_blank\" href=\"https://hosted.weblate.org/projects/goofcord/goofcord/\">dito</a>.",
+    "opt-domOptimizer": "DOM optimizer",
+    "opt-domOptimizer-desc": "Defers ang mga update ng DOM para posibleng butihin ang performance. Maaring magdulot ng visual artifacts."
 }
