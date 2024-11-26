@@ -50,7 +50,7 @@ function createSetting(setting: ConfigKey, entry: SettingEntry) {
 	if (!entry.name) return "";
 
 	let value = ipcRenderer.sendSync("config:getConfig", setting) as ConfigValue<ConfigKey>;
-	if (entry.encrypted && ipcRenderer.sendSync("utils:isEncryptionAvailable")) value = decryptSetting(value);
+	if (entry.encrypted) value = decryptSetting(value);
 
 	const isHidden = entry.showAfter && !evaluateShowAfter(entry.showAfter.condition, ipcRenderer.sendSync("config:getConfig", entry.showAfter.key as ConfigKey));
 

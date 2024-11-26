@@ -44,7 +44,7 @@ async function saveSettings(changedElement: HTMLElement) {
 	const settingData = settingsData[settingName];
 	let settingValue = await getSettingValue(changedElement, settingName as ConfigKey);
 	if (settingValue === undefined) return;
-	if (settingData.encrypted && ipcRenderer.sendSync("utils:isEncryptionAvailable")) settingValue = encryptSetting(settingValue);
+	if (settingData.encrypted) settingValue = encryptSetting(settingValue);
 
 	void ipcRenderer.invoke("config:setConfig", settingName, settingValue);
 	updateVisibility(settingName, settingValue);
