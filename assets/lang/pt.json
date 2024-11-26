@@ -99,5 +99,6 @@
     "opt-encryptionPasswords-desc": "Lista criptografada, armazenada com segurança, das senhas que serão utilizadas para a criptografia. Um backup em algum lugar aconchegante e seguro é recomendado. Separe cada item com uma vírgula.",
     "opt-blocklist-desc": "Uma lista de URLs que serão bloqueadas. Separe cada item com uma vírgula.",
     "opt-arrpc-desc": "Habilita uma reimplementação open source do\nrich presence chamado <a target=\"_blank\" href=\"https://github.com/OpenAsar/arrpc\">arRPC</a>.\nUm <a target=\"_blank\" href=\"https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence\">armengue</a> é necessário para utiliza-lo num FlatPak.",
-    "menu-goofcord-cyclePasswords": "Faça um rodízio de senhas"
+    "menu-goofcord-cyclePasswords": "Faça um rodízio de senhas",
+    "settings-encryption-unavailable": "O GoofCord foi incapaz de achar um gerenciador de senhas no sistema. As configurações de criptografia serão armazenadas em um arquivo de texto comum. Se você estiver usando Linux, instale o \"gnome-libsecret\" ou \"kwallet\""
 }
