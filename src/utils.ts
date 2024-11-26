@@ -95,12 +95,16 @@ export function getErrorMessage(error: unknown): string {
 	return toErrorWithMessage(error).message;
 }
 
+export function isEncryptionAvailable<IPCOn>() {
+	return safeStorage.isEncryptionAvailable();
+}
+
 export function encryptSafeStorage<IPCOn>(plaintextString: string) {
-	return safeStorage.encryptString(plaintextString).toString("base64");
+	return isEncryptionAvailable() ? safeStorage.encryptString(plaintextString).toString("base64") : plaintextString;
 }
 
 export function decryptSafeStorage<IPCOn>(encryptedBase64: string) {
-	return safeStorage.decryptString(Buffer.from(encryptedBase64, "base64"));
+	return isEncryptionAvailable() ? safeStorage.decryptString(Buffer.from(encryptedBase64, "base64")) : encryptedBase64;
 }
 
 export async function saveFileToGCFolder<IPCHandle>(filePath: string, content: string) {

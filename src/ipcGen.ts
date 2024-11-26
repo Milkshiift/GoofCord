@@ -6,6 +6,7 @@ import { setConfigBulk } from "./config.ts";
 import { getVersion } from "./utils.ts";
 import { getDisplayVersion } from "./utils.ts";
 import { getAsset } from "./utils.ts";
+import { isEncryptionAvailable } from "./utils.ts";
 import { encryptSafeStorage } from "./utils.ts";
 import { decryptSafeStorage } from "./utils.ts";
 import { saveFileToGCFolder } from "./utils.ts";
@@ -28,6 +29,7 @@ ipcMain.handle("config:setConfigBulk", async (event, toSet) => { return await se
 ipcMain.on("utils:getVersion", (event, ) => { event.returnValue = getVersion(); });
 ipcMain.on("utils:getDisplayVersion", (event, ) => { event.returnValue = getDisplayVersion(); });
 ipcMain.on("utils:getAsset", (event, assetName) => { event.returnValue = getAsset(assetName); });
+ipcMain.on("utils:isEncryptionAvailable", (event, ) => { event.returnValue = isEncryptionAvailable(); });
 ipcMain.on("utils:encryptSafeStorage", (event, plaintextString) => { event.returnValue = encryptSafeStorage(plaintextString); });
 ipcMain.on("utils:decryptSafeStorage", (event, encryptedBase64) => { event.returnValue = decryptSafeStorage(encryptedBase64); });
 ipcMain.handle("utils:saveFileToGCFolder", async (event, filePath, content) => { return await saveFileToGCFolder(filePath, content); });

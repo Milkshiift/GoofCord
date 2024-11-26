@@ -140,6 +140,8 @@ export function encryptSetting(settingValue: ConfigValue<ConfigKey>) {
 		return ipcRenderer.sendSync("utils:encryptSafeStorage", settingValue);
 	} else if (Array.isArray(settingValue)) {
 		return settingValue.map((value: unknown) => ipcRenderer.sendSync("utils:encryptSafeStorage", value));
+	} else {
+		return settingValue;
 	}
 }
 
@@ -148,6 +150,8 @@ export function decryptSetting(settingValue: ConfigValue<ConfigKey>) {
 		return ipcRenderer.sendSync("utils:decryptSafeStorage", settingValue);
 	} else if (Array.isArray(settingValue)) {
 		return settingValue.map((value: unknown) => ipcRenderer.sendSync("utils:decryptSafeStorage", value));
+	} else {
+		return settingValue;
 	}
 }
 

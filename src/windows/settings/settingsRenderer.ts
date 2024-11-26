@@ -4,7 +4,15 @@ import { type ButtonEntry, type SettingEntry, settingsSchema } from "../../setti
 import { decryptSetting, evaluateShowAfter } from "./preload.mts";
 
 export async function renderSettings() {
-	const html = Object.keys(settingsSchema).map(makeCategory).join("");
+	let html = Object.keys(settingsSchema).map(makeCategory).join("");
+	if (!ipcRenderer.sendSync("utils:isEncryptionAvailable")) {
+		html =
+			`
+			<div class="message">
+				<p>${ipcRenderer.sendSync("localization:i", "settings-encryption-unavailable")}</p>
+			</div>
+		` + html;
+	}
 	const settingsDiv = document.getElementById("settings");
 	if (settingsDiv) settingsDiv.innerHTML = html;
 }

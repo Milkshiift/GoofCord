@@ -29,6 +29,7 @@
   "screenshare-resolution": "Resolution",
   "screenshare-framerate": "Framerate",
   "settingsWindow-title": "GoofCord Settings | Version: ",
+  "settings-encryption-unavailable": "GoofCord was unable to detect a password manager. Encrypted settings will be stored in plain text. If you are on Linux, install gnome-libsecret or kwallet",
   "category-general": "General settings",
   "category-client": "Client mods settings",
   "category-firewall": "Firewall settings",

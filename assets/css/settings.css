@@ -40,6 +40,10 @@ html {
     cursor: default;
 }
 
+p {
+    cursor: text;
+}
+
 h1,
 h2,
 h3,
@@ -327,4 +331,13 @@ fieldset:hover #revert-button {
     background-color: green;
     color: white;
 
+}
+
+.message {
+    text-align: center;
+    background-color: var(--bg-secondary);
+    border-radius: 5px;
+    padding: 10px 15px 10px;
+    margin: 0 40px;
+    border: solid 2px #F2D157;
 }
