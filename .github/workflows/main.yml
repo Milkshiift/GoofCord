@@ -3,8 +3,7 @@ name: Release app
 on:
   workflow_dispatch
 
-permissions:
-  contents: write
+permissions: {}
 
 jobs:
   build:
@@ -29,6 +28,8 @@ jobs:
     steps:
       - name: Github checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Install Python setuptools
         if: matrix.name == 'mac'
@@ -52,19 +53,9 @@ jobs:
       - name: Build GoofCord
         run: bun run build
 
-      - name: Load Electron Cache
-        uses: actions/cache/restore@v4
-        with:
-          path: .cache
-          key: electron-zips.stable.${{matrix.os}}
-
       - name: Package GoofCord
+        permissions:
+          contents: write
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: electron-builder ${{ matrix.arch }} --${{ matrix.name }} ${{ matrix.targets }} --publish=always
-
-      - name: Save Electron Cache
-        uses: actions/cache/save@v4
-        with:
-          path: .cache
-          key: electron-zips.stable.${{matrix.os}}
