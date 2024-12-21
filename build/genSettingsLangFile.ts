@@ -1,30 +1,39 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { settingsSchema } from "../src/settingsSchema.ts";
+import { extractKeysAtLevel, extractJSON } from "./cursedJson.ts";
 
 const dirname = () => path.dirname(fileURLToPath(import.meta.url));
 
 export async function genSettingsLangFile() {
-	function extractNames(data: object) {
+	function extractNames(data: string) {
 		const result = {};
 
-		// Iterate through each category in the JSON object
-		for (const category in data) {
+		const categories = extractKeysAtLevel(data, 1);
+		for (const category of categories) {
 			result[`category-${category.toLowerCase().split(" ")[0]}`] = category;
-			const categorySettings = data[category];
-			for (const setting in categorySettings) {
-				if (categorySettings[setting].name === undefined) continue;
-				result[`opt-${setting}`] = categorySettings[setting].name;
-				if (categorySettings[setting].description === undefined) continue;
-				result[`opt-${setting}-desc`] = categorySettings[setting].description;
+
+			const settings = extractJSON(data, [category])!;
+			const settingKeys = extractKeysAtLevel(settings, 1);
+			for (const key of settingKeys) {
+				const name = extractJSON(settings, [key, "name"]);
+				const description = extractJSON(settings, [key, "description"]);
+				if (name !== undefined) {
+					result[`opt-${key}`] = name;
+					if (description !== undefined) {
+						result[`opt-${key}-desc`] = description;
+					}
+				}
 			}
 		}
 
 		return result;
 	}
 
-	const extractedStrings = extractNames(settingsSchema);
+	const file = (await fs.promises.readFile(path.join(dirname(), "..", "src", "settingsSchema.ts"), "utf-8")).split("settingsSchema = ").pop();
+	if (!file) { console.error("Failed to read settingsSchema file"); return; }
+
+	const extractedStrings = extractNames(file);
 
 	const engLangPath = path.join(dirname(), "..", "assets", "lang", "en-US.json");
 	const engLang = JSON.parse(await fs.promises.readFile(engLangPath, "utf8"));

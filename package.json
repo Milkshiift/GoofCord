@@ -45,9 +45,7 @@
     "@biomejs/biome",
     "bufferutil",
     "electron",
-    "esbuild",
-    "msgpackr-extract",
-    "sharp"
+    "esbuild"
   ],
   "engines": {
     "node": ">=21.0.0"
