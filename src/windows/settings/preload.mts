@@ -18,7 +18,7 @@ contextBridge.exposeInMainWorld("settings", {
 const settingsData: Record<string, SettingEntry> = {};
 const elementsWithShowAfter: [string, HTMLElement][] = [];
 
-async function initializeSettings() {
+async function initSettings() {
 	while (document.body === null) await new Promise((resolve) => setTimeout(resolve, 10));
 	await renderSettings();
 
@@ -155,4 +155,4 @@ export function decryptSetting(settingValue: ConfigValue<ConfigKey>) {
 	}
 }
 
-initializeSettings().catch(console.error);
+initSettings().catch(console.error);

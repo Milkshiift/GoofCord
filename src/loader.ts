@@ -3,7 +3,7 @@ import pc from "picocolors";
 import { firstLaunch, getConfig } from "./config.ts";
 import { setMenu } from "./menu.ts";
 import { categorizeAllAssets } from "./modules/assetLoader.ts";
-import { initializeFirewall, unstrictCSP } from "./modules/firewall.ts";
+import { initFirewall, unstrictCSP } from "./modules/firewall.ts";
 import { i } from "./modules/localization.ts";
 import { initEncryption } from "./modules/messageEncryption.ts";
 import { manageMods, updateMods } from "./modules/mods.ts";
@@ -24,7 +24,8 @@ export async function load() {
 	console.timeEnd(pc.green("[Timer]") + " Electron loaded in");
 
 	initEncryption();
-	await Promise.all([preReady, waitForInternetConnection(), setPermissions(), unstrictCSP(), initializeFirewall()]);
+	initFirewall();
+	await Promise.all([preReady, waitForInternetConnection(), setPermissions(), unstrictCSP()]);
 	firstLaunch ? await handleFirstLaunch() : await createMainWindow();
 
 	console.timeEnd(pc.green("[Timer]") + " GoofCord fully loaded in");

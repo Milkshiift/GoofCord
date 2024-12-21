@@ -7,7 +7,7 @@ let capturerWindow: BrowserWindow;
 const isWayland = process.platform === "linux" && (process.env.XDG_SESSION_TYPE?.toLowerCase() === "wayland" || !!process.env.WAYLAND_DISPLAY);
 if (isWayland) console.log(`You are using ${pc.greenBright("Wayland")}! >ᴗ<`);
 
-export function registerCustomHandler() {
+export function registerScreenshareHandler() {
 	const primaryDisplay = screen.getPrimaryDisplay();
 	const { width, height } = primaryDisplay.workAreaSize;
 
@@ -15,6 +15,7 @@ export function registerCustomHandler() {
 		let sources = await desktopCapturer.getSources({
 			types: ["screen", "window"],
 		});
+		if (!sources) return callback({});
 		if (isWayland) sources = [sources[0]];
 
 		capturerWindow = new BrowserWindow({
@@ -38,7 +39,7 @@ export function registerCustomHandler() {
 		ipcMain.handleOnce("selectScreenshareSource", async (_event, id, name, audio, contentHint, resolution, framerate) => {
 			capturerWindow.close();
 			// https://github.com/Milkshiift/goofcord-shelter-plugins/tree/main/plugins/screenshare-quality
-			await request.frame.executeJavaScript(`
+			await request.frame?.executeJavaScript(`
                 try{
                     window.ScreenshareQuality.patchScreenshareQuality(${resolution}, ${framerate})
                 } catch(e) {console.log(e);}

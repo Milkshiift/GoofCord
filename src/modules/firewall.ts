@@ -8,7 +8,7 @@ function getConfigOrDefault<K extends ConfigKey>(toGet: K): ConfigValue<K> {
 	return getConfig("customFirewallRules") ? getConfig(toGet) : getDefaultValue(toGet);
 }
 
-export async function initializeFirewall() {
+export function initFirewall() {
 	if (!getConfig("firewall")) return;
 	const blocklist = getConfigOrDefault("blocklist");
 	const blockedStrings = getConfigOrDefault("blockedStrings");
@@ -31,16 +31,12 @@ export async function initializeFirewall() {
 	const allowRegex = new RegExp(allowedStrings.join("|"), "i");
 
 	session.defaultSession.webRequest.onBeforeSendHeaders({ urls: ["<all_urls>"] }, (details, callback) => {
-		if (details.resourceType !== "xhr") {
-			// Filtering out non-xhr requests for performance
-			callback({ cancel: false });
-			return;
-		}
+		// No need to filter non-xhr requests
+		if (details.resourceType !== "xhr") return callback({ cancel: false });
 
 		if (blockRegex.test(details.url)) {
 			if (!allowRegex.test(details.url)) {
-				callback({ cancel: true });
-				return;
+				return callback({ cancel: true });
 			}
 		}
 
@@ -58,8 +54,7 @@ export async function unstrictCSP() {
 		if (resourceType === "mainFrame" || resourceType === "subFrame") {
 			responseHeaders["content-security-policy"] = [""];
 		} else if (resourceType === "stylesheet") {
-			// Fix hosts that don't properly set the css content type, such as
-			// raw.githubusercontent.com
+			// Fix hosts that don't properly set the css content type, such as raw.githubusercontent.com
 			responseHeaders["content-type"] = ["text/css"];
 		}
 		done({ responseHeaders });

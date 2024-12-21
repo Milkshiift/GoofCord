@@ -7,7 +7,7 @@ import { getUserAgent } from "../../modules/agent.ts";
 import { initArrpc } from "../../modules/arrpc.ts";
 import { adjustWindow } from "../../modules/windowStateManager.ts";
 import { dirname, getAsset, getCustomIcon } from "../../utils.ts";
-import { registerCustomHandler } from "../screenshare/main.ts";
+import { registerScreenshareHandler } from "../screenshare/main.ts";
 
 export let mainWindow: BrowserWindow;
 
@@ -55,7 +55,7 @@ async function doAfterDefiningTheWindow() {
 	});
 	subscribeToAppEvents();
 	setWindowOpenHandler();
-	registerCustomHandler();
+	registerScreenshareHandler();
 	void initYoutubeAdblocker();
 	void initArrpc();
 }
