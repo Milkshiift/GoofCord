@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import * as path from "node:path";
-import { BrowserWindow, app, ipcMain, shell } from "electron";
+import { app, BrowserWindow, ipcMain, shell } from "electron";
 import pc from "picocolors";
 import { getConfig } from "../../config.ts";
 import { getUserAgent } from "../../modules/agent.ts";
@@ -34,7 +34,7 @@ export async function createMainWindow() {
 		},
 	});
 
-	adjustWindow(mainWindow, "windowState:main1");
+	adjustWindow(mainWindow, "windowState:main");
 	if (getConfig("startMinimized")) mainWindow.hide();
 	await doAfterDefiningTheWindow();
 }
@@ -114,6 +114,7 @@ function setWindowOpenHandler() {
 async function initYoutubeAdblocker() {
 	const adblocker = await fs.readFile(getAsset("adblocker.js"), "utf8");
 	mainWindow.webContents.on("frame-created", (_, { frame }) => {
+		if (!frame) return;
 		frame.once("dom-ready", () => {
 			if (frame.url.includes("youtube.com/embed/") || (frame.url.includes("discordsays") && frame.url.includes("youtube.com"))) {
 				frame.executeJavaScript(adblocker);

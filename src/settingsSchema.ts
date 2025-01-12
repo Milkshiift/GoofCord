@@ -313,7 +313,7 @@ export const settingsSchema = {
 			defaultValue: ["720", "30", false, "motion"],
 			outputType: "[number, number, boolean, string]",
 		},
-		"windowState:main1": {
+		"windowState:main": {
 			defaultValue: [true, [835, 600]],
 			outputType: "[boolean, [number, number]]",
 		},

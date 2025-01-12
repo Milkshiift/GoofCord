@@ -11,7 +11,7 @@ export function adjustWindow(window: BrowserWindow, configEntry: string) {
 	window.setSize(width, height);
 	if (osMaximized) window.maximize();
 
-	const debouncedSaveState = debounce(async () => await saveState(window, configEntry), 500);
+	const debouncedSaveState = debounce(async () => await saveState(window, configEntry), 1000);
 
 	for (const event of ["resize", "maximize", "unmaximize"]) {
 		// @ts-ignore
