@@ -72,7 +72,7 @@ function domOptimizer() {
 	if (!ipcRenderer.sendSync("config:getConfig", "domOptimizer")) return;
 	void webFrame.executeJavaScript(`
         function optimize(orig) {
-		    const delayedClasses = ["activity", "gif", "avatar", "imagePlaceholder", "emoji", "reaction", "hoverBar"];
+		    const delayedClasses = ["activity", "gif", "avatar", "imagePlaceholder", "reaction", "hoverBar"];
 		
 		    return function (...args) {
 		        const element = args[0];
