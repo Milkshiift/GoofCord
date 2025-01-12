@@ -143,7 +143,7 @@ export const settingsSchema = {
 		},
 		invidiousEmbeds: {
 			name: "Invidious embeds",
-			defaultValue: true,
+			defaultValue: false,
 			description: "Replaces YouTube embeds with Invidious embeds. You can customize the instance from Shelter's settings.",
 			inputType: "checkbox",
 		},
