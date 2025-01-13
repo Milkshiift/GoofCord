@@ -1,3 +1,5 @@
+// Every script in the "build" directory is meant to be run with Bun
+
 import fs from "node:fs";
 import path from "node:path";
 import { genIpcHandlers } from "./genIpcHandlers.ts";
@@ -46,14 +48,6 @@ async function renamePreloadFiles(directoryPath: string) {
 		if (filePath.endsWith("preload.js")) {
 			const newFilePath = filePath.replace("preload.js", "preload.mjs");
 			await fs.promises.rename(filePath, newFilePath);
-		}
-	});
-}
-
-async function deleteSourceMaps(directoryPath: string) {
-	await traverseDirectory(directoryPath, async (filePath: string) => {
-		if (filePath.endsWith(".map")) {
-			void fs.promises.unlink(filePath);
 		}
 	});
 }

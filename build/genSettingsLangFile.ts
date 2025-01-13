@@ -1,13 +1,13 @@
-import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { extractKeysAtLevel, extractJSON } from "./cursedJson.ts";
 
-const dirname = () => path.dirname(fileURLToPath(import.meta.url));
-
 export async function genSettingsLangFile() {
-	function extractNames(data: string) {
-		const result = {};
+	interface LangEntries {
+		[key: string]: string;
+	}
+
+	function extractNames(data: string): LangEntries {
+		const result: LangEntries = {};
 
 		const categories = extractKeysAtLevel(data, 1);
 		for (const category of categories) {
@@ -30,18 +30,39 @@ export async function genSettingsLangFile() {
 		return result;
 	}
 
-	const file = (await fs.promises.readFile(path.join(dirname(), "..", "src", "settingsSchema.ts"), "utf-8")).split("settingsSchema = ").pop();
-	if (!file) { console.error("Failed to read settingsSchema file"); return; }
+	const settingsSchemaPath = path.join(
+		import.meta.dir,
+		"..",
+		"src",
+		"settingsSchema.ts",
+	);
+	const settingsSchemaFile = Bun.file(settingsSchemaPath);
+	const fileContent = await settingsSchemaFile.text();
+	const file = fileContent.split("settingsSchema = ").pop();
+	if (!file) {
+		console.error("Failed to read settingsSchema file");
+		return;
+	}
 
 	const extractedStrings = extractNames(file);
 
-	const engLangPath = path.join(dirname(), "..", "assets", "lang", "en-US.json");
-	const engLang = JSON.parse(await fs.promises.readFile(engLangPath, "utf8"));
+	const engLangPath = path.join(
+		import.meta.dir,
+		"..",
+		"assets",
+		"lang",
+		"en-US.json",
+	);
+	const engLangFile = Bun.file(engLangPath);
+	const engLang = JSON.parse(await engLangFile.text());
 
 	for (const key in extractedStrings) {
-		if (key.startsWith("opt-")) delete engLang[key];
+		if (key.startsWith("opt-")) {
+			delete engLang[key];
+		}
 		engLang[key] = extractedStrings[key];
+
 	}
 
-	await fs.promises.writeFile(engLangPath, JSON.stringify(engLang, null, 2), "utf8");
+	await Bun.write(engLangPath, JSON.stringify(engLang, null, 2));
 }

@@ -1,12 +1,8 @@
-import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { extractKeysAtLevel, extractJSON } from "./cursedJson.ts";
 
-const dirname = () => path.dirname(fileURLToPath(import.meta.url));
-
 // Simple mapping of input types to TypeScript types
-const TYPE_MAPPING = {
+const TYPE_MAPPING: Record<string, string> = {
 	checkbox: "boolean",
 	textfield: "string",
 	dropdown: "string",
@@ -15,11 +11,11 @@ const TYPE_MAPPING = {
 	"dropdown-multiselect": "string[]"
 };
 
-function inferType(inputType: string) {
+function inferType(inputType: string): string {
 	return TYPE_MAPPING[inputType] ?? "unknown";
 }
 
-function generateSettingsMappings(data: string) {
+function generateSettingsMappings(data: string): string[] {
 	const lines: string[] = [];
 
 	const categories = extractKeysAtLevel(data, 1);
@@ -28,7 +24,9 @@ function generateSettingsMappings(data: string) {
 		const settingKeys = extractKeysAtLevel(settings, 1);
 		for (const key of settingKeys) {
 			if (key.startsWith("button-")) continue;
-			const type = extractJSON(settings, [key, "outputType"]) ?? inferType(extractJSON(settings, [key, "inputType"])!);
+			const outputType = extractJSON(settings, [key, "outputType"]);
+			const inputType = extractJSON(settings, [key, "inputType"]);
+			const type = outputType ?? inferType(inputType!);
 			lines.push(`    "${key}": ${type};`);
 		}
 	}
@@ -36,17 +34,20 @@ function generateSettingsMappings(data: string) {
 	return lines;
 }
 
-function generateType(data: string) {
-	const settingKeys: string[] = extractKeysAtLevel(data, 2).filter(key => !key.startsWith("button-")).map(key => `"${key}"`);
+function generateType(data: string): string {
+	const settingKeys: string[] = extractKeysAtLevel(data, 2)
+		.filter(key => !key.startsWith("button-"))
+		.map(key => `"${key}"`);
+	const settingsMappings = generateSettingsMappings(data);
 	const lines = [
 		"// This file is auto-generated. Any changes will be lost. See genSettingsTypes.mjs script",
 		"",
 		`export type ConfigKey = ${settingKeys.join(" | ")};`,
 		"",
 		"export type ConfigValue<K extends ConfigKey> = K extends keyof {",
-		...generateSettingsMappings(data),
+		...settingsMappings,
 		"} ? {",
-		...generateSettingsMappings(data),
+		...settingsMappings,
 		"}[K] : never;",
 		"",
 		"export type Config = Map<ConfigKey, ConfigValue<ConfigKey>>;"
@@ -55,10 +56,12 @@ function generateType(data: string) {
 	return lines.join("\n");
 }
 
-const dtsPath = path.join(dirname(), "..", "src", "configTypes.d.ts");
+const dtsPath = path.join(import.meta.dir, "..", "src", "configTypes.d.ts");
 
-export async function generateDTSFile() {
-	const file = (await fs.promises.readFile(path.join(dirname(), "..", "src", "settingsSchema.ts"), "utf-8")).split("settingsSchema = ").pop()!;
+export async function generateDTSFile(): Promise<void> {
+	const file = (await Bun.file(path.join(import.meta.dir, "..", "src", "settingsSchema.ts")).text())
+		.split("settingsSchema = ")
+		.pop()!;
 	const dtsContent = generateType(file);
-	await fs.promises.writeFile(dtsPath, dtsContent, "utf-8");
+	await Bun.write(dtsPath, dtsContent);
 }
