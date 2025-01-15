@@ -3,7 +3,8 @@ name: Release app
 on:
   workflow_dispatch
 
-permissions: {}
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -28,8 +29,6 @@ jobs:
     steps:
       - name: Github checkout
         uses: actions/checkout@v4
-        with:
-          persist-credentials: false
 
       - name: Install Python setuptools
         if: matrix.name == 'mac'
@@ -54,8 +53,6 @@ jobs:
         run: bun run build
 
       - name: Package GoofCord
-        permissions:
-          contents: write
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: electron-builder ${{ matrix.arch }} --${{ matrix.name }} ${{ matrix.targets }} --publish=always
