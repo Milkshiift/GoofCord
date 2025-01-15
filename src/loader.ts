@@ -1,4 +1,4 @@
-import { net, app, dialog, session, systemPreferences } from "electron";
+import { app, dialog, net, session, systemPreferences } from "electron";
 import pc from "picocolors";
 import { firstLaunch, getConfig } from "./config.ts";
 import { setMenu } from "./menu.ts";
@@ -8,6 +8,7 @@ import { i } from "./modules/localization.ts";
 import { initEncryption } from "./modules/messageEncryption.ts";
 import { manageMods, updateMods } from "./modules/mods.ts";
 import { checkForUpdate } from "./modules/updateCheck.ts";
+import { initVenmic } from "./modules/venmic.ts";
 import { createTray } from "./tray.ts";
 import { getCustomIcon, isDev } from "./utils.ts";
 import { createMainWindow } from "./windows/main/main.ts";
@@ -32,6 +33,7 @@ export async function load() {
 
 	await updateMods();
 	await checkForUpdate();
+	await initVenmic();
 }
 
 async function waitForInternetConnection() {

@@ -30,22 +30,57 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function fixScreenShare() {
-	// Content hint setting
+	// Content hint + venmic
 	void webFrame.executeJavaScript(`
         (() => {
         const original = navigator.mediaDevices.getDisplayMedia;
+        
+        async function getVirtmic() {
+        	try {
+        	    const devices = await navigator.mediaDevices.enumerateDevices();
+        	    const audioDevice = devices.find(({ label }) => label === "vencord-screen-share");
+        	    return audioDevice?.deviceId;
+        	} catch (error) {
+        	    return null;
+        	}
+    	}
+        
         navigator.mediaDevices.getDisplayMedia = async function (opts) {
             const stream = await original.call(this, opts);
-            console.log("Setting stream's content hint");
+            console.log("Setting stream's content hint and audio device");
             
             const videoTrack = stream.getVideoTracks()[0];
             videoTrack.contentHint = window.contentHint || "motion";
             
+            // Default audio sharing
             const audioTrack = stream.getAudioTracks()[0];
             if (audioTrack) audioTrack.contentHint = "music";
+            
+            // Venmic
+            const id = await getVirtmic();
+            if (id) {
+            	const audio = await navigator.mediaDevices.getUserMedia({
+            	    audio: {
+            	        deviceId: {
+            	            exact: id
+            	        },
+            	        autoGainControl: false,
+            	        echoCancellation: false,
+            	        noiseSuppression: false
+            	    }
+            	});
+            	audio.getAudioTracks().forEach(t => stream.addTrack(t));
+        	}
     
             return stream;
         };
+        
+        shelter.flux.dispatcher.subscribe("STREAM_CLOSE", ({streamKey}) => {
+			const owner = streamKey.split(":").at(-1);
+			if (owner === shelter.flux.stores.UserStore.getCurrentUser().id) {
+				goofcord.stopVenmic();
+			}
+		})
         })();
     `);
 }

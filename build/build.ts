@@ -31,6 +31,8 @@ const bundleResult = await Bun.build({
 });
 if (bundleResult.logs.length) console.log(bundleResult.logs);
 
+await copyVenmic();
+
 await renamePreloadFiles("./ts-out");
 await fs.promises.cp("./assets/", "./ts-out/assets", { recursive: true });
 
@@ -66,6 +68,25 @@ async function traverseDirectory(directory: string, fileHandler: (filePath: stri
 			fileHandler(filePath);
 		}
 	}
+}
+
+async function copyVenmic() {
+	if (process.platform !== "linux") return;
+
+	return Promise.all([
+		copyFile(
+			"./node_modules/@vencord/venmic/prebuilds/venmic-addon-linux-x64/node-napi-v7.node",
+			"./assets/venmic-x64.node"
+		),
+		copyFile(
+			"./node_modules/@vencord/venmic/prebuilds/venmic-addon-linux-arm64/node-napi-v7.node",
+			"./assets/venmic-arm64.node"
+		)
+	]).catch(() => console.warn("Failed to copy venmic. Building without venmic support"));
+}
+
+async function copyFile(src: string, dest: string) {
+	await Bun.write(dest, Bun.file(src));
 }
 
 console.log(pc.green("✅ Build completed! 🎉"));

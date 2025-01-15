@@ -23,4 +23,5 @@ contextBridge.exposeInMainWorld("goofcord", {
 	cycleThroughPasswords: () => ipcRenderer.invoke("messageEncryption:cycleThroughPasswords"),
 	openSettingsWindow: () => ipcRenderer.invoke("main:createSettingsWindow"),
 	setBadgeCount: (count: number) => ipcRenderer.invoke("dynamicIcon:setBadgeCount", count),
+	stopVenmic: () => ipcRenderer.invoke("venmic:stopVenmic"),
 });
