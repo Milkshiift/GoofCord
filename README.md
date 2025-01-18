@@ -31,8 +31,8 @@ Choose `GoofCord-Setup-<YOUR ARCHITECTURE>.exe` for an installer, or
 
 * Install with prebuilt binaries from the [releases](https://github.com/Milkshiift/GoofCord/releases/latest) page.
 * Install from [Flathub](https://flathub.org/apps/io.github.milkshiift.GoofCord)
-* Install from [AUR](https://aur.archlinux.org/packages/goofcord-bin) if you run an **Arch**-based OS. Here's an example using pacman:    
-`sudo pacman -S goofcord-bin`    
+* Install from [AUR](https://aur.archlinux.org/packages/goofcord-bin) if you run an **Arch**-based OS. Here's an example using yay:    
+`yay -S goofcord-bin`    
 Keep in mind that the AUR package is not maintained by the developers of GoofCord.
 * Install in **NixOS** system-wide by adding ``pkgs.goofcord`` to ``environment.systemPackages``     
 Testing in a temporary shell can also be done using ``nix shell nixpkgs#goofcord``
