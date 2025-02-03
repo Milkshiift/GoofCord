@@ -75,12 +75,15 @@ function fixScreenShare() {
             return stream;
         };
         
-        shelter.flux.dispatcher.subscribe("STREAM_CLOSE", ({streamKey}) => {
-			const owner = streamKey.split(":").at(-1);
-			if (owner === shelter.flux.stores.UserStore.getCurrentUser().id) {
-				goofcord.stopVenmic();
-			}
-		})
+        setTimeout(() => {
+			window.shelter.flux.dispatcher.subscribe("STREAM_CLOSE", ({streamKey}) => {
+				console.log(streamKey);
+				const owner = streamKey.split(":").at(-1);
+				if (owner === shelter.flux.stores.UserStore.getCurrentUser().id) {
+					goofcord.stopVenmic();
+				}
+			})
+        }, 5000); // Time for shelter flux to initialize
         })();
     `);
 }
