@@ -45,6 +45,7 @@ export interface ButtonEntry {
 	onClick: string;
 }
 
+// https://github.com/Milkshiift/GoofCord/wiki/How-to-develop-GoofCord#entries
 export const settingsSchema = {
 	"General settings": {
 		locale: {
@@ -336,6 +337,8 @@ export const settingsSchema = {
 	},
 	"Cloud Settings": {
 		cloudHost: {
+			name: "Cloud Host",
+			description: "GoofCord Cloud Server URL. You can self-host it yourself, see the <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">repository</a>.",
 			defaultValue: "https://goofcordcloud.wuemeli.com",
 			inputType: "textfield",
 		},

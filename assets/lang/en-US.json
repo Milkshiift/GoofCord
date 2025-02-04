@@ -99,6 +99,8 @@
   "opt-button-openGoofCordFolder": "Open GoofCord folder",
   "opt-button-clearCache": "Clear cache",
   "opt-button-forceNativeCrash": "Force native crash",
+  "opt-cloudHost": "Cloud Host",
+  "opt-cloudHost-desc": "GoofCord Cloud Server URL. You can self-host it yourself, see the <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">repository</a>.",
   "opt-cloudEncryptionKey": "Cloud Encryption Key",
   "opt-cloudEncryptionKey-desc": "Leave empty to not use encryption and not save message encryption passwords on cloud. You can't recover your password if you lose it.",
   "opt-button-loadFromCloud": "Load from cloud",
