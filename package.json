@@ -39,7 +39,7 @@
     "jimp": "^1.6.0",
     "picocolors": "^1.1.1",
     "stegcloak": "github:Milkshiift/stegcloak-node",
-    "v8-compile-cache": "^2.4.0"
+    "v8-compile-cache": "github:JulioC/v8-compile-cache#bugfix/esm"
   },
   "optionalDependencies": {
     "@vencord/venmic": "^6.1.0"

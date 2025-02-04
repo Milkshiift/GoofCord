@@ -10,7 +10,7 @@
         "jimp": "^1.6.0",
         "picocolors": "^1.1.1",
         "stegcloak": "github:Milkshiift/stegcloak-node",
-        "v8-compile-cache": "^2.4.0",
+        "v8-compile-cache": "github:JulioC/v8-compile-cache#bugfix/esm",
       },
       "devDependencies": {
         "@biomejs/biome": "^1.9.4",
@@ -857,7 +857,7 @@
 
     "util-deprecate": ["util-deprecate@1.0.2", "", {}, "sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw=="],
 
-    "v8-compile-cache": ["v8-compile-cache@2.4.0", "", {}, "sha512-ocyWc3bAHBB/guyqJQVI5o4BZkPhznPYUG2ea80Gond/BgNWpap8TOmLSeeQG7bnh2KMISxskdADG59j7zruhw=="],
+    "v8-compile-cache": ["v8-compile-cache@github:JulioC/v8-compile-cache#4ea4c11", {}, "JulioC-v8-compile-cache-4ea4c11"],
 
     "verror": ["verror@1.10.1", "", { "dependencies": { "assert-plus": "^1.0.0", "core-util-is": "1.0.2", "extsprintf": "^1.2.0" } }, "sha512-veufcmxri4e3XSrT0xwfUR7kguIkaxBeosDg00yDWhk49wdwkSUrvvsm7nc75e1PUyvIeZj6nS8VQRYz2/S4Xg=="],
 
