@@ -1,14 +1,15 @@
 import { createRequire } from "node:module";
 import type { LinkData, PatchBay } from "@vencord/venmic";
 import { app } from "electron";
-import { getAsset } from "../utils.ts";
 import pc from "picocolors";
+import { getAsset } from "../utils.ts";
 
 let patchBay: typeof PatchBay;
 let venmic: PatchBay;
 export let hasPipewirePulse = false;
 
 export async function initVenmic() {
+	if (process.argv.some((arg) => arg === "--no-venmic")) return;
 	try {
 		patchBay = (createRequire(import.meta.url)(getAsset(`venmic-${process.arch}.node`)) as typeof import("@vencord/venmic")).PatchBay;
 		venmic = new patchBay();
