@@ -100,5 +100,8 @@
     "opt-locale-desc": "Відрізняється від мови в Discord. Ви можете перекласти GoofCord <a target=\"_blank\" href=\"https://hosted.weblate.org/projects/goofcord/goofcord/\">тут</a>.",
     "settings-encryption-unavailable": "GoofCord не зміг виявити менеджер паролей. Зашифровані налаштування зберігатимуться незашифрованими. Якщо ви використовуєте Linux, встановіть gnome-libsecret або kwallet",
     "opt-domOptimizer-desc": "Відкладає оновлення DOM для потенційного підвищення швидкодії. Може спричинити візуальні помилки.",
-    "opt-domOptimizer": "Оптимізатор DOM"
+    "opt-domOptimizer": "Оптимізатор DOM",
+    "inviteMessage": "Ви хочете приєднатися до",
+    "no": "Ні",
+    "yes": "Так"
 }
