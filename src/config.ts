@@ -40,8 +40,8 @@ async function handleConfigError(e: unknown) {
 	}
 }
 
-export async function loadConfig(): Promise<void> {
-	while (!cachedConfig) {
+export async function loadConfig<IPCHandle>(): Promise<void> {
+	do {
 		try {
 			// I don't know why but specifically in this scenario using fs.promises.readFile is whopping 180 ms compared to ~1 ms using fs.readFileSync
 			// Related? https://github.com/nodejs/performance/issues/151
@@ -53,7 +53,7 @@ export async function loadConfig(): Promise<void> {
 			const shouldExit = await handleConfigError(e);
 			if (shouldExit) break;
 		}
-	}
+	} while (!cachedConfig);
 }
 
 export function getConfig<K extends ConfigKey, IPCOn>(key: K, bypassDefault = false): ConfigValue<K> {
