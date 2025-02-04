@@ -44,7 +44,6 @@ Choose the file ending with `mac-arm64.dmg` if your computer uses an Apple Silic
 Otherwise, choose the file that ends with `mac-x64.dmg`
 * If you get an error like "GoofCord is damaged and can't be opened" see [this issue](https://github.com/Milkshiift/GoofCord/issues/7)
 
-See FAQ for ways to open GoofCord's settings.    
 To explore plugins and themes, head over to the Vencord category in the Discord settings.    
 Have fun!
     
@@ -57,11 +56,14 @@ And if you want to compile it yourself, here's how:
 6. Find your freshly compiled app in the `dist` folder.
 
 ## Short FAQ
+### Need Support? Join Our Discord!
+[![](https://dcbadge.vercel.app/api/server/CZc4bpnjmm)](https://discord.gg/CZc4bpnjmm)
+
 ### Where is the long FAQ?
 - [On the Wiki](https://github.com/Milkshiift/GoofCord/wiki/FAQ)
 
-### Need Support? Join Our Discord!
-[![](https://dcbadge.vercel.app/api/server/CZc4bpnjmm)](https://discord.gg/CZc4bpnjmm)
+### How do I develop GoofCord?
+- See the development [guide](https://github.com/Milkshiift/GoofCord/wiki/How-to-develop-GoofCord)
 
 ### Can I get banned from using GoofCord? 🤔
 - While using GoofCord goes against [Discord ToS](https://discord.com/terms#software-in-discord%E2%80%99s-services), no one has ever been banned from using it or any client mods.
