@@ -100,5 +100,10 @@
     "opt-blocklist-desc": "Uma lista de URLs que serão bloqueadas. Separe cada item com uma vírgula.",
     "opt-arrpc-desc": "Habilita uma reimplementação open source do\nrich presence chamado <a target=\"_blank\" href=\"https://github.com/OpenAsar/arrpc\">arRPC</a>.\nUm <a target=\"_blank\" href=\"https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence\">armengue</a> é necessário para utiliza-lo num FlatPak.",
     "menu-goofcord-cyclePasswords": "Faça um rodízio de senhas",
-    "settings-encryption-unavailable": "O GoofCord foi incapaz de achar um gerenciador de senhas no sistema. As configurações de criptografia serão armazenadas em um arquivo de texto comum. Se você estiver usando Linux, instale o \"gnome-libsecret\" ou \"kwallet\""
+    "settings-encryption-unavailable": "O GoofCord foi incapaz de achar um gerenciador de senhas no sistema. As configurações de criptografia serão armazenadas em um arquivo de texto comum. Se você estiver usando Linux, instale o \"gnome-libsecret\" ou \"kwallet\"",
+    "inviteMessage": "Deseja juntar-se",
+    "yes": "Sim",
+    "no": "Não",
+    "opt-cloudHost": "Anfitrião Cloud",
+    "opt-cloudHost-desc": "URL Servidor GoofCord. Pode auto-anfitriar , ver o repositório <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\"></a>."
 }
