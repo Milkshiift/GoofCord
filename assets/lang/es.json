@@ -100,5 +100,10 @@
     "opt-encryptionCover-desc": "Mensaje que verá un usuario sin contraseña. Al menos dos palabras o vacío.",
     "opt-blockedStrings-desc": "Si alguna de las cadenas especificadas está en la URL, se bloqueará.",
     "opt-autoscroll-desc": "Permite el desplazamiento automático con el botón central del ratón.",
-    "opt-arrpc-desc": "Permite usar una reimplementación de código abierto de la presencia enriquecida de Discord\nllamada <a target=\"_blank\" href=\"https://github.com/OpenAsar/arrpc\">arRPC</a>.\nSe necesita una <a target=\"_blank\" href=\"https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence\">solución alternativa</a> para que arRPC funcione en Flatpak"
+    "opt-arrpc-desc": "Permite usar una reimplementación de código abierto de la presencia enriquecida de Discord\nllamada <a target=\"_blank\" href=\"https://github.com/OpenAsar/arrpc\">arRPC</a>.\nSe necesita una <a target=\"_blank\" href=\"https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence\">solución alternativa</a> para que arRPC funcione en Flatpak",
+    "inviteMessage": "Tu quieres unirte",
+    "yes": "Si",
+    "no": "No",
+    "opt-cloudHost": "Host en la nube",
+    "opt-cloudHost-desc": "URL del servidor en la nube de GoofCord: ¿Te gustaría hostear GoofCord? Visita el <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">repositorio oficial</a> para obtener más información y comenzar."
 }
