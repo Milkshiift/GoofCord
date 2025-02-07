@@ -103,5 +103,7 @@
     "opt-domOptimizer": "Оптимізатор DOM",
     "inviteMessage": "Ви хочете приєднатися до",
     "no": "Ні",
-    "yes": "Так"
+    "yes": "Так",
+    "opt-cloudHost": "Хмарний Сервер",
+    "opt-cloudHost-desc": "Посилання на хмарний сервер GoofCord. Ви можете використовувати власний хостинг, дивіться <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">репозиторій</a>."
 }
