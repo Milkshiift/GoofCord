@@ -10,7 +10,7 @@ export async function addDefaultPlugins() {
             ["https://spikehd.github.io/shelter-plugins/shelteRPC/", true],
             ["https://milkshiift.github.io/goofcord-shelter-plugins/dynamic-icon/", true],
             ["https://milkshiift.github.io/goofcord-shelter-plugins/screenshare-quality/", true],
-            ["https://milkshiift.github.io/goofcord-shelter-plugins/console-suppressor/", true],
+            ["https://milkshiift.github.io/goofcord-shelter-plugins/console-suppressor/", false],
             ["https://milkshiift.github.io/goofcord-shelter-plugins/message-encryption/", true],
             ["https://milkshiift.github.io/goofcord-shelter-plugins/invidious-embeds/", true],
             ["https://milkshiift.github.io/goofcord-shelter-plugins/settings-category/", true],
