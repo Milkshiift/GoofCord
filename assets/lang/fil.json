@@ -99,5 +99,10 @@
     "opt-locale": "Wika 🌍",
     "opt-locale-desc": "Ito ay naiiba sa wika ng Discord. Pwede ninyo isalin ang GoofCord <a target=\"_blank\" href=\"https://hosted.weblate.org/projects/goofcord/goofcord/\">dito</a>.",
     "opt-domOptimizer": "DOM optimizer",
-    "opt-domOptimizer-desc": "Defers ang mga update ng DOM para posibleng butihin ang performance. Maaring magdulot ng visual artifacts."
+    "opt-domOptimizer-desc": "Defers ang mga update ng DOM para posibleng butihin ang performance. Maaring magdulot ng visual artifacts.",
+    "yes": "Oo",
+    "no": "Hindi",
+    "opt-cloudHost": "Cloud Host",
+    "inviteMessage": "Gusto mo ba sumama",
+    "settings-encryption-unavailable": "Hindi nakakita ng password manager ang GoofCord. Ang mga naka-encrypt na mga setting ay maiimbak sa plain text. Kung ikay ay nasa Linux, i-install ang gnome-libsecret o kwallet"
 }
