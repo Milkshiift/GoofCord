@@ -1,4 +1,4 @@
-import { Menu, Tray, app, dialog, nativeImage } from "electron";
+import { app, dialog, Menu, nativeImage, Tray } from "electron";
 import { i } from "./modules/localization.ts";
 import { saveState } from "./modules/windowStateManager.ts";
 import { getDisplayVersion, getTrayIcon } from "./utils.ts";
@@ -43,6 +43,15 @@ export async function createTray() {
 		},
 		{
 			type: "separator",
+		},
+		{
+			label: i("goofcord-restart"),
+			accelerator: "Shift+CmdOrCtrl+R",
+			click: async () => {
+				await saveState(mainWindow, "windowState:main");
+				app.relaunch();
+				app.exit();
+			},
 		},
 		{
 			label: i("goofcord-quit"),

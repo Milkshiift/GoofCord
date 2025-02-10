@@ -1,4 +1,4 @@
-import { BrowserWindow, Menu, app } from "electron";
+import { app, BrowserWindow, Menu } from "electron";
 import contextMenu from "electron-context-menu";
 import { i } from "./modules/localization.ts";
 import { cycleThroughPasswords } from "./modules/messageEncryption.ts";
@@ -43,6 +43,7 @@ export async function setApplicationMenu() {
 					label: i("goofcord-restart"),
 					accelerator: "Shift+CmdOrCtrl+R",
 					click: async () => {
+						await saveState(mainWindow, "windowState:main");
 						app.relaunch();
 						app.exit();
 					},
