@@ -11,6 +11,8 @@ import { registerScreenshareHandler } from "../screenshare/main.ts";
 export let mainWindow: BrowserWindow;
 
 export async function createMainWindow() {
+	if (process.argv.some((arg) => arg === "--headless")) return;
+
 	console.log(`${pc.blue("[Window]")} Opening window...`);
 	const transparency: boolean = getConfig("transparency");
 	mainWindow = new BrowserWindow({
