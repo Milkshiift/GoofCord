@@ -2,6 +2,7 @@ import { app, dialog, net, session, systemPreferences } from "electron";
 import pc from "picocolors";
 import { firstLaunch, getConfig } from "./config.ts";
 import { setMenu } from "./menu.ts";
+import { initArrpc } from "./modules/arrpc.ts";
 import { categorizeAllAssets } from "./modules/assetLoader.ts";
 import { initFirewall, unstrictCSP } from "./modules/firewall.ts";
 import { i } from "./modules/localization.ts";
@@ -31,9 +32,10 @@ export async function load() {
 
 	console.timeEnd(pc.green("[Timer]") + " GoofCord fully loaded in");
 
-	await updateMods();
-	await checkForUpdate();
-	await initVenmic();
+	void updateMods();
+	void checkForUpdate();
+	void initVenmic();
+	void initArrpc();
 }
 
 async function waitForInternetConnection() {

@@ -108,6 +108,10 @@ export const settingsSchema = {
 			inputType: "dropdown-multiselect",
 			options: ["vencord", "equicord", "shelter", "custom"],
 		},
+		modEtagCache: {
+			defaultValue: {},
+			outputType: "object",
+		},
 		customJsBundle: {
 			name: "Custom JS bundle",
 			defaultValue: "",

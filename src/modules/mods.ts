@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { Notification } from "electron";
 import pc from "picocolors";
-import { getConfig } from "../config.ts";
+import { getConfig, setConfig } from "../config.ts";
 import { getErrorMessage } from "../utils.ts";
 import { assetsFolder } from "./assetLoader.ts";
 
@@ -21,11 +21,26 @@ const MOD_BUNDLES_URLS: ModBundleUrls = {
 };
 
 async function downloadBundles(urls: Array<string | undefined>, name: string) {
-	console.log(LOG_PREFIX, "Downloading mod bundles for:", name);
+	const cache = getConfig("modEtagCache");
+	let logged = false;
 	for (const url of urls) {
 		if (!url) continue;
 		try {
-			const response = await fetch(url);
+			const response = await fetch(url, {
+				headers: {
+					'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.3',
+					"If-None-Match": cache[url] ?? "",
+				},
+			});
+
+			// Up to date
+			if (response.status === 304) continue;
+
+			cache[url] = response.headers.get("ETag");
+
+			if (!logged) console.log(LOG_PREFIX, "Downloading mod bundles for:", name);
+			logged = true;
+
 			const bundle = await response.text();
 
 			await fs.promises.writeFile(path.join(assetsFolder, `${name}${path.extname(url)}`), bundle, "utf-8");
@@ -40,7 +55,10 @@ async function downloadBundles(urls: Array<string | undefined>, name: string) {
 			return;
 		}
 	}
-	console.log(LOG_PREFIX, "Bundles downloaded for:", name);
+	if (logged) {
+		await setConfig("modEtagCache", cache);
+		console.log(LOG_PREFIX, "Bundles downloaded for:", name);
+	}
 }
 
 const enabledMods: string[] = [];
@@ -69,6 +87,6 @@ export async function updateMods() {
 		return;
 	}
 	for (const mod of enabledMods) {
-		void downloadBundles(MOD_BUNDLES_URLS[mod], mod);
+		await downloadBundles(MOD_BUNDLES_URLS[mod], mod);
 	}
 }

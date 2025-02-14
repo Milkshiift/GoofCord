@@ -1,6 +1,6 @@
 // This file is auto-generated. Any changes will be lost. See genSettingsTypes.mjs script
 
-export type ConfigKey = "locale" | "customTitlebar" | "minimizeToTray" | "startMinimized" | "dynamicIcon" | "customIconPath" | "discordUrl" | "modNames" | "customJsBundle" | "customCssBundle" | "noBundleUpdates" | "installDefaultShelterPlugins" | "invidiousEmbeds" | "messageEncryption" | "encryptionPasswords" | "encryptionCover" | "encryptionMark" | "firewall" | "customFirewallRules" | "blocklist" | "blockedStrings" | "allowedStrings" | "arrpc" | "domOptimizer" | "launchWithOsBoot" | "spellcheck" | "popoutWindowAlwaysOnTop" | "updateNotification" | "autoscroll" | "transparency" | "screensharePreviousSettings" | "windowState:main" | "trayIcon" | "cloudHost" | "cloudToken" | "cloudEncryptionKey";
+export type ConfigKey = "locale" | "customTitlebar" | "minimizeToTray" | "startMinimized" | "dynamicIcon" | "customIconPath" | "discordUrl" | "modNames" | "modEtagCache" | "customJsBundle" | "customCssBundle" | "noBundleUpdates" | "installDefaultShelterPlugins" | "invidiousEmbeds" | "messageEncryption" | "encryptionPasswords" | "encryptionCover" | "encryptionMark" | "firewall" | "customFirewallRules" | "blocklist" | "blockedStrings" | "allowedStrings" | "arrpc" | "domOptimizer" | "launchWithOsBoot" | "spellcheck" | "popoutWindowAlwaysOnTop" | "updateNotification" | "autoscroll" | "transparency" | "screensharePreviousSettings" | "windowState:main" | "trayIcon" | "cloudHost" | "cloudToken" | "cloudEncryptionKey";
 
 export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "locale": string;
@@ -11,6 +11,7 @@ export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "customIconPath": string;
     "discordUrl": string;
     "modNames": string[];
+    "modEtagCache": object;
     "customJsBundle": string;
     "customCssBundle": string;
     "noBundleUpdates": boolean;
@@ -48,6 +49,7 @@ export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "customIconPath": string;
     "discordUrl": string;
     "modNames": string[];
+    "modEtagCache": object;
     "customJsBundle": string;
     "customCssBundle": string;
     "noBundleUpdates": boolean;

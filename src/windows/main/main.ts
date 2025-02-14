@@ -4,7 +4,6 @@ import { app, BrowserWindow, ipcMain, shell } from "electron";
 import pc from "picocolors";
 import { getConfig } from "../../config.ts";
 import { getUserAgent } from "../../modules/agent.ts";
-import { initArrpc } from "../../modules/arrpc.ts";
 import { adjustWindow } from "../../modules/windowStateManager.ts";
 import { dirname, getAsset, getCustomIcon } from "../../utils.ts";
 import { registerScreenshareHandler } from "../screenshare/main.ts";
@@ -57,7 +56,6 @@ async function doAfterDefiningTheWindow() {
 	setWindowOpenHandler();
 	registerScreenshareHandler();
 	void initYoutubeAdblocker();
-	void initArrpc();
 }
 
 let subscribed = false;
