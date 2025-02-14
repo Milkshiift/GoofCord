@@ -1,5 +1,6 @@
 import { dialog } from "electron";
 import { getConfig } from "../config.ts";
+import { getGoofCordFolderPath } from "../utils.ts";
 import { mainWindow } from "../windows/main/main.ts";
 import { i } from "./localization.ts";
 
@@ -8,7 +9,7 @@ export async function initArrpc() {
 	try {
 		const { default: Server } = await import("arrpc");
 		const Bridge = await import("arrpc/src/bridge.js");
-		const server = new Server();
+		const server = new Server(getGoofCordFolderPath() + "/detectable.json");
 		server.on("activity", (data: object) => Bridge.send(data));
 		server.on("invite", async (code: string) => {
 			const inviteRequest = await fetch("https://discordapp.com/api/v9/invites/" + code);
