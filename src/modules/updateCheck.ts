@@ -32,36 +32,51 @@ export async function checkForUpdate() {
 }
 
 function isSemverLower(version1: string, version2: string): boolean {
-	const parseVersion = (version: string) => {
-		const [main, preRelease] = version.split("-");
-		const mainParts = main.split(".").map(Number);
-		const preReleaseParts = preRelease ? preRelease.split(".").map((p) => (Number.isNaN(Number(p)) ? p : Number(p))) : [];
+	function compareParts(a: string | number | undefined, b: string | number | undefined): number {
+		const aNum = typeof a === 'number' || (typeof a === 'string' && !Number.isNaN(Number(a)));
+		const bNum = typeof b === 'number' || (typeof b === 'string' && !Number.isNaN(Number(b)));
 
-		return { mainParts, preReleaseParts };
-	};
-
-	const compareParts = (part1: string | number, part2: string | number) => {
-		if (typeof part1 === "number" && typeof part2 === "number") return part1 - part2;
-		if (typeof part1 === "number") return -1;
-		if (typeof part2 === "number") return 1;
-		return part1.localeCompare(part2);
-	};
-
-	const { mainParts: v1Main, preReleaseParts: v1Pre } = parseVersion(version1);
-	const { mainParts: v2Main, preReleaseParts: v2Pre } = parseVersion(version2);
-
-	for (let i = 0; i < Math.max(v1Main.length, v2Main.length); i++) {
-		const cmp = (v1Main[i] || 0) - (v2Main[i] || 0);
-		if (cmp !== 0) return cmp < 0;
+		if (aNum && bNum) return (Number(a) ?? 0) - (Number(b) ?? 0);
+		if (aNum) return -1;
+		if (bNum) return 1;
+		return String(a ?? '').localeCompare(String(b ?? ''));
 	}
 
-	if (v1Pre.length === 0 && v2Pre.length > 0) return false;
-	if (v1Pre.length > 0 && v2Pre.length === 0) return true;
+	function compareVersionParts(v1: string, v2: string): boolean {
+		const [v1Main, v1Pre] = v1.split('-');
+		const [v2Main, v2Pre] = v2.split('-');
 
-	for (let i = 0; i < Math.max(v1Pre.length, v2Pre.length); i++) {
-		const cmp = compareParts(v1Pre[i] || "", v2Pre[i] || "");
-		if (cmp !== 0) return cmp < 0;
+		const v1MainParts = v1Main.split('.').map(Number);
+		const v2MainParts = v2Main.split('.').map(Number);
+
+		const v1IsPreRelease = v1Pre !== undefined;
+		const v2IsPreRelease = v2Pre !== undefined;
+
+		if (!v1IsPreRelease && v2IsPreRelease) {
+			return false;
+		}
+		if(v1IsPreRelease && !v2IsPreRelease){
+			return true;
+		}
+
+		for (let i = 0; i < Math.max(v1MainParts.length, v2MainParts.length); i++) {
+			const cmp = compareParts(v1MainParts[i], v2MainParts[i]);
+			if (cmp !== 0) return cmp < 0;
+		}
+		const v1PreParts = v1Pre ? v1Pre.split('.') : [];
+		const v2PreParts = v2Pre ? v2Pre.split('.') : [];
+
+		if (!v1Pre && v2Pre) return false;
+		if (v1Pre && !v2Pre) return true;
+
+		for (let i = 0; i < Math.max(v1PreParts.length, v2PreParts.length); i++) {
+			const cmp = compareParts(v1PreParts[i], v2PreParts[i]);
+			if (cmp !== 0) return cmp < 0;
+		}
+
+
+		return false;
 	}
 
-	return false;
+	return compareVersionParts(version1, version2);
 }
