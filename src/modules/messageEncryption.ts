@@ -1,4 +1,4 @@
-import { dialog, ipcMain } from "electron";
+import { dialog } from "electron";
 import pc from "picocolors";
 import StegCloak from "stegcloak";
 import { getConfig } from "../config.ts";
@@ -11,10 +11,6 @@ let chosenPassword: string;
 let encryptionMark: string;
 let cover: string;
 
-ipcMain.on("messageEncryption:getDecryptedPasswords", (event) => {
-	event.returnValue = encryptionPasswords;
-});
-
 export function initEncryption() {
 	try {
 		void loadPasswords();
@@ -26,9 +22,6 @@ export function initEncryption() {
 	}
 }
 
-// This function loads encrypted encryption passwords from the configuration, decrypts them, and stores them in memory.
-// Although storing passwords in memory is not secure due to potential memory inspection, it's considered acceptable
-// since the application code (.asar) can be replaced by malicious actors, providing alternate and easier ways for password retrieval.
 async function loadPasswords() {
 	const encryptedPasswords = getConfig("encryptionPasswords");
 	try {
