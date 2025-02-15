@@ -38,7 +38,7 @@ export async function loadCloud<IPCHandle>() {
 }
 
 export async function saveCloud<IPCHandle>() {
-	const excludedOptions = ["cloudEncryptionKey", "cloudHost", "cloudToken"];
+	const excludedOptions = ["cloudEncryptionKey", "cloudHost", "cloudToken", "modEtagCache"];
 	const configToSave = new Map(cachedConfig);
 	if (getEncryptionKey()) {
 		configToSave.set("encryptionPasswords", encryptionPasswords);
