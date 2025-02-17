@@ -75,7 +75,7 @@ async function setPermissions() {
 			if (details.mediaTypes?.includes("video")) {
 				callback(await systemPreferences.askForMediaAccess("camera"));
 			}
-		} else if (["media", "notifications", "fullscreen", "clipboard-sanitized-write", "openExternal"].includes(permission)) {
+		} else if (["media", "notifications", "fullscreen", "clipboard-sanitized-write", "openExternal", "pointerLock", "keyboardLock"].includes(permission)) {
 			callback(true);
 		}
 	});
