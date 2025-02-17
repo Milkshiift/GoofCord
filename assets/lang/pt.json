@@ -81,7 +81,7 @@
     "menu-edit-cut": "Cortar",
     "category-cloud": "Configurações de nuvem",
     "opt-locale-desc": "Isso é separado do idioma que o Discord usa. Você pode traduzir o GoofCord para outras línguas <a target=\"_blank\" href=\"https://hosted.weblate.org/projects/goofcord/goofcord/\">aqui</a>.",
-    "opt-dynamicIcon-desc": "Mostra uma contagem de pings/menções no ícone do GoofCord. Isso sobrepõe o ícone personalizado.\nNo Linux, menções na barra de tarefas só são possíveis com launcher do Unity ou com o pacote \"unitylib\".",
+    "opt-dynamicIcon-desc": "Mostra uma contagem de pings/menções no ícone do GoofCord. Isso sobrepõe o ícone personalizado.\nNo Linux, menções na barra de tarefas só são possíveis com launcher do Unity ou com o pacote \"unitylib\"",
     "opt-installDefaultShelterPlugins": "Instalar plugins padrão do Shelter",
     "opt-invidiousEmbeds": "Embeds do Inviduos",
     "opt-messageEncryption-desc": "Veja sobre <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/Message-Encryption\">criptografia de mensagens</a>.",
