@@ -40,10 +40,7 @@ export function registerScreenshareHandler() {
 			capturerWindow.close();
 			// https://github.com/Milkshiift/goofcord-shelter-plugins/tree/main/plugins/screenshare-quality
 			await request.frame?.executeJavaScript(`
-                try{
-                    window.ScreenshareQuality.patchScreenshareQuality(${resolution}, ${framerate})
-                } catch(e) {console.log(e);}
-                window.contentHint = "${contentHint}";
+				window.screenshareSettings = ${JSON.stringify({resolution: resolution, framerate: framerate, contentHint: contentHint})};
             `);
 
 			const result = isWayland || id === "0" ? sources[0] : { id, name, width: 9999, height: 9999 };

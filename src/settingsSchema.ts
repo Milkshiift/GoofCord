@@ -142,7 +142,7 @@ export const settingsSchema = {
 		},
 		installDefaultShelterPlugins: {
 			defaultValue: true,
-			outputType: "bool",
+			outputType: "boolean",
 		},
 		invidiousEmbeds: {
 			name: "Invidious embeds",

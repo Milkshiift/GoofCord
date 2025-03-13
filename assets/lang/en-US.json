@@ -58,8 +58,6 @@
   "opt-customJsBundle-desc": "",
   "opt-customCssBundle": "Custom CSS bundle",
   "opt-customCssBundle-desc": "A raw link to the JS bundle and CSS bundle of a client mod you want to use.",
-  "opt-installDefaultShelterPlugins": "Install default Shelter plugins",
-  "opt-installDefaultShelterPlugins-desc": "Adds GoofCord's helper plugins to Shelter on launch. Don't disable unless facing issues.",
   "opt-invidiousEmbeds": "Invidious embeds",
   "opt-invidiousEmbeds-desc": "Replaces YouTube embeds with Invidious embeds. You can customize the instance from Shelter's settings.",
   "opt-messageEncryption": "Message encryption",

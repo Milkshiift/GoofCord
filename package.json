@@ -1,6 +1,6 @@
 {
   "name": "goofcord",
-  "version": "1.8.4",
+  "version": "1.9.0",
   "description": "Take control of your Discord experience with GoofCord – the highly configurable and privacy-minded discord client.",
   "main": "ts-out/main.js",
   "scripts": {
@@ -24,11 +24,12 @@
   "homepage": "https://github.com/Milkshiift/GoofCord",
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@types/bun": "^1.2.4",
-    "@types/node": "^22.13.9",
+    "@types/bun": "^1.2.5",
+    "@types/node": "^22.13.10",
     "@types/stegcloak": "^1.0.2",
-    "electron": "^35.0.0",
-    "electron-builder": "^26.0.10",
+    "@vencord/types": "^1.11.5",
+    "electron": "^35.0.1",
+    "electron-builder": "^26.0.11",
     "ts-morph": "^25.0.1",
     "typescript": "^5.8.2"
   },
@@ -39,7 +40,7 @@
     "jimp": "^1.6.0",
     "picocolors": "^1.1.1",
     "stegcloak": "github:Milkshiift/stegcloak-node",
-    "v8-compile-cache": "github:JulioC/v8-compile-cache#bugfix/esm"
+    "v8-compile-cache": "github:JulioC/v8-compile-cache#bugfix/esm",
   },
   "optionalDependencies": {
     "@vencord/venmic": "^6.1.0"
