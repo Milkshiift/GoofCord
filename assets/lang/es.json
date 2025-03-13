@@ -52,8 +52,6 @@
     "opt-modNames": "Mods del cliente",
     "opt-customJsBundle": "Paquete JS personalizado",
     "opt-customJsBundle-desc": " ",
-    "opt-installDefaultShelterPlugins": "Instalar los complementos predeterminados de Shelter",
-    "opt-installDefaultShelterPlugins-desc": "Agrega los complementos de ayuda de GoofCord a Shelter al iniciarse. No los deshabilites a menos que tengas problemas.",
     "opt-invidiousEmbeds": "Incrustaciones de Invidious",
     "opt-messageEncryption": "Cifrado de mensajes",
     "opt-encryptionPasswords": "Contraseñas de cifrado",

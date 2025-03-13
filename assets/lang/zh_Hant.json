@@ -44,8 +44,6 @@
     "screenshare-resolution": "畫質",
     "screenshare-framerate": "楨率",
     "opt-customCssBundle": "自訂 CSS 模組",
-    "opt-installDefaultShelterPlugins": "安裝預設 Shelter 模組",
-    "opt-installDefaultShelterPlugins-desc": "在開啟 GoofCord 時自動安裝 Shelter 優化模組。請勿在沒有問題的情況下停用此設定。",
     "opt-encryptionMark": "加密標記",
     "opt-firewall": "防火牆",
     "opt-encryptionPasswords-desc": "將會被安全地儲存的密碼清單。請隨時備份此清單。以逗號分隔不同項目。",
