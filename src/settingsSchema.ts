@@ -141,10 +141,8 @@ export const settingsSchema = {
 			inputType: "checkbox",
 		},
 		installDefaultShelterPlugins: {
-			name: "Install default Shelter plugins",
 			defaultValue: true,
-			description: "Adds GoofCord's helper plugins to Shelter on launch. Don't disable unless facing issues.",
-			inputType: "checkbox",
+			outputType: "bool",
 		},
 		invidiousEmbeds: {
 			name: "Invidious embeds",
