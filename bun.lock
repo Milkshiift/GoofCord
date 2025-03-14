@@ -238,7 +238,7 @@
 
     "argparse": ["argparse@2.0.1", "", {}, "sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q=="],
 
-    "arrpc": ["arrpc@github:Milkshiift/arrpc#6e2c5fa", { "dependencies": { "picocolors": "^1.1.1", "ws": "^8.18.1" }, "optionalDependencies": { "bufferutil": "^4.0.9" }, "bin": { "arrpc": "src/index.js" } }, "Milkshiift-arrpc-6e2c5fa"],
+    "arrpc": ["arrpc@github:Milkshiift/arrpc#3ea2abb", { "dependencies": { "picocolors": "^1.1.1", "ws": "^8.18.1" }, "optionalDependencies": { "bufferutil": "^4.0.9" }, "bin": { "arrpc": "src/index.js" } }, "Milkshiift-arrpc-3ea2abb"],
 
     "assert-plus": ["assert-plus@1.0.0", "", {}, "sha512-NfJ4UzBCcQGLDlQq7nHxH+tv3kyZ0hHQqF5BO6J7tNJeP5do1llPr8dZ8zHonfhAu0PHAdMkSo+8o0wxg9lZWw=="],
 
