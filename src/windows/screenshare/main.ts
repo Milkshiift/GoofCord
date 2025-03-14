@@ -1,7 +1,7 @@
 import path from "node:path";
 import { BrowserWindow, desktopCapturer, ipcMain, screen, session } from "electron";
 import pc from "picocolors";
-import { hasPipewirePulse, venmicList, venmicStartSystem } from "../../modules/venmic.ts";
+import { hasPipewirePulse, initVenmic, venmicList, venmicStartSystem } from "../../modules/venmic.ts";
 import { dirname, getAsset } from "../../utils.ts";
 
 let capturerWindow: BrowserWindow;
@@ -45,19 +45,22 @@ export function registerScreenshareHandler() {
 
 			const result = isWayland || id === "0" ? sources[0] : { id, name, width: 9999, height: 9999 };
 			if (audio) {
-				if (process.platform === "linux" && hasPipewirePulse) {
-					console.log(pc.cyan("[Screenshare]"), "Starting Venmic...");
-					console.log(
-						pc.cyan("[Screenshare]"),
-						"Available sources:",
-						// Comment out "map" if you need more details for Venmic poking
-						venmicList().map((s) => s["media.class"] === "Stream/Output/Audio" ? s["application.name"] : undefined).filter(Boolean),
-					);
-					venmicStartSystem();
-					callback({ video: result });
-				} else {
-					callback({ video: result, audio: "loopback" });
+				if (process.platform === "linux") {
+					await initVenmic();
+					if (hasPipewirePulse) {
+						console.log(pc.cyan("[Screenshare]"), "Starting Venmic...");
+						console.log(
+							pc.cyan("[Screenshare]"),
+							"Available sources:",
+							// Comment out "map" if you need more details for Venmic poking
+							venmicList().map((s) => s["media.class"] === "Stream/Output/Audio" ? s["application.name"] : undefined).filter(Boolean),
+						);
+						venmicStartSystem();
+						callback({ video: result });
+						return;
+					}
 				}
+				callback({ video: result, audio: "loopback" });
 				return;
 			}
 			callback({ video: result });

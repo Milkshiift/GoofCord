@@ -9,7 +9,7 @@ let venmic: PatchBay;
 export let hasPipewirePulse = false;
 
 export async function initVenmic() {
-	if (process.argv.some((arg) => arg === "--no-venmic")) return;
+	if (process.argv.some((arg) => arg === "--no-venmic") || patchBay !== undefined) return;
 	try {
 		patchBay = (createRequire(import.meta.url)(getAsset(`venmic-${process.arch}.node`)) as typeof import("@vencord/venmic")).PatchBay;
 		venmic = new patchBay();

@@ -9,7 +9,6 @@ import { i } from "./modules/localization.ts";
 import { initEncryption } from "./modules/messageEncryption.ts";
 import { manageMods, updateMods } from "./modules/mods.ts";
 import { checkForUpdate } from "./modules/updateCheck.ts";
-import { initVenmic } from "./modules/venmic.ts";
 import { createTray } from "./tray.ts";
 import { getCustomIcon, isDev } from "./utils.ts";
 import { createMainWindow } from "./windows/main/main.ts";
@@ -34,7 +33,6 @@ export async function load() {
 
 	void updateMods();
 	void checkForUpdate();
-	void initVenmic();
 	void initArrpc();
 }
 
