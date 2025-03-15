@@ -6,7 +6,7 @@ import { mainWindow } from "../windows/main/main.ts";
 
 let venbind: VenbindType | undefined = undefined;
 export function obtainVenbind() {
-    if (venbind !== undefined) return venbind;
+    if (venbind !== undefined || process.argv.some((arg) => arg === "--no-venbind")) return venbind;
     try {
         venbind = (createRequire(import.meta.url)(getAsset(`venbind-${process.platform}-${process.arch}.node`)));
     } catch (e: unknown) {
