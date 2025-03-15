@@ -26,8 +26,17 @@ async function main() {
 function setFlags() {
 	if (process.argv.some((arg) => arg === "--no-flags")) return;
 	const disableFeatures = ["OutOfBlinkCors", "UseChromeOSDirectVideoDecoder", "HardwareMediaKeyHandling", "MediaSessionService", "WebRtcAllowInputVolumeAdjustment", "Vulkan"];
-	const enableFeatures = ["WebRTC", "WebRtcHideLocalIpsWithMdns", "PlatformHEVCEncoderSupport", "EnableDrDc", "CanvasOopRasterization", "UseSkiaRenderer"];
-	if (process.platform === "linux") enableFeatures.push("PulseaudioLoopbackForScreenShare", "VaapiVideoDecoder", "VaapiVideoEncoder", "VaapiVideoDecodeLinuxGL");
+	const enableFeatures = [
+		"WebRTC",
+		"WebRtcHideLocalIpsWithMdns",
+		"PlatformHEVCEncoderSupport",
+		"EnableDrDc",
+		"CanvasOopRasterization",
+		"UseSkiaRenderer",
+		"AcceleratedVideoEncoder",
+		"AcceleratedVideoDecoder",
+	];
+	if (process.platform === "linux") enableFeatures.push("PulseaudioLoopbackForScreenShare", "VaapiVideoDecoder", "VaapiVideoEncoder", "VaapiVideoDecodeLinuxGL", "AcceleratedVideoDecodeLinuxGL", "AcceleratedVideoDecodeLinuxZeroCopyGL");
 	app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 	app.commandLine.appendSwitch("enable-speech-dispatcher");
 	app.commandLine.appendSwitch("disable-features", disableFeatures.join(","));

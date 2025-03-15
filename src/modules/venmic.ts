@@ -51,6 +51,7 @@ export function venmicStartSystem() {
 }
 
 export function stopVenmic<IPCHandle>() {
+	if (!venmic) return;
 	console.log(pc.cyan("[Screenshare]"), "Stopping Venmic...");
 	venmic.unlink();
 }

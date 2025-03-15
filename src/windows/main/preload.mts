@@ -4,6 +4,8 @@ import { ipcRenderer, webFrame } from "electron";
 import { log } from "../../modules/logger.ts";
 import { injectTitlebar } from "./titlebar.ts";
 import { getDefaultScripts } from "./defaultAssets.ts";
+import "./patches/screenshare.ts";
+import "./patches/keybinds.ts";
 
 const assets: Record<string, string[][]> = ipcRenderer.sendSync("assetLoader:getAssets");
 

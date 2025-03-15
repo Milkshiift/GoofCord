@@ -64,7 +64,7 @@ let subscribed = false;
 function subscribeToAppEvents() {
 	if (subscribed) return;
 	subscribed = true;
-	app.on("second-instance", () => {
+	app.on("second-instance", (_event, cmdLine, _cwd, _data) => {
 		mainWindow.restore();
 		mainWindow.show();
 	});

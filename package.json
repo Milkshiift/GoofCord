@@ -41,6 +41,7 @@
     "picocolors": "^1.1.1",
     "stegcloak": "github:Milkshiift/stegcloak-node",
     "v8-compile-cache": "github:JulioC/v8-compile-cache#bugfix/esm",
+    "venbind": "^0.0.3"
   },
   "optionalDependencies": {
     "@vencord/venmic": "^6.1.0"
