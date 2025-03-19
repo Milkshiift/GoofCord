@@ -1,5 +1,5 @@
 {
-    "goofcord-open": "Ouvert GoofCord",
+    "goofcord-open": "Ouvrir GoofCord",
     "welcomeMessage": "Bienvenue à GoofCord !\nConfigurez les paramètres à votre convenance et redémarrez GoofCord pour accéder à Discord.\nVous pouvez le faire avec Ctrl+Maj+R ou par le menu tray/dock.\nBonne discussion !",
     "goofcord-about": "À propos GoofCord",
     "goofcord-quit": "Abandon",
@@ -31,7 +31,7 @@
     "category-firewall": "Paramètres du pare-feu",
     "settingsWindow-title": "Paramètres de Goofcord | Version : ",
     "menu-edit-paste": "Coller",
-    "menu-edit-selectAll": "Sélectionner tout",
+    "menu-edit-selectAll": "Tout sélectionner",
     "menu-zoom": "Zoom",
     "menu-zoom-in": "Zoom avant",
     "menu-zoom-out": "Zoom arrière",
@@ -65,5 +65,10 @@
     "opt-modNames-desc": "Quels mods client utiliser. <b>Vous ne devriez pas désactiver Shelter</b>car il est utilisé par de nombreuses fonctionnalités de GoofCord. Ne pas mélanger les forks d'un même mod (par exemple Vencord et Equicord). <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/FAQ#how-do-i-add-a-custom-client-mod\">Le mod client que je veux utiliser n'est pas listé</a>.",
     "opt-invidiousEmbeds": "Embeds de Invidious",
     "opt-messageEncryption-desc": "Voir<a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/Message-Encryption\">cryptage des messages</a>.",
-    "opt-encryptionPasswords-desc": "Liste chiffrée et stockée en toute sécurité des mots de passe qui seront utilisés pour le chiffrement. Il est recommandé de conserver une copie de sauvegarde dans un endroit chaud et sûr. Séparez les entrées par des virgules."
+    "opt-encryptionPasswords-desc": "Liste chiffrée et stockée en toute sécurité des mots de passe qui seront utilisés pour le chiffrement. Il est recommandé de conserver une copie de sauvegarde dans un endroit chaud et sûr. Séparez les entrées par des virgules.",
+    "no": "Non",
+    "inviteMessage": "Voulez-vous rejoindre",
+    "yes": "Oui",
+    "menu-edit-undo": "Annuler",
+    "menu-edit-redo": "Rétablir"
 }
