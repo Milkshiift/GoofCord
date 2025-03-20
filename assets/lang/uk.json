@@ -54,8 +54,6 @@
     "opt-modNames-desc": "Які модифікації клієнта використовувати. <b>Не вимикайте Shelter</b>, оскільки він використовується багатьма функціями GoofCord. Не змішувати форки одного моду (наприклад, Vencord і Equicord). <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/FAQ#how-do-i-add-a-custom-client-mod\">Мод який я хочу використовувати не перерахований </a>.",
     "opt-customJsBundle": "Власний JS файл",
     "opt-customCssBundle-desc": "Посилання на JS і CSS файли вашої модифікації.",
-    "opt-installDefaultShelterPlugins": "Типове встановлення плагінів Shelter",
-    "opt-installDefaultShelterPlugins-desc": "Додає допоміжні плагіни GoofCord до Shelter при запуску. Вимикайте тільки при виникненні проблем.",
     "opt-invidiousEmbeds": "Використовувати Invidious для YouTube відео",
     "opt-invidiousEmbeds-desc": "Заміняє відео YouTube на ідентичне відео Invidious для покращеної конфіденційності. Ви можете змінити екземпляр Invidious в налаштуваннях Shelter.",
     "opt-messageEncryption": "Шифрування повідомлень",
