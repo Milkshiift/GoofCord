@@ -70,5 +70,7 @@
     "inviteMessage": "Voulez-vous rejoindre",
     "yes": "Oui",
     "menu-edit-undo": "Annuler",
-    "menu-edit-redo": "Rétablir"
+    "menu-edit-redo": "Rétablir",
+    "opt-blocklist-desc": "Une liste d'URLs à bloquer. Chaque entrée doit être séparée par une virgule.",
+    "opt-blockedStrings": "Chaînes de caractères bloquées"
 }
