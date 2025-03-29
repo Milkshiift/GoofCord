@@ -1,6 +1,6 @@
 <div align="center">
 <img src="assetsDev/gf_logo_full.png" width="520" alt="GoofCord logo">
-<h2>Take control of your Discord experience with GoofCord – the highly configurable and privacy-focused Discord client.<br>Based on <a href="https://github.com/Legcord/Legcord">Legcord</a>.</h2>
+<h2>Take control of your Discord experience with GoofCord – the highly configurable and privacy-focused Discord client.<br><sub>Based on <a href="https://github.com/Legcord/Legcord">Legcord</a></sub></h2>
 <img src="https://img.shields.io/github/downloads/Milkshiift/GoofCord/total">
 <a href="https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md"><img src="https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg"></a>
 <img src="https://img.shields.io/github/license/Milkshiift/GoofCord">
@@ -14,14 +14,13 @@
 - **:lock: With Privacy in mind**: GoofCord blocks all tracking and uses multiple techniques like message encryption to improve your privacy and security. [Learn more](https://github.com/Milkshiift/GoofCord/wiki/Privacy-FAQ)
 - **:gear: Your Way, Your Client**: Set up GoofCord to your liking with an array of customization options.
 - **:chart_with_upwards_trend: Fast and Performant**: Glide through your chats with GoofCord's superior speed and responsiveness compared to the official client. 
-- **:bookmark: Standalone**: GoofCord is a standalone client, not reliant on the original Discord client in any way.
-- **:electric_plug: Plugins & Themes support**: Easily use client mods like [Vencord](https://github.com/Vendicated/Vencord) or [Shelter](https://github.com/uwu/shelter) for a world of plugins and themes.
+- **:bookmark: Standalone**: GoofCord is a standalone application, not reliant on the original Discord client in any way.
+- **:electric_plug: Plugins & Themes support**: Easily use client mods like [Vencord](https://github.com/Vendicated/Vencord), [Equicord](https://github.com/Equicord/Equicord) or [Shelter](https://github.com/uwu/shelter) for a world of plugins and themes.
 - **🐧 Linux support**: Seamless screensharing with audio and native Wayland support on Linux. See FAQ for details.
 
-## Ready to Dive In?
+## Installation
 ### Windows 🪟
 
-* **Windows 7/8:** Use [this](https://github.com/Alex313031/GoofCord-Win7) fork. (could be outdated)
 * Install with prebuilt binaries from the [releases](https://github.com/Milkshiift/GoofCord/releases/latest) page.    
 Choose `GoofCord-Setup-<YOUR ARCHITECTURE>.exe` for an installer, or    
 `GoofCord-<VERSION>-win-<YOUR ARCHITECTURE>.zip` to manually unpack into a directory of your choice.
@@ -34,8 +33,7 @@ Choose `GoofCord-Setup-<YOUR ARCHITECTURE>.exe` for an installer, or
 * Install from [AUR](https://aur.archlinux.org/packages/goofcord-bin) if you run an **Arch**-based OS. Here's an example using yay:    
 `yay -S goofcord-bin`    
 Keep in mind that the AUR package is not maintained by the developers of GoofCord.
-* Install in **NixOS** system-wide by adding ``pkgs.goofcord`` to ``environment.systemPackages``     
-Testing in a temporary shell can also be done using ``nix shell nixpkgs#goofcord``
+* Install in **NixOS** from [nixpkgs](https://search.nixos.org/packages?channel=unstable&query=goofcord).
 
 ### macOS 🍏
 
@@ -44,8 +42,7 @@ Choose the file ending with `mac-arm64.dmg` if your computer uses an Apple Silic
 Otherwise, choose the file that ends with `mac-x64.dmg`
 * If you get an error like "GoofCord is damaged and can't be opened" see [this issue](https://github.com/Milkshiift/GoofCord/issues/7)
 
-To explore plugins and themes, head over to the Vencord category in the Discord settings.    
-Have fun!
+To explore plugins and themes, head over to the Vencord category in the Discord settings.
     
 And if you want to compile it yourself, here's how:
 1. Install [Node.js](https://nodejs.dev) *and* [Bun](https://bun.sh) for package management and bundling.
@@ -79,9 +76,6 @@ And if you want to compile it yourself, here's how:
 `--enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform-hint=auto`    
 If GoofCord shows a black screen, also include this flag: `--disable-gpu-sandbox`
 
-### How do I stream with audio on Linux?
-- If you use PulseAudio it should work out of the box. For PipeWire you will need to install pipewire-pulse if it's not already installed
-
 ### Seeking the Source Code? 🕵️‍♂️
 - You can find our source code on [GitHub](https://github.com/Milkshiift/GoofCord/).
 
@@ -95,3 +89,9 @@ If GoofCord shows a black screen, also include this flag: `--disable-gpu-sandbox
 [Vencord](https://github.com/Vendicated/Vencord)     
 [Vesktop](https://github.com/Vencord/Vesktop)    
 [WebCord](https://github.com/SpacingBat3/WebCord)
+
+## Donations
+If you like GoofCord, you can support me with crypto:
+- **XMR (Monero)**: `44FyEbizgCbCaghrtCp2BGQ7WZcNRkwAMNEf9fUzgu6A3wmQq8yqrHiAMu2jT784k6NcSByJUApk8jMREMmUJQeu9g6Dxbq`
+- **USDT (Polygon/BEP20)**: `0x48680c916b59e3b254e637fd3cd764fec90aa93e`
+- **BTC**: `3F9YHx5KQ5yvYwKfVYcJh5a4HqSfUJyG1w`
