@@ -1,5 +1,14 @@
 [class*="scrollerBase"] {
     will-change: transform;
+    contain: content;
+}
+
+[class*="messagesWrapper"] {
+    contain: strict;
+}
+
+[class*="containerDefault"] {
+    content-visibility: auto;
 }
 
 /* Hide download discord button */

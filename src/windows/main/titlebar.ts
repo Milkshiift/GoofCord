@@ -1,28 +1,12 @@
 import fs from "node:fs/promises";
 import { ipcRenderer, webFrame } from "electron";
 
-let titlebar: HTMLDivElement;
-function createTitlebar() {
-	titlebar = document.createElement("div");
-	titlebar.innerHTML = `
-		<p class="titlebar-text"></p>
-        <nav class="titlebar">
-          <div class="window-title" id="window-title"></div>
-          <div id="window-controls-container">
-            <div id="minimize"></div>
-            <div id="maximize"></div>
-            <div id="quit"></div>
-          </div>
-        </nav>
-    `;
-	titlebar.classList.add("withFrame-haYltI");
-	return titlebar;
-}
+let titlebar: HTMLElement;
 
-async function attachTitlebarEvents(titlebar: HTMLDivElement) {
-	const minimize = titlebar.querySelector("#minimize");
-	const maximize = titlebar.querySelector("#maximize");
-	const quit = titlebar.querySelector("#quit");
+async function attachControlsEvents(container: Element) {
+	const minimize = container.querySelector("#minimize");
+	const maximize = container.querySelector("#maximize");
+	const quit = container.querySelector("#quit");
 
 	minimize?.addEventListener("click", () => {
 		void ipcRenderer.invoke("window:Minimize");
@@ -47,53 +31,62 @@ async function attachTitlebarEvents(titlebar: HTMLDivElement) {
 }
 
 export async function injectTitlebar() {
-	const titlebar = createTitlebar();
+	const titlebarCss = fs.readFile(ipcRenderer.sendSync("utils:getAsset", "css/titlebar.css"), "utf8");
 
-	const appMount = document.getElementById("app-mount");
-	if (!appMount) return;
-
-	appMount.prepend(titlebar);
-
-	// MutationObserver to check if the title bar gets destroyed
-	const observer = new MutationObserver((mutations) => {
-		for (const mutation of mutations) {
-			const removedNodes = Array.from(mutation.removedNodes);
-			if (removedNodes.includes(titlebar)) {
-				console.log("Reinjecting titlebar");
-				injectTitlebar().catch((error) => console.error("Error reinjecting titlebar:", error));
-				break;
-			}
-		}
-	});
-	observer.observe(appMount, { childList: true, subtree: false });
-
-	if (!ipcRenderer.sendSync("config:getConfig", "customTitlebar")) {
-		const infoOnlyTitlebarCss = await fs.readFile(ipcRenderer.sendSync("utils:getAsset", "css/infoOnlyTitlebar.css"), "utf8");
-		webFrame.insertCSS(infoOnlyTitlebarCss);
+	while (!document.querySelector('[data-windows]')) {
+		await new Promise((resolve) => setTimeout(resolve, 100));
 	}
-	const titlebarCss = await fs.readFile(ipcRenderer.sendSync("utils:getAsset", "css/titlebar.css"), "utf8");
-	webFrame.insertCSS(titlebarCss);
 
-	await attachTitlebarEvents(titlebar);
+	const bar = document.querySelector('[data-windows]');
+	if (!bar) return;
+	titlebar = bar as HTMLElement;
+	const leading = titlebar.querySelector('[class^="leading"]');
+	const title = titlebar.querySelector('[class^="title"]');
+	const trailing = titlebar.querySelector('[class^="trailing"]');
+	if (!leading || !title || !trailing) return;
+
+	const titlebarText = document.createElement("p");
+	titlebarText.id = "titlebar-text";
+	title.prepend(titlebarText);
+
+	if (ipcRenderer.sendSync("config:getConfig", "customTitlebar")) {
+		const wordmark = document.createElement("div");
+		wordmark.id = "window-title";
+		leading.prepend(wordmark);
+
+		const controlsFiller = document.createElement('div');
+		controlsFiller.id = "window-controls-filler";
+		trailing.append(controlsFiller);
+
+		const appMount = document.getElementById("app-mount");
+		if (appMount) {
+			const controls = document.createElement('div');
+			controls.id = "window-controls-container";
+			controls.innerHTML = '<div id="minimize"></div><div id="maximize"></div><div id="quit"></div>';
+			appMount.prepend(controls);
+			void attachControlsEvents(controls);
+		}
+	}
+
+	webFrame.insertCSS(await titlebarCss);
 }
 
 let animFinished = true;
 export function flashTitlebar(color: string) {
-	const realTitlebar = titlebar.children[1] as HTMLElement;
-	const originalColor = realTitlebar.style.backgroundColor;
+	const originalColor = titlebar.style.backgroundColor;
 
 	if (!animFinished) {
-		realTitlebar.style.backgroundColor = originalColor;
-		realTitlebar.removeEventListener("transitionend", handler);
+		titlebar.style.backgroundColor = originalColor;
+		titlebar.removeEventListener("transitionend", handler);
 	}
 	animFinished = false;
 
-	realTitlebar.style.backgroundColor = color;
-	realTitlebar.addEventListener("transitionend", handler);
+	titlebar.style.backgroundColor = color;
+	titlebar.addEventListener("transitionend", handler);
 	function handler() {
-		realTitlebar.style.backgroundColor = originalColor;
+		titlebar.style.backgroundColor = originalColor;
 		animFinished = true;
-		realTitlebar.removeEventListener("transitionend", handler);
+		titlebar.removeEventListener("transitionend", handler);
 	}
 }
 
