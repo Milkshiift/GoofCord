@@ -245,7 +245,7 @@ export const settingsSchema = {
 		},
 		allowedStrings: {
 			name: "Allowed strings",
-			defaultValue: ["videoplayback", "discord-attachments", "googleapis", "search", "api.spotify"],
+			defaultValue: ["videoplayback", "discord-attachments", "googleapis", "search", "api.spotify", "discord.com/assets/sentry."],
 			description: "If any of specified strings are in the URL, it will *not* be blocked.",
 			inputType: "textarea",
 			showAfter: {
