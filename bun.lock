@@ -5,26 +5,26 @@
       "name": "goofcord",
       "dependencies": {
         "arrpc": "github:Milkshiift/arrpc",
-        "auto-launch": "latest",
+        "auto-launch": "^5.0.6",
         "electron-context-menu": "github:Milkshiift/electron-context-menu",
-        "jimp": "latest",
-        "picocolors": "latest",
+        "jimp": "^1.6.0",
+        "picocolors": "^1.1.1",
         "stegcloak": "github:Milkshiift/stegcloak-node",
         "v8-compile-cache": "github:JulioC/v8-compile-cache#bugfix/esm",
       },
       "devDependencies": {
-        "@biomejs/biome": "latest",
-        "@types/bun": "latest",
-        "@types/node": "latest",
-        "@types/stegcloak": "latest",
-        "@vencord/types": "latest",
-        "electron": "latest",
-        "electron-builder": "latest",
-        "ts-morph": "latest",
-        "typescript": "latest",
+        "@biomejs/biome": "^1.9.4",
+        "@types/bun": "^1.2.8",
+        "@types/node": "^22.13.14",
+        "@types/stegcloak": "^1.0.2",
+        "@vencord/types": "^1.11.5",
+        "electron": "^35.1.2",
+        "electron-builder": "^26.0.12",
+        "ts-morph": "^25.0.1",
+        "typescript": "^5.8.2",
       },
       "optionalDependencies": {
-        "@vencord/venmic": "latest",
+        "@vencord/venmic": "^6.1.0",
       },
     },
   },
@@ -237,7 +237,7 @@
 
     "argparse": ["argparse@2.0.1", "", {}, "sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q=="],
 
-    "arrpc": ["arrpc@github:Milkshiift/arrpc#b853aaf", { "dependencies": { "picocolors": "^1.1.1", "ws": "^8.18.1" }, "optionalDependencies": { "bufferutil": "^4.0.9" }, "bin": { "arrpc": "src/index.js" } }, "Milkshiift-arrpc-b853aaf"],
+    "arrpc": ["arrpc@github:Milkshiift/arrpc#97027e4", { "dependencies": { "picocolors": "^1.1.1", "ws": "^8.18.1" }, "optionalDependencies": { "bufferutil": "^4.0.9" }, "bin": { "arrpc": "src/index.js" } }, "Milkshiift-arrpc-97027e4"],
 
     "assert-plus": ["assert-plus@1.0.0", "", {}, "sha512-NfJ4UzBCcQGLDlQq7nHxH+tv3kyZ0hHQqF5BO6J7tNJeP5do1llPr8dZ8zHonfhAu0PHAdMkSo+8o0wxg9lZWw=="],
 
