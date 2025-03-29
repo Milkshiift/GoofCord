@@ -24,12 +24,12 @@
   "homepage": "https://github.com/Milkshiift/GoofCord",
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@types/bun": "^1.2.5",
-    "@types/node": "^22.13.10",
+    "@types/bun": "^1.2.8",
+    "@types/node": "^22.13.14",
     "@types/stegcloak": "^1.0.2",
     "@vencord/types": "^1.11.5",
-    "electron": "^35.0.1",
-    "electron-builder": "^26.0.11",
+    "electron": "^35.1.2",
+    "electron-builder": "^26.0.12",
     "ts-morph": "^25.0.1",
     "typescript": "^5.8.2"
   },
@@ -40,7 +40,7 @@
     "jimp": "^1.6.0",
     "picocolors": "^1.1.1",
     "stegcloak": "github:Milkshiift/stegcloak-node",
-    "v8-compile-cache": "github:JulioC/v8-compile-cache#bugfix/esm",
+    "v8-compile-cache": "github:JulioC/v8-compile-cache#bugfix/esm"
   },
   "optionalDependencies": {
     "@vencord/venmic": "^6.1.0"
