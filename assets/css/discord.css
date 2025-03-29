@@ -1,15 +1,5 @@
-* {
-    outline: none;
-    scrollbar-width: unset !important;
-    scrollbar-color: unset !important;
-}
-
-[class^="scrollerBase"] {
+[class*="scrollerBase"] {
     will-change: transform;
-}
-
-[class^="socialLinks-"] + [class^="info-"] {
-    padding-right: 0;
 }
 
 /* Hide download discord button */
