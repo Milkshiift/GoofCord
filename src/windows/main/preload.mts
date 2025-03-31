@@ -5,18 +5,14 @@ import { log } from "../../modules/logger.ts";
 import { injectTitlebar } from "./titlebar.ts";
 import { getDefaultScripts } from "./defaultAssets.ts";
 
-const assets: Record<string, string[][]> = ipcRenderer.sendSync("assetLoader:getAssets");
-
-assets.scripts.push(...getDefaultScripts());
-
-for (const script of assets.scripts) {
-	webFrame.executeJavaScript(script[1]).then(() => log(`Loaded script: ${script[0]}`));
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-	if (!document.location.hostname.includes("discord")) return;
-
+if (document.location.hostname.includes("discord")) {
 	void injectTitlebar();
+
+	const assets: Record<string, string[][]> = ipcRenderer.sendSync("assetLoader:getAssets");
+	assets.scripts.push(...getDefaultScripts());
+	for (const script of assets.scripts) {
+		webFrame.executeJavaScript(script[1]).then(() => log(`Loaded script: ${script[0]}`));
+	}
 
 	window.localStorage.setItem("hideNag", "true"); // Hide "Download Discord Desktop now!" banner
 
@@ -25,4 +21,4 @@ document.addEventListener("DOMContentLoaded", () => {
 		webFrame.insertCSS(style[1]);
 		log(`Loaded style: ${style[0]}`);
 	}
-});
+}
