@@ -1,13 +1,14 @@
 [class*="scrollerBase"] {
     will-change: transform;
     contain: content;
+    text-rendering: geometricPrecision;
 }
 
-[class*="messagesWrapper"] {
+[class*="messagesWrapper"], #channels {
     contain: strict;
 }
 
-[class*="containerDefault"] {
+img, [class*="emojiListRow"] {
     content-visibility: auto;
 }
 
