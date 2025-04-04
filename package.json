@@ -25,10 +25,10 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/bun": "^1.2.8",
-    "@types/node": "^22.13.14",
+    "@types/node": "^22.14.0",
     "@types/stegcloak": "^1.0.2",
     "@vencord/types": "^1.11.5",
-    "electron": "^35.1.2",
+    "electron": "^35.1.4",
     "electron-builder": "^26.0.12",
     "ts-morph": "^25.0.1",
     "typescript": "^5.8.2"
