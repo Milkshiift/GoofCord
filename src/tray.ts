@@ -65,7 +65,7 @@ export async function createTray() {
 	await app.whenReady();
 
 	if (process.platform === "darwin") {
-		app.dock.setMenu(contextMenu);
+		app.dock?.setMenu(contextMenu);
 	} else {
 		tray = new Tray(trayImage);
 		tray.setContextMenu(contextMenu);
