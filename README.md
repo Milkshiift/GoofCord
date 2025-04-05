@@ -36,11 +36,11 @@ Keep in mind that the AUR package is not maintained by the developers of GoofCor
 * Install in **NixOS** from [nixpkgs](https://search.nixos.org/packages?channel=unstable&query=goofcord).
 
 ### macOS 🍏
-
+Note: As I don't have a macOS device, macOS support is limited.
 * Install with prebuilt binaries from the [releases](https://github.com/Milkshiift/GoofCord/releases/latest) page.    
 Choose the file ending with `mac-arm64.dmg` if your computer uses an Apple Silicon processor. [Mac computers with Apple Silicon](https://support.apple.com/en-us/HT211814)      
 Otherwise, choose the file that ends with `mac-x64.dmg`
-* If you get an error like "GoofCord is damaged and can't be opened" see [this issue](https://github.com/Milkshiift/GoofCord/issues/7)
+* If you get an error like "GoofCord is damaged and can't be opened" see [this issue](https://github.com/Milkshiift/GoofCord/issues/7) 
 
 To explore plugins and themes, head over to the Vencord category in the Discord settings.
     
