@@ -3,7 +3,7 @@ import pc from "picocolors";
 import { firstLaunch, getConfig } from "./config.ts";
 import { setMenu } from "./menu.ts";
 import { initArrpc } from "./modules/arrpc.ts";
-import { categorizeAllAssets } from "./modules/assetLoader.ts";
+import { categorizeAllAssets, startStyleWatcher } from "./modules/assetLoader.ts";
 import { initFirewall, unstrictCSP } from "./modules/firewall.ts";
 import { i } from "./modules/localization.ts";
 import { initEncryption } from "./modules/messageEncryption.ts";
@@ -34,6 +34,7 @@ export async function load() {
 	void updateMods();
 	void checkForUpdate();
 	void initArrpc();
+	void startStyleWatcher();
 }
 
 async function waitForInternetConnection() {

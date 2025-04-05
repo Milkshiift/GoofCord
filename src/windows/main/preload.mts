@@ -5,6 +5,8 @@ import { log } from "../../modules/logger.ts";
 import { injectTitlebar } from "./titlebar.ts";
 import { getDefaultScripts } from "./defaultAssets.ts";
 
+const loadedStyles = new Map<string, string>();
+
 if (document.location.hostname.includes("discord")) {
 	void injectTitlebar();
 
@@ -18,7 +20,24 @@ if (document.location.hostname.includes("discord")) {
 
 	assets.styles.push(["discord.css", fs.readFileSync(ipcRenderer.sendSync("utils:getAsset", "css/discord.css"), "utf8")]);
 	for (const style of assets.styles) {
-		webFrame.insertCSS(style[1]);
+		const styleId = webFrame.insertCSS(style[1]);
+		loadedStyles.set(style[0], styleId);
 		log(`Loaded style: ${style[0]}`);
 	}
+
+	ipcRenderer.on('assetLoader:styleUpdate', (_, data) => {
+		const { file, content } = data;
+
+		if (loadedStyles.has(file)) {
+			try {
+				webFrame.removeInsertedCSS(loadedStyles.get(file)!);
+			} catch (err) {
+				log(`Error removing old style: ${file} - ${err}`);
+			}
+		}
+
+		const styleId = webFrame.insertCSS(content);
+		loadedStyles.set(file, styleId);
+		log(`Hot reloaded style: ${file}`);
+	});
 }
