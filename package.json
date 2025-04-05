@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "arrpc": "github:Milkshiift/arrpc",
-    "auto-launch": "^5.0.6",
+    "auto-launch": "github:Teamwork/node-auto-launch",
     "electron-context-menu": "github:Milkshiift/electron-context-menu",
     "picocolors": "^1.1.1",
     "stegcloak": "github:Milkshiift/stegcloak-node",
