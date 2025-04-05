@@ -53,7 +53,7 @@ async function handleFirstLaunch() {
 	});
 }
 
-async function setAutoLaunchState() {
+export async function setAutoLaunchState<IPCHandle>() {
 	const { default: AutoLaunch } = await import("auto-launch");
 	const isAUR = process.execPath.endsWith("electron") && !isDev();
 	const gfAutoLaunch = new AutoLaunch({

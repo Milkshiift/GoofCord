@@ -38,6 +38,7 @@ export interface SettingEntry {
 		key: string;
 		condition: (value: unknown) => boolean;
 	};
+	onChange?: string; // IPC channel to invoke
 }
 
 export interface ButtonEntry {
@@ -107,6 +108,7 @@ export const settingsSchema = {
 				'What client mods to use. <b>You shouldn\'t disable Shelter</b> as it is used by many GoofCord features. Do not mix forks of the same mod (e.g. Vencord and Equicord). <a target="_blank" href="https://github.com/Milkshiift/GoofCord/wiki/FAQ#how-do-i-add-a-custom-client-mod">Client mod I want to use is not listed</a>.',
 			inputType: "dropdown-multiselect",
 			options: ["vencord", "equicord", "shelter", "custom"],
+			onChange: "mods:updateModsFull",
 		},
 		modEtagCache: {
 			defaultValue: {},
@@ -123,6 +125,7 @@ export const settingsSchema = {
 					return value.includes("custom");
 				},
 			},
+			onChange: "mods:updateModsFull",
 		},
 		customCssBundle: {
 			name: "Custom CSS bundle",
@@ -135,6 +138,7 @@ export const settingsSchema = {
 					return value.includes("custom");
 				},
 			},
+			onChange: "mods:updateModsFull",
 		},
 		noBundleUpdates: {
 			defaultValue: false,
@@ -263,6 +267,7 @@ export const settingsSchema = {
 			description:
 				'Enables an open source reimplementation of Discord\'s\nrich presence called <a target="_blank" href="https://github.com/OpenAsar/arrpc">arRPC</a>.\nA <a target="_blank" href="https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence">workaround</a> is needed for arRPC to work on Flatpak',
 			inputType: "checkbox",
+			onChange: "arrpc:initArrpc",
 		},
 		domOptimizer: {
 			name: "DOM optimizer",
@@ -275,6 +280,7 @@ export const settingsSchema = {
 			defaultValue: false,
 			description: "Start GoofCord automatically on system boot. May not work in some Linux environments.",
 			inputType: "checkbox",
+			onChange: "loader:setAutoLaunchState",
 		},
 		spellcheck: {
 			name: "Spellcheck",
@@ -331,10 +337,6 @@ export const settingsSchema = {
 		"button-clearCache": {
 			name: "Clear cache",
 			onClick: "settings.clearCache()",
-		},
-		"button-forceNativeCrash": {
-			name: "Force native crash",
-			onClick: "settings.crash()",
 		},
 	},
 	"Cloud Settings": {

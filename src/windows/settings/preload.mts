@@ -11,8 +11,7 @@ contextBridge.exposeInMainWorld("settings", {
 	deleteCloud: () => ipcRenderer.invoke("cloud:deleteCloud"),
 	saveCloud: () => ipcRenderer.invoke("cloud:saveCloud"),
 	openFolder: (folder: string) => ipcRenderer.invoke("openFolder", folder),
-	clearCache: () => ipcRenderer.invoke("clearCache"),
-	crash: () => ipcRenderer.invoke("crash"),
+	clearCache: () => ipcRenderer.invoke("cacheManager:clearCache"),
 });
 
 const settingsData: Record<string, SettingEntry> = {};
@@ -49,6 +48,8 @@ async function saveSettings(changedElement: HTMLElement) {
 	void ipcRenderer.invoke("config:setConfig", settingName, settingValue);
 	updateVisibility(settingName, settingValue);
 	void ipcRenderer.invoke("flashTitlebar", "#5865F2");
+
+	if (settingData.onChange) void ipcRenderer.invoke(settingData.onChange);
 }
 
 function updateVisibility(changedElementName: string, changedElementValue: unknown) {

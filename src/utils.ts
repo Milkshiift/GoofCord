@@ -112,3 +112,12 @@ export async function saveFileToGCFolder<IPCHandle>(filePath: string, content: s
 	await fs.promises.writeFile(fullPath, content);
 	return fullPath;
 }
+
+export async function isFileAccessible(filePath: string) {
+	try {
+		await fs.promises.access(filePath, fs.constants.F_OK);
+		return true;
+	} catch (error) {
+		return false;
+	}
+}

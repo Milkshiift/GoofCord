@@ -3,17 +3,14 @@ import path from "node:path";
 import { Notification } from "electron";
 import pc from "picocolors";
 import { getConfig, setConfig } from "../config.ts";
-import { getErrorMessage } from "../utils.ts";
+import { getErrorMessage, isFileAccessible } from "../utils.ts";
 import { assetsFolder } from "./assetLoader.ts";
 
 export const LOG_PREFIX = pc.yellow("[Mod Loader]");
 
-interface ModBundleUrls {
-	[key: string]: [string | undefined, string | undefined];
-}
-
-const modNames: string[] = getConfig("modNames");
-const MOD_BUNDLES_URLS: ModBundleUrls = {
+const MOD_BUNDLES_URLS: {
+	[key: string]: [string, string | undefined];
+} = {
 	vencord: ["https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js", "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css"],
 	equicord: ["https://github.com/Equicord/Equicord/releases/download/latest/browser.js", "https://github.com/Equicord/Equicord/releases/download/latest/browser.css"],
 	shelter: ["https://raw.githubusercontent.com/uwu/shelter-builds/main/shelter.js", undefined],
@@ -26,10 +23,14 @@ async function downloadBundles(urls: Array<string | undefined>, name: string) {
 	for (const url of urls) {
 		if (!url) continue;
 		try {
+			const filepath = path.join(assetsFolder, `${name}${path.extname(url)}`);
+
+			const exists = await isFileAccessible(filepath);
+
 			const response = await fetch(url, {
 				headers: {
 					'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.3',
-					"If-None-Match": cache[url] ?? "",
+					"If-None-Match": exists ? cache[url] ?? "" : "",
 				},
 			});
 
@@ -43,7 +44,7 @@ async function downloadBundles(urls: Array<string | undefined>, name: string) {
 
 			const bundle = await response.text();
 
-			await fs.promises.writeFile(path.join(assetsFolder, `${name}${path.extname(url)}`), bundle, "utf-8");
+			await fs.promises.writeFile(filepath, bundle, "utf-8");
 		} catch (e: unknown) {
 			console.error(LOG_PREFIX, `Failed to download ${name} bundle:`, e);
 			const notification = new Notification({
@@ -63,6 +64,8 @@ async function downloadBundles(urls: Array<string | undefined>, name: string) {
 
 const enabledMods: string[] = [];
 export async function manageMods() {
+	enabledMods.length = 0;
+	const modNames: string[] = getConfig("modNames");
 	const possibleMods = Object.keys(MOD_BUNDLES_URLS);
 	for (const possibleMod of possibleMods) {
 		const possibleModPath = path.join(assetsFolder, possibleMod);
@@ -89,4 +92,9 @@ export async function updateMods() {
 	for (const mod of enabledMods) {
 		await downloadBundles(MOD_BUNDLES_URLS[mod], mod);
 	}
+}
+
+export async function updateModsFull<IPCHandle>() {
+	await manageMods();
+	await updateMods();
 }
