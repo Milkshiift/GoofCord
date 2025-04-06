@@ -1,11 +1,11 @@
 import "./bridge.ts";
 import fs from "node:fs";
 import { ipcRenderer, webFrame } from "electron";
-import { log } from "../../modules/logger.ts";
+import { error, log } from "../../modules/logger.ts";
 import { injectTitlebar } from "./titlebar.ts";
 import { getDefaultScripts } from "./defaultAssets.ts";
 
-const loadedStyles = new Map<string, string>();
+const loadedStyles = new Map<string, HTMLStyleElement>();
 
 if (document.location.hostname.includes("discord")) {
 	void injectTitlebar();
@@ -20,8 +20,11 @@ if (document.location.hostname.includes("discord")) {
 
 	assets.styles.push(["discord.css", fs.readFileSync(ipcRenderer.sendSync("utils:getAsset", "css/discord.css"), "utf8")]);
 	for (const style of assets.styles) {
-		const styleId = webFrame.insertCSS(style[1]);
-		loadedStyles.set(style[0], styleId);
+		const styleElement = document.createElement('style');
+		styleElement.textContent = style[1];
+		styleElement.id = style[0];
+		document.head.appendChild(styleElement);
+		loadedStyles.set(style[0], styleElement);
 		log(`Loaded style: ${style[0]}`);
 	}
 
@@ -30,14 +33,18 @@ if (document.location.hostname.includes("discord")) {
 
 		if (loadedStyles.has(file)) {
 			try {
-				webFrame.removeInsertedCSS(loadedStyles.get(file)!);
+				const oldStyleElement = loadedStyles.get(file)!;
+				oldStyleElement.remove();
 			} catch (err) {
-				log(`Error removing old style: ${file} - ${err}`);
+				error(`Error removing old style: ${file} - ${err}`);
 			}
 		}
 
-		const styleId = webFrame.insertCSS(content);
-		loadedStyles.set(file, styleId);
+		const styleElement = document.createElement('style');
+		styleElement.textContent = content;
+		styleElement.id = file;
+		document.head.appendChild(styleElement);
+		loadedStyles.set(file, styleElement);
 		log(`Hot reloaded style: ${file}`);
 	});
 }
