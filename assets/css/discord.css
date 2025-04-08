@@ -1,5 +1,5 @@
 [class*="scrollerBase"] {
-    will-change: transform;
+    will-change: transform, scroll-position;
     contain: content;
     text-rendering: geometricPrecision;
 }
