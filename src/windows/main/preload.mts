@@ -18,33 +18,35 @@ if (document.location.hostname.includes("discord")) {
 
 	window.localStorage.setItem("hideNag", "true"); // Hide "Download Discord Desktop now!" banner
 
-	assets.styles.push(["discord.css", fs.readFileSync(ipcRenderer.sendSync("utils:getAsset", "css/discord.css"), "utf8")]);
-	for (const style of assets.styles) {
-		const styleElement = document.createElement('style');
-		styleElement.textContent = style[1];
-		styleElement.id = style[0];
-		document.head.appendChild(styleElement);
-		loadedStyles.set(style[0], styleElement);
-		log(`Loaded style: ${style[0]}`);
-	}
-
-	ipcRenderer.on('assetLoader:styleUpdate', (_, data) => {
-		const { file, content } = data;
-
-		if (loadedStyles.has(file)) {
-			try {
-				const oldStyleElement = loadedStyles.get(file)!;
-				oldStyleElement.remove();
-			} catch (err) {
-				error(`Error removing old style: ${file} - ${err}`);
-			}
+	document.addEventListener("DOMContentLoaded", () => {
+		assets.styles.push(["discord.css", fs.readFileSync(ipcRenderer.sendSync("utils:getAsset", "css/discord.css"), "utf8")]);
+		for (const style of assets.styles) {
+			const styleElement = document.createElement('style');
+			styleElement.textContent = style[1];
+			styleElement.id = style[0];
+			document.head.appendChild(styleElement);
+			loadedStyles.set(style[0], styleElement);
+			log(`Loaded style: ${style[0]}`);
 		}
 
-		const styleElement = document.createElement('style');
-		styleElement.textContent = content;
-		styleElement.id = file;
-		document.head.appendChild(styleElement);
-		loadedStyles.set(file, styleElement);
-		log(`Hot reloaded style: ${file}`);
+		ipcRenderer.on('assetLoader:styleUpdate', (_, data) => {
+			const { file, content } = data;
+
+			if (loadedStyles.has(file)) {
+				try {
+					const oldStyleElement = loadedStyles.get(file)!;
+					oldStyleElement.remove();
+				} catch (err) {
+					error(`Error removing old style: ${file} - ${err}`);
+				}
+			}
+
+			const styleElement = document.createElement('style');
+			styleElement.textContent = content;
+			styleElement.id = file;
+			document.head.appendChild(styleElement);
+			loadedStyles.set(file, styleElement);
+			log(`Hot reloaded style: ${file}`);
+		});
 	});
 }
