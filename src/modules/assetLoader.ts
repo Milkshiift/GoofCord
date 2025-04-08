@@ -2,7 +2,9 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import pc from "picocolors";
 import { getGoofCordFolderPath, readOrCreateFolder } from "../utils.ts";
-import { error } from "./logger.ts";
+import { mainWindow } from "../windows/main/main.ts";
+
+export const LOG_PREFIX = pc.yellowBright("[Asset Loader]");
 
 export const enabledAssets: Record<string, string[][]> = {
 	scripts: [],
@@ -29,10 +31,10 @@ async function categorizeAssetsByExtension(extension: string) {
 			categorizedAssets.push([file, content]);
 		}
 
-		console.log(pc.yellowBright(`[Asset Loader] Categorized files with extension ${extension}`));
+		console.log(LOG_PREFIX, `Categorized files with extension ${extension}`);
 		return categorizedAssets;
 	} catch (err) {
-		error(`An error occurred while categorizing files with extension ${extension}: ${err}`);
+		console.error(LOG_PREFIX, `An error occurred while categorizing files with extension ${extension}: ${err}`);
 		return [];
 	}
 }
@@ -40,4 +42,35 @@ async function categorizeAssetsByExtension(extension: string) {
 export async function categorizeAllAssets() {
 	enabledAssets.scripts = await categorizeAssetsByExtension(".js");
 	enabledAssets.styles = await categorizeAssetsByExtension(".css");
+}
+
+export async function startStyleWatcher() {
+	try {
+		const watcher = fs.watch(assetsFolder);
+
+		for await (const event of watcher) {
+			if (event.filename?.endsWith('.css')) {
+				try {
+					const filePath = path.join(assetsFolder, event.filename);
+					const content = await fs.readFile(filePath, "utf-8");
+
+					mainWindow.webContents.send('assetLoader:styleUpdate', {
+						file: event.filename,
+						content
+					});
+				} catch (err) {
+					if (err instanceof Error && "code" in err && err.code === "ENOENT") {
+						mainWindow.webContents.send('assetLoader:styleUpdate', {
+							file: event.filename,
+							content: ""
+						});
+					} else {
+						console.error(LOG_PREFIX, `Error processing style update: ${err}`);
+					}
+				}
+			}
+		}
+	} catch (err) {
+		console.error(LOG_PREFIX, `Failed to start style watcher: ${err}`);
+	}
 }

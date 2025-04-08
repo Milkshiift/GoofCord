@@ -124,6 +124,7 @@ input[type="checkbox"] {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: solid #0000 4px;
     margin: 0;
+    will-change: transform;
 }
 
 .slim-checkbox {

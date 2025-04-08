@@ -25,18 +25,26 @@ async function main() {
 
 function setFlags() {
 	if (process.argv.some((arg) => arg === "--no-flags")) return;
-	const disableFeatures = ["OutOfBlinkCors", "UseChromeOSDirectVideoDecoder", "HardwareMediaKeyHandling", "MediaSessionService", "WebRtcAllowInputVolumeAdjustment", "Vulkan"];
+
+	const disableFeatures = [
+		"OutOfBlinkCors",
+		"UseChromeOSDirectVideoDecoder",
+		"HardwareMediaKeyHandling",
+		"MediaSessionService",
+		"WebRtcAllowInputVolumeAdjustment",
+		"Vulkan"
+	];
 	const enableFeatures = [
 		"WebRTC",
 		"WebRtcHideLocalIpsWithMdns",
 		"PlatformHEVCEncoderSupport",
 		"EnableDrDc",
 		"CanvasOopRasterization",
-		"UseSkiaRenderer",
-		"AcceleratedVideoEncoder",
-		"AcceleratedVideoDecoder",
+		"UseSkiaRenderer"
 	];
-	if (process.platform === "linux") enableFeatures.push("PulseaudioLoopbackForScreenShare", "VaapiVideoDecoder", "VaapiVideoEncoder", "VaapiVideoDecodeLinuxGL", "AcceleratedVideoDecodeLinuxGL", "AcceleratedVideoDecodeLinuxZeroCopyGL");
+	if (process.platform === "linux") enableFeatures.push("PulseaudioLoopbackForScreenShare");
+	if (!process.argv.some((arg) => arg === "--no-vaapi")) enableFeatures.push("AcceleratedVideoDecodeLinuxGL", "AcceleratedVideoEncoder", "AcceleratedVideoDecoder", "AcceleratedVideoDecodeLinuxZeroCopyGL");
+
 	app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
 	app.commandLine.appendSwitch("enable-speech-dispatcher");
 	app.commandLine.appendSwitch("disable-features", disableFeatures.join(","));

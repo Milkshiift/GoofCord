@@ -76,9 +76,8 @@ export const config: Configuration = {
         }
     },
     electronFuses: {
-        onlyLoadAppFromAsar: true,
         runAsNode: false,
-        enableCookieEncryption: true
+        onlyLoadAppFromAsar: true
     }
 };
 

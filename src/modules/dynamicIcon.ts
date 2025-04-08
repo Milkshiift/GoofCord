@@ -1,6 +1,4 @@
-import fs from "node:fs";
-import { type NativeImage, app, nativeImage } from "electron";
-import { Jimp } from "jimp";
+import { app, type NativeImage, nativeImage } from "electron";
 import { tray } from "../tray.ts";
 import { getAsset, getTrayIcon } from "../utils.ts";
 import { mainWindow } from "../windows/main/main.ts";
@@ -25,10 +23,10 @@ export async function setBadgeCount<IPCHandle>(count: number) {
 			break;
 		case "darwin":
 			if (count === 0) {
-				app.dock.setBadge("");
+				app.dock?.setBadge("");
 				break;
 			}
-			app.dock.setBadge(count.toString());
+			app.dock?.setBadge(count.toString());
 			break;
 		case "win32":
 			mainWindow.setOverlayIcon(loadBadge(count), `${count} Notifications`);
@@ -43,27 +41,64 @@ async function loadTrayImage(index: number) {
 	const trayImagePath = await getTrayIcon();
 
 	const clampedIndex = Math.min(index, 10);
-	if (clampedIndex === 0) return nativeImage.createFromPath(trayImagePath);
 
 	const cached = trayCache.get(clampedIndex);
 	if (cached) return cached;
 
-	const baseImage = await Jimp.read(trayImagePath);
-	const { width, height } = baseImage.bitmap;
-	if (!width || !height) return nativeImage.createFromPath(trayImagePath);
+	if (clampedIndex === 0) {
+		const trayImage = nativeImage.createFromPath(trayImagePath);
+		if (process.platform === "darwin") trayImage.resize({ width: 22, height: 22 });
+		trayCache.set(clampedIndex, trayImage);
+		return trayImage;
+	}
 
-	const overlaySize = Math.round(width * 0.6);
-	const overlayImage = await Jimp.read(await fs.promises.readFile(getAsset(`badges/${clampedIndex}.png`)));
-	overlayImage.resize({ w: overlaySize, h: overlaySize });
+	const trayImage: string = await mainWindow.webContents.executeJavaScript(`
+	(async () => {
+	let data;
+	
+	canvas = document.createElement("canvas");
+	canvas.width = 128;
+	canvas.height = 128;
+	
+	const img = new Image();
+	img.width = 128;
+	img.height = 128;
+	
+	img.onload = () => {
+		const ctx = canvas.getContext("2d");
+		if (ctx) {
+			ctx.drawImage(img, 0, 0);
+			
+			const overlaySize = Math.round(img.width * 0.6);
+			
+			const iconImg = new Image();
+			iconImg.width = overlaySize;
+			iconImg.height = overlaySize;
+			
+			iconImg.onload = () => {
+				ctx.drawImage(iconImg, img.width-overlaySize, img.height-overlaySize, overlaySize, overlaySize);
+				data = canvas.toDataURL();
+			};
+		
+			iconImg.src = "${nativeImage.createFromPath(getAsset(`badges/${clampedIndex}.png`)).toDataURL()}";
+		}
+	};
+	
+	img.src = "${nativeImage.createFromPath(trayImagePath).resize({width: 128, height: 128}).toDataURL()}";
+	
+	while (!data) {
+		await new Promise((resolve) => setTimeout(resolve, 500));
+	}
+    return data;
+	
+	})();
+	`);
 
-	baseImage.composite(overlayImage, width - overlaySize, height - overlaySize);
+	const nativeTrayImage = nativeImage.createFromDataURL(trayImage);
 
-	if (process.platform === "darwin") baseImage.resize({ w: 22, h: 22 });
+	if (process.platform === "darwin") nativeTrayImage.resize({ width: 22, height: 22 });
 
-	const finalBuffer = await baseImage.getBuffer("image/png");
-	const finalNativeImage = nativeImage.createFromBuffer(finalBuffer);
+	trayCache.set(clampedIndex, nativeTrayImage);
 
-	trayCache.set(clampedIndex, finalNativeImage);
-
-	return finalNativeImage;
+	return nativeTrayImage;
 }

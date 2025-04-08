@@ -3,7 +3,7 @@ import pc from "picocolors";
 import { firstLaunch, getConfig } from "./config.ts";
 import { setMenu } from "./menu.ts";
 import { initArrpc } from "./modules/arrpc.ts";
-import { categorizeAllAssets } from "./modules/assetLoader.ts";
+import { categorizeAllAssets, startStyleWatcher } from "./modules/assetLoader.ts";
 import { initFirewall, unstrictCSP } from "./modules/firewall.ts";
 import { i } from "./modules/localization.ts";
 import { initEncryption } from "./modules/messageEncryption.ts";
@@ -36,6 +36,7 @@ export async function load() {
 	void checkForUpdate();
 	void initArrpc();
 	void startVenbind();
+	void startStyleWatcher();
 }
 
 async function waitForInternetConnection() {
@@ -55,7 +56,7 @@ async function handleFirstLaunch() {
 	});
 }
 
-async function setAutoLaunchState() {
+export async function setAutoLaunchState<IPCHandle>() {
 	const { default: AutoLaunch } = await import("auto-launch");
 	const isAUR = process.execPath.endsWith("electron") && !isDev();
 	const gfAutoLaunch = new AutoLaunch({

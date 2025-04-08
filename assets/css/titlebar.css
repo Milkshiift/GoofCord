@@ -1,68 +1,74 @@
 :root {
     --wordmark-svg: url("data:image/svg+xml,%3Csvg version='1.2' baseProfile='tiny' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 14' overflow='visible' xml:space='preserve'%3E%3Cpath fill='%2372767D' d='M7.3 4.3c-.7-1.8-3.8-1.4-3.8.4v4.7c0 2.1 4 2.1 4 0v-.5H5.3V6h5.5v3.4c0 3.1-2.6 4.7-5.3 4.7-2.7 0-5.4-1.6-5.4-4.7V4.7C.1 1.6 2.8.1 5.5.1 7.3.1 9.3.8 10.2 3L7.3 4.3zM12.1 4.8c0-3.1 2.8-4.7 5.6-4.7s5.6 1.6 5.6 4.7v4.7c0 3.1-2.8 4.7-5.6 4.7s-5.6-1.6-5.6-4.7V4.8zm3.5 4.6c0 1 1.1 1.5 2.2 1.5s2.2-.5 2.2-1.5V4.8c0-1.1-1.1-1.5-2.2-1.5s-2.1.5-2.1 1.5v4.6zM24.9 4.8c0-3.1 2.8-4.7 5.6-4.7s5.6 1.6 5.6 4.7v4.7c0 3.1-2.8 4.7-5.6 4.7s-5.6-1.6-5.6-4.7V4.8zm3.4 4.6c0 1 1.1 1.5 2.2 1.5s2.2-.5 2.2-1.5V4.8c0-1.1-1.1-1.5-2.2-1.5s-2.1.5-2.1 1.5v4.6zM41.3 6h5.2v3.2h-5.2v4.7h-3.5V.3h9.5v3.3h-6V6zM58.8 11.1c-1.1 2.2-3.2 3.1-4.9 3.1-2.7 0-5.4-1.6-5.4-4.7V4.8c0-3.1 2.7-4.7 5.4-4.7 1.7 0 3.7.7 4.8 3.1L56 4.4c-.9-1.7-4-1.3-4 .4v4.7c0 1.6 3.1 2.1 3.8.2l3 1.4zM59.9 4.8c0-3.1 2.8-4.7 5.6-4.7s5.6 1.6 5.6 4.7v4.7c0 3.1-2.8 4.7-5.6 4.7s-5.6-1.6-5.6-4.7V4.8zm3.5 4.6c0 1 1.1 1.5 2.2 1.5s2.2-.5 2.2-1.5V4.8c0-1.1-1.1-1.5-2.2-1.5s-2.2.5-2.2 1.5v4.6zM77 9.6h-.6v4.3h-3.5V.3h5.4c2.8 0 5 1.3 5 4.5 0 2.5-1 3.9-2.7 4.5l3.7 4.7H80l-3-4.4zm1.4-3c2.2 0 2.2-3.1 0-3.1h-2v3.1h2z'/%3E%3Cpath fill-rule='evenodd' fill='%2372767D' d='M85.6.1h3.1c2.5 0 3.2 0 3.9.2.5.2 1.1.4 1.6.7.4.3.9.8 1.1 1.2.3.3.5.8.6 1 .1.3.2 1.7.2 3.2 0 1.9 0 3.1-.1 3.7-.1.5-.3 1.1-.4 1.3-.1.3-.5.7-.8 1-.2.3-.8.7-1.2.9-.4.2-1.1.4-1.6.5-.4 0-2.1.1-6.4.1v-3.4h2.6c1.5 0 2.9 0 3.1-.1.3-.1.7-.2.8-.4.4-.3.4-.4.4-2.9 0-2 0-2.6-.2-2.9-.1-.2-.3-.5-.5-.6-.3-.1-.8-.1-2.6-.1V6c0 1.5-.1 2.7-.1 2.7-.1.1-.9-.7-3.5-3.3V.1z'/%3E%3C/svg%3E");
-    --height: 25px;
 }
 
-.withFrame-haYltI {
-    height: var(--height);
-    z-index: 9999;
-}
-
-.titlebar {
-    height: var(--height);
-    line-height: var(--height);
+[data-windows] {
     transition: background-color 0.25s ease-in;
-    -webkit-app-region: drag;
+    will-change: background-color;
 }
 
-.titlebar-text {
+#titlebar-text {
+    will-change: opacity;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
     color: white;
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%);
-    padding: 0 120px;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(20, 20, 20, 1) 50%, rgba(0, 0, 0, 0) 100%);
+    padding: 6px 120px;
     margin: 0;
     max-width: 1000px;
-    height: var(--height);
+    height: 25px;
     vertical-align: middle;
     line-height: 150%;
     opacity: 0;
+    z-index: 999;
+    font-weight: bold;
+    letter-spacing: 0.02em;
 }
 
-.window-title {
-    position: relative;
-    width: 100px;
+#dragbar {
+    position: absolute;
+    width: 100%;
+    height: 37px;
+    z-index: 998;
+    transition: background-color 0.25s ease-in;
+}
+
+#window-title {
+    width: 80px;
     mask-image: var(--wordmark-svg);
     mask-repeat: no-repeat;
     background-color: var(--text-muted);
     height: 9px;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    float: left;
 }
 
-.titlebar #window-controls-container {
-    float: right;
-    width: 150px;
-    height: 100%;
+#window-controls-filler {
+    width: 100px;
+    height: 32px;
+}
+
+#window-controls-container {
+    width: 100px;
+    height: 32px;
+    position: absolute;
+    top: 3px;
+    right: 11px;
+    z-index: 999;
     -webkit-app-region: no-drag;
 }
 
-.titlebar #window-controls-container > div {
+#window-controls-container > div {
     float: left;
     width: 33.3%;
     height: 100%;
-    cursor: pointer;
-    transition: 0.1s ease;
-    mask-size: 27%;
+    mask-size: 40%;
     mask-repeat: no-repeat;
     mask-position: center;
     background-color: var(--interactive-normal);
+    cursor: pointer;
 }
 
-.titlebar #window-controls-container > div:hover {
+#window-controls-container > div:hover {
     background-color: var(--interactive-hover);
 }
 

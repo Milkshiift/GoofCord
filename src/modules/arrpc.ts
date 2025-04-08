@@ -2,8 +2,10 @@ import { getConfig } from "../config.ts";
 import { getGoofCordFolderPath } from "../utils.ts";
 import { mainWindow } from "../windows/main/main.ts";
 
-export async function initArrpc() {
-	if (!getConfig("arrpc")) return;
+let initialised = false;
+
+export async function initArrpc<IPCHandle>() {
+	if (!getConfig("arrpc") || initialised) return;
 	try {
 		const { default: Server } = await import("arrpc");
 		const Bridge = await import("arrpc/src/bridge.js");
@@ -19,22 +21,7 @@ export async function initArrpc() {
 			})
 		});
 
-		// server.on("invite", async (code: string) => {
-		// 	const inviteRequest = await fetch("https://discordapp.com/api/v9/invites/" + code);
-		// 	const inviteData = await inviteRequest.json();
-		// 	const response = await dialog.showMessageBox({
-		// 		message: i("inviteMessage")+" "+inviteData.guild.name+"?",
-		// 		buttons: [i("yes"), i("no")],
-		// 	});
-		// 	if (response.response === 0) {
-		// 		void mainWindow.webContents.executeJavaScript(`
-		// 			shelter.http.post({
-		// 				url: "/invites/${code}"
-		// 			})
-		// 		`);
-		// 		mainWindow.show();
-		// 	}
-		// });
+		initialised = true;
 	} catch (e) {
 		console.error("Failed to start arRPC server", e);
 	}

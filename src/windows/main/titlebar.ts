@@ -1,28 +1,26 @@
 import fs from "node:fs/promises";
 import { ipcRenderer, webFrame } from "electron";
 
-let titlebar: HTMLDivElement;
-function createTitlebar() {
-	titlebar = document.createElement("div");
-	titlebar.innerHTML = `
-		<p class="titlebar-text"></p>
-        <nav class="titlebar">
-          <div class="window-title" id="window-title"></div>
-          <div id="window-controls-container">
-            <div id="minimize"></div>
-            <div id="maximize"></div>
-            <div id="quit"></div>
-          </div>
-        </nav>
-    `;
-	titlebar.classList.add("withFrame-haYltI");
-	return titlebar;
+interface TitlebarElements {
+	titlebar: HTMLElement | null;
+	controls: HTMLElement | null;
+	dragBar: HTMLElement | null;
+	titlebarText: HTMLElement | null;
 }
 
-async function attachTitlebarEvents(titlebar: HTMLDivElement) {
-	const minimize = titlebar.querySelector("#minimize");
-	const maximize = titlebar.querySelector("#maximize");
-	const quit = titlebar.querySelector("#quit");
+const elements: TitlebarElements = {
+	titlebar: null,
+	controls: null,
+	dragBar: null,
+	titlebarText: null
+};
+
+const customTitlebarEnabled = ipcRenderer.sendSync("config:getConfig", "customTitlebar");
+
+async function attachControlsEvents(container: Element): Promise<void> {
+	const minimize = container.querySelector("#minimize");
+	const maximize = container.querySelector("#maximize");
+	const quit = container.querySelector("#quit");
 
 	minimize?.addEventListener("click", () => {
 		void ipcRenderer.invoke("window:Minimize");
@@ -30,6 +28,7 @@ async function attachTitlebarEvents(titlebar: HTMLDivElement) {
 
 	const isMaximized = await ipcRenderer.invoke("window:IsMaximized");
 	if (maximize && isMaximized) maximize.id = "maximized";
+
 	maximize?.addEventListener("click", async () => {
 		const isMaximized = await ipcRenderer.invoke("window:IsMaximized");
 		if (isMaximized) {
@@ -46,73 +45,136 @@ async function attachTitlebarEvents(titlebar: HTMLDivElement) {
 	});
 }
 
-export async function injectTitlebar() {
-	const titlebar = createTitlebar();
+function addCustomTitlebar(): void {
+	elements.titlebarText = document.createElement("p");
+	elements.titlebarText.id = "titlebar-text";
+	document.body.prepend(elements.titlebarText);
 
-	const appMount = document.getElementById("app-mount");
-	if (!appMount) return;
+	elements.dragBar = document.createElement('div');
+	elements.dragBar.id = "dragbar";
 
-	appMount.prepend(titlebar);
+	if (customTitlebarEnabled) {
+		elements.dragBar.style.setProperty('-webkit-app-region', 'drag');
 
-	// MutationObserver to check if the title bar gets destroyed
-	const observer = new MutationObserver((mutations) => {
-		for (const mutation of mutations) {
-			const removedNodes = Array.from(mutation.removedNodes);
-			if (removedNodes.includes(titlebar)) {
-				console.log("Reinjecting titlebar");
-				injectTitlebar().catch((error) => console.error("Error reinjecting titlebar:", error));
-				break;
-			}
+		elements.controls = document.createElement('div');
+		elements.controls.id = "window-controls-container";
+		elements.controls.innerHTML = '<div id="minimize"></div><div id="maximize"></div><div id="quit"></div>';
+		document.body.prepend(elements.controls);
+		void attachControlsEvents(elements.controls);
+	}
+
+	document.body.prepend(elements.dragBar);
+}
+
+function modifyDiscordBar(): void {
+	if (!customTitlebarEnabled) return;
+
+	const bar = document.querySelector('[data-windows]');
+	if (!bar) return;
+	elements.titlebar = bar as HTMLElement;
+
+	const leading = elements.titlebar.querySelector('[class^="leading"]');
+	const trailing = elements.titlebar.querySelector('[class^="trailing"]');
+	if (!leading || !trailing) return;
+
+	const wordmark = document.createElement("div");
+	wordmark.id = "window-title";
+	leading.prepend(wordmark);
+
+	const controlsFiller = document.createElement('div');
+	controlsFiller.id = "window-controls-filler";
+	trailing.append(controlsFiller);
+}
+
+export async function injectTitlebar(): Promise<void> {
+	document.addEventListener("DOMContentLoaded", async () => {
+		addCustomTitlebar();
+
+		const observer = new MutationObserver(checkMainLayer);
+		observer.observe(document.body, {childList: true, subtree: true});
+
+		// Initial check
+		checkMainLayer();
+
+		try {
+			const cssPath = ipcRenderer.sendSync("utils:getAsset", "css/titlebar.css");
+			const cssContent = await fs.readFile(cssPath, "utf8");
+			webFrame.insertCSS(cssContent);
+		} catch (error) {
+			console.error('Failed to load titlebar CSS:', error);
 		}
 	});
-	observer.observe(appMount, { childList: true, subtree: false });
-
-	if (!ipcRenderer.sendSync("config:getConfig", "customTitlebar")) {
-		const infoOnlyTitlebarCss = await fs.readFile(ipcRenderer.sendSync("utils:getAsset", "css/infoOnlyTitlebar.css"), "utf8");
-		webFrame.insertCSS(infoOnlyTitlebarCss);
-	}
-	const titlebarCss = await fs.readFile(ipcRenderer.sendSync("utils:getAsset", "css/titlebar.css"), "utf8");
-	webFrame.insertCSS(titlebarCss);
-
-	await attachTitlebarEvents(titlebar);
 }
 
-let animFinished = true;
-export function flashTitlebar(color: string) {
-	const realTitlebar = titlebar.children[1] as HTMLElement;
-	const originalColor = realTitlebar.style.backgroundColor;
+function checkMainLayer(): void {
+	if (!elements.dragBar) return;
 
-	if (!animFinished) {
-		realTitlebar.style.backgroundColor = originalColor;
-		realTitlebar.removeEventListener("transitionend", handler);
-	}
-	animFinished = false;
+	// mainLayer is a parent of the Discord top bar. If it's hidden, show the drag bar as a fallback
+	const mainLayer = document.querySelector('[aria-hidden][class^="layer_"]');
 
-	realTitlebar.style.backgroundColor = color;
-	realTitlebar.addEventListener("transitionend", handler);
-	function handler() {
-		realTitlebar.style.backgroundColor = originalColor;
-		animFinished = true;
-		realTitlebar.removeEventListener("transitionend", handler);
+	if (!mainLayer) {
+		elements.dragBar.style.display = "block";
+	} else {
+		elements.dragBar.style.display = mainLayer.getAttribute('aria-hidden') === "true" ? "block" : "none";
+
+		if (!elements.titlebar) modifyDiscordBar();
 	}
 }
 
-let titlebarTimeout: Timer;
-export function flashTitlebarWithText(color: string, text: string) {
+let animationInProgress = false;
+let titlebarTimeout: NodeJS.Timeout;
+
+export function flashTitlebar(color: string): void {
+	if (!elements.titlebar || !elements.dragBar) return;
+
+	const originalTitlebarColor = elements.titlebar.style.backgroundColor;
+	const originalDragbarColor = elements.dragBar.style.backgroundColor;
+
+	// Cancel any ongoing animation
+	if (animationInProgress) {
+		resetTitlebarColors(originalTitlebarColor, originalDragbarColor);
+	}
+
+	animationInProgress = true;
+
+	elements.titlebar.style.backgroundColor = color;
+	elements.dragBar.style.backgroundColor = color;
+
+	const handleTransitionEnd = () => {
+		resetTitlebarColors(originalTitlebarColor, originalDragbarColor);
+	};
+
+	elements.titlebar.addEventListener("transitionend", handleTransitionEnd, { once: true });
+	elements.dragBar.addEventListener("transitionend", handleTransitionEnd, { once: true });
+}
+
+function resetTitlebarColors(titlebarColor: string, dragbarColor: string): void {
+	if (!elements.titlebar || !elements.dragBar) return;
+
+	elements.titlebar.style.backgroundColor = titlebarColor;
+	elements.dragBar.style.backgroundColor = dragbarColor;
+	animationInProgress = false;
+}
+
+export function flashTitlebarWithText(color: string, text: string): void {
 	flashTitlebar(color);
 
-	const titlebarText = titlebar.getElementsByTagName("p")[0];
-	titlebarText.innerHTML = text;
-	titlebarText.style.transition = "opacity 0.2s ease-out";
-	titlebarText.style.opacity = "1";
+	if (!elements.titlebarText) return;
+
+	elements.titlebarText.innerHTML = text;
+	elements.titlebarText.style.transition = "opacity 0.2s ease-out";
+	elements.titlebarText.style.opacity = "1";
 
 	// Clear the previous timeout if it exists
 	if (titlebarTimeout) {
 		clearTimeout(titlebarTimeout);
 	}
 
+	// Hide the text after a delay
 	titlebarTimeout = setTimeout(() => {
-		titlebarText.style.transition = "opacity 2s ease-out";
-		titlebarText.style.opacity = "0";
+		if (elements.titlebarText) {
+			elements.titlebarText.style.transition = "opacity 2s ease-out";
+			elements.titlebarText.style.opacity = "0";
+		}
 	}, 4000);
 }
