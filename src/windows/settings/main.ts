@@ -1,15 +1,12 @@
 import path from "node:path";
 import { BrowserWindow, ipcMain, shell } from "electron";
-import { clearCache } from "../../modules/cacheManager.ts";
 import { i } from "../../modules/localization.ts";
 import { dirname, getAsset, getCustomIcon, getDisplayVersion, userDataPath } from "../../utils.ts";
 
 export let settingsWindow: BrowserWindow;
 let isOpen = false;
 
-ipcMain.handle("clearCache", async (_event) => await clearCache());
 ipcMain.handle("openFolder", async (_event, folder: string) => await shell.openPath(path.join(userDataPath, `/${folder}/`)));
-ipcMain.handle("crash", () => process.crash());
 
 export async function createSettingsWindow<IPCHandle>() {
 	if (isOpen) {

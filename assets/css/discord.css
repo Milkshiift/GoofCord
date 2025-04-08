@@ -1,15 +1,15 @@
-* {
-    outline: none;
-    scrollbar-width: unset !important;
-    scrollbar-color: unset !important;
+[class*="scrollerBase"] {
+    will-change: transform, scroll-position;
+    contain: content;
+    text-rendering: geometricPrecision;
 }
 
-[class^="scrollerBase"] {
-    will-change: transform;
+[class*="messagesWrapper"], #channels {
+    contain: strict;
 }
 
-[class^="socialLinks-"] + [class^="info-"] {
-    padding-right: 0;
+img, [class*="emojiListRow"] {
+    content-visibility: auto;
 }
 
 /* Hide download discord button */
