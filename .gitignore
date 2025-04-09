@@ -9,4 +9,4 @@ assets/lang/test-TEST.json
 assets/venmic-arm64.node
 assets/venmic-x64.node
 assets/venbind-linux-x64.node
-assets/venbind-windows-x64.node
+assets/venbind-win32-x64.node

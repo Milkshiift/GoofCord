@@ -92,10 +92,12 @@ function copyVenbind() {
 		).catch(() => console.warn("Failed to copy venbind. Building without venbind support"));
 	}
 
-	return copyFile(
-		"./node_modules/venbind/prebuilds/linux-x86_64/venbind-linux-x86_64.node",
-		"./assets/venbind-linux-x64.node"
-	).catch(() => console.warn("Failed to copy venbind. Building without venbind support"));
+	if (process.platform === "linux") {
+		return copyFile(
+			"./node_modules/venbind/prebuilds/linux-x86_64/venbind-linux-x86_64.node",
+			"./assets/venbind-linux-x64.node"
+		).catch(() => console.warn("Failed to copy venbind. Building without venbind support"));
+	}
 }
 
 async function copyFile(src: string, dest: string) {
