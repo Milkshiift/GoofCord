@@ -13,12 +13,6 @@ contextBridge.exposeInMainWorld("goofcord", {
 		flashTitlebar: (color: string) => flashTitlebar(color),
 		flashTitlebarWithText: (color: string, text: string) => flashTitlebarWithText(color, text),
 	},
-	keybind: {
-		register: (shortcut: string, id: number) => ipcRenderer.invoke("venbind:registerKeybind", shortcut, id),
-		unregister: (id: number) => ipcRenderer.invoke("venbind:unregisterKeybind", id),
-		shouldPreRegister: () => ipcRenderer.sendSync("venbind:shouldPreregister"),
-		preRegister: (actions: { id: number; name: string }[]) => ipcRenderer.invoke("venbind:preregisterKeybinds", actions)
-	},
 	electron: process.versions.electron,
 	version: ipcRenderer.sendSync("utils:getVersion"),
 	displayVersion: ipcRenderer.sendSync("utils:getDisplayVersion"),

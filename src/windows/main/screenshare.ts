@@ -1,4 +1,4 @@
-import { addPatch, scripts } from "../defaultAssets.ts";
+import { addPatch, scripts } from "./defaultAssets.ts";
 
 addPatch({
     patches: [

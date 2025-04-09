@@ -21,6 +21,7 @@ import { encryptMessage } from "./modules/messageEncryption.ts";
 import { decryptMessage } from "./modules/messageEncryption.ts";
 import { cycleThroughPasswords } from "./modules/messageEncryption.ts";
 import { updateModsFull } from "./modules/mods.ts";
+import { setKeybinds } from "./modules/venbind.ts";
 import { stopVenmic } from "./modules/venmic.ts";
 import { createSettingsWindow } from "./windows/settings/main.ts";
 import { loadCloud } from "./windows/settings/cloud/cloud.ts";
@@ -50,6 +51,7 @@ ipcMain.on("messageEncryption:encryptMessage", (event, message) => { event.retur
 ipcMain.on("messageEncryption:decryptMessage", (event, message) => { event.returnValue = decryptMessage(message); });
 ipcMain.handle("messageEncryption:cycleThroughPasswords", (event, ) => { return cycleThroughPasswords(); });
 ipcMain.handle("mods:updateModsFull", async (event, ) => { return await updateModsFull(); });
+ipcMain.handle("venbind:setKeybinds", (event, keybinds) => { return setKeybinds(keybinds); });
 ipcMain.handle("venmic:stopVenmic", (event, ) => { return stopVenmic(); });
 ipcMain.handle("main:createSettingsWindow", async (event, ) => { return await createSettingsWindow(); });
 ipcMain.handle("cloud:loadCloud", async (event, ) => { return await loadCloud(); });
