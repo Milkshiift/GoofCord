@@ -114,6 +114,8 @@ function updateKeybinds() {
 }
 
 export function startKeybindWatcher() {
+    updateKeybinds();
+
     contextBridge.exposeInMainWorld("keybinds", {
         updateKeybinds: debounce(updateKeybinds,1000)
     })
