@@ -1,4 +1,4 @@
-import type { Configuration } from "electron-builder";
+import { Configuration } from "electron-builder";
 
 export const config: Configuration = {
     artifactName: "${productName}-${version}-${os}-${arch}.${ext}",
@@ -39,8 +39,7 @@ export const config: Configuration = {
                 GenericName: "Internet Messenger",
                 Type: "Application",
                 Categories: "Network;InstantMessaging;Chat;",
-                Keywords: "discord;goofcord;electron;chat;",
-                MimeType: "x-scheme-handler/discord"
+                Keywords: "discord;goofcord;"
             }
         }
     },

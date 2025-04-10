@@ -7,8 +7,6 @@ import { genSettingsLangFile } from "./genSettingsLangFile.ts";
 import { generateDTSFile } from "./genSettingsTypes.ts";
 import pc from "picocolors";
 
-const isDev = process.argv.some((arg) => arg === "--dev" || arg === "-d");
-
 await fs.promises.rm("ts-out", { recursive: true, force: true });
 
 console.log("Preprocessing...");
@@ -32,6 +30,7 @@ const bundleResult = await Bun.build({
 if (bundleResult.logs.length) console.log(bundleResult.logs);
 
 await copyVenmic();
+await copyVenbind();
 
 await renamePreloadFiles("./ts-out");
 await fs.promises.cp("./assets/", "./ts-out/assets", { recursive: true });
@@ -70,7 +69,7 @@ async function traverseDirectory(directory: string, fileHandler: (filePath: stri
 	}
 }
 
-async function copyVenmic() {
+function copyVenmic() {
 	if (process.platform !== "linux") return;
 
 	return Promise.all([
@@ -83,6 +82,22 @@ async function copyVenmic() {
 			"./assets/venmic-arm64.node"
 		)
 	]).catch(() => console.warn("Failed to copy venmic. Building without venmic support"));
+}
+
+function copyVenbind() {
+	if (process.platform === "win32") {
+		return copyFile(
+			"./node_modules/venbind/prebuilds/windows-x86_64/venbind-windows-x86_64.node",
+			"./assets/venbind-win32-x64.node"
+		).catch(() => console.warn("Failed to copy venbind. Building without venbind support"));
+	}
+
+	if (process.platform === "linux") {
+		return copyFile(
+			"./node_modules/venbind/prebuilds/linux-x86_64/venbind-linux-x86_64.node",
+			"./assets/venbind-linux-x64.node"
+		).catch(() => console.warn("Failed to copy venbind. Building without venbind support"));
+	}
 }
 
 async function copyFile(src: string, dest: string) {

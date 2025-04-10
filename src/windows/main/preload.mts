@@ -4,6 +4,8 @@ import { ipcRenderer, webFrame } from "electron";
 import { error, log } from "../../modules/logger.ts";
 import { injectTitlebar } from "./titlebar.ts";
 import { getDefaultScripts } from "./defaultAssets.ts";
+import "./screenshare.ts";
+import { startKeybindWatcher, } from "./keybinds.ts";
 
 const loadedStyles = new Map<string, HTMLStyleElement>();
 
@@ -15,6 +17,8 @@ if (document.location.hostname.includes("discord")) {
 	for (const script of assets.scripts) {
 		webFrame.executeJavaScript(script[1]).then(() => log(`Loaded script: ${script[0]}`));
 	}
+
+	startKeybindWatcher();
 
 	window.localStorage.setItem("hideNag", "true"); // Hide "Download Discord Desktop now!" banner
 

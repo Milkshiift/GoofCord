@@ -64,9 +64,18 @@ let subscribed = false;
 function subscribeToAppEvents() {
 	if (subscribed) return;
 	subscribed = true;
-	app.on("second-instance", () => {
-		mainWindow.restore();
-		mainWindow.show();
+	app.on("second-instance", (_event, cmdLine, _cwd, _data) => {
+		const keybind = cmdLine.find(x => x.startsWith("--keybind"));
+		if (keybind !== undefined) {
+			const action = keybind.split("=")[1];
+			const keyup: boolean = keybind.startsWith("--keybind-up=") || keybind.startsWith("--keybind=");
+			if (action !== undefined) {
+				mainWindow.webContents.send("keybinds:trigger", action, keyup);
+			}
+		} else {
+			mainWindow.restore();
+			mainWindow.show();
+		}
 	});
 	app.on("activate", () => {
 		mainWindow.show();
