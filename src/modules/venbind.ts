@@ -28,3 +28,7 @@ export async function startVenbind() {
 export function setKeybinds<IPCHandle>(keybinds: { id: string; name?: string; shortcut?: string }[]) {
     venbind?.setKeybinds(keybinds);
 }
+
+export function isVenbindLoaded<IPCHandle>() {
+    return obtainVenbind() !== undefined;
+}

@@ -14,10 +14,18 @@ addPatch({
                 {
                     match: /\(0,(?:[A-Za-z_$][\w$]*)\.isDesktop\)\(\)/g,
                     replace: "true"
-                }
+                },
+                {
+                    // eslint-disable-next-line no-useless-escape
+                    match: /((?:[A-Za-z_$][\w$]*)\.isPlatformEmbedded\?)(.+renderEmpty\((?:[A-Za-z_$][\w$]*)\)\]\}\)\]\}\))/,
+                    replace: "$1$self.keybindMessage($2)"
+                },
             ]
-        }
-    ]
+        },
+    ],
+    xdpWarning (keybindsList) {
+        return keybindsList;
+    }
 });
 
 interface Keybind {

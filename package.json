@@ -39,11 +39,11 @@
     "electron-context-menu": "github:Milkshiift/electron-context-menu",
     "picocolors": "^1.1.1",
     "stegcloak": "github:Milkshiift/stegcloak-node",
-    "v8-compile-cache": "github:JulioC/v8-compile-cache#bugfix/esm",
-    "venbind": "^0.1.0"
+    "v8-compile-cache": "github:JulioC/v8-compile-cache#bugfix/esm"
   },
   "optionalDependencies": {
-    "@vencord/venmic": "^6.1.0"
+    "@vencord/venmic": "^6.1.0",
+    "venbind": "^0.1.0"
   },
   "trustedDependencies": [
     "@biomejs/biome",
