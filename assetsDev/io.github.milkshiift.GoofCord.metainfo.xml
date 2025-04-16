@@ -12,12 +12,12 @@
   <project_group>GoofCord</project_group>
   <description>
     <ul>
-      <li>With Privacy in mind: GoofCord blocks all tracking and uses multiple techniques like message encryption to improve your privacy and security. Learn more in the wiki</li>
-      <li>Your Way, Your Client: Set up GoofCord to your liking with an array of customization options.</li>
+      <li>With Privacy in mind: GoofCord blocks all tracking and uses multiple techniques like message encryption to improve your privacy and security. Learn more on the GitHub wiki</li>
       <li>Fast and Performant: Glide through your chats with GoofCord's superior speed and responsiveness compared to the official client.</li>
       <li>Standalone: GoofCord is a standalone client, not reliant on the original Discord client in any way.</li>
-      <li>Plugins &amp; Themes support: Use client mods like Vencord or Shelter for a world of plugins and themes.</li>
-      <li>Linux support: Seamless screen sharing with audio and native Wayland support on Linux. See FAQ for details.</li>
+      <li>Plugins &amp; Themes support: Easily use client mods like Vencord, Equicord or Shelter for plugins and themes.</li>
+      <li>Global Keybinds: Set up keybinds and use them across the system.</li>
+      <li>Linux support: Seamless screen sharing with audio and native Wayland support on Linux.</li>
     </ul>
   </description>
   <screenshots>

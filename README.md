@@ -12,10 +12,10 @@
 
 ## Features :sparkles:
 - **:lock: With Privacy in mind**: GoofCord blocks all tracking and uses multiple techniques like message encryption to improve your privacy and security. [Learn more](https://github.com/Milkshiift/GoofCord/wiki/Privacy-FAQ)
-- **:gear: Your Way, Your Client**: Set up GoofCord to your liking with an array of customization options.
 - **:chart_with_upwards_trend: Fast and Performant**: Glide through your chats with GoofCord's superior speed and responsiveness compared to the official client. 
 - **:bookmark: Standalone**: GoofCord is a standalone application, not reliant on the original Discord client in any way.
-- **:electric_plug: Plugins & Themes support**: Easily use client mods like [Vencord](https://github.com/Vendicated/Vencord), [Equicord](https://github.com/Equicord/Equicord) or [Shelter](https://github.com/uwu/shelter) for a world of plugins and themes.
+- **:electric_plug: Plugins & Themes support**: Easily use client mods like [Vencord](https://github.com/Vendicated/Vencord), [Equicord](https://github.com/Equicord/Equicord) or [Shelter](https://github.com/uwu/shelter) for plugins and themes.
+- **⌨️ Global Keybinds**: Set up keybinds and use them across the system
 - **🐧 Linux support**: Seamless screensharing with audio and native Wayland support on Linux. See FAQ for details.
 
 ## Installation
@@ -72,9 +72,9 @@ And if you want to compile it yourself, here's how:
   - Press `Ctrl+Shift+'` shortcut.
 
 ### How do I run GoofCord natively on Wayland?
-- GoofCord should run natively out of the box, but if it doesn't, run with these flags:    
+- GoofCord should run natively out of the box, but if it doesn't, run with these arguments:    
 `--enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform-hint=auto`    
-If GoofCord shows a black screen, also include this flag: `--disable-gpu-sandbox`
+If GoofCord shows a black screen, also include this argument: `--disable-gpu-sandbox`
 
 ### Seeking the Source Code? 🕵️‍♂️
 - You can find our source code on [GitHub](https://github.com/Milkshiift/GoofCord/).
