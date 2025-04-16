@@ -81,17 +81,8 @@ If GoofCord shows a black screen, also include this argument: `--disable-gpu-san
 
 ### Check out our [wiki](https://github.com/Milkshiift/GoofCord/wiki) if you've got questions left
 
-## Credits 🙌
-
-[GoofCord Cloud Server](https://github.com/Wuemeli/goofcord-cloudserver)    
-[LegCord](https://github.com/Legcord/Legcord)  
-[Discord Sandboxed](https://github.com/khlam/discord-sandboxed)  
-[Vencord](https://github.com/Vendicated/Vencord)     
-[Vesktop](https://github.com/Vencord/Vesktop)    
-[WebCord](https://github.com/SpacingBat3/WebCord)
-
 ## Donations
 If you like GoofCord, you can support me with crypto:
 - **XMR (Monero)**: `44FyEbizgCbCaghrtCp2BGQ7WZcNRkwAMNEf9fUzgu6A3wmQq8yqrHiAMu2jT784k6NcSByJUApk8jMREMmUJQeu9g6Dxbq`
-- **USDT (Polygon/BEP20)**: `0x48680c916b59e3b254e637fd3cd764fec90aa93e`
-- **BTC**: `3F9YHx5KQ5yvYwKfVYcJh5a4HqSfUJyG1w`
+- **USDT (Arbitrum/BEP20)**: `0xcacf4a4089c5a68657f2b39d8935a1ec01f999b8`
+- **BTC**: `3PRgLrYWzojWHur8WKKNRwpXwzG6J5Zf3K`
