@@ -25,32 +25,31 @@ if (document.location.hostname.includes("discord")) {
 	document.addEventListener("DOMContentLoaded", () => {
 		assets.styles.push(["discord.css", fs.readFileSync(ipcRenderer.sendSync("utils:getAsset", "css/discord.css"), "utf8")]);
 		for (const style of assets.styles) {
-			const styleElement = document.createElement('style');
-			styleElement.textContent = style[1];
-			styleElement.id = style[0];
-			document.head.appendChild(styleElement);
-			loadedStyles.set(style[0], styleElement);
+			updateStyle(style[1], style[0]);
 			log(`Loaded style: ${style[0]}`);
 		}
 
 		ipcRenderer.on('assetLoader:styleUpdate', (_, data) => {
 			const { file, content } = data;
-
-			if (loadedStyles.has(file)) {
-				try {
-					const oldStyleElement = loadedStyles.get(file)!;
-					oldStyleElement.remove();
-				} catch (err) {
-					error(`Error removing old style: ${file} - ${err}`);
-				}
-			}
-
-			const styleElement = document.createElement('style');
-			styleElement.textContent = content;
-			styleElement.id = file;
-			document.head.appendChild(styleElement);
-			loadedStyles.set(file, styleElement);
+			updateStyle(content, file);
 			log(`Hot reloaded style: ${file}`);
 		});
 	});
+}
+
+function updateStyle(style: string, id: string) {
+	if (loadedStyles.has(id)) {
+		try {
+			const oldStyleElement = loadedStyles.get(id)!;
+			oldStyleElement.remove();
+		} catch (err) {
+			error(`Error removing old style: ${id} - ${err}`);
+		}
+	}
+
+	const styleElement = document.createElement('style');
+	styleElement.textContent = style;
+	styleElement.id = id;
+	document.body.appendChild(styleElement);
+	loadedStyles.set(style, styleElement);
 }
