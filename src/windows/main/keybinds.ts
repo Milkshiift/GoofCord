@@ -16,7 +16,6 @@ addPatch({
                     replace: "true"
                 },
                 {
-                    // eslint-disable-next-line no-useless-escape
                     match: /((?:[A-Za-z_$][\w$]*)\.isPlatformEmbedded\?)(.+renderEmpty\((?:[A-Za-z_$][\w$]*)\)\]\}\)\]\}\))/,
                     replace: "$1$self.keybindMessage($2)"
                 },
