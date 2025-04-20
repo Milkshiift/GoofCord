@@ -32,7 +32,8 @@ function setFlags() {
 		"HardwareMediaKeyHandling",
 		"MediaSessionService",
 		"WebRtcAllowInputVolumeAdjustment",
-		"Vulkan"
+		"Vulkan",
+		"FontationsFontBackend"
 	];
 	const enableFeatures = [
 		"WebRTC",
