@@ -51,5 +51,5 @@ function updateStyle(style: string, id: string) {
 	styleElement.textContent = style;
 	styleElement.id = id;
 	document.body.appendChild(styleElement);
-	loadedStyles.set(style, styleElement);
+	loadedStyles.set(id, styleElement);
 }
