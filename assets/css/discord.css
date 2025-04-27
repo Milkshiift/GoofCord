@@ -1,15 +1,6 @@
-[class*="scrollerBase"] {
-    will-change: transform, scroll-position;
-    contain: content;
-    text-rendering: geometricPrecision;
-}
-
-[class*="messagesWrapper"], #channels {
-    contain: strict;
-}
-
-img, [class*="emojiListRow"] {
-    content-visibility: auto;
+[class*="messagesWrapper"], #channels, #emoji-picker-grid, [class*="members_"] {
+     will-change: transform, scroll-position;
+     contain: strict;
 }
 
 /* Hide download discord button */

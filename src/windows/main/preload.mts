@@ -20,8 +20,6 @@ if (document.location.hostname.includes("discord")) {
 
 	startKeybindWatcher();
 
-	window.localStorage.setItem("hideNag", "true"); // Hide "Download Discord Desktop now!" banner
-
 	document.addEventListener("DOMContentLoaded", () => {
 		assets.styles.push(["discord.css", fs.readFileSync(ipcRenderer.sendSync("utils:getAsset", "css/discord.css"), "utf8")]);
 		for (const style of assets.styles) {
