@@ -73,17 +73,8 @@ function modifyDiscordBar(): void {
 	if (!bar) return;
 	elements.titlebar = bar as HTMLElement;
 
-	const leading = elements.titlebar.querySelector('[class^="leading"]');
-	const trailing = elements.titlebar.querySelector('[class^="trailing"]');
-	if (!leading || !trailing) return;
-
-	const wordmark = document.createElement("div");
-	wordmark.id = "window-title";
-	leading.prepend(wordmark);
-
-	const controlsFiller = document.createElement('div');
-	controlsFiller.id = "window-controls-filler";
-	trailing.append(controlsFiller);
+	// trigger CSS rules that show custom titlebar
+	bar.setAttribute("__goofcord-custom-titlebar", "true");
 }
 
 export async function injectTitlebar(): Promise<void> {
@@ -117,7 +108,9 @@ function checkMainLayer(): void {
 	} else {
 		elements.dragBar.style.display = mainLayer.getAttribute('aria-hidden') === "true" ? "block" : "none";
 
-		if (!elements.titlebar) modifyDiscordBar();
+		// `elements.titlebar` may be uninitialized or may have been deleted from the document
+		// (due to switching accounts etc.) so we check it
+		if (!document.body.contains(elements.titlebar)) modifyDiscordBar();
 	}
 }
 
