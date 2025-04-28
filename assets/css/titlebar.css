@@ -8,7 +8,8 @@
 }
 
 /* GoofCord logo */
-[data-windows][__goofcord-custom-titlebar="true"] > [class^="leading"] {
+[data-windows][__goofcord-custom-titlebar="true"] > [class^="leading"]::after {
+    content: "";
     width: 80px;
     mask-image: var(--wordmark-svg);
     mask-repeat: no-repeat;
@@ -16,8 +17,7 @@
     height: 9px;
 }
 
-/* Move top right buttons to the left to make space for
-   max/min/close buttons */
+/* Make space to the right of the top right buttons */
 [data-windows][__goofcord-custom-titlebar="true"] > [class^="trailing"] {
     padding-right: 100px !important;
 }
