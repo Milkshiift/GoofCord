@@ -110,7 +110,7 @@ function checkMainLayer(): void {
 
 		// `elements.titlebar` may be uninitialized or may have been deleted from the document
 		// (due to switching accounts etc.) so we check it
-		if (!document.body.contains(elements.titlebar)) modifyDiscordBar();
+		if (!mainLayer.contains(elements.titlebar)) modifyDiscordBar();
 	}
 }
 
