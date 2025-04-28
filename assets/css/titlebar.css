@@ -7,6 +7,22 @@
     will-change: background-color;
 }
 
+/* GoofCord logo */
+[data-windows][__goofcord-custom-titlebar="true"] > [class^="leading"]::after {
+    content: "";
+    width: 80px;
+    mask-image: var(--wordmark-svg);
+    mask-repeat: no-repeat;
+    background-color: var(--text-muted);
+    height: 9px;
+}
+
+/* Move top right buttons to the left to make space for
+   max/min/close buttons */
+[data-windows][__goofcord-custom-titlebar="true"] > [class^="trailing"] {
+    padding-right: 100px !important;
+}
+
 #titlebar-text {
     will-change: opacity;
     position: absolute;
@@ -32,19 +48,6 @@
     height: 37px;
     z-index: 998;
     transition: background-color 0.25s ease-in;
-}
-
-#window-title {
-    width: 80px;
-    mask-image: var(--wordmark-svg);
-    mask-repeat: no-repeat;
-    background-color: var(--text-muted);
-    height: 9px;
-}
-
-#window-controls-filler {
-    width: 100px;
-    height: 32px;
 }
 
 #window-controls-container {
