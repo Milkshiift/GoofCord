@@ -17,7 +17,8 @@
     height: 9px;
 }
 
-/* Make space to the right of the top right buttons */
+/* Move top right buttons to the left to make space for
+   max/min/close buttons */
 [data-windows][__goofcord-custom-titlebar="true"] > [class^="trailing"] {
     padding-right: 100px !important;
 }
