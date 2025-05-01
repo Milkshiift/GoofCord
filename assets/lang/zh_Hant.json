@@ -23,7 +23,7 @@
     "opt-minimizeToTray-desc": "即使關閉所有 GoofCord 視窗它仍然正在執行。",
     "opt-dynamicIcon": "動態圖示",
     "opt-customIconPath": "自訂圖示",
-    "welcomeMessage": "歡迎來到 GoofCord！\n調整完設定後重新啟動 GoofCord 以取用 Discord。\n您可以按 Ctrl＋Shift＋R 或是從面板中重新啟動\n祝聊天愉快！",
+    "welcomeMessage": "歡迎來到 GoofCord!\n根據您的喜好設置設定，並重啟 GoofCord 以訪問 Discord。\n您可以使用 Ctrl+Shift+R 或通過系統托盤/停靠菜單來執行此操作。\n祝您聊天愉快!",
     "menu-edit-undo": "復原",
     "goofcord-fullScreen": "全螢幕",
     "menu-goofcord-cyclePasswords": "在候選密碼中循環",
@@ -93,5 +93,15 @@
     "opt-button-forceNativeCrash": "強制關閉",
     "opt-button-loadFromCloud": "從雲端載入",
     "opt-button-saveToCloud": "儲存至雲端",
-    "opt-button-deleteCloud": "刪除雲端資料"
+    "opt-button-deleteCloud": "刪除雲端資料",
+    "opt-domOptimizer": "DOM 優化器",
+    "inviteMessage": "您想加入嗎",
+    "no": "不",
+    "opt-locale": "語言 🌍",
+    "opt-locale-desc": "這與 Discord 的語言不同。您可以在 <a target=\"_blank\" href=\"https://hosted.weblate.org/projects/goofcord/goofcord/\">這裡</a> 翻譯 GoofCord。",
+    "opt-cloudHost-desc": "GoofCord 雲端伺服器 URL。您可以自行架設，請參閱 <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">倉庫</a>。",
+    "opt-cloudHost": "雲端主機",
+    "yes": "是的",
+    "opt-domOptimizer-desc": "將 DOM 更新延遲以可能提高性能。可能會導致視覺上的瑕疵。",
+    "settings-encryption-unavailable": "GoofCord 無法檢測到密碼管理器。加密設定將以純文字形式儲存。如果您使用的是 Linux，請安裝 gnome-libsecret 或 kwallet"
 }
