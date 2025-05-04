@@ -78,19 +78,6 @@ function MultiselectDropdown(options){
   });
 }
 
-window.addEventListener('load',()=>{
-  setTimeout(()=>{
-    MultiselectDropdown(window.MultiselectDropdownOptions);
-  }, 500)
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  const buttons = document.querySelectorAll('[data-string^="cloud-"]');
-  buttons.forEach(button => {
-    button.addEventListener('click', function () {
-      buttons.forEach(btn => btn.classList.remove('checked'));
-      this.classList.add('checked');
-      setTimeout(() => this.classList.remove('checked'), 1000);
-    });
-  });
-});
+window.initMultiselect = () => {
+  MultiselectDropdown(window.MultiselectDropdownOptions);
+}

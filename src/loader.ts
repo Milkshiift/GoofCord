@@ -35,6 +35,8 @@ export async function load() {
 	void checkForUpdate();
 	void initArrpc();
 	void startStyleWatcher();
+
+	if (process.argv.some((arg) => arg === "--settings")) void createSettingsWindow();
 }
 
 async function waitForInternetConnection() {

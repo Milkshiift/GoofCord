@@ -48,7 +48,7 @@ export interface ButtonEntry {
 
 // https://github.com/Milkshiift/GoofCord/wiki/How-to-develop-GoofCord#entries
 export const settingsSchema = {
-	"General settings": {
+	"General": {
 		locale: {
 			name: "Language 🌍",
 			defaultValue: "en-US",
@@ -83,7 +83,7 @@ export const settingsSchema = {
 		dynamicIcon: {
 			name: "Dynamic icon",
 			defaultValue: true,
-			description: "Shows pings/mentions count on GoofCord's icon and its tray. Overwrites the custom icon.\nOn Linux pings on the taskbar icon only show when Unity launcher or unitylib is used",
+			description: "Shows pings/mentions count on GoofCord's icon and its tray. Overwrites the custom icon.\nOn Linux, pings on the taskbar only work when unitylib is installed.",
 			inputType: "checkbox",
 		},
 		customIconPath: {
@@ -100,7 +100,7 @@ export const settingsSchema = {
 			inputType: "textfield",
 		},
 	},
-	"Client mods settings": {
+	"Client Mods": {
 		modNames: {
 			name: "Client mods",
 			defaultValue: ["shelter", "vencord"],
@@ -198,7 +198,7 @@ export const settingsSchema = {
 			},
 		},
 	},
-	"Firewall settings": {
+	"Firewall": {
 		firewall: {
 			name: "Firewall",
 			defaultValue: true,
@@ -260,7 +260,7 @@ export const settingsSchema = {
 			},
 		},
 	},
-	"Other settings": {
+	"Other": {
 		arrpc: {
 			name: "Activity display",
 			defaultValue: false,
@@ -339,7 +339,7 @@ export const settingsSchema = {
 			onClick: "settings.clearCache()",
 		},
 	},
-	"Cloud Settings": {
+	"Cloud": {
 		cloudHost: {
 			name: "Cloud Host",
 			description: "GoofCord Cloud Server URL. You can self-host it yourself, see the <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">repository</a>.",

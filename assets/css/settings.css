@@ -1,9 +1,4 @@
-/*
-  CSS code originally created by SpacingBat3
-  Source: https://github.com/SpacingBat3/WebCord
-  Licensed under the MIT License
-*/
-
+/* ==================== Base Styles & Variables ==================== */
 @font-face {
     font-family: InterVariable;
     font-style: normal;
@@ -16,9 +11,8 @@
     --color-primary: #5865f2;
     --color-primary-light: #797eff;
     --color-primary-ultralight: #9499ff;
-    --bg-primary: #36393f;
-    --bg-secondary: #2f3136;
-    --bg-secondary-alt: #1b1c1f;
+    --bg-primary: #313439;
+    --bg-secondary: #27292e;
     --font-color-settings: #8e9297;
     --font-color-code: #b9bbbe;
     --font-color-normal: #dcddde;
@@ -26,114 +20,198 @@
     --input-bg: #484c52;
     --scrollbar-width: 6px;
     --scrollbar-thumb-color: #202225;
-    --font-family: "InterVariable";
+    --font-family: "InterVariable", sans-serif;
     --checkmark-icon: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M174 439 7 273a26 26 0 0 1 0-36l37-36c10-10 26-10 36 0l112 112L432 73c10-10 26-10 36 0l37 36c9 10 9 26 0 36L210 439a26 26 0 0 1-36 0z' fill='%23fff'/%3E%3C/svg%3E");
     --revert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-2 0 24 24'%3E%3Cpath fill-rule='evenodd' d='m5.62 7 1.44 1.44a1.5 1.5 0 0 1-2.12 2.12l-4-4a1.5 1.5 0 0 1 0-2.12l4-4a1.5 1.5 0 1 1 2.12 2.12L5.62 4H10A10 10 0 1 1 0 14a1.5 1.5 0 0 1 3 0 7 7 0 1 0 7-7H5.62z' clip-rule='evenodd'/%3E%3C/svg%3E");
 }
 
 html {
-    padding: 10px;
     background-color: var(--bg-primary);
-    font-family: var(--font-family), sans-serif;
+    font-family: var(--font-family);
+    font-size: 0.8em;
     color: var(--font-color-normal);
     line-height: 1.25;
-    cursor: default;
+}
+
+body {
+    margin: 0;
+    background-color: var(--bg-primary);
+    min-height: 100vh;
 }
 
 p {
     cursor: text;
+    margin: 0;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
     color: var(--font-color-header);
     margin-bottom: 0.5em;
+    margin-top: 0;
 }
 
+header {
+    background-color: var(--bg-secondary);
+    padding-top: 1px;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+/* ==================== Scrollbar Styles ==================== */
 ::-webkit-scrollbar {
     width: var(--scrollbar-width);
     background-color: transparent;
-    border-radius: 25px;
 }
 
 ::-webkit-scrollbar-thumb {
     background-color: var(--scrollbar-thumb-color);
-    border-radius: 25px;
-    box-sizing: border-box;
+    border-radius: var(--scrollbar-width);
 }
 
+/* ==================== Links ==================== */
 a {
-    color: #fff;
+    color: var(--color-primary-ultralight);
+    text-decoration: none;
 }
 
 a:hover {
     color: var(--color-primary-light);
+    text-decoration: underline;
 }
 
-h2 {
-    text-transform: uppercase;
-    margin-left: 15px;
-    font-size: 0.8em;
-}
-
-.description {
-    margin-top: 0.5em;
-    margin-left: 2.1em;
-    padding-right: 1em;
-    color: var(--font-color-settings);
-}
-
-form {
+/* ==================== Tab Navigation (Ribbon) ==================== */
+.settings-tabs {
     display: flex;
-    flex-direction: column;
-    margin: 0 40px 2em 40px;
-    padding: 10px 15px 10px;
-    background-color: var(--bg-secondary);
-    font-size: 0.8em;
-    border-radius: 5px;
+    padding: 0 20px;
+    border-bottom: 1px solid #3b3e43; /* Separator below tabs */
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.tab-item {
+    padding: 12px 20px;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    font-size: 1.1em;
+    font-weight: 500;
+    color: var(--font-color-settings);
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s ease, border-bottom-color 0.2s ease;
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+.tab-item:hover {
+    color: var(--font-color-normal);
+}
+
+.tab-item.active {
+    color: var(--font-color-header);
+    border-bottom-color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* ==================== Content Panels ==================== */
+.settings-content {
+    padding: 20px 30px;
+    overflow-y: scroll;
+}
+
+.content-panel {
+    display: none; /* Hide inactive panels */
+    animation: fadeIn 0.3s ease-out;
+}
+
+.content-panel.active {
+    display: block; /* Show active panel */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Category Title within Panel */
+.content-panel h2 {
+    text-transform: uppercase;
+    color: var(--font-color-settings);
+    border-bottom: 1px solid #3b3e43;
+    padding-bottom: 5px;
+    font-size: 1em;
+}
+
+/* ==================== Setting Fields ==================== */
+form.settingsContainer {
+    margin: 0;
 }
 
 fieldset {
-    margin: 0.25em 0;
+    margin: 20px 0 0 0;
     padding: 0;
     border: none;
+    position: relative; /* Needed for revert button */
 }
 
 .checkbox-container {
     display: flex;
-    margin: 0 1em;
-    gap: 0.5em;
     align-items: center;
+    gap: 15px;
+    width: fit-content;
+    cursor: pointer;
 }
 
-input,
-label {
+.description {
+    margin-top: 0.5em;
+    margin-left: calc(1.5em + 15px); /* Indent description based on checkbox size + gap */
+    color: var(--font-color-settings);
+    padding-right: 1em;
+}
+
+
+.revert-button {
+    background-color: var(--font-color-settings);
+    mask-image: var(--revert-icon);
+    -webkit-mask-image: var(--revert-icon);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    width: 1em;
+    height: 1em;
+    position: absolute;
+    right: 0; /* Position at the right edge of fieldset */
+    top: 0.25em; /* Vertically align near the top of the line */
     cursor: pointer;
+    transform: scale(1);
+    transition: 0.2s ease-in-out;
+    display: none; /* Hide by default */
+    z-index: 1;
+}
+
+fieldset:hover .revert-button {
+    display: block; /* Show on fieldset hover */
+}
+
+.revert-button:hover {
+    background-color: var(--color-primary-light);
+    transform: scale(1.1);
+}
+
+
+/* ==================== Input Controls ==================== */
+input, label {
+    cursor: inherit;
 }
 
 input[type="checkbox"] {
     height: 1.5em;
     width: 1.5em;
     border-radius: 5px;
-    appearance: none;
+    appearance: none; /* Hide default checkbox */
     background-color: var(--input-bg);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: solid #0000 4px;
+    border: solid transparent 4px;
     margin: 0;
     will-change: transform;
-}
-
-.slim-checkbox {
-    width: 0 !important;
-    background-image: none !important;
-}
-
-.no-margin {
-    margin: 0 !important;
 }
 
 input[type="checkbox"]:checked {
@@ -141,7 +219,7 @@ input[type="checkbox"]:checked {
     background-image: var(--checkmark-icon);
     background-repeat: no-repeat;
     background-position: center;
-    background-size: contain;
+    background-size: 90%;
     animation: checkmark-animation 0.4s ease-in-out;
 }
 
@@ -154,93 +232,41 @@ input[type="checkbox"]:hover {
 }
 
 @keyframes checkmark-animation {
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.1);
-    }
-
-    100% {
-        transform: scale(1);
-    }
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
 }
 
 @keyframes checkmark-animation-unchecked {
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(0.9);
-    }
-
-    100% {
-        transform: scale(1);
-    }
+    0% { transform: scale(1); }
+    50% { transform: scale(0.9); }
+    100% { transform: scale(1); }
 }
 
+
 textarea {
-    height: 9em;
-    width: 22em;
+    min-height: 6em;
+    max-width: 30em;
+    width: 16em;
     border-radius: 5px;
     background-color: var(--input-bg);
     border: none;
     color: var(--font-color-normal);
     padding: 10px;
-    font-family: var(--font-family), sans-serif;
+    font-family: var(--font-family);
+    display: block;
+    margin-top: 5px;
 }
 
 .text {
+    min-width: 5em;
     border-radius: 5px;
-    width: 15em;
     background-color: var(--input-bg);
     border: none;
     color: var(--font-color-normal);
     padding: 10px;
-    font-family: var(--font-family), sans-serif;
+    font-family: var(--font-family);
     cursor: text;
-}
-
-button {
-    margin: 0.2em auto;
-    padding: 5px;
-    width: fit-content;
-    border-radius: 5px;
-    background-color: var(--color-primary-light);
-    color: var(--font-color-header);
-    font-weight: bold;
-    border: solid #0000 4px;
-    transition: background-color 0.2s ease-in-out;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: var(--color-primary-ultralight);
-}
-
-.buttonContainer {
-    display: flex;
-}
-
-input[type=file] {
-    width: 7em;
-}
-
-input[type=file]::file-selector-button {
-    border: none;
-    width: 7em;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: var(--color-primary);
-    color: var(--font-color-header);
-    transition: background-color 0.2s ease-in-out;
-    cursor: pointer;
-}
-
-input[type=file]::file-selector-button:hover {
-    background-color: var(--color-primary-light);
 }
 
 select {
@@ -249,96 +275,147 @@ select {
     border: none;
     color: var(--font-color-normal);
     padding: 10px;
-    font-family: var(--font-family), sans-serif;
+    font-family: var(--font-family);
     cursor: pointer;
 }
 
-p.center {
-    text-align: center;
-    margin: 0;
+input[type=file] {
+    width: 7.1em; /* Hide "No file chosen" */
 }
 
-.hidden {
-    display: none;
-}
-
-.multiselect-dropdown {
-    border-radius: 5px;
-    background-color: var(--input-bg);
+input[type=file]::file-selector-button {
     border: none;
-    color: var(--font-color-normal);
     padding: 10px;
-    font-family: var(--font-family), sans-serif;
+    border-radius: 5px;
+    background-color: var(--color-primary);
+    color: var(--font-color-header);
+    transition: background-color 0.2s ease-in-out;
     cursor: pointer;
-    position: relative;
-    height: 1.2em;
+    font-family: var(--font-family);
+}
+
+input[type=file]::file-selector-button:hover {
+    background-color: var(--color-primary-light);
+}
+
+
+/* ==================== Buttons & Button Container ==================== */
+.buttonContainer {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #3b3e43;
+    justify-content: space-evenly;
+}
+
+.buttonContainer button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--color-primary);
+    color: var(--font-color-header);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.buttonContainer button:hover {
+    background-color: var(--color-primary-light);
+}
+
+
+/* ==================== Multiselect Dropdown ==================== */
+.multiselect-dropdown {
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px 10px;
+    position: relative;
+    cursor: pointer;
+    background-color: var(--input-bg);
+    border-radius: 5px;
+}
+
+.multiselect-dropdown .optext { /* Style for selected options displayed */
+    background-color: #383b41;
+    color: var(--font-color-normal);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    white-space: nowrap;
+}
+
+.multiselect-dropdown .placeholder {
+    color: var(--font-color-settings);
 }
 
 .multiselect-dropdown-list-wrapper {
-    box-shadow: #2b2b2b 0 3px 8px;
-    z-index: 100;
-    border-radius: 4px;
-    display: block;
     position: absolute;
+    min-width: 90px;
     top: 0;
     left: 0;
     right: 0;
-    background: var(--bg-primary);
-    transition: max-height 0.2s linear;
-    max-height: 200px;
-    min-width: 90px;
-    overflow-y: hidden;
+    z-index: 100;
+    background: #2e3035;
+    border: 1px solid var(--bg-primary);
+    border-radius: 4px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    max-height: 0; /* Hidden by default */
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, opacity 0.1s ease-in-out;
+    pointer-events: none; /* Don't block clicks when hidden */
 }
 
-.dropdown-hidden {
-    max-height: 0;
+.multiselect-dropdown-list-wrapper:not(.dropdown-hidden) {
+    max-height: 200px;
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .multiselect-dropdown-list {
-    padding: 2px;
-    overflow-y: hidden;
+    padding: 5px 0;
 }
 
 .multiselect-dropdown-list div {
-    padding: 0.25em;
-}
-
-#revert-button {
-    background-color: var(--input-bg);
-    mask-image: var(--revert-icon);
-    width: 1em;
-    height: 1em;
-    mask-size: contain;
-    position: absolute;
-    left: 5.15em;
+    width: 100%;
+    padding: 8px 5px;
     cursor: pointer;
-    transform: scale(1);
-    transition: 0.2s ease-in-out;
-    display: none;
+    transition: background-color 0.1s ease-in-out;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-#revert-button:hover {
-    background-color: var(--color-primary-light);
-    transform: scale(1.1);
+.multiselect-dropdown-list div:hover {
+    background-color: var(--bg-primary);
+}
+.multiselect-dropdown-list div.checked {
+    background-color: var(--color-primary);
+    color: var(--font-color-header);
 }
 
-fieldset:hover #revert-button {
-    display: block;
+.slim-checkbox {
+    width: 0 !important;
+    background-image: none !important;
 }
 
-.checked {
-    background-color: green;
-    color: white;
 
+
+.hidden {
+    display: none !important;
 }
 
+/* Message Box */
 .message {
     text-align: center;
-    background-color: var(--bg-secondary);
     border-radius: 5px;
-    padding: 10px 15px 10px;
-    margin: 0 40px;
+    padding: 15px 20px;
+    margin: 20px 20px 0;
+    max-width: 800px;
     border: solid 2px #F2D157;
+    color: #F2D157;
 }

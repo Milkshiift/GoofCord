@@ -27,7 +27,6 @@ function setFlags() {
 	if (process.argv.some((arg) => arg === "--no-flags")) return;
 
 	const disableFeatures = [
-		"OutOfBlinkCors",
 		"UseChromeOSDirectVideoDecoder",
 		"HardwareMediaKeyHandling",
 		"MediaSessionService",

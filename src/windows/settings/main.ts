@@ -18,7 +18,7 @@ export async function createSettingsWindow<IPCHandle>() {
 	console.log("Creating a settings window.");
 	settingsWindow = new BrowserWindow({
 		width: 660,
-		height: 670,
+		height: 700,
 		title: i("settingsWindow-title") + getDisplayVersion(),
 		darkTheme: true,
 		frame: true,
