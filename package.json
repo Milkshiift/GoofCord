@@ -24,11 +24,11 @@
   "homepage": "https://github.com/Milkshiift/GoofCord",
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@types/bun": "^1.2.10",
-    "@types/node": "^22.14.1",
+    "@types/bun": "^1.2.12",
+    "@types/node": "^22.15.3",
     "@types/stegcloak": "^1.0.2",
     "@vencord/types": "^1.11.5",
-    "electron": "^35.2.0",
+    "electron": "^36.1.0",
     "electron-builder": "^26.0.12",
     "ts-morph": "^25.0.1",
     "typescript": "^5.8.3"
