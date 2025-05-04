@@ -52,8 +52,8 @@ ipcMain.on("messageEncryption:encryptMessage", (event, message) => { event.retur
 ipcMain.on("messageEncryption:decryptMessage", (event, message) => { event.returnValue = decryptMessage(message); });
 ipcMain.handle("messageEncryption:cycleThroughPasswords", (event, ) => { return cycleThroughPasswords(); });
 ipcMain.handle("mods:updateModsFull", async (event, ) => { return await updateModsFull(); });
-ipcMain.handle("venbind:setKeybinds", (event, keybinds) => { return setKeybinds(keybinds); });
-ipcMain.handle("venbind:isVenbindLoaded", (event, ) => { return isVenbindLoaded(); });
+ipcMain.handle("venbind:setKeybinds", async (event, keybinds) => { return await setKeybinds(keybinds); });
+ipcMain.handle("venbind:isVenbindLoaded", async (event, ) => { return await isVenbindLoaded(); });
 ipcMain.handle("venmic:stopVenmic", (event, ) => { return stopVenmic(); });
 ipcMain.handle("main:createSettingsWindow", async (event, ) => { return await createSettingsWindow(); });
 ipcMain.handle("cloud:loadCloud", async (event, ) => { return await loadCloud(); });

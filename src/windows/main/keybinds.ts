@@ -95,6 +95,7 @@ const getActiveKeybinds = (): Map<string, Keybind> => {
     return activeKeybinds;
 };
 
+// HELLO_WORLD -> Hello World
 const macroCaseToTitleCase = (input: string): string => {
     return input.toLowerCase()
         .split('_')
@@ -105,7 +106,6 @@ const macroCaseToTitleCase = (input: string): string => {
 let activeKeybinds: Map<string, Keybind> = getActiveKeybinds();
 
 function updateKeybinds() {
-
     activeKeybinds = getActiveKeybinds();
     const toSend: object[] = [];
 
@@ -117,7 +117,7 @@ function updateKeybinds() {
         });
     }
     console.log(toSend);
-    ipcRenderer.invoke("venbind:setKeybinds", toSend);
+    void ipcRenderer.invoke("venbind:setKeybinds", toSend);
 }
 
 export function startKeybindWatcher() {
