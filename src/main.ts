@@ -31,7 +31,7 @@ function setFlags() {
 		"HardwareMediaKeyHandling",
 		"MediaSessionService",
 		"WebRtcAllowInputVolumeAdjustment",
-		"Vulkan"
+		"Vulkan",
 	];
 	const enableFeatures = [
 		"WebRTC",
@@ -41,14 +41,35 @@ function setFlags() {
 		"CanvasOopRasterization",
 		"UseSkiaRenderer"
 	];
-	if (process.platform === "linux") enableFeatures.push("PulseaudioLoopbackForScreenShare");
-	if (!process.argv.some((arg) => arg === "--no-vaapi")) enableFeatures.push("AcceleratedVideoDecodeLinuxGL", "AcceleratedVideoEncoder", "AcceleratedVideoDecoder", "AcceleratedVideoDecodeLinuxZeroCopyGL");
 
-	app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
-	app.commandLine.appendSwitch("enable-speech-dispatcher");
-	app.commandLine.appendSwitch("disable-features", disableFeatures.join(","));
-	app.commandLine.appendSwitch("enable-features", enableFeatures.join(","));
-	app.commandLine.appendSwitch("disable-http-cache");
+	if (process.platform === "linux") {
+		enableFeatures.push("PulseaudioLoopbackForScreenShare");
+		if (!process.argv.some((arg) => arg === "--no-vaapi")) {
+			enableFeatures.push(
+				"AcceleratedVideoDecodeLinuxGL",
+				"AcceleratedVideoEncoder",
+				"AcceleratedVideoDecoder",
+				"AcceleratedVideoDecodeLinuxZeroCopyGL"
+			);
+		}
+	}
+
+	const switches = [
+		["enable-gpu-rasterization"],
+		["enable-zero-copy"],
+		["disable-low-res-tiling"],
+		["disable-site-isolation-trials"],
+		["enable-hardware-overlays", "single-fullscreen,single-on-top,underlay"],
+		["autoplay-policy", "no-user-gesture-required"],
+		["enable-speech-dispatcher"],
+		["disable-http-cache"],
+		["disable-features", disableFeatures.join(",")],
+		["enable-features", enableFeatures.join(",")],
+	]
+
+	for (const [key, val] of switches) {
+		app.commandLine.appendSwitch(key, val);
+	}
 }
 
 main().catch(console.error);
