@@ -86,17 +86,29 @@ function copyVenmic() {
 
 function copyVenbind() {
 	if (process.platform === "win32") {
-		return copyFile(
-			"./node_modules/venbind/prebuilds/windows-x86_64/venbind-windows-x86_64.node",
-			"./assets/venbind-win32-x64.node"
-		).catch(() => console.warn("Failed to copy venbind. Building without venbind support"));
+		return Promise.all([
+			copyFile(
+				"./node_modules/venbind/prebuilds/windows-x86_64/venbind-windows-x86_64.node",
+				"./assets/venbind-win32-x64.node"
+			),
+			copyFile(
+				"./node_modules/venbind/prebuilds/windows-aarch64/venbind-windows-aarch64.node",
+				"./assets/venbind-win32-arm64.node"
+			)
+		]).catch(() => console.warn("Failed to copy venbind. Building without venbind support"));
 	}
 
 	if (process.platform === "linux") {
-		return copyFile(
-			"./node_modules/venbind/prebuilds/linux-x86_64/venbind-linux-x86_64.node",
-			"./assets/venbind-linux-x64.node"
-		).catch(() => console.warn("Failed to copy venbind. Building without venbind support"));
+		return Promise.all([
+			copyFile(
+				"./node_modules/venbind/prebuilds/linux-x86_64/venbind-linux-x86_64.node",
+				"./assets/venbind-linux-x64.node"
+			),
+			copyFile(
+				"./node_modules/venbind/prebuilds/linux-aarch64/venbind-linux-aarch64.node",
+				"./assets/venbind-linux-arm64.node"
+			),
+		]).catch(() => console.warn("Failed to copy venbind. Building without venbind support"));
 	}
 }
 

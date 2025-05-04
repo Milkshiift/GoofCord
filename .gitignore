@@ -6,7 +6,5 @@ ts-out
 .idea
 .vscode/
 assets/lang/test-TEST.json
-assets/venmic-arm64.node
-assets/venmic-x64.node
-assets/venbind-linux-x64.node
-assets/venbind-win32-x64.node
+assets/venmic*
+assets/venbind*

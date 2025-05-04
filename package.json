@@ -43,7 +43,7 @@
   },
   "optionalDependencies": {
     "@vencord/venmic": "^6.1.0",
-    "venbind": "^0.1.0"
+    "venbind": "0.1.5"
   },
   "trustedDependencies": [
     "@biomejs/biome",
