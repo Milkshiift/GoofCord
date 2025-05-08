@@ -1,5 +1,5 @@
 {
-    "welcomeMessage": "Willkommen bei GoofCord!\nRichten Sie die Einstellungen nach Ihren Wünschen ein und starten Sie GoofCord neu, um auf Discord zuzugreifen.\nSie können dies mit Strg+Umschalt+R oder über das Tray Menü tun.\nViel Spaß beim Chatten!",
+    "welcomeMessage": "Willkamen bi GoofCord.\nMaak de Instellen, so as se dat goed finnst, un start GoofCord nochmaal, dat du na Discord kannst.\nDat kannst mit Ctrl+Shift+R doon oder över’t Tray- oder Dockmenü.\nVeel Pläseer bi’t Klönen!",
     "goofcord-quit": "Beenden",
     "goofcord-reload": "Neuladen",
     "goofcord-restart": "Neustarten",
@@ -93,5 +93,15 @@
     "screenshare-optimization": "Optimierung",
     "screenshare-optimization-motion": "Bewegung",
     "screenshare-optimization-detail": "Detail",
-    "screenshare-resolution": "Auflösung"
+    "screenshare-resolution": "Auflösung",
+    "inviteMessage": "Wullst du mitmaken",
+    "yes": "Ja",
+    "no": "Nee",
+    "opt-locale": "Sprake 🌍",
+    "opt-domOptimizer": "DOM-Optimierer",
+    "opt-cloudHost": "Cloud-Host",
+    "settings-encryption-unavailable": "GoofCord hett keen Passwort-Manager funnen. Verslüchene Instellen wurrt in Klartext speichert. Wenn du op Linux büst, installeer gnome-libsecret oder kwallet",
+    "opt-domOptimizer-desc": "Schiebt DOM-Ännerungen up, üm mööglicherweise de Leistung to verbeteren. Kann visuelle Artefakte veroorzaken.",
+    "opt-locale-desc": "Dit is anders as Discord's Sprake. Du kannst GoofCord <a target=\"_blank\" href=\"https://hosted.weblate.org/projects/goofcord/goofcord/\">hier</a> ümschrieven.",
+    "opt-cloudHost-desc": "GoofCord Cloud-Server-URL. Du kannst dat sjelf hosten, kiek dat <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">repository</a> an."
 }
