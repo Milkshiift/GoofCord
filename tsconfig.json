@@ -1,31 +1,33 @@
 // Reference: https://www.typescriptlang.org/tsconfig
 {
-    "include": ["src/**/*", "build/**/*"],
-    //"exclude": ["src/**/*.test.ts"],
-    "compilerOptions": {
-        "rootDir": "./",
-        "outDir": "ts-out",
-        "moduleResolution": "bundler",
+  "include": ["src/**/*", "build/**/*"],
+  //"exclude": ["src/**/*.test.ts"],
+  "compilerOptions": {
+    "rootDir": "./",
+    "outDir": "ts-out",
+    "moduleResolution": "bundler",
 
-        "strict": true,
-        "noImplicitAny": false,
-        "noImplicitReturns": false,
-        "noFallthroughCasesInSwitch": true,
-        "forceConsistentCasingInFileNames": true,
-        "esModuleInterop": true,
-        "resolveJsonModule": true,
-        "allowImportingTsExtensions": true,
-        "lib": ["ESNext", "dom", "dom.Iterable"],
+    "strict": true,
+    "noImplicitAny": false,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "lib": ["ESNext", "dom", "dom.Iterable"],
 
-        "module": "esnext",
-        "removeComments": true,
-        "sourceMap": true,
+    "module": "esnext",
+    "removeComments": true,
+    "inlineSourceMap": true,
+    "inlineSources": true,
 
-        "declaration": false,
-        "declarationMap": false,
+    "declaration": false,
+    "declarationMap": false,
 
-        "target": "esnext",
-        "downlevelIteration": false,
-        "importHelpers": false
-    }
+    "target": "esnext",
+    "downlevelIteration": false,
+    "importHelpers": false
+  }
 }

@@ -4,6 +4,13 @@ import pc from "picocolors";
 import { loadConfig } from "./config.ts";
 import { initLocalization } from "./modules/localization.ts";
 import { getDisplayVersion } from "./utils.ts";
+import { isDev } from "./utils.ts";
+
+console.time(pc.green("[Timer]") + " GoofCord fully loaded in");
+
+if (isDev()) {
+  require("source-map-support").install();
+}
 
 console.log("GoofCord", getDisplayVersion());
 
@@ -14,62 +21,60 @@ setFlags();
 if (!app.requestSingleInstanceLock()) app.exit();
 
 async function main() {
-	console.time(pc.green("[Timer]") + " GoofCord fully loaded in");
+  await loadConfig();
+  await initLocalization();
 
-	await loadConfig();
-	await initLocalization();
-
-	const loader = await import("./loader");
-	await loader.load();
+  const loader = await import("./loader");
+  await loader.load();
 }
 
 function setFlags() {
-	if (process.argv.some((arg) => arg === "--no-flags")) return;
+  if (process.argv.some((arg) => arg === "--no-flags")) return;
 
-	const disableFeatures = [
-		"UseChromeOSDirectVideoDecoder",
-		"HardwareMediaKeyHandling",
-		"MediaSessionService",
-		"WebRtcAllowInputVolumeAdjustment",
-		"Vulkan",
-	];
-	const enableFeatures = [
-		"WebRTC",
-		"WebRtcHideLocalIpsWithMdns",
-		"PlatformHEVCEncoderSupport",
-		"EnableDrDc",
-		"CanvasOopRasterization",
-		"UseSkiaRenderer"
-	];
+  const disableFeatures = [
+    "UseChromeOSDirectVideoDecoder",
+    "HardwareMediaKeyHandling",
+    "MediaSessionService",
+    "WebRtcAllowInputVolumeAdjustment",
+    "Vulkan",
+  ];
+  const enableFeatures = [
+    "WebRTC",
+    "WebRtcHideLocalIpsWithMdns",
+    "PlatformHEVCEncoderSupport",
+    "EnableDrDc",
+    "CanvasOopRasterization",
+    "UseSkiaRenderer",
+  ];
 
-	if (process.platform === "linux") {
-		enableFeatures.push("PulseaudioLoopbackForScreenShare");
-		if (!process.argv.some((arg) => arg === "--no-vaapi")) {
-			enableFeatures.push(
-				"AcceleratedVideoDecodeLinuxGL",
-				"AcceleratedVideoEncoder",
-				"AcceleratedVideoDecoder",
-				"AcceleratedVideoDecodeLinuxZeroCopyGL"
-			);
-		}
-	}
+  if (process.platform === "linux") {
+    enableFeatures.push("PulseaudioLoopbackForScreenShare");
+    if (!process.argv.some((arg) => arg === "--no-vaapi")) {
+      enableFeatures.push(
+        "AcceleratedVideoDecodeLinuxGL",
+        "AcceleratedVideoEncoder",
+        "AcceleratedVideoDecoder",
+        "AcceleratedVideoDecodeLinuxZeroCopyGL",
+      );
+    }
+  }
 
-	const switches = [
-		["enable-gpu-rasterization"],
-		["enable-zero-copy"],
-		["disable-low-res-tiling"],
-		["disable-site-isolation-trials"],
-		["enable-hardware-overlays", "single-fullscreen,single-on-top,underlay"],
-		["autoplay-policy", "no-user-gesture-required"],
-		["enable-speech-dispatcher"],
-		["disable-http-cache"],
-		["disable-features", disableFeatures.join(",")],
-		["enable-features", enableFeatures.join(",")],
-	]
+  const switches = [
+    ["enable-gpu-rasterization"],
+    ["enable-zero-copy"],
+    ["disable-low-res-tiling"],
+    ["disable-site-isolation-trials"],
+    ["enable-hardware-overlays", "single-fullscreen,single-on-top,underlay"],
+    ["autoplay-policy", "no-user-gesture-required"],
+    ["enable-speech-dispatcher"],
+    ["disable-http-cache"],
+    ["disable-features", disableFeatures.join(",")],
+    ["enable-features", enableFeatures.join(",")],
+  ];
 
-	for (const [key, val] of switches) {
-		app.commandLine.appendSwitch(key, val);
-	}
+  for (const [key, val] of switches) {
+    app.commandLine.appendSwitch(key, val);
+  }
 }
 
 main().catch(console.error);

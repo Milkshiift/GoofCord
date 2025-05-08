@@ -31,7 +31,8 @@
     "electron": "^36.1.0",
     "electron-builder": "^26.0.12",
     "ts-morph": "^25.0.1",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "source-map-support": "github:onigoetz/node-source-map-support"
   },
   "dependencies": {
     "arrpc": "github:Milkshiift/arrpc",
