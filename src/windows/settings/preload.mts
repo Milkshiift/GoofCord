@@ -1,8 +1,8 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { SettingEntry, settingsSchema } from "../../settingsSchema.ts";
-import { renderSettings } from "./settingsRenderer.ts";
+import type { ConfigKey, ConfigValue } from "../../configTypes";
+import { type SettingEntry, settingsSchema } from "../../settingsSchema.ts";
 import { findKeyAtDepth } from "../preloadUtils.ts";
-import { ConfigKey, ConfigValue } from "../../configTypes";
+import { renderSettings } from "./settingsRenderer.ts";
 
 console.log("GoofCord Settings");
 
@@ -73,7 +73,7 @@ async function getSettingValue<K extends ConfigKey>(element: HTMLElement, settin
 			if (element.type === "text") return element.value as ConfigValue<K>;
 			// Horror
 			if (element.type === "file") {
-				const file = element.files![0];
+				const file = element.files?.[0];
 				if (!file) throw new Error("No file selected");
 
 				return await new Promise((resolve, reject) => {
@@ -139,21 +139,21 @@ function createArrayFromTextarea(input: string): string[] {
 export function encryptSetting(settingValue: ConfigValue<ConfigKey>) {
 	if (typeof settingValue === "string") {
 		return ipcRenderer.sendSync("utils:encryptSafeStorage", settingValue);
-	} else if (Array.isArray(settingValue)) {
-		return settingValue.map((value: unknown) => ipcRenderer.sendSync("utils:encryptSafeStorage", value));
-	} else {
-		return settingValue;
 	}
+	if (Array.isArray(settingValue)) {
+		return settingValue.map((value: unknown) => ipcRenderer.sendSync("utils:encryptSafeStorage", value));
+	}
+	return settingValue;
 }
 
 export function decryptSetting(settingValue: ConfigValue<ConfigKey>) {
 	if (typeof settingValue === "string") {
 		return ipcRenderer.sendSync("utils:decryptSafeStorage", settingValue);
-	} else if (Array.isArray(settingValue)) {
-		return settingValue.map((value: unknown) => ipcRenderer.sendSync("utils:decryptSafeStorage", value));
-	} else {
-		return settingValue;
 	}
+	if (Array.isArray(settingValue)) {
+		return settingValue.map((value: unknown) => ipcRenderer.sendSync("utils:decryptSafeStorage", value));
+	}
+	return settingValue;
 }
 
 initSettings().catch(console.error);
