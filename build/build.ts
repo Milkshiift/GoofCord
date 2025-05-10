@@ -12,9 +12,15 @@ const isDev = process.argv.some((arg) => arg === "--dev" || arg === "-d");
 await fs.promises.rm("ts-out", { recursive: true, force: true });
 
 console.log("Preprocessing...");
+console.time("dtc");
 await generateDTSFile();
+console.timeEnd("dtc");
+console.time("lang");
 await genSettingsLangFile();
+console.timeEnd("lang");
+console.time("Ipc");
 await genIpcHandlers();
+console.timeEnd("Ipc");
 
 console.log("Building...");
 await fs.promises.mkdir("ts-out");
