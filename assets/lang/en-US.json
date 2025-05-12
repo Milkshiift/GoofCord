@@ -83,6 +83,8 @@
   "opt-arrpc-desc": "Enables an open source reimplementation of Discord's\nrich presence called <a target=\"_blank\" href=\"https://github.com/OpenAsar/arrpc\">arRPC</a>.\nA <a target=\"_blank\" href=\"https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence\">workaround</a> is needed for arRPC to work on Flatpak",
   "opt-domOptimizer": "DOM optimizer",
   "opt-domOptimizer-desc": "Defers DOM updates to possibly improve performance. May cause visual artifacts.",
+  "opt-renderingOptimizations": "Rendering optimizations",
+  "opt-renderingOptimizations-desc": "Applies CSS optimizations to improve scrolling smoothness, at the cost of CPU usage (when scrolling).",
   "opt-launchWithOsBoot": "Launch GoofCord on startup",
   "opt-launchWithOsBoot-desc": "Start GoofCord automatically on system boot. May not work in some Linux environments.",
   "opt-spellcheck": "Spellcheck",

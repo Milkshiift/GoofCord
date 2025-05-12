@@ -275,6 +275,12 @@ export const settingsSchema = {
 			description: "Defers DOM updates to possibly improve performance. May cause visual artifacts.",
 			inputType: "checkbox",
 		},
+		renderingOptimizations: {
+			name: "Rendering optimizations",
+			defaultValue: true,
+			description: "Applies CSS optimizations to improve scrolling smoothness. In rare cases may cause issues.",
+			inputType: "checkbox",
+		},
 		launchWithOsBoot: {
 			name: "Launch GoofCord on startup",
 			defaultValue: false,

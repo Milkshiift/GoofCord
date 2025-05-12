@@ -1,8 +1,3 @@
-[class*="messagesWrapper"], #channels, #emoji-picker-grid, [class*="members_"] {
-     will-change: transform, scroll-position;
-     contain: strict;
-}
-
 /* Hide download discord button */
 [class^="listItem_"]:has([data-list-item-id="guildsnav___app-download-button"]),
 [class^="listItem_"]:has(+ [class^="listItem_"] [data-list-item-id="guildsnav___app-download-button"]) {

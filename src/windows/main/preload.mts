@@ -2,8 +2,8 @@ import "./bridge.ts";
 import fs from "node:fs";
 import { ipcRenderer, webFrame } from "electron";
 import { error, log } from "../../modules/logger.ts";
-import { injectTitlebar } from "./titlebar.ts";
 import { getDefaultScripts } from "./defaultAssets.ts";
+import { injectTitlebar } from "./titlebar.ts";
 import "./screenshare.ts";
 import { startKeybindWatcher, } from "./keybinds.ts";
 
@@ -22,6 +22,14 @@ if (document.location.hostname.includes("discord")) {
 
 	document.addEventListener("DOMContentLoaded", () => {
 		assets.styles.push(["discord.css", fs.readFileSync(ipcRenderer.sendSync("utils:getAsset", "css/discord.css"), "utf8")]);
+		if (ipcRenderer.sendSync("config:getConfig", "renderingOptimizations")) {
+			assets.styles.push(["renderingOptimizations", `
+				[class*="messagesWrapper"], #channels, #emoji-picker-grid, [class*="members_"] {
+				     will-change: transform, scroll-position;
+				     contain: strict;
+				}
+			`]);
+		}
 		for (const style of assets.styles) {
 			updateStyle(style[1], style[0]);
 			log(`Loaded style: ${style[0]}`);
@@ -36,13 +44,11 @@ if (document.location.hostname.includes("discord")) {
 }
 
 function updateStyle(style: string, id: string) {
-	if (loadedStyles.has(id)) {
-		try {
-			const oldStyleElement = loadedStyles.get(id)!;
-			oldStyleElement.remove();
-		} catch (err) {
-			error(`Error removing old style: ${id} - ${err}`);
-		}
+	try {
+		const oldStyleElement = loadedStyles.get(id);
+		oldStyleElement?.remove();
+	} catch (err) {
+		error(`Error removing old style: ${id} - ${err}`);
 	}
 
 	const styleElement = document.createElement('style');
