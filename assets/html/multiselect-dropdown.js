@@ -1,83 +1,144 @@
-function MultiselectDropdown(options){
-  let config={
-    placeholder:'Select...',
+function MultiselectDropdown(options) {
+  const config = {
+    placeholder: 'Select...',
     ...options
   };
-  function newEl(tag,attrs){
-    let e=document.createElement(tag);
-    if(attrs!==undefined) Object.keys(attrs).forEach(k=>{
-      if(k==='class') { Array.isArray(attrs[k]) ? attrs[k].forEach(o=>o!==''?e.classList.add(o):0) : (attrs[k]!==''?e.classList.add(attrs[k]):0)}
-      else if(k==='style'){
-        Object.keys(attrs[k]).forEach(ks=>{
-          e.style[ks]=attrs[k][ks];
+
+  function createElement(tag, attrs = {}) {
+    const element = document.createElement(tag);
+
+    Object.entries(attrs).forEach(([key, value]) => {
+      if (key === 'class') {
+        if (Array.isArray(value)) {
+          value.filter(cls => cls !== '').forEach(cls => element.classList.add(cls));
+        } else if (value !== '') {
+          element.classList.add(value);
+        }
+      } else if (key === 'style') {
+        Object.entries(value).forEach(([styleKey, styleValue]) => {
+          element.style[styleKey] = styleValue;
         });
-       }
-      else if(k==='text'){attrs[k]===''?e.innerHTML='&nbsp;':e.innerText=attrs[k]}
-      else e[k]=attrs[k];
-    });
-    return e;
-  }
-
-
-  document.querySelectorAll("select[multiple]").forEach((el,k)=>{
-    let div=newEl('div',{class:'multiselect-dropdown'});
-    el.style.display='none';
-    el.parentNode.insertBefore(div,el.nextSibling);
-    let listWrap=newEl('div',{class:'multiselect-dropdown-list-wrapper'});
-    let list=newEl('div',{class:'multiselect-dropdown-list'});
-    div.appendChild(listWrap);
-    listWrap.appendChild(list);
-    listWrap.classList.add('dropdown-hidden');
-
-    el.loadOptions=()=>{
-      list.innerHTML='';
-
-      Array.from(el.options).map(o=>{
-        let op=newEl('div',{class:'checkbox-container',optEl:o})
-        op.classList.add('no-margin')
-        let ic=newEl('input',{type:'checkbox',class:'slim-checkbox',checked:o.selected});
-        op.appendChild(ic);
-        op.appendChild(newEl('label',{text:o.text}));
-
-        op.addEventListener('click',()=>{
-          ic.checked=!ic.checked;
-          op.optEl.selected=!!!op.optEl.selected;
-          el.dispatchEvent(new Event('change'));
-        });
-        ic.addEventListener('click',(ev)=>{
-          ic.checked=!ic.checked;
-        });
-        o.listitemEl=op;
-        list.appendChild(op);
-      });
-      div.listEl=listWrap;
-
-      div.refresh=()=>{
-        div.querySelectorAll('span.optext, span.placeholder').forEach(t=>div.removeChild(t));
-        let sels=Array.from(el.selectedOptions);
-        sels.map(x=>{
-          let c=newEl('span',{class:'optext',text:x.text, srcOption: x});
-          div.appendChild(c);
-        });
-        if(0==el.selectedOptions.length) div.appendChild(newEl('span',{class:'placeholder',text:config.placeholder}));
-      };
-      div.refresh();
-    }
-    el.loadOptions();
-
-    div.addEventListener('click',()=>{
-      div.listEl.classList.remove('dropdown-hidden')
-    });
-
-    document.addEventListener('click', function(event) {
-      if (!div.contains(event.target)) {
-        listWrap.classList.add('dropdown-hidden');
-        div.refresh();
+      } else if (key === 'text') {
+        element.textContent = value === '' ? '\u00A0' : value;
+      } else if (key === 'html') {
+        element.innerHTML = value;
+      } else {
+        element[key] = value;
       }
     });
+
+    return element;
+  }
+
+  document.querySelectorAll("select[multiple]").forEach(selectElement => {
+    selectElement.style.display = 'none';
+
+    const dropdownContainer = createElement('div', {
+      class: 'multiselect-dropdown',
+      role: 'listbox',
+      'aria-label': selectElement.getAttribute('aria-label') || 'Multiselect dropdown',
+      tabIndex: 0
+    });
+
+    selectElement.parentNode.insertBefore(dropdownContainer, selectElement.nextSibling);
+
+    const listWrapper = createElement('div', {
+      class: ['multiselect-dropdown-list-wrapper', 'dropdown-hidden']
+    });
+
+    const optionsList = createElement('div', {
+      class: 'multiselect-dropdown-list',
+      role: 'group'
+    });
+
+    dropdownContainer.appendChild(listWrapper);
+    listWrapper.appendChild(optionsList);
+
+    selectElement.loadOptions = () => {
+      optionsList.innerHTML = '';
+
+      Array.from(selectElement.options).forEach(option => {
+        const optionItem = createElement('div', {
+          class: option.selected ? 'checked' : '',
+          optEl: option,
+          role: 'option',
+          'aria-selected': option.selected
+        });
+
+        const optionLabel = createElement('label', {
+          text: option.text
+        });
+
+        optionItem.appendChild(optionLabel);
+
+        optionItem.addEventListener('click', (e) => {
+          e.stopPropagation();
+          option.selected = !option.selected;
+          optionItem.setAttribute('aria-selected', option.selected);
+          optionItem.classList.toggle('checked', option.selected);
+          selectElement.dispatchEvent(new Event('change'));
+          refreshDropdown();
+        });
+
+        option.listitemEl = optionItem;
+        optionsList.appendChild(optionItem);
+      });
+    };
+
+    const refreshDropdown = () => {
+      dropdownContainer.querySelectorAll('span.optext, span.placeholder').forEach(el =>
+          dropdownContainer.removeChild(el)
+      );
+
+      const selectedOptions = Array.from(selectElement.selectedOptions);
+
+      if (selectedOptions.length === 0) {
+        dropdownContainer.appendChild(createElement('span', {
+          class: 'placeholder',
+          text: config.placeholder
+        }));
+      } else {
+        selectedOptions.forEach(option => {
+          const tag = createElement('span', {
+            class: 'optext',
+            text: option.text,
+            srcOption: option
+          });
+
+          dropdownContainer.appendChild(tag);
+        });
+      }
+    };
+
+    selectElement.loadOptions();
+    refreshDropdown();
+
+    dropdownContainer.addEventListener('click', () => {
+      listWrapper.classList.toggle('dropdown-hidden');
+      dropdownContainer.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!dropdownContainer.contains(event.target)) {
+        listWrapper.classList.add('dropdown-hidden');
+        dropdownContainer.classList.remove('open');
+        refreshDropdown();
+      }
+    });
+
+    dropdownContainer.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        listWrapper.classList.toggle('dropdown-hidden');
+      } else if (e.key === 'Escape') {
+        listWrapper.classList.add('dropdown-hidden');
+      }
+    });
+
+    selectElement.addEventListener('change', refreshDropdown);
   });
 }
 
 window.initMultiselect = () => {
-  MultiselectDropdown(window.MultiselectDropdownOptions);
-}
+  MultiselectDropdown(window.MultiselectDropdownOptions || {});
+};

@@ -20,7 +20,7 @@ export async function renderSettings() {
 
 		panelHtml += `
             <div id="${panelId}" class="content-panel ${isActive}">
-                <h2>${categoryTitle}</h2>
+                
                 <form class="settingsContainer">
                     ${settingsHtml}
                     ${buttonsHtml ? `<div class="buttonContainer">${buttonsHtml}</div>` : ""}
