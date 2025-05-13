@@ -1,6 +1,6 @@
-import { app, type NativeImage, nativeImage } from "electron";
-import { tray } from "../tray.ts";
-import { getAsset, getTrayIcon } from "../utils.ts";
+import { type NativeImage, app, nativeImage } from "electron";
+import { getTrayIcon, tray } from "../tray.ts";
+import { getAsset } from "../utils.ts";
 import { mainWindow } from "../windows/main/main.ts";
 
 const badgeCache = new Map<number, NativeImage>();
@@ -55,42 +55,42 @@ async function loadTrayImage(index: number) {
 	const trayImage: string = await mainWindow.webContents.executeJavaScript(`
 	(async () => {
 	let data;
-	
+
 	canvas = document.createElement("canvas");
 	canvas.width = 128;
 	canvas.height = 128;
-	
+
 	const img = new Image();
 	img.width = 128;
 	img.height = 128;
-	
+
 	img.onload = () => {
 		const ctx = canvas.getContext("2d");
 		if (ctx) {
 			ctx.drawImage(img, 0, 0);
-			
+
 			const overlaySize = Math.round(img.width * 0.6);
-			
+
 			const iconImg = new Image();
 			iconImg.width = overlaySize;
 			iconImg.height = overlaySize;
-			
+
 			iconImg.onload = () => {
 				ctx.drawImage(iconImg, img.width-overlaySize, img.height-overlaySize, overlaySize, overlaySize);
 				data = canvas.toDataURL();
 			};
-		
+
 			iconImg.src = "${nativeImage.createFromPath(getAsset(`badges/${clampedIndex}.png`)).toDataURL()}";
 		}
 	};
-	
+
 	img.src = "${nativeImage.createFromPath(trayImagePath).resize({width: 128, height: 128}).toDataURL()}";
-	
+
 	while (!data) {
 		await new Promise((resolve) => setTimeout(resolve, 500));
 	}
     return data;
-	
+
 	})();
 	`);
 

@@ -1,7 +1,8 @@
-import { app, dialog, Menu, nativeImage, Tray } from "electron";
+import { Menu, Tray, app, dialog, nativeImage } from "electron";
+import { getConfig } from "./config.ts";
 import { i } from "./modules/localization.ts";
 import { saveState } from "./modules/windowStateManager.ts";
-import { getDisplayVersion, getTrayIcon } from "./utils.ts";
+import { getAsset, getCustomIcon, getDisplayVersion } from "./utils.ts";
 import { mainWindow } from "./windows/main/main.ts";
 import { createSettingsWindow } from "./windows/settings/main.ts";
 
@@ -74,4 +75,10 @@ export async function createTray() {
 			mainWindow.show();
 		});
 	}
+}
+
+export async function getTrayIcon() {
+	if (getConfig("trayIcon") === "symbolic_black") return getAsset("gf_symbolic_black.png");
+	if (getConfig("trayIcon") === "symbolic_white") return getAsset("gf_symbolic_white.png");
+	return getCustomIcon();
 }

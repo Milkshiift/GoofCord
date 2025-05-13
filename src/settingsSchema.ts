@@ -93,6 +93,19 @@ export const settingsSchema = {
 			inputType: "file",
 			accept: "image/*",
 		},
+		trayIcon: {
+			name: "Tray icon",
+			defaultValue: "default",
+			description: 'What tray icon to use. Symbolic attempts to mimic Gnome\'s monochromatic icons.',
+			inputType: "dropdown",
+			options: ["default", "symbolic_black", "symbolic_white"],
+			showAfter: {
+				key: "trayIcon",
+				condition: (value) => {
+					return process.platform === "linux";
+				},
+			},
+		},
 		discordUrl: {
 			name: "Discord URL",
 			defaultValue: "https://discord.com/app",
@@ -331,10 +344,6 @@ export const settingsSchema = {
 		"windowState:main": {
 			defaultValue: [true, [835, 600]],
 			outputType: "[boolean, [number, number]]",
-		},
-		trayIcon: {
-			defaultValue: "default",
-			outputType: "string",
 		},
 		"button-openGoofCordFolder": {
 			name: "Open GoofCord folder",
