@@ -291,7 +291,7 @@ export const settingsSchema = {
 		renderingOptimizations: {
 			name: "Rendering optimizations",
 			defaultValue: true,
-			description: "Applies CSS optimizations to improve scrolling smoothness. In rare cases may cause issues.",
+			description: "Applies CSS optimizations to improve scrolling smoothness. May cause text to become blurry if used with some themes.",
 			inputType: "checkbox",
 		},
 		launchWithOsBoot: {
