@@ -11,7 +11,6 @@ const loadedStyles = new Map<string, HTMLStyleElement>();
 
 if (document.location.hostname.includes("discord")) {
 	void injectTitlebar();
-	fixSpellcheckSuggestions();
 
 	const assets: Record<string, string[][]> = ipcRenderer.sendSync("assetLoader:getAssets");
 	assets.scripts.push(...getDefaultScripts());
