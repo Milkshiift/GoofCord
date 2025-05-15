@@ -43,9 +43,10 @@ async function handleConfigError(e: unknown) {
 export async function loadConfig<IPCHandle>(): Promise<void> {
 	do {
 		try {
-			const rawData = await import(getConfigLocation(), {with: { type: "json" }});
+			// fs.promises.readFile is much slower than fs.readFileSync
+			const rawData = fs.readFileSync(getConfigLocation(), "utf-8");
 
-			cachedConfig = new Map(Object.entries(rawData.default)) as Config;
+			cachedConfig = new Map(Object.entries(JSON.parse(rawData))) as Config;
 			return; // Success, exit the function
 		} catch (e: unknown) {
 			const shouldExit = await handleConfigError(e);
