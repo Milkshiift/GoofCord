@@ -5,7 +5,7 @@ import { loadConfig, getConfig, getConfigBulk, setConfig, setConfigBulk, getDefa
 import { i } from "./modules/localization";
 import { stopVenmic } from "./modules/venmic";
 import { encryptMessage, decryptMessage, cycleThroughPasswords } from "./modules/messageEncryption";
-import { createSettingsWindow } from "./windows/settings/main";
+import { createSettingsWindow, hotreloadLocale } from "./windows/settings/main";
 import { initArrpc } from "./modules/arrpc";
 import { getAssets } from "./modules/assetLoader";
 import { updateModsFull } from "./modules/mods";
@@ -34,6 +34,7 @@ ipcMain.on("messageEncryption:encryptMessage", (event, message) => { event.retur
 ipcMain.on("messageEncryption:decryptMessage", (event, message) => { event.returnValue = decryptMessage(message); });
 ipcMain.handle("messageEncryption:cycleThroughPasswords", (event, ) => { return cycleThroughPasswords(); });
 ipcMain.handle("main:createSettingsWindow", async (event, ) => { return await createSettingsWindow(); });
+ipcMain.handle("main:hotreloadLocale", async (event, ) => { return await hotreloadLocale(); });
 ipcMain.handle("arrpc:initArrpc", async (event, ) => { return await initArrpc(); });
 ipcMain.on("assetLoader:getAssets", (event, ) => { event.returnValue = getAssets(); });
 ipcMain.handle("mods:updateModsFull", async (event, ) => { return await updateModsFull(); });

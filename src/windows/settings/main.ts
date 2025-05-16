@@ -1,6 +1,6 @@
 import path from "node:path";
 import { BrowserWindow, ipcMain, shell } from "electron";
-import { i } from "../../modules/localization.ts";
+import { i, initLocalization } from "../../modules/localization.ts";
 import { dirname, getAsset, getCustomIcon, getDisplayVersion, userDataPath } from "../../utils.ts";
 
 export let settingsWindow: BrowserWindow;
@@ -43,4 +43,9 @@ export async function createSettingsWindow<IPCHandle>() {
 	settingsWindow.on("close", () => {
 		isOpen = false;
 	});
+}
+
+export async function hotreloadLocale<IPCHandle>() {
+	await initLocalization();
+	if (settingsWindow) settingsWindow.webContents.reload();
 }

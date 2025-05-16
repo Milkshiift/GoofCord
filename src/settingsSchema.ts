@@ -61,6 +61,7 @@ export const settingsSchema = {
 				if (!files.length) return ["No language files found!"];
 				return files.map((file: string) => file.replace(".json", ""));
 			})(),
+			onChange: "main:hotreloadLocale",
 		},
 		customTitlebar: {
 			name: "Custom titlebar",
