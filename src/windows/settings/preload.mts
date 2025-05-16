@@ -70,7 +70,10 @@ async function getSettingValue<K extends ConfigKey>(element: HTMLElement, settin
 	try {
 		if (element instanceof HTMLInputElement) {
 			if (element.type === "checkbox") return element.checked as ConfigValue<K>;
-			if (element.type === "text") return element.value as ConfigValue<K>;
+			if (element.type === "text") {
+				if (element.dataset.hidden) return JSON.parse(element.value) as ConfigValue<K>;
+				return element.value as ConfigValue<K>;
+			}
 			// Horror
 			if (element.type === "file") {
 				const file = element.files?.[0];

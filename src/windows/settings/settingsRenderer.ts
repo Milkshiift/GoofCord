@@ -16,8 +16,6 @@ export async function renderSettings() {
 		const isActive = index === 0 ? "active" : "";
 		const { settingsHtml, buttonsHtml } = generatePanelInnerContent(categoryName);
 
-		const categoryTitle = ipcRenderer.sendSync("localization:i", `category-${categoryName.toLowerCase().split(" ")[0]}`);
-
 		panelHtml += `
             <div id="${panelId}" class="content-panel ${isActive}">
                 
@@ -79,8 +77,6 @@ function generatePanelInnerContent(categoryName: string): { settingsHtml: string
 }
 
 function createSetting(setting: ConfigKey, entry: SettingEntry): string | "" {
-	if (!entry.name) return "";
-
 	let value: ConfigValue<ConfigKey> = ipcRenderer.sendSync("config:getConfig", setting);
 
 	if (entry.encrypted && typeof value === 'string') {
@@ -88,13 +84,17 @@ function createSetting(setting: ConfigKey, entry: SettingEntry): string | "" {
 	}
 
 	let isHidden = false;
+	if (!entry.name) {
+		isHidden = true;
+		entry.inputType = "textfield";
+	}
 	if (entry.showAfter) {
 		const controllingValue = ipcRenderer.sendSync("config:getConfig", entry.showAfter.key as ConfigKey);
 		isHidden = !evaluateShowAfter(entry.showAfter.condition, controllingValue);
 	}
 
-	const name = ipcRenderer.sendSync("localization:i", `opt-${setting}`);
-	const description = ipcRenderer.sendSync("localization:i", `opt-${setting}-desc`);
+	const name = ipcRenderer.sendSync("localization:i", `opt-${setting}`) ?? setting;
+	const description = ipcRenderer.sendSync("localization:i", `opt-${setting}-desc`) ?? "";
 
 	return `
         <fieldset class="${isHidden ? "hidden" : ""}">
@@ -115,6 +115,10 @@ function createButton(id: string, entry: ButtonEntry): string {
 
 
 function getInputElement(entry: SettingEntry, setting: ConfigKey, value: ConfigValue<ConfigKey>): string {
+	if (!entry.name) {
+		return `<input data-hidden="true" setting-name="${setting}" class="text" id="${setting}" type="text" value="${escapeHtmlValue(JSON.stringify(value))}"/>`;
+	}
+
 	switch (entry.inputType) {
 		case "checkbox":
 			return `<input setting-name="${setting}" id="${setting}" type="checkbox" ${value ? "checked" : ""}/>`;

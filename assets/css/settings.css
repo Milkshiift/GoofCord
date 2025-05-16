@@ -358,7 +358,7 @@ input[type="file"] {
 
     &::file-selector-button {
         border: none;
-        padding: 8px 15px;
+        padding: 10px 15px;
         border-radius: var(--border-radius-md);
         background-color: var(--color-primary);
         color: var(--font-color-on-primary);
@@ -367,14 +367,6 @@ input[type="file"] {
         cursor: pointer;
         font-family: var(--font-family);
         margin-right: 10px;
-
-        &:hover {
-            background-color: var(--color-primary-hover);
-        }
-
-        &:active {
-            background-color: var(--color-primary-active);
-        }
     }
 
     &:focus-visible {
@@ -382,6 +374,14 @@ input[type="file"] {
         outline-offset: 2px;
         border-radius: var(--border-radius-sm);
     }
+}
+
+input[type="file"]::file-selector-button:hover {
+    background-color: var(--color-primary-hover);
+}
+
+input[type="file"]::file-selector-button:active {
+    background-color: var(--color-primary-active);
 }
 
 /* ==================== Buttons & Button Container ==================== */
