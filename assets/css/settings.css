@@ -559,11 +559,12 @@ input[type="file"] {
 
 /* ==================== Message Box ==================== */
 .message {
-    text-align: left;
+    text-align: center;
     border-radius: var(--border-radius-md);
     padding: 15px 20px;
-    margin: 25px 0;
-    max-width: 800px;
+    margin-top: 30px;
+    margin-left: 35px;
+    margin-right: 35px;
     border: 1px solid;
     display: flex;
     align-items: flex-start;

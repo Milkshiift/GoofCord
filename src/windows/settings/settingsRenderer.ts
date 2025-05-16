@@ -49,7 +49,7 @@ export async function renderSettings() {
 			</header>
 			
 			${ipcRenderer.sendSync("utils:isEncryptionAvailable") ? "" : `
-				<div class="message">
+				<div class="message warning">
 					<p>${ipcRenderer.sendSync("localization:i", "settings-encryption-unavailable")}</p>
 				</div>
 			`}
