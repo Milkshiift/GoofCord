@@ -5,9 +5,9 @@ import { mainWindow } from "../windows/main/main.ts";
 import pc from "picocolors";
 
 let venbind: VenbindType | undefined = undefined;
-let venbindLoaded = false;
+let venbindLoadAttempted = false;
 export async function obtainVenbind() {
-    if (venbind !== undefined || process.argv.some((arg) => arg === "--no-venbind") || venbindLoaded) return venbind;
+    if (venbind !== undefined || process.argv.some((arg) => arg === "--no-venbind") || venbindLoadAttempted) return venbind;
     try {
         venbind = (createRequire(import.meta.url)(getAsset(`venbind-${process.platform}-${process.arch}.node`)));
         if (!venbind) throw new Error("Venbind is undefined");
@@ -16,7 +16,7 @@ export async function obtainVenbind() {
     } catch (e: unknown) {
         console.error("Failed to import venbind", e);
     }
-    venbindLoaded = true;
+    venbindLoadAttempted = true;
     return venbind;
 }
 
@@ -31,6 +31,7 @@ export async function startVenbind(venbind: VenbindType) {
 }
 
 export async function setKeybinds<IPCHandle>(keybinds: { id: string; name?: string; shortcut?: string }[]) {
+    console.log(pc.green("[Venbind]"), "Setting keybinds");
     (await obtainVenbind())?.setKeybinds(keybinds);
 }
 

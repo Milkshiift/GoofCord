@@ -1,14 +1,49 @@
 @font-face {
-    font-family: InterVariable;
+    font-family: "InterVariable";
     font-style: normal;
     font-weight: 100 900;
     font-display: swap;
     src: url("../fonts/InterVariable.woff2") format("woff2");
 }
 
+:root {
+    --color-primary: #5865f2;
+    --color-primary-hover: #797eff;
+    --color-primary-active: #4a56e0;
+    --color-primary-ultralight: #9499ff;
+    --bg-body: #2c2f33;
+    --bg-primary: #313439;
+    --bg-secondary: #27292e;
+    --bg-tertiary: #202225;
+    --bg-input: #3a3e44;
+    --bg-input-hover: #42464d;
+    --bg-input-focus: var(--bg-input);
+    --font-color-dim: #8e9297;
+    --font-color-normal: #dcddde;
+    --font-color-strong: #f0f0f0;
+    --font-color-header: #fff;
+    --font-color-on-primary: #fff;
+    --border-color-divider: #3b3e43;
+    --border-color-interactive: #4f545c;
+    --border-color-focus: var(--color-primary);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.2);
+    --scrollbar-width: 8px;
+    --font-family: "InterVariable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    --border-radius-sm: 4px;
+    --border-radius-md: 6px;
+    --transition-duration-fast: 0.15s;
+    --transition-duration-normal: 0.2s;
+    --transition-duration-slow: 0.3s;
+    --easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --checkmark-icon: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M174 439 7 273a26 26 0 0 1 0-36l37-36c10-10 26-10 36 0l112 112L432 73c10-10 26-10 36 0l37 36c9 10 9 26 0 36L210 439a26 26 0 0 1-36 0z' fill='%23fff'/%3E%3C/svg%3E");
+}
+
 body,
 html {
     overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.7);
 }
 
 .desktop-capturer-selection {
@@ -16,22 +51,21 @@ html {
     position: absolute;
     top: 50%;
     left: 50%;
-    min-width: 240px;
-    max-width: 430px;
-    -ms-transform: translate(-50%, -50%);
+    min-width: 280px;
+    max-width: 440px;
     transform: translate(-50%, -50%);
-    vertical-align: center;
-    background-color: #36393f;
-    border-radius: 4px;
-    color: #ffffff;
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius-md);
+    border: var(--border-color-divider) solid 1px;
+    color: var(--font-color-normal);
     display: flex;
-    font-family: "InterVariable", sans-serif;
+    font-family: var(--font-family);
     align-items: center;
     justify-content: center;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: 0 0 2rem 7px black;
-    animation: fadeIn 0.15s ease-out;
+    box-shadow: var(--shadow-lg);
+    animation: fadeIn var(--transition-duration-normal) var(--easing-smooth);
 }
 
 @keyframes fadeIn {
@@ -47,144 +81,111 @@ html {
     display: flex;
     overflow-y: auto;
     align-items: flex-start;
+    width: 100%;
 }
 
 .desktop-capturer-selection__list {
-    padding: 2px 17px;
+    padding: 15px 20px;
     display: flex;
     flex-wrap: wrap;
     list-style: none;
     overflow: hidden;
-    justify-content: space-evenly;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
 }
 
 .desktop-capturer-selection__item {
-
+    /* Maintain flex properties for wrapping */
+    flex: 0 1 120px; /* flex-grow: 0, flex-shrink: 1, flex-basis: 120px */
+    max-width: 150px;
+    /* Added min-width to prevent excessive shrinking when text is short */
+    min-width: 100px; /* Adjust this based on your desired minimum preview width */
+    box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
 }
 
 .desktop-capturer-selection__btn {
     display: flex;
     flex-direction: column;
-    width: 145px;
+    width: 100%;
     border: 0;
     background: transparent;
     cursor: pointer;
+    padding: 0;
+    text-align: center;
+    transition: transform var(--transition-duration-fast) var(--easing-smooth);
+    /* Added overflow: hidden to prevent text overflow from affecting button size */
+    overflow: hidden;
+
+    &:hover {
+        transform: translateY(-3px);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 3px;
+        border-radius: var(--border-radius-md);
+        background-color: rgba(var(--color-primary-ultralight), 0.1);
+    }
 }
 
-@media (prefers-reduced-motion: no-preference) {
+/* Container for the thumbnail to maintain aspect ratio */
+.desktop-capturer-selection__thumbnail-container {
+    width: 100%;
+    /* Use padding-top to create a 16:9 aspect ratio (9 / 16 * 100% = 56.25%) */
+    padding-top: 56.25%; /* For 16:9 aspect ratio */
+    position: relative;
+    border-radius: var(--border-radius-sm);
+    overflow: hidden; /* Hide any overflow from the image */
+    border: 2px solid transparent;
+    transition: border-color var(--transition-duration-fast) var(--easing-smooth);
+    box-sizing: border-box;
 }
 
 .desktop-capturer-selection__thumbnail {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 81px;
+    height: 100%;
     object-fit: cover;
-    border-radius: 4px;
-    outline-color: #00000000;
+    /* Removed border properties from here, moved to thumbnail-container */
 }
 
-.desktop-capturer-selection__btn:hover .desktop-capturer-selection__thumbnail {
-    outline: #5865f2 solid 3px;
-    transition: outline-color .3s;
+.desktop-capturer-selection__btn:hover .desktop-capturer-selection__thumbnail-container,
+.desktop-capturer-selection__btn:focus-visible .desktop-capturer-selection__thumbnail-container {
+    border-color: var(--color-primary-hover);
 }
+
 
 .desktop-capturer-selection__name {
-    margin: 6px auto;
+    margin: 8px auto 0;
     white-space: nowrap;
-    color: white;
+    color: var(--font-color-strong);
     text-overflow: ellipsis;
     text-align: center;
-    overflow: hidden;
-    width: 95%;
+    overflow: hidden; /* Ensure text is truncated */
+    width: 100%;
     font-weight: 600;
-    font-size: 14px;
-}
-
-.desktop-capturer-selection__name--cancel {
-    margin: auto 0;
-}
-
-input[type="checkbox"] {
-    height: 2em;
-    width: 2em;
-    border-radius: 5px;
-    appearance: none;
-    background-color: #484c52;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: solid #0000 4px;
-    cursor: pointer;
-}
-
-input[type="checkbox"]:checked {
-    background-color: #5865f2;
-    background-image: url("data:image/svg+xml,%3Csvg width='64px' height='64px' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m53 0-29 40-13-17-11 8.3 24 33 40-56z' fill='%23fff'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    animation: checkmark-animation 0.4s ease-in-out;
-}
-
-input[type="checkbox"]:not(:checked) {
-    animation: checkmark-animation-unchecked 0.3s ease-in-out;
-}
-
-input[type="checkbox"]:hover {
-    background-color: #797eff;
-}
-
-input[type="text"] {
-    color: white;
-    width: 33px;
-    border-radius: 5px;
-    appearance: none;
-    background-color: #484c52;
-    border: solid #0000 4px;
-    margin: 0.3em;
-    cursor: text;
-}
-
-select {
-    color: white;
-    border-radius: 5px;
-    background-color: #484c52;
-    border: solid #0000 4px;
-    margin: 0.3em;
-    cursor: pointer;
-}
-
-
-@keyframes checkmark-animation {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.1);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-@keyframes checkmark-animation-unchecked {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(0.9);
-    }
-    100% {
-        transform: scale(1);
-    }
+    font-size: 0.9em;
+    /* Added min-width to prevent the name from collapsing too much */
+    min-width: 0; /* Allows the text to shrink */
 }
 
 .checkbox-container {
     display: flex;
     width: 100%;
     align-items: center;
-    justify-content: space-evenly;
-    padding: 21px;
-    background-color: #2b2d31;
-    border-radius: 0 0 4px 4px;
-    column-gap: 10px;
+    justify-content: space-around;
+    padding: 15px 20px;
+    background-color: var(--bg-tertiary);
+    border-top: 1px solid var(--border-color-divider);
+    border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
+    gap: 20px;
+    flex-wrap: wrap;
+    box-sizing: border-box;
 }
 
 .subcontainer {
@@ -192,26 +193,146 @@ select {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    max-width: 20%;
+    flex-shrink: 1;
+    flex-grow: 0;
+}
+
+.subcontainer label {
+    margin-top: 4px;
+    font-size: 0.8em;
+    color: var(--font-color-dim);
+}
+
+/* Adjusted vertical alignment for checkbox */
+.subcontainer input[type="checkbox"] {
+    vertical-align: middle;
+}
+
+
+input[type="checkbox"] {
+    height: 1.5em;
+    width: 1.5em;
+    border-radius: var(--border-radius-sm);
+    appearance: none;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color-interactive);
+    transition: all var(--transition-duration-normal) var(--easing-smooth);
+    margin: 5px 7px;
+    position: relative;
+    will-change: transform, background-color, border-color;
+    cursor: pointer;
+
+    &:checked {
+        background: var(--color-primary) var(--checkmark-icon) no-repeat center / 70%;
+        border-color: var(--color-primary);
+        animation: checkmark-animation 0.3s var(--easing-smooth);
+    }
+
+    &:hover:not(:checked) {
+        background-color: var(--bg-input-hover);
+        border-color: var(--border-color-focus);
+    }
+
+    &:hover:checked {
+        background-color: var(--color-primary-hover);
+        border-color: var(--color-primary-hover);
+    }
+
+    &:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 2px var(--color-primary-ultralight);
+    }
+}
+
+@keyframes checkmark-animation {
+    0% { transform: scale(0.8); opacity: 0.5; }
+    50% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+input[type="text"] {
+    color: var(--font-color-normal);
+    width: 50px;
+    border-radius: var(--border-radius-md);
+    appearance: none;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color-interactive);
+    margin: 0 4px;
+    cursor: text;
+    padding: 6px;
+    text-align: center;
+    transition: border-color var(--transition-duration-fast) var(--easing-smooth),
+    background-color var(--transition-duration-fast) var(--easing-smooth),
+    box-shadow var(--transition-duration-fast) var(--easing-smooth);
+    box-sizing: border-box;
+    font-size: 0.9em;
+
+
+    &:hover {
+        background-color: var(--bg-input-hover);
+        border-color: var(--border-color-focus);
+    }
+
+    &:focus-visible {
+        outline: none;
+        border-color: var(--color-primary);
+        background-color: var(--bg-input-focus);
+        box-shadow: 0 0 0 2px var(--color-primary-ultralight);
+    }
+}
+
+select {
+    color: var(--font-color-normal);
+    border-radius: var(--border-radius-md);
+    appearance: none;
+    background: var(--bg-input) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23dcddde' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E") no-repeat right 10px center / 0.9em;
+    border: 1px solid var(--border-color-interactive);
+    margin: 0 4px;
+    cursor: pointer;
+    padding: 6px 30px 6px 10px;
+    transition: border-color var(--transition-duration-fast) var(--easing-smooth),
+    background-color var(--transition-duration-fast) var(--easing-smooth),
+    box-shadow var(--transition-duration-fast) var(--easing-smooth);
+    box-sizing: border-box;
+    font-size: 0.9em;
+
+
+    &:hover {
+        background-color: var(--bg-input-hover);
+        border-color: var(--border-color-focus);
+    }
+
+    &:focus-visible {
+        outline: none;
+        border-color: var(--color-primary);
+        background-color: var(--bg-input-focus);
+        box-shadow: 0 0 0 2px var(--color-primary-ultralight);
+    }
 }
 
 ::-webkit-scrollbar {
-    width: 6px;
-    background-color: transparent;
-    border-radius: 25px;
+    width: var(--scrollbar-width);
+    background-color: var(--bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #202225;
-    border-radius: 25px;
-    box-sizing: border-box;
+    background-color: var(--bg-tertiary);
+    border-radius: var(--scrollbar-width);
+    border: 2px solid var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--bg-primary);
 }
 
 .closeButton {
-    position: absolute;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     z-index: -1;
     border: none;
     background-color: transparent;
+    cursor: default;
 }

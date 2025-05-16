@@ -15,6 +15,9 @@ function createSourceItem({ id, name, thumbnail }: IPCSources): HTMLLIElement {
 	button.dataset.id = id;
 	button.title = name;
 
+	const thumbnailContainer = document.createElement("div");
+	thumbnailContainer.classList.add("desktop-capturer-selection__thumbnail-container");
+
 	const img = document.createElement("img");
 	img.classList.add("desktop-capturer-selection__thumbnail");
 	img.src = thumbnail.toDataURL();
@@ -24,8 +27,11 @@ function createSourceItem({ id, name, thumbnail }: IPCSources): HTMLLIElement {
 	span.classList.add("desktop-capturer-selection__name");
 	span.textContent = name;
 
-	button.appendChild(img);
+	thumbnailContainer.appendChild(img);
+
+	button.appendChild(thumbnailContainer);
 	button.appendChild(span);
+
 	li.appendChild(button);
 
 	return li;
@@ -55,7 +61,7 @@ async function addDisplays() {
 		const closeButton = document.createElement("button");
 		closeButton.classList.add("closeButton");
 		closeButton.addEventListener("click", () => {
-			ipcRenderer.invoke("selectScreenshareSource", "window:000000:0", "Close", false, true);
+			ipcRenderer.invoke("selectScreenshareSource");
 		});
 
 		const previousSettings = ipcRenderer.sendSync("config:getConfig", "screensharePreviousSettings");

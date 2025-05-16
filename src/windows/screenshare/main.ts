@@ -18,6 +18,10 @@ export function registerScreenshareHandler() {
 		});
 		if (!sources) return callback({});
 
+		sources.map((source) => {
+			if (!source.name) source.name = "unknown";
+		});
+
 		capturerWindow = new BrowserWindow({
 			width: width,
 			height: height,
@@ -38,7 +42,9 @@ export function registerScreenshareHandler() {
 
 		ipcMain.handleOnce("selectScreenshareSource", async (_event, id, name, audio, contentHint, resolution, framerate) => {
 			capturerWindow.close();
-			// https://github.com/Milkshiift/goofcord-shelter-plugins/tree/main/plugins/screenshare-quality
+			if (!id) return callback({});
+
+			// src/window/main/screenshare.ts
 			await request.frame?.executeJavaScript(`
 				window.screenshareSettings = ${JSON.stringify({resolution: resolution, framerate: framerate, contentHint: contentHint})};
             `);
