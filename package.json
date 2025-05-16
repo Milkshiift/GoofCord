@@ -28,7 +28,7 @@
     "@types/node": "^22.15.18",
     "@types/stegcloak": "^1.0.2",
     "@vencord/types": "^1.11.5",
-    "electron": "^36.2.0",
+    "electron": "^36.2.1",
     "electron-builder": "^26.0.12",
     "source-map-support": "github:onigoetz/node-source-map-support",
     "typescript": "^5.8.3"
