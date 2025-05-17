@@ -87,6 +87,8 @@
   "opt-domOptimizer-desc": "Defers DOM updates to possibly improve performance. May cause visual artifacts.",
   "opt-renderingOptimizations": "Rendering optimizations",
   "opt-renderingOptimizations-desc": "Applies CSS optimizations to improve scrolling smoothness. May cause text to become blurry if used with some themes.",
+  "opt-forceDiscreteGPU": "Force discrete GPU",
+  "opt-forceDiscreteGPU-desc": "Forces GoofCord to use a discrete GPU if available.",
   "opt-launchWithOsBoot": "Launch GoofCord on startup",
   "opt-launchWithOsBoot-desc": "Start GoofCord automatically on system boot. May not work in some Linux environments.",
   "opt-spellcheck": "Spellcheck",

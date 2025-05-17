@@ -1,10 +1,9 @@
 import { app } from "electron";
 import "v8-compile-cache";
 import pc from "picocolors";
-import { loadConfig } from "./config.ts";
+import { getConfig, loadConfig } from "./config.ts";
 import { initLocalization } from "./modules/localization.ts";
-import { getDisplayVersion } from "./utils.ts";
-import { isDev } from "./utils.ts";
+import { getDisplayVersion, isDev } from "./utils.ts";
 
 console.time(pc.green("[Timer]") + " GoofCord fully loaded in");
 
@@ -23,6 +22,9 @@ if (!app.requestSingleInstanceLock()) app.exit();
 async function main() {
   await loadConfig();
   await initLocalization();
+
+  // Not in loader.ts because it may load too late
+  if (getConfig("forceDiscreteGPU")) app.commandLine.appendSwitch("force_high_performance_gpu");
 
   const loader = await import("./loader");
   await loader.load();

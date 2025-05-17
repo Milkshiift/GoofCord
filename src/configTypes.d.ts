@@ -1,6 +1,6 @@
 // This file is auto-generated. Any changes will be lost. See genSettingsTypes.mjs script
 
-export type ConfigKey = "locale" | "customTitlebar" | "minimizeToTray" | "startMinimized" | "dynamicIcon" | "customIconPath" | "trayIcon" | "discordUrl" | "modNames" | "modEtagCache" | "customJsBundle" | "customCssBundle" | "noBundleUpdates" | "installDefaultShelterPlugins" | "invidiousEmbeds" | "messageEncryption" | "encryptionPasswords" | "encryptionCover" | "encryptionMark" | "firewall" | "customFirewallRules" | "blocklist" | "blockedStrings" | "allowedStrings" | "arrpc" | "domOptimizer" | "renderingOptimizations" | "launchWithOsBoot" | "spellcheck" | "popoutWindowAlwaysOnTop" | "updateNotification" | "autoscroll" | "transparency" | "screensharePreviousSettings" | "windowState:main" | "cloudHost" | "cloudToken" | "cloudEncryptionKey";
+export type ConfigKey = "locale" | "customTitlebar" | "minimizeToTray" | "startMinimized" | "dynamicIcon" | "customIconPath" | "trayIcon" | "discordUrl" | "modNames" | "modEtagCache" | "customJsBundle" | "customCssBundle" | "noBundleUpdates" | "installDefaultShelterPlugins" | "invidiousEmbeds" | "messageEncryption" | "encryptionPasswords" | "encryptionCover" | "encryptionMark" | "firewall" | "customFirewallRules" | "blocklist" | "blockedStrings" | "allowedStrings" | "arrpc" | "domOptimizer" | "renderingOptimizations" | "forceDiscreteGPU" | "launchWithOsBoot" | "spellcheck" | "popoutWindowAlwaysOnTop" | "updateNotification" | "autoscroll" | "transparency" | "screensharePreviousSettings" | "windowState:main" | "cloudHost" | "cloudToken" | "cloudEncryptionKey";
 
 export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "locale": string;
@@ -30,6 +30,7 @@ export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "arrpc": boolean;
     "domOptimizer": boolean;
     "renderingOptimizations": boolean;
+    "forceDiscreteGPU": boolean;
     "launchWithOsBoot": boolean;
     "spellcheck": boolean;
     "popoutWindowAlwaysOnTop": boolean;
@@ -69,6 +70,7 @@ export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "arrpc": boolean;
     "domOptimizer": boolean;
     "renderingOptimizations": boolean;
+    "forceDiscreteGPU": boolean;
     "launchWithOsBoot": boolean;
     "spellcheck": boolean;
     "popoutWindowAlwaysOnTop": boolean;
