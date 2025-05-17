@@ -255,6 +255,10 @@ input, label {
     cursor: inherit;
 }
 
+label {
+    flex-shrink: 0;
+}
+
 input[type="text"],
 input[type="password"],
 input[type="email"],

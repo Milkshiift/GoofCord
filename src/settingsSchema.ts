@@ -63,11 +63,19 @@ export const settingsSchema = {
 			})(),
 			onChange: "main:hotreloadLocale",
 		},
-		customTitlebar: {
-			name: "Custom titlebar",
-			defaultValue: true,
-			description: "Enables a Discord-like titlebar.",
+		discordUrl: {
+			name: "Discord URL",
+			defaultValue: "https://discord.com/app",
+			description: 'URL that GoofCord will load on launch. Add "canary." or "ptb." before "discord.com" for respective instances.',
+			inputType: "textfield",
+		},
+		arrpc: {
+			name: "Activity display",
+			defaultValue: false,
+			description:
+				'Enables an open source reimplementation of Discord\'s\nrich presence called <a target="_blank" href="https://github.com/OpenAsar/arrpc">arRPC</a>.\nA <a target="_blank" href="https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence">workaround</a> is needed for arRPC to work on Flatpak',
 			inputType: "checkbox",
+			onChange: "arrpc:initArrpc",
 		},
 		minimizeToTray: {
 			name: "Minimize to tray",
@@ -78,13 +86,40 @@ export const settingsSchema = {
 		startMinimized: {
 			name: "Start minimized",
 			defaultValue: false,
-			description: "GoofCord starts in the background and remains out of your way.",
+			description: "GoofCord starts in the background.",
+			inputType: "checkbox",
+		},
+		launchWithOsBoot: {
+			name: "Launch GoofCord on startup",
+			defaultValue: false,
+			description: "Start GoofCord automatically on system boot. May not work in some Linux environments.",
+			inputType: "checkbox",
+			onChange: "loader:setAutoLaunchState",
+		},
+		spellcheck: {
+			name: "Spellcheck",
+			defaultValue: true,
+			description: "Enables spellcheck for input fields.",
+			inputType: "checkbox",
+		},
+		updateNotification: {
+			name: "Update notification",
+			defaultValue: true,
+			description: "Get notified about new version releases.",
+			inputType: "checkbox",
+		},
+	},
+	"Appearance": {
+		customTitlebar: {
+			name: "Custom titlebar",
+			defaultValue: true,
+			description: "Enables a Discord-like titlebar.",
 			inputType: "checkbox",
 		},
 		dynamicIcon: {
 			name: "Dynamic icon",
 			defaultValue: true,
-			description: "Shows pings/mentions count on GoofCord's icon and its tray. Overwrites the custom icon.\nOn Linux, pings on the taskbar only work when unitylib is installed.",
+			description: "Shows pings/mentions count on GoofCord's icon and its tray. On Linux, pings on the taskbar only work when unitylib is installed.",
 			inputType: "checkbox",
 		},
 		customIconPath: {
@@ -107,11 +142,29 @@ export const settingsSchema = {
 				},
 			},
 		},
-		discordUrl: {
-			name: "Discord URL",
-			defaultValue: "https://discord.com/app",
-			description: 'URL that GoofCord will load on launch. Add "canary." or "ptb." before "discord.com" for respective instances.',
-			inputType: "textfield",
+		autoscroll: {
+			name: "Auto-scroll",
+			defaultValue: false,
+			description: "Enables auto-scrolling with middle mouse button.",
+			inputType: "checkbox",
+			showAfter: {
+				key: "autoscroll",
+				condition: (value) => {
+					return process.platform === "linux";
+				},
+			},
+		},
+		popoutWindowAlwaysOnTop: {
+			name: "Pop out window always on top",
+			defaultValue: true,
+			description: "Makes voice chat pop out window always stay above other windows.",
+			inputType: "checkbox",
+		},
+		transparency: {
+			name: "Transparency",
+			defaultValue: false,
+			description: "Makes the window transparent for use with translucent themes.",
+			inputType: "checkbox",
 		},
 	},
 	"Client Mods": {
@@ -212,7 +265,25 @@ export const settingsSchema = {
 			},
 		},
 	},
-	"Firewall": {
+	"Other": {
+		domOptimizer: {
+			name: "DOM optimizer",
+			defaultValue: true,
+			description: "Defers DOM updates to possibly improve performance. May cause visual artifacts.",
+			inputType: "checkbox",
+		},
+		renderingOptimizations: {
+			name: "Rendering optimizations",
+			defaultValue: true,
+			description: "Applies CSS optimizations to improve scrolling smoothness. May cause text to become blurry if used with some themes.",
+			inputType: "checkbox",
+		},
+		forceDiscreteGPU: {
+			name: "Force discrete GPU",
+			defaultValue: false,
+			description: "Forces GoofCord to use a discrete GPU if available.",
+			inputType: "checkbox",
+		},
 		firewall: {
 			name: "Firewall",
 			defaultValue: true,
@@ -272,77 +343,6 @@ export const settingsSchema = {
 					return value === true;
 				},
 			},
-		},
-	},
-	"Other": {
-		arrpc: {
-			name: "Activity display",
-			defaultValue: false,
-			description:
-				'Enables an open source reimplementation of Discord\'s\nrich presence called <a target="_blank" href="https://github.com/OpenAsar/arrpc">arRPC</a>.\nA <a target="_blank" href="https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence">workaround</a> is needed for arRPC to work on Flatpak',
-			inputType: "checkbox",
-			onChange: "arrpc:initArrpc",
-		},
-		domOptimizer: {
-			name: "DOM optimizer",
-			defaultValue: true,
-			description: "Defers DOM updates to possibly improve performance. May cause visual artifacts.",
-			inputType: "checkbox",
-		},
-		renderingOptimizations: {
-			name: "Rendering optimizations",
-			defaultValue: true,
-			description: "Applies CSS optimizations to improve scrolling smoothness. May cause text to become blurry if used with some themes.",
-			inputType: "checkbox",
-		},
-		forceDiscreteGPU: {
-			name: "Force discrete GPU",
-			defaultValue: false,
-			description: "Forces GoofCord to use a discrete GPU if available.",
-			inputType: "checkbox",
-		},
-		launchWithOsBoot: {
-			name: "Launch GoofCord on startup",
-			defaultValue: false,
-			description: "Start GoofCord automatically on system boot. May not work in some Linux environments.",
-			inputType: "checkbox",
-			onChange: "loader:setAutoLaunchState",
-		},
-		spellcheck: {
-			name: "Spellcheck",
-			defaultValue: true,
-			description: "Enables spellcheck for input fields.",
-			inputType: "checkbox",
-		},
-		popoutWindowAlwaysOnTop: {
-			name: "Pop out window always on top",
-			defaultValue: true,
-			description: "Makes voice chat pop out window always stay above other windows.",
-			inputType: "checkbox",
-		},
-		updateNotification: {
-			name: "Update notification",
-			defaultValue: true,
-			description: "Get notified about new version releases.",
-			inputType: "checkbox",
-		},
-		autoscroll: {
-			name: "Auto-scroll",
-			defaultValue: false,
-			description: "Enables auto-scrolling with middle mouse button.",
-			inputType: "checkbox",
-			showAfter: {
-				key: "autoscroll",
-				condition: (value) => {
-					return process.platform === "linux";
-				},
-			},
-		},
-		transparency: {
-			name: "Transparency",
-			defaultValue: false,
-			description: "Makes the window transparent for use with translucent themes.",
-			inputType: "checkbox",
 		},
 		screensharePreviousSettings: {
 			defaultValue: ["720", "30", false, "motion"],
