@@ -7,7 +7,7 @@ import { decryptSafeStorage } from "../../../utils.ts";
 import { decryptString, encryptString } from "./encryption.ts";
 import { deleteToken, getCloudHost, getCloudToken } from "./token.ts";
 
-export const LOG_PREFIX = pc.cyanBright("[Cloud Settings]");
+export const LOG_PREFIX = pc.cyanBright("[Cloud]");
 export const ENDPOINT_VERSION = "v1/"; // A slash should be at the end
 
 function getEncryptionKey(): string {
