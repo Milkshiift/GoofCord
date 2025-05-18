@@ -24,7 +24,7 @@ async function main() {
   await initLocalization();
 
   // Not in loader.ts because it may load too late
-  if (getConfig("forceDiscreteGPU")) app.commandLine.appendSwitch("force_high_performance_gpu");
+  if (getConfig("forceDedicatedGPU")) app.commandLine.appendSwitch("force_high_performance_gpu");
 
   const loader = await import("./loader");
   await loader.load();

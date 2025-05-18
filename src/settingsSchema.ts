@@ -278,10 +278,10 @@ export const settingsSchema = {
 			description: "Applies CSS optimizations to improve scrolling smoothness. May cause text to become blurry if used with some themes.",
 			inputType: "checkbox",
 		},
-		forceDiscreteGPU: {
-			name: "Force discrete GPU",
+		forceDedicatedGPU: {
+			name: "Force dedicated GPU",
 			defaultValue: false,
-			description: "Forces GoofCord to use a discrete GPU if available.",
+			description: "Forces GoofCord to use a dedicated GPU if available.",
 			inputType: "checkbox",
 		},
 		firewall: {
