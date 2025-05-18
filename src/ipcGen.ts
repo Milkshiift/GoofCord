@@ -5,6 +5,7 @@ import { loadConfig, getConfig, getConfigBulk, setConfig, setConfigBulk, getDefa
 import { i } from "./modules/localization";
 import { stopVenmic } from "./modules/venmic";
 import { encryptMessage, decryptMessage, cycleThroughPasswords } from "./modules/messageEncryption";
+import { loadCloud, saveCloud, deleteCloud } from "./windows/settings/cloud/cloud";
 import { createSettingsWindow, hotreloadLocale } from "./windows/settings/main";
 import { initArrpc } from "./modules/arrpc";
 import { getAssets } from "./modules/assetLoader";
@@ -12,7 +13,6 @@ import { updateModsFull } from "./modules/mods";
 import { clearCache } from "./modules/cacheManager";
 import { setBadgeCount } from "./modules/dynamicIcon";
 import { setKeybinds, isVenbindLoaded } from "./modules/venbind";
-import { loadCloud, saveCloud, deleteCloud } from "./windows/settings/cloud/cloud";
 import { setAutoLaunchState } from "./loader";
 
 ipcMain.on("utils:getVersion", (event, ) => { event.returnValue = getVersion(); });
@@ -33,6 +33,9 @@ ipcMain.handle("venmic:stopVenmic", (event, ) => { return stopVenmic(); });
 ipcMain.on("messageEncryption:encryptMessage", (event, message) => { event.returnValue = encryptMessage(message); });
 ipcMain.on("messageEncryption:decryptMessage", (event, message) => { event.returnValue = decryptMessage(message); });
 ipcMain.handle("messageEncryption:cycleThroughPasswords", (event, ) => { return cycleThroughPasswords(); });
+ipcMain.handle("cloud:loadCloud", async (event, ) => { return await loadCloud(); });
+ipcMain.handle("cloud:saveCloud", async (event, silent) => { return await saveCloud(silent); });
+ipcMain.handle("cloud:deleteCloud", async (event, ) => { return await deleteCloud(); });
 ipcMain.handle("main:createSettingsWindow", async (event, ) => { return await createSettingsWindow(); });
 ipcMain.handle("main:hotreloadLocale", async (event, ) => { return await hotreloadLocale(); });
 ipcMain.handle("arrpc:initArrpc", async (event, ) => { return await initArrpc(); });
@@ -42,7 +45,4 @@ ipcMain.handle("cacheManager:clearCache", async (event, ) => { return await clea
 ipcMain.handle("dynamicIcon:setBadgeCount", async (event, count) => { return await setBadgeCount(count); });
 ipcMain.handle("venbind:setKeybinds", async (event, keybinds) => { return await setKeybinds(keybinds); });
 ipcMain.handle("venbind:isVenbindLoaded", async (event, ) => { return await isVenbindLoaded(); });
-ipcMain.handle("cloud:loadCloud", async (event, ) => { return await loadCloud(); });
-ipcMain.handle("cloud:saveCloud", async (event, ) => { return await saveCloud(); });
-ipcMain.handle("cloud:deleteCloud", async (event, ) => { return await deleteCloud(); });
 ipcMain.handle("loader:setAutoLaunchState", async (event, ) => { return await setAutoLaunchState(); });

@@ -1,6 +1,6 @@
 // This file is auto-generated. Any changes will be lost. See genSettingsTypes.mjs script
 
-export type ConfigKey = "locale" | "discordUrl" | "arrpc" | "minimizeToTray" | "startMinimized" | "launchWithOsBoot" | "spellcheck" | "updateNotification" | "customTitlebar" | "dynamicIcon" | "customIconPath" | "trayIcon" | "autoscroll" | "popoutWindowAlwaysOnTop" | "transparency" | "modNames" | "modEtagCache" | "customJsBundle" | "customCssBundle" | "noBundleUpdates" | "installDefaultShelterPlugins" | "invidiousEmbeds" | "messageEncryption" | "encryptionPasswords" | "encryptionCover" | "encryptionMark" | "domOptimizer" | "renderingOptimizations" | "forceDiscreteGPU" | "firewall" | "customFirewallRules" | "blocklist" | "blockedStrings" | "allowedStrings" | "screensharePreviousSettings" | "windowState:main" | "cloudHost" | "cloudToken" | "cloudEncryptionKey";
+export type ConfigKey = "locale" | "discordUrl" | "arrpc" | "minimizeToTray" | "startMinimized" | "launchWithOsBoot" | "spellcheck" | "updateNotification" | "customTitlebar" | "dynamicIcon" | "customIconPath" | "trayIcon" | "autoscroll" | "popoutWindowAlwaysOnTop" | "transparency" | "modNames" | "modEtagCache" | "customJsBundle" | "customCssBundle" | "noBundleUpdates" | "installDefaultShelterPlugins" | "invidiousEmbeds" | "messageEncryption" | "encryptionPasswords" | "encryptionCover" | "encryptionMark" | "domOptimizer" | "renderingOptimizations" | "forceDiscreteGPU" | "firewall" | "customFirewallRules" | "blocklist" | "blockedStrings" | "allowedStrings" | "screensharePreviousSettings" | "windowState:main" | "autoSaveCloud" | "cloudHost" | "cloudToken" | "cloudEncryptionKey";
 
 export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "locale": string;
@@ -39,6 +39,7 @@ export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "allowedStrings": string[];
     "screensharePreviousSettings": [number, number, boolean, string];
     "windowState:main": [boolean, [number, number]];
+    "autoSaveCloud": boolean;
     "cloudHost": string;
     "cloudToken": string;
     "cloudEncryptionKey": string;
@@ -79,6 +80,7 @@ export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "allowedStrings": string[];
     "screensharePreviousSettings": [number, number, boolean, string];
     "windowState:main": [boolean, [number, number]];
+    "autoSaveCloud": boolean;
     "cloudHost": string;
     "cloudToken": string;
     "cloudEncryptionKey": string;

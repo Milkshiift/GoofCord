@@ -362,6 +362,12 @@ export const settingsSchema = {
 		},
 	},
 	"Cloud": {
+		autoSaveCloud: {
+			name: "Auto save",
+			defaultValue: false,
+			description: "Automatically save settings to cloud when they change.",
+			inputType: "checkbox",
+		},
 		cloudHost: {
 			name: "Cloud Host",
 			description: "GoofCord Cloud Server URL. You can self-host it yourself, see the <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">repository</a>.",

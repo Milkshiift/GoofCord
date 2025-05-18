@@ -37,7 +37,7 @@ export async function loadCloud<IPCHandle>() {
 	await showDialogAndLog("info", "Settings loaded", "Settings loaded from cloud successfully. Please restart GoofCord to apply the changes.");
 }
 
-export async function saveCloud<IPCHandle>() {
+export async function saveCloud<IPCHandle>(silent = false) {
 	const excludedOptions = ["cloudEncryptionKey", "cloudHost", "cloudToken", "modEtagCache"];
 	const configToSave = new Map(cachedConfig);
 	if (getEncryptionKey()) {
@@ -54,7 +54,7 @@ export async function saveCloud<IPCHandle>() {
 
 	const response = await callEndpoint("save", "POST", JSON.stringify({ settings: encryptedSettings }));
 	if (!response) return;
-	await showDialogAndLog("info", "Settings saved", "Settings saved successfully on cloud.");
+	if (!silent) await showDialogAndLog("info", "Settings saved", "Settings saved successfully on cloud.");
 }
 
 export async function deleteCloud<IPCHandle>() {
