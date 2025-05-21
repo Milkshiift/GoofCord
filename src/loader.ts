@@ -54,6 +54,7 @@ async function handleFirstLaunch() {
 		icon: getCustomIcon(),
 		noLink: false,
 	});
+	app.relaunch(); // Relaunches only when user closes settings window
 }
 
 export async function setAutoLaunchState<IPCHandle>() {
