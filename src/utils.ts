@@ -5,7 +5,18 @@ import { app, safeStorage } from "electron";
 import packageInfo from "../package.json" assert { type: "json" };
 import { getConfig } from "./config.ts";
 
+try {
+	const portablePath = path.join(path.dirname(app.getPath("exe")), "goofcord-data");
+	if (await isPathAccessible(portablePath)) {
+		app.setPath("userData", portablePath);
+		console.log("Found \"goofcord-data\" folder, running in portable mode");
+	}
+} catch (e) {
+	console.error("Portable mode error:", e);
+}
+
 export const dirname = () => path.dirname(fileURLToPath(import.meta.url));
+
 export const packageVersion = packageInfo.version;
 export const userDataPath = app.getPath("userData");
 
@@ -108,7 +119,7 @@ export async function saveFileToGCFolder<IPCHandle>(filePath: string, content: s
 	return fullPath;
 }
 
-export async function isFileAccessible(filePath: string) {
+export async function isPathAccessible(filePath: string) {
 	try {
 		await fs.promises.access(filePath, fs.constants.F_OK);
 		return true;

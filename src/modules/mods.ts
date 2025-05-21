@@ -3,7 +3,7 @@ import path from "node:path";
 import { Notification } from "electron";
 import pc from "picocolors";
 import { getConfig, setConfig } from "../config.ts";
-import { getErrorMessage, isFileAccessible } from "../utils.ts";
+import { getErrorMessage, isPathAccessible } from "../utils.ts";
 import { assetsFolder } from "./assetLoader.ts";
 
 export const LOG_PREFIX = pc.yellow("[Mod Loader]");
@@ -25,7 +25,7 @@ async function downloadBundles(urls: Array<string | undefined>, name: string) {
 		try {
 			const filepath = path.join(assetsFolder, `${name}${path.extname(url)}`);
 
-			const exists = await isFileAccessible(filepath);
+			const exists = await isPathAccessible(filepath);
 
 			const response = await fetch(url, {
 				headers: {
