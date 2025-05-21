@@ -14,7 +14,7 @@
     "opt-button-saveToCloud": "Зберегти в хмару",
     "opt-button-loadFromCloud": "Завантажити з хмари",
     "opt-button-deleteCloud": "Видалити дані з хмари",
-    "welcomeMessage": "Ласкаво просимо до GoofCord!\nНалаштуйте параметри за своїм бажанням і перезапустіть GoofCord, щоб отримати доступ до Discord.\nВи можете це зробити за допомогою Ctrl+Shift+R або через меню трею/дока.\nПриємного спілкування!",
+    "welcomeMessage": "Ласкаво просимо до GoofCord!\nНалаштуйте параметри за своїм бажанням і закрийте вікно налаштувань, щоб почати користуватись Discord.\nПриємного спілкування!",
     "goofcord-quit": "Вийти",
     "goofcord-open": "Відкрити GoofCord",
     "goofcord-settings": "Відкрити Налаштування",
