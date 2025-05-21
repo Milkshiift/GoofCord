@@ -116,6 +116,18 @@ export const settingsSchema = {
 			description: "Enables a Discord-like titlebar.",
 			inputType: "checkbox",
 		},
+		disableAltMenu: {
+			name: "Disable application menu",
+			defaultValue: false,
+			description: "Stops Alt key from opening the app menu.",
+			inputType: "checkbox",
+			showAfter: {
+				key: "customTitlebar",
+				condition: (value) => {
+					return value === false;
+				},
+			}
+		},
 		dynamicIcon: {
 			name: "Dynamic icon",
 			defaultValue: true,

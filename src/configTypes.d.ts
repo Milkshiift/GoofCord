@@ -1,6 +1,6 @@
 // This file is auto-generated. Any changes will be lost. See genSettingsTypes.mjs script
 
-export type ConfigKey = "locale" | "discordUrl" | "arrpc" | "minimizeToTray" | "startMinimized" | "launchWithOsBoot" | "spellcheck" | "updateNotification" | "customTitlebar" | "dynamicIcon" | "customIconPath" | "trayIcon" | "autoscroll" | "popoutWindowAlwaysOnTop" | "transparency" | "modNames" | "modEtagCache" | "customJsBundle" | "customCssBundle" | "noBundleUpdates" | "installDefaultShelterPlugins" | "invidiousEmbeds" | "messageEncryption" | "encryptionPasswords" | "encryptionCover" | "encryptionMark" | "domOptimizer" | "renderingOptimizations" | "forceDedicatedGPU" | "firewall" | "customFirewallRules" | "blocklist" | "blockedStrings" | "allowedStrings" | "screensharePreviousSettings" | "windowState:main" | "autoSaveCloud" | "cloudHost" | "cloudToken" | "cloudEncryptionKey";
+export type ConfigKey = "locale" | "discordUrl" | "arrpc" | "minimizeToTray" | "startMinimized" | "launchWithOsBoot" | "spellcheck" | "updateNotification" | "customTitlebar" | "disableAltMenu" | "dynamicIcon" | "customIconPath" | "trayIcon" | "autoscroll" | "popoutWindowAlwaysOnTop" | "transparency" | "modNames" | "modEtagCache" | "customJsBundle" | "customCssBundle" | "noBundleUpdates" | "installDefaultShelterPlugins" | "invidiousEmbeds" | "messageEncryption" | "encryptionPasswords" | "encryptionCover" | "encryptionMark" | "domOptimizer" | "renderingOptimizations" | "forceDedicatedGPU" | "firewall" | "customFirewallRules" | "blocklist" | "blockedStrings" | "allowedStrings" | "screensharePreviousSettings" | "windowState:main" | "autoSaveCloud" | "cloudHost" | "cloudToken" | "cloudEncryptionKey";
 
 export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "locale": string;
@@ -12,6 +12,7 @@ export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "spellcheck": boolean;
     "updateNotification": boolean;
     "customTitlebar": boolean;
+    "disableAltMenu": boolean;
     "dynamicIcon": boolean;
     "customIconPath": string;
     "trayIcon": string;
@@ -53,6 +54,7 @@ export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "spellcheck": boolean;
     "updateNotification": boolean;
     "customTitlebar": boolean;
+    "disableAltMenu": boolean;
     "dynamicIcon": boolean;
     "customIconPath": string;
     "trayIcon": string;

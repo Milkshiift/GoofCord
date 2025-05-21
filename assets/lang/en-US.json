@@ -56,6 +56,8 @@
   "opt-updateNotification-desc": "Get notified about new version releases.",
   "opt-customTitlebar": "Custom titlebar",
   "opt-customTitlebar-desc": "Enables a Discord-like titlebar.",
+  "opt-disableAltMenu": "Disable application menu",
+  "opt-disableAltMenu-desc": "Stops Alt key from opening the app menu.",
   "opt-dynamicIcon": "Dynamic icon",
   "opt-dynamicIcon-desc": "Shows pings/mentions count on GoofCord's icon and its tray. On Linux, pings on the taskbar only work when unitylib is installed.",
   "opt-customIconPath": "Custom Icon",

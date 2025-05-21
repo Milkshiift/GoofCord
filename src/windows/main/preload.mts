@@ -7,6 +7,13 @@ import { injectTitlebar } from "./titlebar.ts";
 import "./screenshare.ts";
 import { startKeybindWatcher, } from "./keybinds.ts";
 
+if (ipcRenderer.sendSync("config:getConfig", "disableAltMenu")) {
+	// https://github.com/electron/electron/issues/34211
+	window.addEventListener('keydown', (e) => {
+		if (e.code === 'AltLeft') e.preventDefault();
+	});
+}
+
 const loadedStyles = new Map<string, HTMLStyleElement>();
 
 if (document.location.hostname.includes("discord")) {
