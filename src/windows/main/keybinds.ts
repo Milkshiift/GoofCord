@@ -15,16 +15,9 @@ addPatch({
                     match: /\(0,(?:[A-Za-z_$][\w$]*)\.isDesktop\)\(\)/g,
                     replace: "true"
                 },
-                {
-                    match: /((?:[A-Za-z_$][\w$]*)\.isPlatformEmbedded\?)(.+renderEmpty\((?:[A-Za-z_$][\w$]*)\)\]\}\)\]\}\))/,
-                    replace: "$1$self.keybindMessage($2)"
-                },
             ]
         },
-    ],
-    xdpWarning (keybindsList) {
-        return keybindsList;
-    }
+    ]
 });
 
 interface Keybind {
@@ -135,6 +128,10 @@ export function startKeybindWatcher() {
         }, 5000); // Time for shelter flux to initialize
     `);
 }
+
+ipcRenderer.on('keybinds:getAll', () => {
+    return activeKeybinds;
+})
 
 ipcRenderer.on('keybinds:trigger', (_, id, keyup) => {
     const keybind = activeKeybinds.get(id);
