@@ -35,7 +35,6 @@
     "opt-button-deleteCloud": "Slett skydata",
     "opt-firewall": "Brannmur",
     "opt-firewall-desc": "Aldri skru av, med mindre du feilsøker",
-    "category-firewall": "Brannmursinnstillinger",
     "category-cloud": "Skyinnstillinger",
     "opt-customFirewallRules": "Egendefinerte brannmursregler",
     "category-general": "Generelle innstillinger"

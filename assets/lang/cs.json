@@ -22,7 +22,6 @@
     "settingsWindow-title": "Nastavení GoofCordu | Verze: ",
     "category-other": "Ostatní nastavení",
     "category-client": "Nastavení klientských modifikací",
-    "category-firewall": "Nastavení firewallu",
     "settings-encryption-unavailable": "GoofCord nebyl schopen nalézt správce hesel. Zašifrovaná nastavení budou uložena jako prostý text. Pokud jste na Linuxu, nainstalujte balíček \"gnome-libsecret\" anebo \"kwallet\".",
     "opt-minimizeToTray-desc": "GoofCord zůstane otevřený i po uzavření všech jeho oken.",
     "opt-startMinimized": "Spustit minimalizovaně",

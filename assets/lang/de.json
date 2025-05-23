@@ -1,5 +1,5 @@
 {
-    "welcomeMessage": "Willkommen bei GoofCord!\nRichten Sie die Einstellungen nach Ihren Wünschen ein und starten Sie GoofCord neu, um auf Discord zuzugreifen.\nSie können dies mit Strg+Umschalt+R oder über das Tray Menü tun.\nViel Spaß beim Chatten!",
+    "welcomeMessage": "Willkommen bei GoofCord!\nRichte die Einstellungen nach deinen Wünschen ein und starte GoofCord neu, um auf Discord zuzugreifen.\nDu kannst dies mit Ctrl+Shift+R oder über das Tray-/Dock-Menü tun.\nViel Spaß beim Chatten!",
     "menu-edit-undo": "Rückgängig machen",
     "opt-arrpc": "Aktivitätsanzeige",
     "opt-cloudEncryptionKey": "Cloud-Verschlüsselungsschlüssel",
@@ -29,7 +29,6 @@
     "settingsWindow-title": "GoofCord Einstellungen | Version: ",
     "category-general": "Allgemeine Einstellungen",
     "category-client": "Client Modifikationen Einstellungen",
-    "category-firewall": "Firewall Einstellungen",
     "category-other": "Andere Einstellungen",
     "category-cloud": "Cloud Einstellungen",
     "opt-customTitlebar": "Benutzerdefinierte Titelbar",
@@ -85,7 +84,6 @@
     "opt-transparency-desc": "Macht das Fenster transparent für die Verwendung mit durchsichtigen Themen.",
     "opt-button-openGoofCordFolder": "Ordner GoofCord öffnen",
     "opt-button-clearCache": "Cache leeren",
-    "opt-button-forceNativeCrash": "Native Crash erzwingen",
     "opt-button-deleteCloud": "Cloud Daten Löschen",
     "screenshare-screenshare": "Bildschirmfreigabe",
     "screenshare-optimization-detail": "Detail",
@@ -93,5 +91,15 @@
     "screenshare-audio": "Audio",
     "screenshare-optimization": "Optimierung",
     "screenshare-optimization-motion": "Bewegung",
-    "screenshare-framerate": "Bildfrequenz"
+    "screenshare-framerate": "Bildfrequenz",
+    "opt-locale-desc": "Dies unterscheidet sich von der Sprache des Discords. Du kannst GoofCord <a target=\"_blank\" href=\"https://hosted.weblate.org/projects/goofcord/goofcord/\">hier</a> übersetzen.",
+    "yes": "Ja",
+    "no": "Nein",
+    "opt-locale": "Sprache 🌍",
+    "opt-cloudHost": "Cloud-Host",
+    "opt-cloudHost-desc": "GoofCord Cloud-Server-URL. Du kannst ihn selbst hosten, sieh dir das <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">repository</a> an.",
+    "inviteMessage": "Willst du beitreten",
+    "settings-encryption-unavailable": "GoofCord konnte keinen Passwort-Manager erkennen. Verschlüsselte Einstellungen werden im Klartext gespeichert. Wenn du Linux verwendest, installiere bitte gnome-libsecre* oder kwallet",
+    "opt-domOptimizer": "DOM-Optimierer",
+    "opt-domOptimizer-desc": "Verschiebt DOM-Updates, um möglicherweise die Leistung zu verbessern. Kann visuelle Artefakte verursachen."
 }
