@@ -116,12 +116,14 @@ function checkMainLayer(): void {
 
 let animationInProgress = false;
 let titlebarTimeout: NodeJS.Timeout;
+let originalTitlebarColor = "";
+let originalDragbarColor = "";
 
 export function flashTitlebar(color: string): void {
 	if (!elements.titlebar || !elements.dragBar) return;
 
-	const originalTitlebarColor = elements.titlebar.style.backgroundColor;
-	const originalDragbarColor = elements.dragBar.style.backgroundColor;
+	originalTitlebarColor = originalTitlebarColor ?? elements.titlebar.style.backgroundColor;
+	originalDragbarColor = originalDragbarColor ?? elements.dragBar.style.backgroundColor;
 
 	// Cancel any ongoing animation
 	if (animationInProgress) {
