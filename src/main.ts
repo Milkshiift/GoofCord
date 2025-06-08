@@ -73,7 +73,8 @@ function setFlags() {
     ["enable-hardware-overlays", "single-fullscreen,single-on-top,underlay"],
     ["autoplay-policy", "no-user-gesture-required"],
     ["enable-speech-dispatcher"],
-    ["disable-http-cache"],
+    ["disable-http-cache"], // Work around https://github.com/electron/electron/issues/40777
+    ["gtk-version", "3"], // https://github.com/electron/electron/issues/46538
     // disable renderer backgrounding to prevent the app from unloading when in the background
     ["disable-renderer-backgrounding"],
     ["disable-background-timer-throttling"],
