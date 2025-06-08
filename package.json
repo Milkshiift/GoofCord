@@ -25,10 +25,10 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/bun": "^1.2.15",
-    "@types/node": "^22.15.29",
+    "@types/node": "^22.15.30",
     "@types/stegcloak": "^1.0.2",
     "@vencord/types": "^1.11.5",
-    "electron": "^36.3.2",
+    "electron": "^36.4.0",
     "electron-builder": "^26.0.12",
     "source-map-support": "github:onigoetz/node-source-map-support",
     "typescript": "^5.8.3"

@@ -61,6 +61,10 @@ function setFlags() {
     }
   }
 
+  if (process.platform === "win32") {
+    disableFeatures.push("CalculateNativeWinOcclusion");
+  }
+
   const switches = [
     ["enable-gpu-rasterization"],
     ["enable-zero-copy"],
@@ -70,6 +74,10 @@ function setFlags() {
     ["autoplay-policy", "no-user-gesture-required"],
     ["enable-speech-dispatcher"],
     ["disable-http-cache"],
+    // disable renderer backgrounding to prevent the app from unloading when in the background
+    ["disable-renderer-backgrounding"],
+    ["disable-background-timer-throttling"],
+    ["disable-disable-backgrounding-occluded-windows"],
     ["disable-features", disableFeatures.join(",")],
     ["enable-features", enableFeatures.join(",")],
   ];
