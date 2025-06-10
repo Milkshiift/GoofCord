@@ -101,5 +101,16 @@
     "yes": "Si",
     "no": "No",
     "opt-cloudHost": "Host en la nube",
-    "opt-cloudHost-desc": "URL del servidor en la nube de GoofCord: ¿Te gustaría hostear GoofCord? Visita el <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">repositorio oficial</a> para obtener más información y comenzar."
+    "opt-cloudHost-desc": "URL del servidor en la nube de GoofCord: ¿Te gustaría hostear GoofCord? Visita el <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">repositorio oficial</a> para obtener más información y comenzar.",
+    "category-appearance": "Apariencia",
+    "opt-trayIcon": "Icono del tray",
+    "opt-autoSaveCloud": "Guardado automático",
+    "opt-autoSaveCloud-desc": "Guardar automáticamente las configuraciones en la nube cuando cambian.",
+    "opt-disableAltMenu": "Desactivar el menú de aplicaciones",
+    "opt-disableAltMenu-desc": "Evita que la tecla Alt abra el menú de la aplicación.",
+    "opt-trayIcon-desc": "Qué icono del tray usar. Intentos simbólicos de imitar los iconos monocromáticos de Gnome.",
+    "opt-renderingOptimizations": "Optimizaciones de renderizado",
+    "opt-renderingOptimizations-desc": "Aplica optimizaciones CSS para mejorar la fluidez del desplazamiento. Puede provocar que el texto se vea borroso si se usa con algunos temas.",
+    "opt-forceDedicatedGPU": "Forzar GPU dedicada",
+    "opt-forceDedicatedGPU-desc": "Obliga a GoofCord a utilizar una GPU dedicada si está disponible."
 }
