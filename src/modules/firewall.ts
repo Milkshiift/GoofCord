@@ -14,6 +14,12 @@ export function initFirewall() {
 	const blockedStrings = getConfigOrDefault("blockedStrings");
 	const allowedStrings = getConfigOrDefault("allowedStrings");
 
+	if (!getConfig("modNames").includes("vencord")) {
+		// The allowlist includes sentry.js for Vencord's NoTrack plugin to properly block it.
+		// But if Vencord is not used, blocking it is more useful.
+		allowedStrings.splice(allowedStrings.indexOf("discord.com/assets/sentry."), 1);
+	}
+
 	// If blocklist is not empty
 	if (blocklist[0] !== "") {
 		// Blocking URLs. This list works in tandem with "blockedStrings" list.
