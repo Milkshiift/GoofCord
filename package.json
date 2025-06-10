@@ -25,7 +25,7 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/bun": "^1.2.15",
-    "@types/node": "^22.15.30",
+    "@types/node": "^24.0.0",
     "@types/stegcloak": "^1.0.2",
     "@vencord/types": "^1.11.5",
     "electron": "^36.4.0",
@@ -43,7 +43,7 @@
   },
   "optionalDependencies": {
     "@vencord/venmic": "^6.1.0",
-    "venbind": "0.1.6"
+    "venbind": "0.1.7"
   },
   "trustedDependencies": [
     "@biomejs/biome",

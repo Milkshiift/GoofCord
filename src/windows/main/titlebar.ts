@@ -69,8 +69,11 @@ function addCustomTitlebar(): void {
 function modifyDiscordBar(): void {
 	if (!customTitlebarEnabled) return;
 
-	const bar = document.querySelector('[data-windows]');
-	if (!bar) return;
+	const bar = document.querySelector('div[class^="bar_"]:has(>[class^="title_"])');
+	if (!bar) {
+		console.error("Failed to find Discord title bar");
+		return;
+	}
 	elements.titlebar = bar as HTMLElement;
 
 	// trigger CSS rules that show custom titlebar
