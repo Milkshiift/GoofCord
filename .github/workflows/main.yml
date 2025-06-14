@@ -55,4 +55,5 @@ jobs:
       - name: Package GoofCord
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_IDENTITY_AUTO_DISCOVERY: false
         run: electron-builder ${{ matrix.arch }} --${{ matrix.name }} ${{ matrix.targets }} --publish=always
