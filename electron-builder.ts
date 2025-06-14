@@ -68,10 +68,9 @@ export const config: Configuration = {
             }
         ],
         icon: "build/icon.icns",
-        hardenedRuntime: true,
+        darkModeSupport: true,
+        identity: "-",
         entitlements: "build/entitlements.mac.plist",
-        entitlementsInherit: "build/entitlements.mac.plist",
-        identity: null,
         extendInfo: {
             NSMicrophoneUsageDescription: "This app needs access to the microphone",
             NSCameraUsageDescription: "This app needs access to the camera",
