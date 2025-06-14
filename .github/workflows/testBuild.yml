@@ -30,24 +30,27 @@ jobs:
       - name: Github checkout
         uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
+      - name: Install Python setuptools
+        if: matrix.name == 'mac'
+        run: brew install python-setuptools
+
+      - uses: oven-sh/setup-bun@v2
         with:
-          version: latest
+          bun-version: latest
 
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22.x"
-          cache: "pnpm"
+          node-version: "24.x"
 
       - name: Install Node dependencies
-        run: pnpm install --frozen-lockfile
+        run: bun install --frozen-lockfile
 
       - name: Install electron-builder globally
-        run: pnpm add electron-builder -g
+        run: bun add electron-builder -g
 
       - name: Build GoofCord
-        run: pnpm run build
+        run: bun run build
 
       - name: Package GoofCord
         run: electron-builder ${{ matrix.arch }} --${{ matrix.name }} ${{ matrix.targets }} --publish=never
