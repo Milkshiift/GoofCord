@@ -69,7 +69,7 @@ export const config: Configuration = {
         ],
         icon: "build/icon.icns",
         darkModeSupport: true,
-        identity: "-",
+        identity: "",
         entitlements: "build/entitlements.mac.plist",
         entitlementsInherit: "build/entitlements.mac.plist",
         extendInfo: {
@@ -79,6 +79,10 @@ export const config: Configuration = {
             "com.apple.security.device.camera": true
         }
     },
+    electronFuses: {
+        runAsNode: false,
+        onlyLoadAppFromAsar: true
+    }
 };
 
 export default config;

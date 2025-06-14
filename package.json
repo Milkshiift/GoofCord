@@ -29,7 +29,7 @@
     "@types/stegcloak": "^1.0.2",
     "@vencord/types": "^1.11.5",
     "electron": "^36.4.0",
-    "electron-builder": "^25.1.8",
+    "electron-builder": "^26.0.16",
     "source-map-support": "github:onigoetz/node-source-map-support",
     "typescript": "^5.8.3"
   },
