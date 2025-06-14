@@ -72,7 +72,6 @@ export const config: Configuration = {
         identity: "-",
         entitlements: "build/entitlements.mac.plist",
         entitlementsInherit: "build/entitlements.mac.plist",
-        forceCodeSigning: true,
         extendInfo: {
             NSMicrophoneUsageDescription: "This app needs access to the microphone",
             NSCameraUsageDescription: "This app needs access to the camera",
@@ -80,10 +79,6 @@ export const config: Configuration = {
             "com.apple.security.device.camera": true
         }
     },
-    electronFuses: {
-        runAsNode: false,
-        onlyLoadAppFromAsar: true
-    }
 };
 
 export default config;
