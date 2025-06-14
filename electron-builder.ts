@@ -71,6 +71,8 @@ export const config: Configuration = {
         darkModeSupport: true,
         identity: "-",
         entitlements: "build/entitlements.mac.plist",
+        entitlementsInherit: "build/entitlements.mac.plist",
+        forceCodeSigning: true,
         extendInfo: {
             NSMicrophoneUsageDescription: "This app needs access to the microphone",
             NSCameraUsageDescription: "This app needs access to the camera",
