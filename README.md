@@ -55,7 +55,7 @@ And if you want to compile it yourself, here's how:
 
 ## Short FAQ
 ### Need Support? Join Our Discord!
-[![](https://dcbadge.vercel.app/api/server/CZc4bpnjmm)](https://discord.gg/CZc4bpnjmm)
+[![](https://dcbadge.limes.pink/api/server/CZc4bpnjmm)](https://discord.gg/CZc4bpnjmm)
 
 ### Where is the long FAQ?
 - [On the Wiki](https://github.com/Milkshiift/GoofCord/wiki/FAQ)
