@@ -1,9 +1,9 @@
 import path from "node:path";
 import { BrowserWindow, ipcMain, shell } from "electron";
+import { cachedConfig, getConfig } from "../../config.ts";
+import type { Config } from "../../configTypes.d.ts";
 import { i, initLocalization } from "../../modules/localization.ts";
 import { dirname, getAsset, getCustomIcon, getDisplayVersion, userDataPath } from "../../utils.ts";
-import type { Config } from "../../configTypes.d.ts";
-import { cachedConfig, getConfig } from "../../config.ts";
 import { saveCloud } from "./cloud/cloud.ts";
 
 export let settingsWindow: BrowserWindow;

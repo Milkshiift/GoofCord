@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { app, safeStorage } from "electron";
-import packageInfo from "../package.json" assert { type: "json" };
+import packageInfo from "../package.json" with { type: "json" };
 import { getConfig } from "./config.ts";
 
 try {

@@ -1,10 +1,10 @@
 import { createRequire } from "node:module";
+import pc from "picocolors";
 import type { Venbind as VenbindType } from "venbind";
 import { getAsset } from "../utils.ts";
 import { mainWindow } from "../windows/main/main.ts";
-import pc from "picocolors";
 
-let venbind: VenbindType | undefined = undefined;
+let venbind: VenbindType | undefined ;
 let venbindLoadAttempted = false;
 export async function obtainVenbind() {
     if (venbind !== undefined || process.argv.some((arg) => arg === "--no-venbind") || venbindLoadAttempted) return venbind;

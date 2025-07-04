@@ -11,7 +11,7 @@ window.GCDP = {};
 
 interface PatchData {
     patches: Omit<Patch, "plugin">[];
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    // biome-ignore lint/suspicious/noExplicitAny: Needed
     [key: string]: any;
 }
 

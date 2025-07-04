@@ -1,4 +1,4 @@
-import { type NativeImage, app, nativeImage } from "electron";
+import { app, type NativeImage, nativeImage } from "electron";
 import { getTrayIcon, tray } from "../tray.ts";
 import { getAsset } from "../utils.ts";
 import { mainWindow } from "../windows/main/main.ts";

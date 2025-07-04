@@ -1,4 +1,4 @@
-import { Menu, Tray, app, dialog, nativeImage } from "electron";
+import { app, dialog, Menu, nativeImage, Tray } from "electron";
 import { getConfig } from "./config.ts";
 import { i } from "./modules/localization.ts";
 import { saveState } from "./modules/windowStateManager.ts";
