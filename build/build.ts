@@ -31,7 +31,7 @@ const bundleResult = await Bun.build({
   external: ["electron"],
   target: "node",
   splitting: true,
-  entrypoints: await searchPreloadFiles("src", [path.join("src", "main.ts")]),
+  entrypoints: await searchPreloadFiles("src", [path.join("src", "main.ts"), path.join("src", "modules", "arrpcWorker.ts")]),
   outdir: "ts-out",
   packages: "bundle",
 });
@@ -39,6 +39,8 @@ if (bundleResult.logs.length) console.log(bundleResult.logs);
 
 await copyVenmic();
 await copyVenbind();
+
+if (process.platform !== "win32") await removeKoffi("./ts-out");
 
 await renamePreloadFiles("./ts-out");
 await fs.promises.cp("./assets/", "./ts-out/assets", { recursive: true });
@@ -131,6 +133,27 @@ function copyVenbind() {
 
 async function copyFile(src: string, dest: string) {
   await Bun.write(dest, Bun.file(src));
+}
+
+async function removeKoffi(directory: string) {
+  try {
+    const files = await fs.promises.readdir(directory);
+    let removedCount = 0;
+
+    for (const file of files) {
+      if (file.startsWith('koffi')) {
+        const filePath = path.join(directory, file);
+        try {
+          await Bun.file(filePath).delete();
+          removedCount++;
+        } catch (error) {
+          console.error(`Error removing ${filePath}:`, error);
+        }
+      }
+    }
+  } catch (error) {
+    console.error(`Error reading directory ${directory}:`, error);
+  }
 }
 
 console.log(pc.green("✅ Build completed! 🎉"));

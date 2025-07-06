@@ -1,28 +1,50 @@
 import { getConfig } from "../config.ts";
-import { getGoofCordFolderPath } from "../utils.ts";
+import { dirname, getGoofCordFolderPath } from "../utils.ts";
+import path from "node:path";
+import { Worker } from "node:worker_threads";
 import { mainWindow } from "../windows/main/main.ts";
+import { dialog } from "electron";
 
-let initialised = false;
+let worker: Worker | undefined;
 
 export async function initArrpc<IPCHandle>() {
-	if (!getConfig("arrpc") || initialised) return;
+	if (worker) {
+		await worker.terminate();
+		worker = undefined;
+	}
+	if (!getConfig("arrpc")) return;
+
 	try {
-		const { default: Server } = await import("arrpc");
-		const Bridge = await import("arrpc/src/bridge.js");
-		const server = new Server(getGoofCordFolderPath() + "/detectable.json");
-		server.on("activity", (data: object) => Bridge.send(data));
-		server.on("invite", (code: string) => {
-			mainWindow.show();
-			Bridge.send({
-				cmd: "INVITE_BROWSER",
-				args: {
-					"code": code
-				}
-			})
+		worker = new Worker(path.join(dirname(), "./modules/arrpcWorker.js"), {
+			workerData: {
+				detectablePath: getGoofCordFolderPath() + "/detectable.json"
+			},
+		} as object);
+
+		worker.on("message", (e: { eventType: string; }) => {
+			const { eventType } = e;
+			if (eventType === "showMainWindow") {
+				mainWindow.show();
+			}
 		});
 
-		initialised = true;
+		worker.on("error", (e: Error) => {
+			console.error("The arRPC worker encountered a fatal error:", e);
+			dialog.showMessageBox(mainWindow, {
+				type: "error",
+				title: "GoofCord was unable to start arRPC (Rich Presence)",
+				message: e.message
+			});
+			worker?.terminate();
+			worker = undefined;
+		});
+
+		worker.on("exit", (code) => {
+			if (code !== 0) console.error(`arRPC worker stopped unexpectedly with exit code: ${code}`);
+			worker = undefined;
+		});
 	} catch (e) {
-		console.error("Failed to start arRPC server", e);
+		console.error("Failed to start arRPC worker:", e);
+		worker = undefined;
 	}
 }
