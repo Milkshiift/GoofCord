@@ -1,11 +1,11 @@
-import fs from "node:fs/promises";
 import * as path from "node:path";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
 import pc from "picocolors";
+import adblocker from "../../../assets/adblocker.js" with { type: "text" };
 import { getConfig } from "../../config.ts";
 import { getUserAgent } from "../../modules/agent.ts";
 import { adjustWindow } from "../../modules/windowStateManager.ts";
-import { dirname, getAsset, getCustomIcon } from "../../utils.ts";
+import { dirname, getCustomIcon } from "../../utils.ts";
 import { registerScreenshareHandler } from "../screenshare/main.ts";
 
 export let mainWindow: BrowserWindow;
@@ -121,7 +121,6 @@ function setWindowOpenHandler() {
 }
 
 async function initYoutubeAdblocker() {
-	const adblocker = await fs.readFile(getAsset("adblocker.js"), "utf8");
 	mainWindow.webContents.on("frame-created", (_, { frame }) => {
 		if (!frame) return;
 		frame.once("dom-ready", () => {

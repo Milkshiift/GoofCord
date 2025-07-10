@@ -1,5 +1,6 @@
-import fs from "node:fs/promises";
 import { ipcRenderer, webFrame } from "electron";
+// @ts-ignore
+import titlebarCss from "../../../assets/css/titlebar.css" with { type: "text" };
 
 interface TitlebarElements {
 	titlebar: HTMLElement | null;
@@ -91,9 +92,7 @@ export async function injectTitlebar(): Promise<void> {
 		checkMainLayer();
 
 		try {
-			const cssPath = ipcRenderer.sendSync("utils:getAsset", "css/titlebar.css");
-			const cssContent = await fs.readFile(cssPath, "utf8");
-			webFrame.insertCSS(cssContent);
+			webFrame.insertCSS(titlebarCss);
 		} catch (error) {
 			console.error('Failed to load titlebar CSS:', error);
 		}
