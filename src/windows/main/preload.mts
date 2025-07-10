@@ -1,7 +1,7 @@
 import "./bridge.ts";
 import { ipcRenderer, webFrame } from "electron";
 import { error, log } from "../../modules/logger.ts";
-import { getDefaultScripts } from "./defaultAssets.ts";
+import { getDefaultScripts } from "./defaultScripts.ts";
 import { injectTitlebar } from "./titlebar.ts";
 import "./screenshare.ts";
 import { startKeybindWatcher } from "./keybinds.ts";
