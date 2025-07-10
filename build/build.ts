@@ -6,6 +6,7 @@ import { genIpcHandlers } from "./genIpcHandlers.ts";
 import { genSettingsLangFile } from "./genSettingsLangFile.ts";
 import { generateDTSFile } from "./genSettingsTypes.ts";
 import pc from "picocolors";
+import { globImporterPlugin } from "./globbyGlob.ts";
 
 const isDev = process.argv.some((arg) => arg === "--dev" || arg === "-d");
 
@@ -34,6 +35,7 @@ const bundleResult = await Bun.build({
   entrypoints: await searchPreloadFiles("src", [path.join("src", "main.ts"), path.join("src", "modules", "arrpcWorker.ts")]),
   outdir: "ts-out",
   packages: "bundle",
+  plugins: [globImporterPlugin],
 });
 if (bundleResult.logs.length) console.log(bundleResult.logs);
 
@@ -44,6 +46,8 @@ if (process.platform !== "win32") await removeKoffi("./ts-out");
 
 await renamePreloadFiles("./ts-out");
 await fs.promises.cp("./assets/", "./ts-out/assets", { recursive: true });
+// Lang files are prebaked
+await fs.promises.rm("./ts-out/assets/lang", { recursive: true, force: true });
 
 async function searchPreloadFiles(directory: string, result: string[] = []) {
   await traverseDirectory(directory, async (filePath: string) => {
@@ -135,6 +139,7 @@ async function copyFile(src: string, dest: string) {
   await Bun.write(dest, Bun.file(src));
 }
 
+// Koffi is an arrpc dependency that is only used in Windows
 async function removeKoffi(directory: string) {
   try {
     const files = await fs.promises.readdir(directory);
