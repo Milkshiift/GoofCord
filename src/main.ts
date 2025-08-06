@@ -13,18 +13,12 @@ if (isDev()) {
 
 console.log("GoofCord", getDisplayVersion());
 
-/*
-   ! Do not use getConfig or i (localization) in this file
-*/
-setFlags();
 if (!app.requestSingleInstanceLock()) app.exit();
 
 async function main() {
   await loadConfig();
+  setFlags(); // Flags should be set as early as possible
   await initLocalization();
-
-  // Not in loader.ts because it may load too late
-  if (getConfig("forceDedicatedGPU")) app.commandLine.appendSwitch("force_high_performance_gpu");
 
   const loader = await import("./loader");
   await loader.load();
@@ -66,11 +60,6 @@ function setFlags() {
   }
 
   const switches = [
-    ["enable-gpu-rasterization"],
-    ["enable-zero-copy"],
-    ["disable-low-res-tiling"],
-    ["disable-site-isolation-trials"],
-    ["enable-hardware-overlays", "single-fullscreen,single-on-top,underlay"],
     ["autoplay-policy", "no-user-gesture-required"],
     ["enable-speech-dispatcher"],
     ["disable-http-cache"], // Work around https://github.com/electron/electron/issues/40777
@@ -82,6 +71,21 @@ function setFlags() {
     ["disable-features", disableFeatures.join(",")],
     ["enable-features", enableFeatures.join(",")],
   ];
+
+  if (getConfig("performanceFlags")) {
+    console.log("Setting performance switches");
+    switches.push(
+        ["enable-gpu-rasterization"],
+        ["enable-zero-copy"],
+        ["disable-low-res-tiling"],
+        ["disable-site-isolation-trials"],
+        ["enable-hardware-overlays", "single-fullscreen,single-on-top,underlay"],
+    );
+  }
+
+  if (getConfig("forceDedicatedGPU")) {
+    switches.push(["force_high_performance_gpu"]);
+  }
 
   for (const [key, val] of switches) {
     app.commandLine.appendSwitch(key, val);

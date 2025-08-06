@@ -266,6 +266,12 @@ export const settingsSchema = {
 			description: "Forces GoofCord to use a dedicated GPU if available.",
 			inputType: "checkbox",
 		},
+		performanceFlags: {
+			name: "Performance flags",
+			defaultValue: false,
+			description: "Enables additional Chromium flags for performance. Recommended ON unless causes issues.",
+			inputType: "checkbox",
+		},
 		firewall: {
 			name: "Firewall",
 			defaultValue: true,

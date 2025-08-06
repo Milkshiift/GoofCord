@@ -92,6 +92,8 @@
   "opt-renderingOptimizations-desc": "Applies CSS optimizations to improve scrolling smoothness. May cause text to become blurry if used with some themes.",
   "opt-forceDedicatedGPU": "Force dedicated GPU",
   "opt-forceDedicatedGPU-desc": "Forces GoofCord to use a dedicated GPU if available.",
+  "opt-performanceFlags": "Performance flags",
+  "opt-performanceFlags-desc": "Enables additional Chromium flags for performance. Recommended ON unless causes issues.",
   "opt-firewall": "Firewall",
   "opt-firewall-desc": "Never disable unless for debugging.",
   "opt-customFirewallRules": "Custom firewall rules",
