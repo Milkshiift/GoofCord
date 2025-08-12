@@ -51,7 +51,10 @@ export const globImporterPlugin: BunPlugin = {
 
                         const varName = `__glob_${counter++}`;
 
-                        imports.push(`import ${varName} from "${absolutePath}";`);
+                        // Fix for Windows: Convert backslashes to forward slashes for import paths
+                        const importPath = absolutePath.replace(/\\/g, '/');
+
+                        imports.push(`import ${varName} from "${importPath}";`);
 
                         objectEntries.push(`"${keyName}": ${varName}`);
                     }
