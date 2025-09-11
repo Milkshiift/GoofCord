@@ -448,11 +448,11 @@ input[type="file"]::file-selector-button:active {
 
 /* ==================== Multiselect Dropdown ==================== */
 .multiselect-dropdown {
-    padding: 8px 12px; /* Adjusted padding */
+    padding: 8px 12px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 6px 8px; /* Gap between selected items */
+    gap: 6px 8px;
     position: relative;
     cursor: pointer;
     background-color: var(--bg-input);
@@ -460,12 +460,12 @@ input[type="file"]::file-selector-button:active {
     border-radius: var(--border-radius-md);
     transition: border-color var(--transition-duration-fast) var(--easing-smooth),
     box-shadow var(--transition-duration-fast) var(--easing-smooth);
-    min-height: 42px; /* Consistent height with other inputs */
+    min-height: 42px;
 
     &:hover {
         border-color: var(--border-color-focus);
     }
-    &.open { /* When dropdown is open */
+    &.open {
         border-color: var(--color-primary);
         box-shadow: 0 0 0 2px var(--color-primary-ultralight);
     }
@@ -482,8 +482,6 @@ input[type="file"]::file-selector-button:active {
         align-items: center;
         gap: 5px;
     }
-    /* Example: Add a remove button to optext if needed */
-    /* .optext .remove-item { background: transparent; border: none; color: var(--font-color-on-primary); opacity: 0.7; cursor: pointer; &:hover { opacity: 1; } } */
 
     .placeholder {
         color: var(--font-color-dim);
@@ -496,11 +494,11 @@ input[type="file"]::file-selector-button:active {
     min-width: max(100%, 7em);
     top: calc(100% + 5px);
     left: 0;
-    z-index: 1001; /* Higher than header */
-    background: var(--bg-secondary); /* Consistent with elevated elements */
+    z-index: 1001;
+    background: var(--bg-secondary);
     border: 1px solid var(--border-color-divider);
     border-radius: var(--border-radius-md);
-    box-shadow: var(--shadow-lg); /* More pronounced shadow for dropdown */
+    box-shadow: var(--shadow-lg);
     max-height: 0;
     opacity: 0;
     overflow: hidden;
@@ -510,20 +508,20 @@ input[type="file"]::file-selector-button:active {
     transform: translateY(-10px);
     pointer-events: none;
 
-    &:not(.dropdown-hidden) { /* When visible */
-        max-height: 250px; /* Allow more items */
+    &:not(.dropdown-hidden) {
+        max-height: 250px;
         opacity: 1;
         transform: translateY(0);
         pointer-events: auto;
-        overflow-y: auto; /* Scroll for list items */
+        overflow-y: auto;
     }
 
     .multiselect-dropdown-list {
-        padding: 5px; /* Padding around the list items */
+        padding: 5px;
 
-        div { /* List item */
+        div {
             width: 100%;
-            padding: 10px 12px; /* More padding */
+            padding: 5px 10px;
             cursor: pointer;
             transition: background-color var(--transition-duration-fast) var(--easing-smooth),
             color var(--transition-duration-fast) var(--easing-smooth);
@@ -539,7 +537,7 @@ input[type="file"]::file-selector-button:active {
             }
 
             &.checked {
-                border-left: var(--color-primary) 3px solid;
+                background-color: var(--color-primary);
                 color: var(--font-color-on-primary);
                 font-weight: 500;
             }
