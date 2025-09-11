@@ -1,6 +1,28 @@
-// @ts-ignore See /build/globbyGlob.ts
+// @ts-expect-error See /build/globbyGlob.ts
 import allLangs from "glob-filenames:../assets/lang/*.json";
 import type { ConfigKey, ConfigValue } from "./configTypes";
+
+const spellcheckLangs = [
+	'af',    'bg',             'ca',
+	'cs',    'cy',             'da',
+	'de',    'de-DE',          'el',
+	'en',    'en-AU',          'en-CA',
+	'en-GB', 'en-GB-oxendict', 'en-US',
+	'es',    'es-419',         'es-AR',
+	'es-ES', 'es-MX',          'es-US',
+	'et',    'fa',             'fo',
+	'fr',    'fr-FR',          'he',
+	'hi',    'hr',             'hu',
+	'hy',    'id',             'it',
+	'it-IT', 'ko',             'lt',
+	'lv',    'nb',             'nl',
+	'pl',    'pt',             'pt-BR',
+	'pt-PT', 'ro',             'ru',
+	'sh',    'sk',             'sl',
+	'sq',    'sr',             'sv',
+	'ta',    'tg',             'tr',
+	'uk',    'vi'
+];
 
 export interface SettingEntry {
 	name: ConfigKey;
@@ -66,17 +88,28 @@ export const settingsSchema = {
 			inputType: "checkbox",
 			onChange: "loader:setAutoLaunchState",
 		},
+		updateNotification: {
+			name: "Update notification",
+			defaultValue: true,
+			description: "Get notified about new version releases.",
+			inputType: "checkbox",
+		},
 		spellcheck: {
 			name: "Spellcheck",
 			defaultValue: true,
 			description: "Enables spellcheck for input fields.",
 			inputType: "checkbox",
 		},
-		updateNotification: {
-			name: "Update notification",
-			defaultValue: true,
-			description: "Get notified about new version releases.",
-			inputType: "checkbox",
+		spellcheckLanguages: {
+			name: "Spellcheck languages",
+			defaultValue: [],
+			description: "A list of languages to check spelling for. When none are selected, the system default is used.",
+			inputType: "dropdown-multiselect",
+			options: spellcheckLangs,
+			showAfter: {
+				key: "spellcheck",
+				condition: (value) => value,
+			}
 		},
 	},
 	"Appearance": {

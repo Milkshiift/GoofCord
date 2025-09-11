@@ -46,6 +46,11 @@ async function doAfterDefiningTheWindow() {
 	// Set the user agent for the web contents based on the Chrome version.
 	mainWindow.webContents.userAgent = getUserAgent(process.versions.chrome);
 
+	const spellcheckLanguages = getConfig("spellcheckLanguages");
+	if (spellcheckLanguages) {
+		mainWindow.webContents.session.setSpellCheckerLanguages(spellcheckLanguages);
+	}
+
 	void mainWindow.loadURL(getConfig("discordUrl"));
 
 	mainWindow.on("close", (event) => {
