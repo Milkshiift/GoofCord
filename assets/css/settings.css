@@ -461,15 +461,17 @@ input[type="file"]::file-selector-button:active {
     transition: border-color var(--transition-duration-fast) var(--easing-smooth),
     box-shadow var(--transition-duration-fast) var(--easing-smooth);
     min-height: 42px;
+    outline: none;
 
     &:hover {
         border-color: var(--border-color-focus);
     }
-    &.open {
+
+    &.open,
+    &:focus-visible {
         border-color: var(--color-primary);
         box-shadow: 0 0 0 2px var(--color-primary-ultralight);
     }
-
 
     .optext { /* Selected item pill */
         background-color: var(--color-primary);
@@ -519,12 +521,10 @@ input[type="file"]::file-selector-button:active {
     .multiselect-dropdown-list {
         padding: 5px;
 
-        div {
+        .multiselect-dropdown-list-option {
             width: 100%;
             padding: 5px 10px;
             cursor: pointer;
-            transition: background-color var(--transition-duration-fast) var(--easing-smooth),
-            color var(--transition-duration-fast) var(--easing-smooth);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -534,15 +534,25 @@ input[type="file"]::file-selector-button:active {
             &:hover {
                 background-color: var(--bg-primary);
                 color: var(--font-color-strong);
+                transition: background-color var(--transition-duration-fast) var(--easing-smooth),
+                color var(--transition-duration-fast) var(--easing-smooth);
+            }
+
+            &.highlighted {
+                background-color: var(--bg-primary);
+                color: var(--font-color-strong);
             }
 
             &.checked {
                 background-color: var(--color-primary);
                 color: var(--font-color-on-primary);
                 font-weight: 500;
-            }
-            &.checked:hover {
-                background-color: var(--color-primary-hover);
+                transition: background-color var(--transition-duration-fast) var(--easing-smooth);
+
+                &.highlighted,
+                &:hover {
+                    background-color: var(--color-primary-hover);
+                }
             }
         }
     }
