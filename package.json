@@ -24,12 +24,12 @@
   },
   "homepage": "https://github.com/Milkshiift/GoofCord",
   "devDependencies": {
-    "@biomejs/biome": "^2.1.4",
-    "@types/bun": "^1.2.20",
-    "@types/node": "^24.2.1",
+    "@biomejs/biome": "^2.2.4",
+    "@types/bun": "^1.2.21",
+    "@types/node": "^24.3.1",
     "@types/stegcloak": "^1.0.2",
     "@vencord/types": "^1.11.5",
-    "electron": "^37.2.6",
+    "electron": "^38.1.0",
     "electron-builder": "^26.0.12",
     "source-map-support": "github:onigoetz/node-source-map-support",
     "typescript": "^5.9.2"
