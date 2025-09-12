@@ -1,6 +1,6 @@
 {
     "welcomeMessage": "Benvenuto su GoofCord!\nCambia le impostazioni a tuo piacimento e, una volta fatto, chiudi la finestra per accedere a Discord.\nBuona permanenza!",
-    "inviteMessage": "Vuoi entrare?",
+    "inviteMessage": "Vuoi entrare",
     "yes": "Sì",
     "no": "No",
     "goofcord-about": "Informazioni su GoofCord",
@@ -113,5 +113,8 @@
     "opt-cloudEncryptionKey-desc": "Lascialo vuoto per non usare la crittografia e non salvare le password di crittografia dei messaggi sul cloud. Non potrai recuperare la password se la perdi.",
     "opt-button-loadFromCloud": "Carica dal cloud",
     "opt-button-saveToCloud": "Salva sul cloud",
-    "opt-button-deleteCloud": "Elimina dati sul cloud"
+    "opt-button-deleteCloud": "Elimina dati sul cloud",
+    "opt-spellcheckLanguages": "Correttore Ortografico Lingue",
+    "opt-spellcheckLanguages-desc": "Un elenco di lingue di cui controllare l'ortografia. Se non se ne seleziona nessuna verrà utilizzata quella di default del sistema.",
+    "opt-customJsBundle-desc": "Lascia vuoto o inserisci uno spazio"
 }
