@@ -106,11 +106,21 @@ export function isEncryptionAvailable<IPCOn>() {
 }
 
 export function encryptSafeStorage<IPCOn>(plaintextString: string) {
-	return isEncryptionAvailable() ? safeStorage.encryptString(plaintextString).toString("base64") : plaintextString;
+	try {
+		return isEncryptionAvailable() ? safeStorage.encryptString(plaintextString).toString("base64") : plaintextString;
+	} catch (e) {
+		console.error(e);
+		return plaintextString;
+	}
 }
 
 export function decryptSafeStorage<IPCOn>(encryptedBase64: string) {
-	return isEncryptionAvailable() ? safeStorage.decryptString(Buffer.from(encryptedBase64, "base64")) : encryptedBase64;
+	try {
+		return isEncryptionAvailable() ? safeStorage.decryptString(Buffer.from(encryptedBase64, "base64")) : encryptedBase64;
+	} catch (e) {
+		console.error(e);
+		return encryptedBase64;
+	}
 }
 
 export async function saveFileToGCFolder<IPCHandle>(filePath: string, content: string) {
