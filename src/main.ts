@@ -63,7 +63,6 @@ function setFlags() {
     ["autoplay-policy", "no-user-gesture-required"],
     ["enable-speech-dispatcher"],
     ["disable-http-cache"], // Work around https://github.com/electron/electron/issues/40777
-    ["gtk-version", "3"], // https://github.com/electron/electron/issues/46538
     // disable renderer backgrounding to prevent the app from unloading when in the background
     ["disable-renderer-backgrounding"],
     ["disable-background-timer-throttling"],
@@ -75,6 +74,7 @@ function setFlags() {
   if (getConfig("performanceFlags")) {
     console.log("Setting performance switches");
     switches.push(
+        ["ignore-gpu-blocklist"]
         ["enable-gpu-rasterization"],
         ["enable-zero-copy"],
         ["disable-low-res-tiling"],
