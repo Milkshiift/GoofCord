@@ -74,8 +74,7 @@ And if you want to compile it yourself, here's how:
 
 ### How do I run GoofCord natively on Wayland?
 - GoofCord should run natively out of the box, but if it doesn't, run with these arguments:    
-`--enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform-hint=auto`    
-If GoofCord shows a black screen, also include this argument: `--disable-gpu-sandbox`
+`--enable-features=UseOzonePlatform --ozone-platform-hint=auto`
 
 ### Seeking the Source Code? 🕵️‍♂️
 - You can find our source code on [GitHub](https://github.com/Milkshiift/GoofCord/).

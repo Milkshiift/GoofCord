@@ -29,10 +29,6 @@ export const config: Configuration = {
                 ]
             }
         ],
-        executableArgs: [
-            "--enable-features=UseOzonePlatform,WaylandWindowDecorations",
-            "--ozone-platform-hint=auto"
-        ],
         desktop: {
             entry: {
                 Name: "GoofCord",

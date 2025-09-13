@@ -5,7 +5,7 @@
   "main": "ts-out/main.js",
   "scripts": {
     "build": "bun build/build.ts",
-    "start": "bun run build --dev && electron ./ts-out/main.js --dev --enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform-hint=auto --enable-source-maps",
+    "start": "bun run build --dev && electron ./ts-out/main.js --dev --enable-source-maps",
     "startWithLoginFix": "bun run fixLogin && bun run start",
     "packageLinux": "bun run build && electron-builder --linux",
     "packageWindows": "bun run build && electron-builder --win",

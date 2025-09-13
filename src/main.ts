@@ -74,7 +74,7 @@ function setFlags() {
   if (getConfig("performanceFlags")) {
     console.log("Setting performance switches");
     switches.push(
-        ["ignore-gpu-blocklist"]
+        ["ignore-gpu-blocklist"],
         ["enable-gpu-rasterization"],
         ["enable-zero-copy"],
         ["disable-low-res-tiling"],
