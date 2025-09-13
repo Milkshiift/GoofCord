@@ -1,5 +1,5 @@
 function optimize(orig) {
-    const delayedClasses = ["activity", "gif", "avatar", "imagePlaceholder", "reaction", "hoverBar"];
+    const delayedClasses = ["activity", "gif", "avatar", "imagePlaceholder", "hoverBar"];
 
     return function (...args) {
         const element = args[0];
