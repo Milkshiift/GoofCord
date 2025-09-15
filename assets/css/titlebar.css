@@ -15,6 +15,7 @@ div[class^="bar_"][__goofcord-custom-titlebar="true"] > [class^="leading"]::afte
     mask-repeat: no-repeat;
     background-color: var(--text-muted);
     height: 9px;
+    margin-left: 20px;
 }
 
 /* Move top right buttons to the left to make space for
