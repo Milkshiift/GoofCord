@@ -12,8 +12,8 @@
   <project_group>GoofCord</project_group>
   <description>
     <ul>
-      <li>With Privacy in mind: GoofCord blocks all tracking and uses multiple techniques like message encryption to improve your privacy and security. Learn more on the GitHub wiki</li>
-      <li>Fast and Performant: Glide through your chats with GoofCord's superior speed and responsiveness compared to the official client.</li>
+      <li>With Privacy in mind: GoofCord blocks as much tracking as possible and uses multiple techniques like message encryption to improve your privacy and security. Learn more on the GitHub wiki</li>
+      <li>Fast and Performant: Noticeable speed and responsiveness improvement compared to the official client.</li>
       <li>Standalone: GoofCord is a standalone client, not reliant on the original Discord client in any way.</li>
       <li>Plugins &amp; Themes support: Easily use client mods like Vencord, Equicord or Shelter for plugins and themes.</li>
       <li>Global Keybinds: Set up keybinds and use them across the system.</li>

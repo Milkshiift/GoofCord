@@ -11,8 +11,8 @@
 </div>
 
 ## Features :sparkles:
-- **:lock: With Privacy in mind**: GoofCord blocks all tracking and uses multiple techniques like message encryption to improve your privacy and security. [Learn more](https://github.com/Milkshiift/GoofCord/wiki/Privacy-FAQ)
-- **:chart_with_upwards_trend: Fast and Performant**: Glide through your chats with GoofCord's superior speed and responsiveness compared to the official client. 
+- **:lock: With Privacy in mind**: GoofCord blocks as much tracking as possible and uses multiple techniques like message encryption to improve your privacy and security. [Learn more](https://github.com/Milkshiift/GoofCord/wiki/Privacy-FAQ)
+- **:chart_with_upwards_trend: Fast and Performant**: Noticeable speed and responsiveness improvement compared to the official client. 
 - **:bookmark: Standalone**: GoofCord is a standalone application, not reliant on the original Discord client in any way.
 - **:electric_plug: Plugins & Themes support**: Easily use client mods like [Vencord](https://github.com/Vendicated/Vencord), [Equicord](https://github.com/Equicord/Equicord) or [Shelter](https://github.com/uwu/shelter) for plugins and themes.
 - **⌨️ Global Keybinds**: Set up keybinds and use them across the system
@@ -75,6 +75,9 @@ And if you want to compile it yourself, here's how:
 ### How do I run GoofCord natively on Wayland?
 - GoofCord should run natively out of the box, but if it doesn't, run with these arguments:    
 `--enable-features=UseOzonePlatform --ozone-platform-hint=auto`
+
+### Why Electron?
+- It's the right tool for this job. While Electron may not be the perfect choice for all applications, achieving a user experience on par with the official Discord client inherently requires embedding its web version within a browser/webview. Currently, no other frameworks come close to Electron in providing this capability and covering all of GoofCord's needs.
 
 ### Seeking the Source Code? 🕵️‍♂️
 - You can find our source code on [GitHub](https://github.com/Milkshiift/GoofCord/).
