@@ -110,7 +110,7 @@ function createSetting(setting: ConfigKey, entry: SettingEntry): string | "" {
 
 function createButton(id: string, entry: ButtonEntry): string {
 	const buttonText = ipcRenderer.sendSync("localization:i", `opt-${id}`);
-	return `<button onclick="${entry.onClick}">${buttonText}</button>`;
+	return `<button type="button" onclick="${entry.onClick}">${buttonText}</button>`;
 }
 
 
