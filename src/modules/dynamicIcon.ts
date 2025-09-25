@@ -37,68 +37,107 @@ export async function setBadgeCount<IPCHandle>(count: number) {
 }
 
 const trayCache = new Map<number, NativeImage>();
-async function loadTrayImage(index: number) {
-	const trayImagePath = await getTrayIcon();
-
-	const clampedIndex = Math.min(index, 10);
+export async function loadTrayImage(index: number) {
+	const clampedIndex = Math.min(index, 100);
 
 	const cached = trayCache.get(clampedIndex);
 	if (cached) return cached;
 
 	if (clampedIndex === 0) {
-		const trayImage = nativeImage.createFromPath(trayImagePath);
-		if (process.platform === "darwin") trayImage.resize({ width: 22, height: 22 });
+		const trayImage = nativeImage.createFromPath(await getTrayIcon());
+		if (process.platform === "darwin") trayImage.setTemplateImage(true);
 		trayCache.set(clampedIndex, trayImage);
 		return trayImage;
 	}
 
-	const trayImage: string = await mainWindow.webContents.executeJavaScript(`
-	(async () => {
-	let data;
+	const rendererFunction = `
+		async (baseImageDataURL, count) => {
+			const loadImage = (src) => new Promise((resolve, reject) => {
+				const img = new Image();
+				img.onload = () => resolve(img);
+				img.onerror = reject;
+				img.src = src;
+			});
 
-	canvas = document.createElement("canvas");
-	canvas.width = 128;
-	canvas.height = 128;
+			function generateBadge(num) {
+				const canvas = document.createElement("canvas");
+				const size = 64; 
+				canvas.width = size;
+				canvas.height = size;
+				const ctx = canvas.getContext("2d");
+				if (!ctx) return null;
 
-	const img = new Image();
-	img.width = 128;
-	img.height = 128;
+				ctx.fillStyle = '#f35a5a';
+				ctx.beginPath();
+				ctx.arc(size / 2, size / 2, size / 2, 0, 2 * Math.PI);
+				ctx.fill();
 
-	img.onload = () => {
-		const ctx = canvas.getContext("2d");
-		if (ctx) {
-			ctx.drawImage(img, 0, 0);
+				const text = num > 99 ? '∞' : num.toString();
+				
+				ctx.fillStyle = 'white';
+				ctx.textAlign = 'center';
+				ctx.textBaseline = 'middle';
 
-			const overlaySize = Math.round(img.width * 0.6);
+				let fontSize;
+				if (text === '∞') {
+					fontSize = size * 1.0; 
+				} else if (text.length > 1) {
+					fontSize = size * 0.7;
+				} else {
+					fontSize = size * 0.8;
+				}
+				ctx.font = \`bold \${fontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif\`;
+				
+				// better optical centering.
+				ctx.fillText(text, size / 2, size / 2 + (size * 0.04));
+				
+				return canvas;
+			}
 
-			const iconImg = new Image();
-			iconImg.width = overlaySize;
-			iconImg.height = overlaySize;
+			const finalCanvas = document.createElement("canvas");
+			const finalSize = 128; 
+			finalCanvas.width = finalSize;
+			finalCanvas.height = finalSize;
+			const ctx = finalCanvas.getContext("2d");
+			if (!ctx) return '';
 
-			iconImg.onload = () => {
-				ctx.drawImage(iconImg, img.width-overlaySize, img.height-overlaySize, overlaySize, overlaySize);
-				data = canvas.toDataURL();
-			};
+			const baseImg = await loadImage(baseImageDataURL);
+			ctx.drawImage(baseImg, 0, 0, finalSize, finalSize);
 
-			iconImg.src = "${nativeImage.createFromPath(getAsset(`badges/${clampedIndex}.png`)).toDataURL()}";
+			if (count > 0) {
+				const badgeCanvas = generateBadge(count);
+				if (badgeCanvas) {
+					const overlaySize = Math.round(finalSize * 0.60);
+					
+					const overlayOffset = finalSize - overlaySize; 
+					
+					ctx.drawImage(badgeCanvas, overlayOffset, overlayOffset, overlaySize, overlaySize);
+				}
+			}
+
+			return finalCanvas.toDataURL();
 		}
-	};
+	`;
 
-	img.src = "${nativeImage.createFromPath(trayImagePath).resize({width: 128, height: 128}).toDataURL()}";
+	const baseTrayIconDataURL = nativeImage.createFromPath(await getTrayIcon())
+		.resize({ width: 128, height: 128 })
+		.toDataURL();
 
-	while (!data) {
-		await new Promise((resolve) => setTimeout(resolve, 500));
+	const finalImageDataURL = await mainWindow.webContents.executeJavaScript(
+		`(${rendererFunction})("${baseTrayIconDataURL}", ${clampedIndex})`
+	);
+
+	if (!finalImageDataURL) {
+		console.error("Failed to generate badged tray icon in renderer.");
+		return nativeImage.createFromPath(await getTrayIcon());
 	}
-    return data;
 
-	})();
-	`);
+	const nativeTrayImage = nativeImage.createFromDataURL(finalImageDataURL);
 
-	const nativeTrayImage = nativeImage.createFromDataURL(trayImage);
-
-	if (process.platform === "darwin") nativeTrayImage.resize({ width: 22, height: 22 });
+	if (process.platform === "darwin") {
+		nativeTrayImage.setTemplateImage(true);
+	}
 
 	trayCache.set(clampedIndex, nativeTrayImage);
-
 	return nativeTrayImage;
 }
