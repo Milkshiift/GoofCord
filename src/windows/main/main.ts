@@ -59,6 +59,13 @@ async function doAfterDefiningTheWindow() {
 			mainWindow.hide();
 		}
 	});
+
+	if (getConfig("staticTitle")) {
+		mainWindow.on('page-title-updated', (event) => {
+			event.preventDefault();
+		});
+	}
+
 	subscribeToAppEvents();
 	setWindowOpenHandler();
 	registerScreenshareHandler();

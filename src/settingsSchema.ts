@@ -131,6 +131,12 @@ export const settingsSchema = {
 				},
 			}
 		},
+		staticTitle: {
+			name: "Static title",
+			defaultValue: false,
+			description: "Prevent Discord from changing the window title.",
+			inputType: "checkbox",
+		},
 		dynamicIcon: {
 			name: "Dynamic icon",
 			defaultValue: true,

@@ -1,6 +1,6 @@
 // This file is auto-generated. Any changes will be lost. See genSettingsTypes.mjs script
 
-export type ConfigKey = "locale" | "discordUrl" | "arrpc" | "minimizeToTray" | "startMinimized" | "launchWithOsBoot" | "updateNotification" | "spellcheck" | "spellcheckLanguages" | "customTitlebar" | "disableAltMenu" | "dynamicIcon" | "customIconPath" | "trayIcon" | "autoscroll" | "popoutWindowAlwaysOnTop" | "transparency" | "modNames" | "modEtagCache" | "customJsBundle" | "customCssBundle" | "noBundleUpdates" | "installDefaultShelterPlugins" | "invidiousEmbeds" | "messageEncryption" | "encryptionPasswords" | "encryptionCover" | "encryptionMark" | "domOptimizer" | "renderingOptimizations" | "forceDedicatedGPU" | "performanceFlags" | "firewall" | "customFirewallRules" | "blocklist" | "blockedStrings" | "allowedStrings" | "screensharePreviousSettings" | "windowState:main" | "autoSaveCloud" | "cloudHost" | "cloudToken" | "cloudEncryptionKey";
+export type ConfigKey = "locale" | "discordUrl" | "arrpc" | "minimizeToTray" | "startMinimized" | "launchWithOsBoot" | "updateNotification" | "spellcheck" | "spellcheckLanguages" | "customTitlebar" | "disableAltMenu" | "staticTitle" | "dynamicIcon" | "customIconPath" | "trayIcon" | "autoscroll" | "popoutWindowAlwaysOnTop" | "transparency" | "modNames" | "modEtagCache" | "customJsBundle" | "customCssBundle" | "noBundleUpdates" | "installDefaultShelterPlugins" | "invidiousEmbeds" | "messageEncryption" | "encryptionPasswords" | "encryptionCover" | "encryptionMark" | "domOptimizer" | "renderingOptimizations" | "forceDedicatedGPU" | "performanceFlags" | "firewall" | "customFirewallRules" | "blocklist" | "blockedStrings" | "allowedStrings" | "screensharePreviousSettings" | "windowState:main" | "autoSaveCloud" | "cloudHost" | "cloudToken" | "cloudEncryptionKey";
 
 export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "locale": string;
@@ -14,6 +14,7 @@ export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "spellcheckLanguages": string[];
     "customTitlebar": boolean;
     "disableAltMenu": boolean;
+    "staticTitle": boolean;
     "dynamicIcon": boolean;
     "customIconPath": string;
     "trayIcon": string;
@@ -58,6 +59,7 @@ export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "spellcheckLanguages": string[];
     "customTitlebar": boolean;
     "disableAltMenu": boolean;
+    "staticTitle": boolean;
     "dynamicIcon": boolean;
     "customIconPath": string;
     "trayIcon": string;
