@@ -9,7 +9,6 @@
         "electron-context-menu": "github:Milkshiift/electron-context-menu",
         "picocolors": "1.1.1",
         "stegcloak": "github:Milkshiift/stegcloak-node",
-        "v8-compile-cache": "github:JulioC/v8-compile-cache#bugfix/esm",
       },
       "devDependencies": {
         "@biomejs/biome": "2.2.4",
@@ -728,8 +727,6 @@
     "utf8-byte-length": ["utf8-byte-length@1.0.5", "", {}, "sha512-Xn0w3MtiQ6zoz2vFyUVruaCL53O/DwUvkEeOvj+uulMm0BkUGYWmBYVyElqZaSLhY6ZD0ulfU3aBra2aVT4xfA=="],
 
     "util-deprecate": ["util-deprecate@1.0.2", "", {}, "sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw=="],
-
-    "v8-compile-cache": ["v8-compile-cache@github:JulioC/v8-compile-cache#4ea4c11", {}, "JulioC-v8-compile-cache-4ea4c11"],
 
     "venbind": ["venbind@0.1.7", "", { "os": [ "linux", "win32", ], "cpu": [ "x64", "arm64", ] }, "sha512-NuKrPYYd7NfMjcmY0xF6ltB/Lka2dV3ZhgFykTgPRlP3qSWmGbaOAmXyp1qPtDoVNAzu7BZkyNXaUqnveuB0tA=="],
 

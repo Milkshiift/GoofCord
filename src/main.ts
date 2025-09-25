@@ -1,11 +1,13 @@
+import module from 'node:module';
 import { app } from "electron";
-import "v8-compile-cache";
 import pc from "picocolors";
 import { getConfig, loadConfig } from "./config.ts";
 import { initLocalization } from "./modules/localization.ts";
 import { getDisplayVersion, isDev } from "./utils.ts";
 
 console.time(pc.green("[Timer]") + " GoofCord fully loaded in");
+
+module.enableCompileCache();
 
 if (isDev()) {
   require("source-map-support").install();
