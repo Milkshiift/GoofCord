@@ -1,53 +1,93 @@
 import crypto from "node:crypto";
 import util from "node:util";
 import zlib from "node:zlib";
-import { showDialogAndLog } from "./cloud.ts";
 
-// Using brotli compression cuts the output in half so why not use it
 const brotliCompress = util.promisify(zlib.brotliCompress);
 const brotliDecompress = util.promisify(zlib.brotliDecompress);
 
-export async function encryptString(string: string, password: string) {
+const SALT_LENGTH = 32;
+const IV_LENGTH = 12; // 96 bits as per NIST recommendations (SP 800-38D): https://csrc.nist.gov/pubs/sp/800/38/d/final
+const TAG_LENGTH = 16;
+const KEY_LENGTH = 32;
+
+// As per OWASP recommendations: https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
+const ARGON2_ALGORITHM = "argon2id";
+const ARGON2_PASSES = 2;
+const ARGON2_PARALLELISM = 1;
+const ARGON2_MEMORY_COST = 19 * 1024; // 19 MiB in KiB (19 * 1024)
+
+export async function encryptString(text: string, password: string): Promise<string | undefined> {
 	try {
-		const compressedSettings = await brotliCompress(Buffer.from(string, "utf8"));
-		if (!password) return compressedSettings.toString("base64");
+		const compressed = await brotliCompress(Buffer.from(text, "utf8"));
 
-		// Derive a 32-byte key for AES-256
-		const key = crypto.createHash("sha256").update(password).digest();
-		const iv = crypto.randomBytes(16);
-		const cipher = crypto.createCipheriv("aes-256-ctr", key, iv);
-		let encrypted = cipher.update(compressedSettings);
-		encrypted = Buffer.concat([encrypted, cipher.final()]);
+		// Passwordless is allowed because sensitive information is removed beforehand (see cloud.ts saveCloud())
+		if (!password) {
+			return compressed.toString("base64");
+		}
 
-		const resultBuffer = Buffer.concat([iv, encrypted]);
-		return resultBuffer.toString("base64");
-	} catch (e) {
-		await showDialogAndLog("error", "Encryption error", `Failed to encrypt settings: ${e}`);
+		const salt = crypto.randomBytes(SALT_LENGTH);
+		const key = crypto.argon2Sync(ARGON2_ALGORITHM, {
+			message: Buffer.from(password),
+			nonce: salt,
+			parallelism: ARGON2_PARALLELISM,
+			tagLength: KEY_LENGTH,
+			memory: ARGON2_MEMORY_COST,
+			passes: ARGON2_PASSES,
+		});
+
+		const iv = crypto.randomBytes(IV_LENGTH);
+		const cipher = crypto.createCipheriv("aes-256-gcm", key, iv);
+
+		const encrypted = Buffer.concat([
+			cipher.update(compressed),
+			cipher.final()
+		]);
+
+		const authTag = cipher.getAuthTag();
+
+		const combined = Buffer.concat([salt, iv, authTag, encrypted]);
+		return combined.toString("base64");
+	} catch (error) {
+		console.error("[Cloud] Encryption failed:", error);
 		return undefined;
 	}
 }
 
-export async function decryptString(encryptedStr: string, password: string) {
+export async function decryptString(encryptedText: string, password: string): Promise<object | undefined> {
 	try {
-		let decrypted: Buffer;
-		if (password) {
-			// Derive a 32-byte key for AES-256
-			const key = crypto.createHash("sha256").update(password).digest();
-			const encryptedBuffer = Buffer.from(encryptedStr, "base64");
-			const iv = encryptedBuffer.subarray(0, 16);
-			const encryptedData = encryptedBuffer.subarray(16);
+		const buffer = Buffer.from(encryptedText, "base64");
 
-			const decipher = crypto.createDecipheriv("aes-256-ctr", key, iv);
-			decrypted = Buffer.concat([decipher.update(encryptedData), decipher.final()]);
-		} else {
-			decrypted = Buffer.from(encryptedStr, "base64");
+		if (!password) {
+			const decompressed = await brotliDecompress(buffer);
+			return JSON.parse(decompressed.toString("utf8"));
 		}
 
-		const decompressedSettings = await brotliDecompress(decrypted);
-		// Parsing here and not in cloud.ts to catch parsing errors too
-		return JSON.parse(decompressedSettings.toString("utf8"));
-	} catch (e) {
-		await showDialogAndLog("error", "Decryption error", `Failed to decrypt settings. Is the password correct?\n${e}`);
+		const salt = buffer.subarray(0, SALT_LENGTH);
+		const iv = buffer.subarray(SALT_LENGTH, SALT_LENGTH + IV_LENGTH);
+		const authTag = buffer.subarray(SALT_LENGTH + IV_LENGTH, SALT_LENGTH + IV_LENGTH + TAG_LENGTH);
+		const encrypted = buffer.subarray(SALT_LENGTH + IV_LENGTH + TAG_LENGTH);
+
+		const key = crypto.argon2Sync(ARGON2_ALGORITHM, {
+			message: Buffer.from(password),
+			nonce: salt,
+			parallelism: ARGON2_PARALLELISM,
+			tagLength: KEY_LENGTH,
+			memory: ARGON2_MEMORY_COST,
+			passes: ARGON2_PASSES,
+		});
+
+		const decipher = crypto.createDecipheriv("aes-256-gcm", key, iv);
+		decipher.setAuthTag(authTag);
+
+		const decrypted = Buffer.concat([
+			decipher.update(encrypted),
+			decipher.final()
+		]);
+
+		const decompressed = await brotliDecompress(decrypted);
+		return JSON.parse(decompressed.toString("utf8"));
+	} catch (error) {
+		console.error("[Cloud] Decryption failed:", error);
 		return undefined;
 	}
 }
