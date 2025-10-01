@@ -201,6 +201,10 @@ form.settingsContainer {
         border: none;
         position: relative;
 
+        &.offset {
+            margin-left: 2em;
+        }
+
         .checkbox-container {
             display: flex;
             align-items: center;

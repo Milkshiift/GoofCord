@@ -97,7 +97,7 @@ function createSetting(setting: ConfigKey, entry: SettingEntry): string | "" {
 	const description = ipcRenderer.sendSync("localization:i", `opt-${setting}-desc`) ?? "";
 
 	return `
-        <fieldset class="${isHidden ? "hidden" : ""}">
+        <fieldset class="${(isHidden ? "hidden" : "") + " " + (entry.showAfter && (entry.showAfter.key !== setting) ? "offset" : "")}">
             <div class='checkbox-container'>
                 <div class="revert-button" title="Revert to default value"></div>
                 ${getInputElement(entry, setting, value)}

@@ -148,6 +148,12 @@ export const settingsSchema = {
 			defaultValue: false,
 			description: "Shows if you have any unread messages on GoofCord's icon as a dot.",
 			inputType: "checkbox",
+			showAfter: {
+				key: "dynamicIcon",
+				condition: (value) => {
+					return value;
+				},
+			},
 		},
 		customIconPath: {
 			name: "Custom Icon",
