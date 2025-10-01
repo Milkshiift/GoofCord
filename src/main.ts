@@ -40,9 +40,6 @@ function setFlags() {
     "WebRTC",
     "WebRtcHideLocalIpsWithMdns",
     "PlatformHEVCEncoderSupport",
-    "EnableDrDc",
-    "CanvasOopRasterization",
-    "UseSkiaRenderer",
   ];
 
   if (process.platform === "linux") {
@@ -69,8 +66,6 @@ function setFlags() {
     ["disable-renderer-backgrounding"],
     ["disable-background-timer-throttling"],
     ["disable-disable-backgrounding-occluded-windows"],
-    ["disable-features", disableFeatures.join(",")],
-    ["enable-features", enableFeatures.join(",")],
   ];
 
   if (getConfig("performanceFlags")) {
@@ -83,11 +78,18 @@ function setFlags() {
         ["disable-site-isolation-trials"],
         ["enable-hardware-overlays", "single-fullscreen,single-on-top,underlay"],
     );
+    enableFeatures.push(
+        "EnableDrDc",
+        "CanvasOopRasterization",
+    )
   }
 
   if (getConfig("forceDedicatedGPU")) {
     switches.push(["force_high_performance_gpu"]);
   }
+
+  switches.push(["disable-features", disableFeatures.join(",")]);
+  switches.push(["enable-features", enableFeatures.join(",")]);
 
   for (const [key, val] of switches) {
     app.commandLine.appendSwitch(key, val);
