@@ -143,6 +143,12 @@ export const settingsSchema = {
 			description: "Shows pings/mentions count on GoofCord's icon and its tray. On Linux, pings on the taskbar only work when unitylib is installed.",
 			inputType: "checkbox",
 		},
+		unreadBadge: {
+			name: "Unread badge",
+			defaultValue: false,
+			description: "Shows if you have any unread messages on GoofCord's icon as a dot.",
+			inputType: "checkbox",
+		},
 		customIconPath: {
 			name: "Custom Icon",
 			defaultValue: "",

@@ -12,8 +12,8 @@ import { getAssets } from "./modules/assetLoader";
 import { updateModsFull } from "./modules/mods";
 import { clearCache } from "./modules/cacheManager";
 import { setKeybinds, isVenbindLoaded } from "./modules/venbind";
-import { setAutoLaunchState } from "./loader";
 import { setBadgeCount } from "./modules/dynamicIcon";
+import { setAutoLaunchState } from "./loader";
 
 ipcMain.on("utils:getVersion", (event, ) => { event.returnValue = getVersion(); });
 ipcMain.on("utils:getDisplayVersion", (event, ) => { event.returnValue = getDisplayVersion(); });
@@ -44,5 +44,5 @@ ipcMain.handle("mods:updateModsFull", async (event, ) => { return await updateMo
 ipcMain.handle("cacheManager:clearCache", async (event, ) => { return await clearCache(); });
 ipcMain.handle("venbind:setKeybinds", async (event, keybinds) => { return await setKeybinds(keybinds); });
 ipcMain.handle("venbind:isVenbindLoaded", async (event, ) => { return await isVenbindLoaded(); });
-ipcMain.handle("loader:setAutoLaunchState", async (event, ) => { return await setAutoLaunchState(); });
 ipcMain.handle("dynamicIcon:setBadgeCount", async (event, count) => { return await setBadgeCount(count); });
+ipcMain.handle("loader:setAutoLaunchState", async (event, ) => { return await setAutoLaunchState(); });

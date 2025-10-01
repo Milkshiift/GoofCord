@@ -1,4 +1,5 @@
 import { app, type NativeImage, nativeImage } from "electron";
+import { getConfig } from "../config.ts";
 import { getTrayIcon, tray } from "../tray.ts";
 import { mainWindow } from "../windows/main/main.ts";
 
@@ -16,6 +17,15 @@ const BADGE_GENERATOR_CODE = `
 		ctx.beginPath();
 		ctx.arc(size / 2, size / 2, size / 2, 0, 2 * Math.PI);
 		ctx.fill();
+		
+		// The "dot" for unread messages
+		if (num === -1) {
+			ctx.fillStyle = 'white';
+			ctx.beginPath();
+			ctx.arc(size / 2, size / 2, size / 5, 0, 2 * Math.PI);
+			ctx.fill();
+			return canvas;
+		}
 
 		const text = num > 99 ? '∞' : num.toString();
 		
@@ -73,11 +83,13 @@ async function generateBadgeOverlay(count: number): Promise<NativeImage | null> 
 	return img;
 }
 
-
+// Pings: >0   Unset: 0    Unread messages: -1
 export async function setBadgeCount<IPCHandle>(count: number) {
+	if (!getConfig("unreadBadge")) count = Math.max(0, count);
+
 	switch (process.platform) {
 		case "linux":
-			app.setBadgeCount(count);
+			app.setBadgeCount(Math.max(0, count));
 			break;
 		case "darwin":
 			app.dock?.setBadge(count > 0 ? count.toString() : "");
@@ -85,7 +97,9 @@ export async function setBadgeCount<IPCHandle>(count: number) {
 		case "win32": {
 			const overlay = await generateBadgeOverlay(count);
 			const description =
-				count > 0 ? `${count} Notifications` : "No new notifications";
+				count > 0 ? `${count} Notifications`
+					: count < 0 ? "Unread messages"
+						: "No new notifications";
 			mainWindow.setOverlayIcon(overlay, description);
 			break;
 		}
@@ -119,7 +133,7 @@ const TRAY_COMPOSITOR_CODE = `
 		ctx.drawImage(baseImg, 0, 0, finalSize, finalSize);
 
 		// If there's a count, draw the badge on top
-		if (count > 0) {
+		if (count !== 0) {
 			const badgeCanvas = generateBadge(count);
 			if (badgeCanvas) {
 				const overlaySize = Math.round(finalSize * 0.60);

@@ -64,6 +64,8 @@
   "opt-staticTitle-desc": "Prevent Discord from changing the window title.",
   "opt-dynamicIcon": "Dynamic icon",
   "opt-dynamicIcon-desc": "Shows pings/mentions count on GoofCord's icon and its tray. On Linux, pings on the taskbar only work when unitylib is installed.",
+  "opt-unreadBadge": "Unread badge",
+  "opt-unreadBadge-desc": "Shows if you have any unread messages on GoofCord's icon as a dot.",
   "opt-customIconPath": "Custom Icon",
   "opt-customIconPath-desc": "Select an alternative icon for GoofCord to use. Images with transparency are recommended.",
   "opt-trayIcon": "Tray icon",
