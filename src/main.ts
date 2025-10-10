@@ -83,6 +83,10 @@ function setFlags() {
     )
   }
 
+  if (getConfig("disableGpuCompositing")) {
+    switches.push(["disable-gpu-compositing"]);
+  }
+
   if (getConfig("forceDedicatedGPU")) {
     switches.push(["force_high_performance_gpu"]);
   }

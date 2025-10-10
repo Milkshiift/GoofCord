@@ -323,6 +323,10 @@ export const settingsSchema = {
 			description: "Enables additional Chromium flags for performance. Recommended ON unless causes issues.",
 			inputType: "checkbox",
 		},
+		disableGpuCompositing: {
+			defaultValue: false,
+			outputType: "bool",
+		},
 		firewall: {
 			name: "Firewall",
 			defaultValue: true,
