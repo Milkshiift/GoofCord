@@ -79,7 +79,6 @@ function setFlags() {
         ["enable-hardware-overlays", "single-fullscreen,single-on-top,underlay"],
     );
     enableFeatures.push(
-        "EnableDrDc",
         "CanvasOopRasterization",
     )
   }
