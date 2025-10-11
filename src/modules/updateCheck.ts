@@ -1,6 +1,7 @@
 import { Notification, shell } from "electron";
 import { getConfig } from "../config.ts";
 import { getVersion } from "../utils.ts";
+import { i } from "./localization.ts";
 
 async function getLatestVersion(): Promise<string> {
 	try {
@@ -18,8 +19,8 @@ export async function checkForUpdate() {
 
 	if (isSemverLower(getVersion(), await getLatestVersion())) {
 		const notification = new Notification({
-			title: "A new update is available ✨",
-			body: "Click on the notification to download",
+			title: i("updateNotification-title"),
+			body: i("updateNotification-body"),
 			timeoutType: "default",
 		});
 

@@ -24,6 +24,8 @@
   "menu-development": "Development",
   "menu-development-devtools": "Open DevTools",
   "menu-development-gpuDebug": "Open chrome://gpu",
+  "updateNotification-title": "A new update is available ✨",
+  "updateNotification-body": "Click on the notification to open release notes",
   "screenshare-screenshare": "Screen Share",
   "screenshare-audio": "Audio",
   "screenshare-optimization": "Optimization",
