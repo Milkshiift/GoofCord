@@ -1,8 +1,7 @@
 (async()=>{
     while(!window.shelter?.plugins?.addRemotePlugin) await new Promise(resolve => setTimeout(resolve, 1000));
     const defaultPlugins = [
-        ["https://spikehd.github.io/shelter-plugins/plugin-browser/", false],
-        ["https://spikehd.github.io/shelter-plugins/shelteRPC/", true],
+        ["https://spikehd.dev/shelter-plugins/shelteRPC/", true],
         ["https://milkshiift.github.io/goofcord-shelter-plugins/dynamic-icon/", true],
         ["https://milkshiift.github.io/goofcord-shelter-plugins/message-encryption/", true],
         ["https://milkshiift.github.io/goofcord-shelter-plugins/invidious-embeds/", true],
