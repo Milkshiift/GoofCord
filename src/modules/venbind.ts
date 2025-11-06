@@ -25,7 +25,6 @@ export async function startVenbind(venbind: VenbindType) {
 		console.error("venbind error:", err);
 	});
 	venbind?.startKeybinds((id, keyup) => {
-		if (mainWindow.isFocused()) return;
 		mainWindow.webContents.send("keybinds:trigger", id, keyup);
 	}, null);
 }
