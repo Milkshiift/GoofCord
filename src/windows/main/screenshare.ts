@@ -4,10 +4,10 @@ import screensharePatch from "./scripts/screensharePatch.js" with { type: "text"
 addPatch({
 	patches: [
 		{
-			find: "this.localWant=",
+			find: "this.getDefaultGoliveQuality()",
 			replacement: {
-				match: /this.localWant=/,
-				replace: "$self.patchStreamQuality(this);$&",
+				match: /this\.getDefaultGoliveQuality\(\)/,
+				replace: "$self.patchStreamQuality($&)",
 			},
 		},
 	],
@@ -15,7 +15,7 @@ addPatch({
 	patchStreamQuality(opts: any) {
 		// @ts-expect-error
 		const screenshareQuality = window.screenshareSettings;
-		if (!screenshareQuality) return;
+		if (!screenshareQuality) return opts;
 
 		const framerate = Number(screenshareQuality.framerate);
 		const height = Number(screenshareQuality.resolution);
@@ -40,6 +40,7 @@ addPatch({
 			height,
 			pixelCount: height * width,
 		});
+		return opts;
 	},
 });
 
