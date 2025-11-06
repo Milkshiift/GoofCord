@@ -325,7 +325,7 @@ export const settingsSchema = {
 		},
 		disableGpuCompositing: {
 			defaultValue: false,
-			outputType: "bool",
+			outputType: "boolean",
 		},
 		firewall: {
 			name: "Firewall",

@@ -37,7 +37,7 @@ export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "renderingOptimizations": boolean;
     "forceDedicatedGPU": boolean;
     "performanceFlags": boolean;
-    "disableGpuCompositing": bool;
+    "disableGpuCompositing": boolean;
     "firewall": boolean;
     "customFirewallRules": boolean;
     "blocklist": string[];
@@ -84,7 +84,7 @@ export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "renderingOptimizations": boolean;
     "forceDedicatedGPU": boolean;
     "performanceFlags": boolean;
-    "disableGpuCompositing": bool;
+    "disableGpuCompositing": boolean;
     "firewall": boolean;
     "customFirewallRules": boolean;
     "blocklist": string[];
