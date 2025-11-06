@@ -29,8 +29,8 @@ async function downloadBundles(urls: Array<string | undefined>, name: string) {
 
 			const response = await fetch(url, {
 				headers: {
-					'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.3',
-					"If-None-Match": exists ? cache[url] ?? "" : "",
+					"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.3",
+					"If-None-Match": exists ? (cache[url] ?? "") : "",
 				},
 			});
 

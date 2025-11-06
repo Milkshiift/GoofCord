@@ -11,28 +11,29 @@ window.GCDP = {};
 `;
 
 interface PatchData {
-    patches: Omit<Patch, "plugin">[];
-    // biome-ignore lint/suspicious/noExplicitAny: Needed
-    [key: string]: any;
+	patches: Omit<Patch, "plugin">[];
+	// biome-ignore lint/suspicious/noExplicitAny: Needed
+	[key: string]: any;
 }
 
 export function addPatch(p: PatchData) {
-    const { patches, ...globals } = p;
+	const { patches, ...globals } = p;
 
-    patches.map((patch)=>{
-        if (!Array.isArray(patch.replacement)) patch.replacement = [patch.replacement];
-        for (const r of patch.replacement) {
-            if (typeof r.replace === "string") r.replace = r.replace.replaceAll("$self", "GCDP");
-            if (typeof r.match !== "string") { // @ts-ignore
-                r.match = [r.match.source, r.match.flags];
-            }
-        }
-        // @ts-expect-error
-        patch.plugin = "GoofCord";
-        return patch;
-    })
+	patches.map((patch) => {
+		if (!Array.isArray(patch.replacement)) patch.replacement = [patch.replacement];
+		for (const r of patch.replacement) {
+			if (typeof r.replace === "string") r.replace = r.replace.replaceAll("$self", "GCDP");
+			if (typeof r.match !== "string") {
+				// @ts-ignore
+				r.match = [r.match.source, r.match.flags];
+			}
+		}
+		// @ts-expect-error
+		patch.plugin = "GoofCord";
+		return patch;
+	});
 
-    patchesScript += `
+	patchesScript += `
     window.Vencord.Plugins.patches.push(...${JSON.stringify(patches)}.map((patch)=>{
         for (const r of patch.replacement) {
             if (Array.isArray(r.match)) {
@@ -43,25 +44,25 @@ export function addPatch(p: PatchData) {
     }));
     `;
 
-    for (const globalF in globals) {
-        patchesScript += `\nwindow.GCDP.${globalF}=function ${String(globals[globalF])}`;
-    }
+	for (const globalF in globals) {
+		patchesScript += `\nwindow.GCDP.${globalF}=function ${String(globals[globalF])}`;
+	}
 }
 
 export const scripts: string[][] = [];
 
 export function getDefaultScripts() {
-    scripts.push(["notificationFix", notificationFix]);
+	scripts.push(["notificationFix", notificationFix]);
 
-    scripts.unshift(["vencordPatches", patchesScript+"})();"]);
+	scripts.unshift(["vencordPatches", patchesScript + "})();"]);
 
-    if (ipcRenderer.sendSync("config:getConfig", "domOptimizer")) {
-        scripts.push(["domOptimizer", domOptimizer]);
-    }
+	if (ipcRenderer.sendSync("config:getConfig", "domOptimizer")) {
+		scripts.push(["domOptimizer", domOptimizer]);
+	}
 
-    if (ipcRenderer.sendSync("config:getConfig", "modNames").includes("shelter") && ipcRenderer.sendSync("config:getConfig", "installDefaultShelterPlugins")) {
-        scripts.push(["shelterPluginInit", shelterPluginInit]);
-    }
+	if (ipcRenderer.sendSync("config:getConfig", "modNames").includes("shelter") && ipcRenderer.sendSync("config:getConfig", "installDefaultShelterPlugins")) {
+		scripts.push(["shelterPluginInit", shelterPluginInit]);
+	}
 
-    return scripts;
+	return scripts;
 }

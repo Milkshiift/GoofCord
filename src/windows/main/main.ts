@@ -61,7 +61,7 @@ async function doAfterDefiningTheWindow() {
 	});
 
 	if (getConfig("staticTitle")) {
-		mainWindow.on('page-title-updated', (event) => {
+		mainWindow.on("page-title-updated", (event) => {
 			event.preventDefault();
 		});
 	}
@@ -77,7 +77,7 @@ function subscribeToAppEvents() {
 	if (subscribed) return;
 	subscribed = true;
 	app.on("second-instance", (_event, cmdLine, _cwd, _data) => {
-		const keybind = cmdLine.find(x => x.startsWith("--keybind"));
+		const keybind = cmdLine.find((x) => x.startsWith("--keybind"));
 		if (keybind !== undefined) {
 			const action = keybind.split("=")[1];
 			const keyup: boolean = keybind.startsWith("--keybind-up=") || keybind.startsWith("--keybind=");

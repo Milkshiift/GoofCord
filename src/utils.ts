@@ -9,7 +9,7 @@ try {
 	const portablePath = path.join(path.dirname(app.getPath("exe")), "goofcord-data");
 	if (await isPathAccessible(portablePath)) {
 		app.setPath("userData", portablePath);
-		console.log("Found \"goofcord-data\" folder, running in portable mode");
+		console.log('Found "goofcord-data" folder, running in portable mode');
 	}
 } catch (e) {
 	console.error("Portable mode error:", e);

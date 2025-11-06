@@ -3,25 +3,62 @@ import allLangs from "glob-filenames:../assets/lang/*.json";
 import type { ConfigKey, ConfigValue } from "./configTypes";
 
 const spellcheckLangs = [
-	'af',    'bg',             'ca',
-	'cs',    'cy',             'da',
-	'de',    'de-DE',          'el',
-	'en',    'en-AU',          'en-CA',
-	'en-GB', 'en-GB-oxendict', 'en-US',
-	'es',    'es-419',         'es-AR',
-	'es-ES', 'es-MX',          'es-US',
-	'et',    'fa',             'fo',
-	'fr',    'fr-FR',          'he',
-	'hi',    'hr',             'hu',
-	'hy',    'id',             'it',
-	'it-IT', 'ko',             'lt',
-	'lv',    'nb',             'nl',
-	'pl',    'pt',             'pt-BR',
-	'pt-PT', 'ro',             'ru',
-	'sh',    'sk',             'sl',
-	'sq',    'sr',             'sv',
-	'ta',    'tg',             'tr',
-	'uk',    'vi'
+	"af",
+	"bg",
+	"ca",
+	"cs",
+	"cy",
+	"da",
+	"de",
+	"de-DE",
+	"el",
+	"en",
+	"en-AU",
+	"en-CA",
+	"en-GB",
+	"en-GB-oxendict",
+	"en-US",
+	"es",
+	"es-419",
+	"es-AR",
+	"es-ES",
+	"es-MX",
+	"es-US",
+	"et",
+	"fa",
+	"fo",
+	"fr",
+	"fr-FR",
+	"he",
+	"hi",
+	"hr",
+	"hu",
+	"hy",
+	"id",
+	"it",
+	"it-IT",
+	"ko",
+	"lt",
+	"lv",
+	"nb",
+	"nl",
+	"pl",
+	"pt",
+	"pt-BR",
+	"pt-PT",
+	"ro",
+	"ru",
+	"sh",
+	"sk",
+	"sl",
+	"sq",
+	"sr",
+	"sv",
+	"ta",
+	"tg",
+	"tr",
+	"uk",
+	"vi",
 ];
 
 export interface SettingEntry {
@@ -46,7 +83,7 @@ export interface ButtonEntry {
 
 // https://github.com/Milkshiift/GoofCord/wiki/How-to-develop-GoofCord#entries
 export const settingsSchema = {
-	"General": {
+	General: {
 		locale: {
 			name: "Language 🌍",
 			defaultValue: "en-US",
@@ -109,10 +146,10 @@ export const settingsSchema = {
 			showAfter: {
 				key: "spellcheck",
 				condition: (value) => value,
-			}
+			},
 		},
 	},
-	"Appearance": {
+	Appearance: {
 		customTitlebar: {
 			name: "Custom titlebar",
 			defaultValue: true,
@@ -129,7 +166,7 @@ export const settingsSchema = {
 				condition: (value) => {
 					return value === false;
 				},
-			}
+			},
 		},
 		staticTitle: {
 			name: "Static title",
@@ -165,7 +202,7 @@ export const settingsSchema = {
 		trayIcon: {
 			name: "Tray icon",
 			defaultValue: "default",
-			description: 'What tray icon to use. Symbolic attempts to mimic Gnome\'s monochromatic icons.',
+			description: "What tray icon to use. Symbolic attempts to mimic Gnome's monochromatic icons.",
 			inputType: "dropdown",
 			options: ["default", "symbolic_black", "symbolic_white"],
 			showAfter: {
@@ -298,7 +335,7 @@ export const settingsSchema = {
 			},
 		},
 	},
-	"Other": {
+	Other: {
 		domOptimizer: {
 			name: "DOM optimizer",
 			defaultValue: true,
@@ -404,7 +441,7 @@ export const settingsSchema = {
 			onClick: "settings.clearCache()",
 		},
 	},
-	"Cloud": {
+	Cloud: {
 		autoSaveCloud: {
 			name: "Auto save",
 			defaultValue: false,
@@ -413,7 +450,7 @@ export const settingsSchema = {
 		},
 		cloudHost: {
 			name: "Cloud Host",
-			description: "GoofCord Cloud Server URL. You can self-host it yourself, see the <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">repository</a>.",
+			description: 'GoofCord Cloud Server URL. You can self-host it yourself, see the <a target="_blank" href="https://github.com/Wuemeli/goofcord-cloudserver">repository</a>.',
 			defaultValue: "https://goofcordcloud.wuemeli.com",
 			inputType: "textfield",
 		},

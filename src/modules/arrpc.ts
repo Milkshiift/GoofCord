@@ -17,11 +17,11 @@ export async function initArrpc<IPCHandle>() {
 	try {
 		worker = new Worker(path.join(dirname(), "./modules/arrpcWorker.js"), {
 			workerData: {
-				detectablePath: getGoofCordFolderPath() + "/detectable.json"
+				detectablePath: getGoofCordFolderPath() + "/detectable.json",
 			},
 		} as object);
 
-		worker.on("message", (e: { eventType: string; }) => {
+		worker.on("message", (e: { eventType: string }) => {
 			const { eventType } = e;
 			if (eventType === "showMainWindow") {
 				mainWindow.show();
@@ -33,7 +33,7 @@ export async function initArrpc<IPCHandle>() {
 			dialog.showMessageBox(mainWindow, {
 				type: "error",
 				title: "GoofCord was unable to start arRPC (Rich Presence)",
-				message: e.message
+				message: e.message,
 			});
 			worker?.terminate();
 			worker = undefined;

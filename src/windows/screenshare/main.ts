@@ -46,7 +46,7 @@ export function registerScreenshareHandler() {
 
 			// src/window/main/screenshare.ts
 			await request.frame?.executeJavaScript(`
-				window.screenshareSettings = ${JSON.stringify({resolution: resolution, framerate: framerate, contentHint: contentHint})};
+				window.screenshareSettings = ${JSON.stringify({ resolution: resolution, framerate: framerate, contentHint: contentHint })};
             `);
 
 			const result = isWayland || id === "0" ? sources[0] : { id, name, width: 9999, height: 9999 };
@@ -59,7 +59,9 @@ export function registerScreenshareHandler() {
 							pc.cyan("[Screenshare]"),
 							"Available sources:",
 							// Comment out "map" if you need more details for Venmic poking
-							venmicList().map((s) => s["media.class"] === "Stream/Output/Audio" ? s["application.name"] : undefined).filter(Boolean),
+							venmicList()
+								.map((s) => (s["media.class"] === "Stream/Output/Audio" ? s["application.name"] : undefined))
+								.filter(Boolean),
 						);
 						venmicStartSystem();
 						callback({ video: result });

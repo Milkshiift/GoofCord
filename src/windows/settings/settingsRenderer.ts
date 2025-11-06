@@ -4,7 +4,10 @@ import { type ButtonEntry, type SettingEntry, settingsSchema } from "../../setti
 import { decryptSetting, evaluateShowAfter } from "./preload.mts";
 
 function sanitizeForId(name: string): string {
-	return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+	return name
+		.toLowerCase()
+		.replace(/\s+/g, "-")
+		.replace(/[^a-z0-9-]/g, "");
 }
 
 export async function renderSettings() {
@@ -46,11 +49,15 @@ export async function renderSettings() {
 				</nav>
 			</header>
 			
-			${ipcRenderer.sendSync("utils:isEncryptionAvailable") ? "" : `
+			${
+				ipcRenderer.sendSync("utils:isEncryptionAvailable")
+					? ""
+					: `
 				<div class="message warning">
 					<p>${ipcRenderer.sendSync("localization:i", "settings-encryption-unavailable")}</p>
 				</div>
-			`}
+			`
+			}
 			
             <div class="settings-content">
                 ${panelHtml}
@@ -61,7 +68,7 @@ export async function renderSettings() {
 	void webFrame.executeJavaScript("window.initSwitcher(); window.initMultiselect();");
 }
 
-function generatePanelInnerContent(categoryName: string): { settingsHtml: string, buttonsHtml: string } {
+function generatePanelInnerContent(categoryName: string): { settingsHtml: string; buttonsHtml: string } {
 	let buttonsHtml = "";
 	let settingsHtml = "";
 
@@ -79,7 +86,7 @@ function generatePanelInnerContent(categoryName: string): { settingsHtml: string
 function createSetting(setting: ConfigKey, entry: SettingEntry): string | "" {
 	let value: ConfigValue<ConfigKey> = ipcRenderer.sendSync("config:getConfig", setting);
 
-	if (entry.encrypted && typeof value === 'string') {
+	if (entry.encrypted && typeof value === "string") {
 		value = decryptSetting(value);
 	}
 
@@ -97,7 +104,7 @@ function createSetting(setting: ConfigKey, entry: SettingEntry): string | "" {
 	const description = ipcRenderer.sendSync("localization:i", `opt-${setting}-desc`) ?? "";
 
 	return `
-        <fieldset class="${(isHidden ? "hidden" : "") + " " + (entry.showAfter && (entry.showAfter.key !== setting) ? "offset" : "")}">
+        <fieldset class="${(isHidden ? "hidden" : "") + " " + (entry.showAfter && entry.showAfter.key !== setting ? "offset" : "")}">
             <div class='checkbox-container'>
                 <div class="revert-button" title="Revert to default value"></div>
                 ${getInputElement(entry, setting, value)}
@@ -112,7 +119,6 @@ function createButton(id: string, entry: ButtonEntry): string {
 	const buttonText = ipcRenderer.sendSync("localization:i", `opt-${id}`);
 	return `<button type="button" onclick="${entry.onClick}">${buttonText}</button>`;
 }
-
 
 function getInputElement(entry: SettingEntry, setting: ConfigKey, value: ConfigValue<ConfigKey>): string {
 	if (!entry.name) {
@@ -129,23 +135,24 @@ function getInputElement(entry: SettingEntry, setting: ConfigKey, value: ConfigV
 			return `<textarea setting-name="${setting}" id="${setting}">${escapeHtmlValue(textValue)}</textarea>`;
 		}
 		case "file":
-			return `<input setting-name="${setting}" id="${setting}" accept="${entry.accept || '*'}" type="file"/>`;
+			return `<input setting-name="${setting}" id="${setting}" accept="${entry.accept || "*"}" type="file"/>`;
 		case "dropdown":
 		case "dropdown-multiselect": {
 			const isMultiselect = entry.inputType === "dropdown-multiselect";
 			const selectValue = Array.isArray(value) ? value : [String(value)];
 			return `
                 <select setting-name="${setting}" class="left dropdown" id="${setting}" name="${setting}" ${isMultiselect ? "multiple" : ""}>
-                    ${entry.options?.map((option) => {
-					const optionStr = String(option);
-					const isSelected = selectValue.includes(optionStr);
-					return `
+                    ${entry.options
+											?.map((option) => {
+												const optionStr = String(option);
+												const isSelected = selectValue.includes(optionStr);
+												return `
                                 <option value="${optionStr}" ${isSelected ? "selected" : ""}>
                                     ${optionStr}
                                 </option>
                              `;
-					})
-				.join("")}
+											})
+											.join("")}
                 </select>
             `;
 		}
@@ -156,9 +163,5 @@ function getInputElement(entry: SettingEntry, setting: ConfigKey, value: ConfigV
 }
 
 function escapeHtmlValue(unsafeString: string) {
-	return unsafeString
-		.replace(/&/g, "&amp;")
-		.replace(/"/g, "&quot;")
-		.replace(/</g, "&lt;")
-		.replace(/>/g, "&gt;");
+	return unsafeString.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }

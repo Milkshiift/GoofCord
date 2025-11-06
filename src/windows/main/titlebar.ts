@@ -13,7 +13,7 @@ const elements: TitlebarElements = {
 	titlebar: null,
 	controls: null,
 	dragBar: null,
-	titlebarText: null
+	titlebarText: null,
 };
 
 const customTitlebarEnabled = ipcRenderer.sendSync("config:getConfig", "customTitlebar");
@@ -51,13 +51,13 @@ function addCustomTitlebar(): void {
 	elements.titlebarText.id = "titlebar-text";
 	document.body.prepend(elements.titlebarText);
 
-	elements.dragBar = document.createElement('div');
+	elements.dragBar = document.createElement("div");
 	elements.dragBar.id = "dragbar";
 
 	if (customTitlebarEnabled) {
-		elements.dragBar.style.setProperty('-webkit-app-region', 'drag');
+		elements.dragBar.style.setProperty("-webkit-app-region", "drag");
 
-		elements.controls = document.createElement('div');
+		elements.controls = document.createElement("div");
 		elements.controls.id = "window-controls-container";
 		elements.controls.innerHTML = '<div id="minimize"></div><div id="maximize"></div><div id="quit"></div>';
 		document.body.prepend(elements.controls);
@@ -86,7 +86,7 @@ export async function injectTitlebar(): Promise<void> {
 		addCustomTitlebar();
 
 		const observer = new MutationObserver(checkMainLayer);
-		observer.observe(document.body, {childList: true, subtree: true});
+		observer.observe(document.body, { childList: true, subtree: true });
 
 		// Initial check
 		checkMainLayer();
@@ -94,7 +94,7 @@ export async function injectTitlebar(): Promise<void> {
 		try {
 			webFrame.insertCSS(titlebarCss);
 		} catch (error) {
-			console.error('Failed to load titlebar CSS:', error);
+			console.error("Failed to load titlebar CSS:", error);
 		}
 	});
 }
@@ -108,7 +108,7 @@ function checkMainLayer(): void {
 	if (!mainLayer) {
 		elements.dragBar.style.display = "block";
 	} else {
-		elements.dragBar.style.display = mainLayer.getAttribute('aria-hidden') === "true" ? "block" : "none";
+		elements.dragBar.style.display = mainLayer.getAttribute("aria-hidden") === "true" ? "block" : "none";
 
 		// `elements.titlebar` may be uninitialized or may have been deleted from the document
 		// (due to switching accounts etc.) so we check it

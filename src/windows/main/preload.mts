@@ -22,19 +22,22 @@ if (document.location.hostname.includes("discord")) {
 	document.addEventListener("DOMContentLoaded", () => {
 		assets.styles.push(["discord.css", discordCss]);
 		if (ipcRenderer.sendSync("config:getConfig", "renderingOptimizations")) {
-			assets.styles.push(["renderingOptimizations", `
+			assets.styles.push([
+				"renderingOptimizations",
+				`
 				[class*="messagesWrapper"], #channels, #emoji-picker-grid, [class*="members_"] {
 				     will-change: transform, scroll-position;
 				     contain: strict;
 				}
-			`]);
+			`,
+			]);
 		}
 		for (const style of assets.styles) {
 			updateStyle(style[1], style[0]);
 			log(`Loaded style: ${style[0]}`);
 		}
 
-		ipcRenderer.on('assetLoader:styleUpdate', (_, data) => {
+		ipcRenderer.on("assetLoader:styleUpdate", (_, data) => {
 			const { file, content } = data;
 			updateStyle(content, file);
 			log(`Hot reloaded style: ${file}`);
@@ -51,7 +54,7 @@ function updateStyle(style: string, id: string) {
 		error(`Error removing old style: ${id} - ${err}`);
 	}
 
-	const styleElement = document.createElement('style');
+	const styleElement = document.createElement("style");
 	styleElement.textContent = style;
 	styleElement.id = id;
 	document.body.appendChild(styleElement);
@@ -60,7 +63,7 @@ function updateStyle(style: string, id: string) {
 
 if (ipcRenderer.sendSync("config:getConfig", "disableAltMenu")) {
 	// https://github.com/electron/electron/issues/34211
-	window.addEventListener('keydown', (e) => {
-		if (e.code === 'AltLeft') e.preventDefault();
+	window.addEventListener("keydown", (e) => {
+		if (e.code === "AltLeft") e.preventDefault();
 	});
 }

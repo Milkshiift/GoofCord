@@ -69,9 +69,7 @@ async function generateBadgeOverlay(count: number): Promise<NativeImage | null> 
 		}
 	`;
 
-	const dataURL = await mainWindow.webContents.executeJavaScript(
-		`(${rendererFunction})(${clampedCount})`,
-	);
+	const dataURL = await mainWindow.webContents.executeJavaScript(`(${rendererFunction})(${clampedCount})`);
 
 	if (!dataURL) {
 		console.error("Failed to generate badge overlay icon in renderer.");
@@ -96,10 +94,7 @@ export async function setBadgeCount<IPCHandle>(requestedCount: number) {
 			break;
 		case "win32": {
 			const overlay = await generateBadgeOverlay(count);
-			const description =
-				count > 0 ? `${count} Notifications`
-					: count < 0 ? "Unread messages"
-						: "No new notifications";
+			const description = count > 0 ? `${count} Notifications` : count < 0 ? "Unread messages" : "No new notifications";
 			mainWindow.setOverlayIcon(overlay, description);
 			break;
 		}
@@ -108,7 +103,6 @@ export async function setBadgeCount<IPCHandle>(requestedCount: number) {
 	if (process.platform === "darwin") return;
 	tray.setImage(await loadTrayImage(count));
 }
-
 
 const TRAY_COMPOSITOR_CODE = `
 	async (baseImageDataURL, count) => {
@@ -166,9 +160,7 @@ export async function loadTrayImage(index: number) {
 		.resize({ width: 128, height: 128 })
 		.toDataURL();
 
-	const finalImageDataURL = await mainWindow.webContents.executeJavaScript(
-		`(${TRAY_COMPOSITOR_CODE})("${baseTrayIconDataURL}", ${clampedIndex})`,
-	);
+	const finalImageDataURL = await mainWindow.webContents.executeJavaScript(`(${TRAY_COMPOSITOR_CODE})("${baseTrayIconDataURL}", ${clampedIndex})`);
 
 	if (!finalImageDataURL) {
 		console.error("Failed to generate badged tray icon in renderer.");

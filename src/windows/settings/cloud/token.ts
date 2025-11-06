@@ -65,9 +65,7 @@ async function fetchTokenInternal(): Promise<string> {
 	// 2. Determine Vencord availability and get callback URL
 	let callbackUrl = "";
 
-	const vencordAvailable = await mainWindow.webContents
-		.executeJavaScript("window.Vencord?.Webpack !== undefined")
-		.catch(() => false);
+	const vencordAvailable = await mainWindow.webContents.executeJavaScript("window.Vencord?.Webpack !== undefined").catch(() => false);
 
 	if (vencordAvailable) {
 		mainWindow.show();
@@ -182,23 +180,19 @@ async function getCallbackUrlViaWindow(cloudHostUrl: string): Promise<string> {
 			});
 
 			// Intercept callback
-			authWindow.webContents.session.webRequest.onBeforeRequest(
-				{ urls: [`${callbackPrefix}?*`] },
-				(details, callback) => {
-					if (details.url.includes("?code=")) {
-						console.log(LOG_PREFIX, "Got callback");
-						resolve(details.url);
-						cleanup();
-						callback({ cancel: true });
-					} else {
-						callback({ cancel: false });
-					}
+			authWindow.webContents.session.webRequest.onBeforeRequest({ urls: [`${callbackPrefix}?*`] }, (details, callback) => {
+				if (details.url.includes("?code=")) {
+					console.log(LOG_PREFIX, "Got callback");
+					resolve(details.url);
+					cleanup();
+					callback({ cancel: true });
+				} else {
+					callback({ cancel: false });
 				}
-			);
+			});
 
 			authWindow.loadURL(cloudHostUrl + ENDPOINT_VERSION + "login");
 			authWindow.show();
-
 		} catch (error) {
 			cleanup();
 			reject(error);

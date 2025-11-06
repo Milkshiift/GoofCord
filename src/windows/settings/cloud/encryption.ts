@@ -39,10 +39,7 @@ export async function encryptString(text: string, password: string): Promise<str
 		const iv = crypto.randomBytes(IV_LENGTH);
 		const cipher = crypto.createCipheriv("aes-256-gcm", key, iv);
 
-		const encrypted = Buffer.concat([
-			cipher.update(compressed),
-			cipher.final()
-		]);
+		const encrypted = Buffer.concat([cipher.update(compressed), cipher.final()]);
 
 		const authTag = cipher.getAuthTag();
 
@@ -79,10 +76,7 @@ export async function decryptString(encryptedText: string, password: string): Pr
 		const decipher = crypto.createDecipheriv("aes-256-gcm", key, iv);
 		decipher.setAuthTag(authTag);
 
-		const decrypted = Buffer.concat([
-			decipher.update(encrypted),
-			decipher.final()
-		]);
+		const decrypted = Buffer.concat([decipher.update(encrypted), decipher.final()]);
 
 		const decompressed = await brotliDecompress(decrypted);
 		return JSON.parse(decompressed.toString("utf8"));

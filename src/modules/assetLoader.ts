@@ -49,20 +49,20 @@ export async function startStyleWatcher() {
 		const watcher = fs.watch(assetsFolder);
 
 		for await (const event of watcher) {
-			if (event.filename?.endsWith('.css')) {
+			if (event.filename?.endsWith(".css")) {
 				try {
 					const filePath = path.join(assetsFolder, event.filename);
 					const content = await fs.readFile(filePath, "utf-8");
 
-					mainWindow.webContents.send('assetLoader:styleUpdate', {
+					mainWindow.webContents.send("assetLoader:styleUpdate", {
 						file: event.filename,
-						content
+						content,
 					});
 				} catch (err) {
 					if (err instanceof Error && "code" in err && err.code === "ENOENT") {
-						mainWindow.webContents.send('assetLoader:styleUpdate', {
+						mainWindow.webContents.send("assetLoader:styleUpdate", {
 							file: event.filename,
-							content: ""
+							content: "",
 						});
 					} else {
 						console.error(LOG_PREFIX, `Error processing style update: ${err}`);

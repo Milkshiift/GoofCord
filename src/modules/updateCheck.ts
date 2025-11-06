@@ -34,21 +34,21 @@ export async function checkForUpdate() {
 
 function isSemverLower(version1: string, version2: string): boolean {
 	function compareParts(a: string | number | undefined, b: string | number | undefined): number {
-		const aNum = typeof a === 'number' || (typeof a === 'string' && !Number.isNaN(Number(a)));
-		const bNum = typeof b === 'number' || (typeof b === 'string' && !Number.isNaN(Number(b)));
+		const aNum = typeof a === "number" || (typeof a === "string" && !Number.isNaN(Number(a)));
+		const bNum = typeof b === "number" || (typeof b === "string" && !Number.isNaN(Number(b)));
 
 		if (aNum && bNum) return (Number(a) ?? 0) - (Number(b) ?? 0);
 		if (aNum) return -1;
 		if (bNum) return 1;
-		return String(a ?? '').localeCompare(String(b ?? ''));
+		return String(a ?? "").localeCompare(String(b ?? ""));
 	}
 
 	function compareVersionParts(v1: string, v2: string): boolean {
-		const [v1Main, v1Pre] = v1.split('-');
-		const [v2Main, v2Pre] = v2.split('-');
+		const [v1Main, v1Pre] = v1.split("-");
+		const [v2Main, v2Pre] = v2.split("-");
 
-		const v1MainParts = v1Main.split('.').map(Number);
-		const v2MainParts = v2Main.split('.').map(Number);
+		const v1MainParts = v1Main.split(".").map(Number);
+		const v2MainParts = v2Main.split(".").map(Number);
 
 		const v1IsPreRelease = v1Pre !== undefined;
 		const v2IsPreRelease = v2Pre !== undefined;
@@ -56,7 +56,7 @@ function isSemverLower(version1: string, version2: string): boolean {
 		if (!v1IsPreRelease && v2IsPreRelease) {
 			return false;
 		}
-		if(v1IsPreRelease && !v2IsPreRelease){
+		if (v1IsPreRelease && !v2IsPreRelease) {
 			return true;
 		}
 
@@ -64,8 +64,8 @@ function isSemverLower(version1: string, version2: string): boolean {
 			const cmp = compareParts(v1MainParts[i], v2MainParts[i]);
 			if (cmp !== 0) return cmp < 0;
 		}
-		const v1PreParts = v1Pre ? v1Pre.split('.') : [];
-		const v2PreParts = v2Pre ? v2Pre.split('.') : [];
+		const v1PreParts = v1Pre ? v1Pre.split(".") : [];
+		const v2PreParts = v2Pre ? v2Pre.split(".") : [];
 
 		if (!v1Pre && v2Pre) return false;
 		if (v1Pre && !v2Pre) return true;
@@ -74,7 +74,6 @@ function isSemverLower(version1: string, version2: string): boolean {
 			const cmp = compareParts(v1PreParts[i], v2PreParts[i]);
 			if (cmp !== 0) return cmp < 0;
 		}
-
 
 		return false;
 	}
