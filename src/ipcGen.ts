@@ -44,5 +44,5 @@ ipcMain.handle("mods:updateModsFull", async (event, ) => { return await updateMo
 ipcMain.handle("cacheManager:clearCache", async (event, ) => { return await clearCache(); });
 ipcMain.handle("venbind:setKeybinds", async (event, keybinds) => { return await setKeybinds(keybinds); });
 ipcMain.handle("venbind:isVenbindLoaded", async (event, ) => { return await isVenbindLoaded(); });
-ipcMain.handle("dynamicIcon:setBadgeCount", async (event, count) => { return await setBadgeCount(count); });
+ipcMain.handle("dynamicIcon:setBadgeCount", async (event, requestedCount) => { return await setBadgeCount(requestedCount); });
 ipcMain.handle("loader:setAutoLaunchState", async (event, ) => { return await setAutoLaunchState(); });

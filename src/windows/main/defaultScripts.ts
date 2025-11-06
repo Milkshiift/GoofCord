@@ -24,7 +24,7 @@ export function addPatch(p: PatchData) {
 		for (const r of patch.replacement) {
 			if (typeof r.replace === "string") r.replace = r.replace.replaceAll("$self", "GCDP");
 			if (typeof r.match !== "string") {
-				// @ts-ignore
+				// @ts-expect-error
 				r.match = [r.match.source, r.match.flags];
 			}
 		}
