@@ -84,8 +84,8 @@ async function generateBadgeOverlay(count: number): Promise<NativeImage | null> 
 }
 
 // Pings: >0   Unset: 0    Unread messages: -1
-export async function setBadgeCount<IPCHandle>(count: number) {
-	if (!getConfig("unreadBadge")) count = Math.max(0, count);
+export async function setBadgeCount<IPCHandle>(requestedCount: number) {
+	const count = getConfig("unreadBadge") ? requestedCount : Math.max(0, requestedCount);
 
 	switch (process.platform) {
 		case "linux":

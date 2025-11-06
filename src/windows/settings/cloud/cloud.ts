@@ -12,7 +12,7 @@ export const ENDPOINT_VERSION = "v1/"; // A slash should be at the end
 
 let currentOperation: string | null = null;
 
-async function withLock<T>(operation: string, fn: () => Promise<T>): Promise<T | void> {
+async function withLock<T>(operation: string, fn: () => Promise<T>): Promise<T | undefined> {
     if (currentOperation) {
         const message = `"${currentOperation}" operation is already running. Please wait for it to complete.`;
         console.log(LOG_PREFIX, message);

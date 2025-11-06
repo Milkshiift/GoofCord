@@ -13,7 +13,7 @@ addPatch({
     ],
     // biome-ignore lint/suspicious/noExplicitAny: Needed
     patchStreamQuality(opts: any) {
-        // @ts-ignore
+        // @ts-expect-error
         const screenshareQuality = window.screenshareSettings;
         if (!screenshareQuality) return;
 

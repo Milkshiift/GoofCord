@@ -4,7 +4,7 @@ import { error, log } from "../../modules/logger.ts";
 import { getDefaultScripts } from "./defaultScripts.ts";
 import { injectTitlebar } from "./titlebar.ts";
 import "./screenshare.ts";
-// @ts-ignore
+// @ts-expect-error
 import discordCss from "../../../assets/css/discord.css" with { type: "text" };
 import { startKeybindWatcher } from "./keybinds.ts";
 

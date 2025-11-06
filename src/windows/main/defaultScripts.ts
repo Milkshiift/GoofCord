@@ -27,7 +27,7 @@ export function addPatch(p: PatchData) {
                 r.match = [r.match.source, r.match.flags];
             }
         }
-        // @ts-ignore
+        // @ts-expect-error
         patch.plugin = "GoofCord";
         return patch;
     })

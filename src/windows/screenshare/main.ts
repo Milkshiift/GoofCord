@@ -18,7 +18,7 @@ export function registerScreenshareHandler() {
 		});
 		if (!sources) return callback({});
 
-		sources.map((source) => {
+		sources.forEach((source) => {
 			if (!source.name) source.name = "unknown";
 		});
 

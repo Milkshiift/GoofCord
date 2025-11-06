@@ -1,4 +1,4 @@
-// @ts-ignore See /build/globbyGlob.ts
+// @ts-expect-error See /build/globbyGlob.ts
 import allLangData from 'glob-import:../../assets/lang/*.json';
 import { app } from "electron";
 import { getConfig, setConfig } from "../config.ts";

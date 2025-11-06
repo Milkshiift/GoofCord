@@ -14,7 +14,7 @@ export function adjustWindow(window: BrowserWindow, configEntry: string) {
 	const debouncedSaveState = debounce(async () => await saveState(window, configEntry), 1000);
 
 	for (const event of ["resize", "maximize", "unmaximize"]) {
-		// @ts-ignore
+		// @ts-expect-error
 		window.on(event, debouncedSaveState);
 	}
 }

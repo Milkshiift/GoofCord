@@ -55,7 +55,7 @@
                 }
             });
 
-            stream.getAudioTracks().forEach(t => stream.removeTrack(t));
+            stream.getAudioTracks().forEach(t => void stream.removeTrack(t));
             stream.addTrack(audio.getAudioTracks()[0]);
         }
 
