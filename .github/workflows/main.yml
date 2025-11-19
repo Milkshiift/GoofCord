@@ -28,7 +28,7 @@ jobs:
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Github checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Python setuptools
         if: matrix.name == 'mac'
@@ -39,7 +39,7 @@ jobs:
           bun-version: latest
 
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "25.x"
 
