@@ -112,6 +112,8 @@
   "opt-blockedStrings-desc": "If any of specified strings are in the URL, it will be blocked.",
   "opt-allowedStrings": "Allowed strings",
   "opt-allowedStrings-desc": "If any of specified strings are in the URL, it will *not* be blocked.",
+  "opt-customUserAgent": "Custom user agent",
+  "opt-customUserAgent-desc": "Changing may make you suspicious. Leave empty for default.",
   "opt-button-openGoofCordFolder": "Open GoofCord folder",
   "opt-button-clearCache": "Clear cache",
   "opt-autoSaveCloud": "Auto save",

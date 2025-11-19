@@ -3,7 +3,7 @@
 
 	MIT License
 
-	Copyright (c) 2020-2023 Dawid Papiewski "SpacingBat3"
+	Copyright (c) 2020-2025 Dawid Papiewski "SpacingBat3"
 
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@
 	SOFTWARE.
 */
 import { release } from "node:os";
+import { getConfig } from "../config.ts";
 
 interface AgentReplace {
 	platform: string;
@@ -55,6 +56,12 @@ const toAgentCase = (s: string) => (s.slice(0, 1).toUpperCase() + s.slice(1).toL
  * @returns Fake Chrome/Chromium user agent string.
  */
 export function getUserAgent(chromeVersion: string, mobile?: boolean, replace?: AgentReplace) {
+	const customUserAgent = getConfig("customUserAgent");
+	if (customUserAgent.trim()) {
+		console.log("Using custom user agent");
+		return customUserAgent;
+	}
+
 	const userAgentPlatform = replace?.platform ?? process.platform;
 	const osVersion = replace?.version ?? (typeof process.getSystemVersion === "function" ? process.getSystemVersion() : userAgentPlatform === "darwin" ? "13.5.2" : release());
 	const device = replace?.device !== undefined ? (`; ${replace.device}` as const) : "";
