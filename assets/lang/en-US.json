@@ -114,6 +114,8 @@
   "opt-allowedStrings-desc": "If any of specified strings are in the URL, it will *not* be blocked.",
   "opt-customUserAgent": "Custom user agent",
   "opt-customUserAgent-desc": "Changing may make your traffic suspicious. Leave empty for default.",
+  "opt-windowsSpoof": "Windows Spoofing",
+  "opt-windowsSpoof-desc": "Tricks discord into thinking it is running on Windows (requires restart)",
   "opt-button-openGoofCordFolder": "Open GoofCord folder",
   "opt-button-clearCache": "Clear cache",
   "opt-autoSaveCloud": "Auto save",

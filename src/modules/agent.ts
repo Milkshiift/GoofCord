@@ -26,7 +26,7 @@
 import { release } from "node:os";
 import { getConfig } from "../config.ts";
 
-interface AgentReplace {
+export interface AgentReplace {
 	platform: string;
 	version: string;
 	arch: string;
