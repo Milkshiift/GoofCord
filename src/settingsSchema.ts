@@ -428,7 +428,7 @@ export const settingsSchema = {
 			name: "Custom user agent",
 			defaultValue: "",
 			inputType: "textfield",
-			description: "Changing may make you suspicious. Leave empty for default."
+			description: "Changing may make your traffic suspicious. Leave empty for default."
 		},
 		screensharePreviousSettings: {
 			defaultValue: ["720", "30", false, "motion"],
