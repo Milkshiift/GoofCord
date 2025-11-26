@@ -71,6 +71,7 @@ export interface SettingEntry {
 	options?: string[];
 	showAfter?: {
 		key: string;
+		customKey: any,
 		condition: (value: unknown) => boolean;
 	};
 	onChange?: string; // IPC channel to invoke
@@ -434,8 +435,14 @@ export const settingsSchema = {
       name: "Windows Spoofing",
       defaultValue: false,
       inputType: "checkbox",
-      description:
-        "Tricks discord into thinking it is running on Windows (requires restart)",
+      description: "Tricks discord into thinking it is running on Windows (requires restart)",
+     	showAfter: {
+        key: "windowsSpoof",
+				customKey: process.platform,
+				condition: (value: string) => {
+					return value !== "win32";
+				},
+      }
     },
 		screensharePreviousSettings: {
 			defaultValue: ["720", "30", false, "motion"],

@@ -21,7 +21,7 @@ export async function renderSettings() {
 
 		panelHtml += `
             <div id="${panelId}" class="content-panel ${isActive}">
-                
+
                 <form class="settingsContainer">
                     ${settingsHtml}
                     ${buttonsHtml ? `<div class="buttonContainer">${buttonsHtml}</div>` : ""}
@@ -48,7 +48,7 @@ export async function renderSettings() {
 					${tabHtml}
 				</nav>
 			</header>
-			
+
 			${
 				ipcRenderer.sendSync("utils:isEncryptionAvailable")
 					? ""
@@ -58,7 +58,7 @@ export async function renderSettings() {
 				</div>
 			`
 			}
-			
+
             <div class="settings-content">
                 ${panelHtml}
             </div>
@@ -96,7 +96,7 @@ function createSetting(setting: ConfigKey, entry: SettingEntry): string | "" {
 		entry.inputType = "textfield";
 	}
 	if (entry.showAfter) {
-		const controllingValue = ipcRenderer.sendSync("config:getConfig", entry.showAfter.key as ConfigKey);
+		const controllingValue = entry.showAfter.customKey || ipcRenderer.sendSync("config:getConfig", entry.showAfter.key as ConfigKey);
 		isHidden = !evaluateShowAfter(entry.showAfter.condition, controllingValue);
 	}
 
