@@ -35,22 +35,6 @@ export async function createMainWindow() {
 		},
 	});
 
- let chromeVer = process.versions.chrome.split(".")[0]
-    let windowSpoofOn = getConfig("windowsSpoof")
-  mainWindow.webContents.session.webRequest.onBeforeSendHeaders(
-    (details, callback) => {
-      if (windowSpoofOn) {
-        if(details.requestHeaders["sec-ch-ua-platform"]) {
-          details.requestHeaders["sec-ch-ua-platform"] = "Windows"
-        }
-        if(details.requestHeaders["sec-ch-ua"]) {
-          details.requestHeaders["sec-ch-ua"] = `"Chromium";v="${chromeVer}"`
-        }
-      }
-      callback({ requestHeaders: details.requestHeaders });
-    },
-  );
-
 	adjustWindow(mainWindow, "windowState:main");
 	if (getConfig("startMinimized")) mainWindow.hide();
 	await doAfterDefiningTheWindow();
@@ -58,20 +42,39 @@ export async function createMainWindow() {
 
 async function doAfterDefiningTheWindow() {
 	console.log(`${pc.blue("[Window]")} Setting up window...`);
+	let chromeVer = process.versions.chrome.split(".")[0]
+	let windowSpoofOn = getConfig("windowsSpoof")
 
-	// Set the user agent for the web contents based on the Chrome version.
-  // EDIT 11/25/25 : forces a windows useragent is spoof is enabled
-  // TODO : Add navigator.platform spoofing
-  if (getConfig("windowsSpoof")) {
-    let AgentInfo: AgentReplace = {
-      platform: "win32",
-      version: "10.0",
-      arch: "win64"
-    }
-    mainWindow.webContents.userAgent = getUserAgent(process.versions.chrome, false, AgentInfo)
-  } else {
-    mainWindow.webContents.userAgent = getUserAgent(process.versions.chrome);
-  }
+	if (windowSpoofOn) {
+      let AgentInfo: AgentReplace = {
+          platform: "win32",
+          version: "10.0",
+          arch: "win64"
+      }
+
+      const spoofInfo = {
+        userAgent: getUserAgent(process.versions.chrome, false, AgentInfo),
+        platform: "Win32",
+        userAgentMetadata: {
+          brands: [
+            {brand: "Chromium", version: chromeVer}
+          ],
+          fullVersionList: [
+            {brand: "Chromium", version: chromeVer}
+          ],
+          platform: "Windows",
+          platformVersion: "WT 10",
+          architecture: "x64",
+          model: "Windows",
+          mobile: false
+        }
+      }
+
+      mainWindow.webContents.debugger.attach('1.3');
+      mainWindow.webContents.debugger.sendCommand("Emulation.setUserAgentOverride", spoofInfo)
+	} else {
+	  mainWindow.webContents.userAgent = getUserAgent(process.versions.chrome);
+	}
 
 	const spellcheckLanguages = getConfig("spellcheckLanguages");
 	if (spellcheckLanguages) {
