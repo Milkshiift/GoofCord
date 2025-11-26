@@ -10,6 +10,8 @@ import { registerScreenshareHandler } from "../screenshare/main.ts";
 
 export let mainWindow: BrowserWindow;
 
+const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
 export async function createMainWindow() {
 	if (process.argv.some((arg) => arg === "--headless")) return;
 
@@ -78,6 +80,7 @@ async function doAfterDefiningTheWindow() {
       })
 
       mainWindow.webContents.debugger.sendCommand("Emulation.setUserAgentOverride", spoofInfo)
+      //await delay(1000)
     } catch(error) {
       console.error(`${pc.red("[WindowsSpoof]")} Debugger attach failed : `, error)
     }
@@ -90,7 +93,8 @@ async function doAfterDefiningTheWindow() {
 		mainWindow.webContents.session.setSpellCheckerLanguages(spellcheckLanguages);
 	}
 
-	void mainWindow.loadURL(getConfig("discordUrl"));
+	void mainWindow.loadURL(getConfig("discordUrl"))
+  void mainWindow.reload();
 
 	mainWindow.on("close", (event) => {
 		if (getConfig("minimizeToTray") || process.platform === "darwin") {

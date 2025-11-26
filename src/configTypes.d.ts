@@ -1,6 +1,6 @@
 // This file is auto-generated. Any changes will be lost. See genSettingsTypes.mjs script
 
-export type ConfigKey = "locale" | "discordUrl" | "arrpc" | "minimizeToTray" | "startMinimized" | "launchWithOsBoot" | "updateNotification" | "spellcheck" | "spellcheckLanguages" | "customTitlebar" | "disableAltMenu" | "staticTitle" | "dynamicIcon" | "unreadBadge" | "customIconPath" | "trayIcon" | "autoscroll" | "popoutWindowAlwaysOnTop" | "transparency" | "modNames" | "modEtagCache" | "customJsBundle" | "customCssBundle" | "noBundleUpdates" | "installDefaultShelterPlugins" | "invidiousEmbeds" | "messageEncryption" | "encryptionPasswords" | "encryptionCover" | "encryptionMark" | "domOptimizer" | "renderingOptimizations" | "forceDedicatedGPU" | "performanceFlags" | "disableGpuCompositing" | "firewall" | "customFirewallRules" | "blocklist" | "blockedStrings" | "allowedStrings" | "customUserAgent" | "windowsSpoof" | "screensharePreviousSettings" | "windowState:main" | "autoSaveCloud" | "cloudHost" | "cloudToken" | "cloudEncryptionKey";
+export type ConfigKey = "locale" | "discordUrl" | "arrpc" | "minimizeToTray" | "startMinimized" | "launchWithOsBoot" | "updateNotification" | "spellcheck" | "spellcheckLanguages" | "customTitlebar" | "disableAltMenu" | "staticTitle" | "dynamicIcon" | "unreadBadge" | "customIconPath" | "trayIcon" | "autoscroll" | "popoutWindowAlwaysOnTop" | "transparency" | "modNames" | "modEtagCache" | "customJsBundle" | "customCssBundle" | "noBundleUpdates" | "installDefaultShelterPlugins" | "invidiousEmbeds" | "messageEncryption" | "encryptionPasswords" | "encryptionCover" | "encryptionMark" | "domOptimizer" | "renderingOptimizations" | "forceDedicatedGPU" | "performanceFlags" | "windowsSpoof" | "disableGpuCompositing" | "firewall" | "customFirewallRules" | "blocklist" | "blockedStrings" | "allowedStrings" | "customUserAgent" | "screensharePreviousSettings" | "windowState:main" | "autoSaveCloud" | "cloudHost" | "cloudToken" | "cloudEncryptionKey";
 
 export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "locale": string;
@@ -37,6 +37,7 @@ export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "renderingOptimizations": boolean;
     "forceDedicatedGPU": boolean;
     "performanceFlags": boolean;
+    "windowsSpoof": boolean;
     "disableGpuCompositing": boolean;
     "firewall": boolean;
     "customFirewallRules": boolean;
@@ -44,7 +45,6 @@ export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "blockedStrings": string[];
     "allowedStrings": string[];
     "customUserAgent": string;
-    "windowsSpoof": boolean;
     "screensharePreviousSettings": [number, number, boolean, string];
     "windowState:main": [boolean, [number, number]];
     "autoSaveCloud": boolean;
@@ -86,6 +86,7 @@ export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "renderingOptimizations": boolean;
     "forceDedicatedGPU": boolean;
     "performanceFlags": boolean;
+    "windowsSpoof": boolean;
     "disableGpuCompositing": boolean;
     "firewall": boolean;
     "customFirewallRules": boolean;
@@ -93,7 +94,6 @@ export type ConfigValue<K extends ConfigKey> = K extends keyof {
     "blockedStrings": string[];
     "allowedStrings": string[];
     "customUserAgent": string;
-    "windowsSpoof": boolean;
     "screensharePreviousSettings": [number, number, boolean, string];
     "windowState:main": [boolean, [number, number]];
     "autoSaveCloud": boolean;

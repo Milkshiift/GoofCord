@@ -360,6 +360,18 @@ export const settingsSchema = {
 			description: "Enables additional Chromium flags for performance. Recommended ON unless causes issues.",
 			inputType: "checkbox",
 		},
+  windowsSpoof: {
+      name: "Spoof Windows (VPN block bypass)",
+      defaultValue: false,
+      inputType: "checkbox",
+      description: "Emulates the Windows platform. Enable this if Discord fails to load with a VPN.",
+     	showAfter: {
+        key: "windowsSpoof",
+        condition: (value: string) => {
+          return process.platform !== "win32";
+        },
+      }
+    },
 		disableGpuCompositing: {
 			defaultValue: false,
 			outputType: "boolean",
@@ -430,18 +442,6 @@ export const settingsSchema = {
 			inputType: "textfield",
 			description: "Changing may make your traffic suspicious. Leave empty for default."
 		},
-    windowsSpoof: {
-      name: "Windows Spoofing",
-      defaultValue: false,
-      inputType: "checkbox",
-      description: "Tricks discord into thinking it is running on Windows (requires restart)",
-     	showAfter: {
-        key: "windowsSpoof",
-				condition: (value: string) => {
-					return process.platform !== "win32";
-				},
-      }
-    },
 		screensharePreviousSettings: {
 			defaultValue: ["720", "30", false, "motion"],
 			outputType: "[number, number, boolean, string]",
