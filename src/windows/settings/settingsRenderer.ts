@@ -96,7 +96,7 @@ function createSetting(setting: ConfigKey, entry: SettingEntry): string | "" {
 		entry.inputType = "textfield";
 	}
 	if (entry.showAfter) {
-		const controllingValue = entry.showAfter.customKey || ipcRenderer.sendSync("config:getConfig", entry.showAfter.key as ConfigKey);
+		const controllingValue = ipcRenderer.sendSync("config:getConfig", entry.showAfter.key as ConfigKey);
 		isHidden = !evaluateShowAfter(entry.showAfter.condition, controllingValue);
 	}
 
