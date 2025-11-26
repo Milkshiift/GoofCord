@@ -1,4 +1,5 @@
 import { ipcRenderer } from "electron";
+import pc from "picocolors";
 
 interface IPCSources {
 	id: string;
@@ -41,22 +42,59 @@ async function selectSource(id: string | null, title: string | null) {
 	try {
 		const audio = (document.getElementById("audio-checkbox") as HTMLInputElement).checked;
 		const contentHint = (document.getElementById("content-hint-select") as HTMLInputElement).value;
-		const resolution = (document.getElementById("resolution-textbox") as HTMLInputElement).value;
-		const framerate = (document.getElementById("framerate-textbox") as HTMLInputElement).value;
+		const resolution = (document.getElementById("resolution-select") as HTMLInputElement).value;
+		const framerate = (document.getElementById("framerate-select") as HTMLInputElement).value;
 		void ipcRenderer.invoke("flashTitlebar", "#5865F2");
 
 		void ipcRenderer.invoke("config:setConfig", "screensharePreviousSettings", [+resolution, +framerate, audio, contentHint]);
 
 		void ipcRenderer.invoke("selectScreenshareSource", id, title, audio, contentHint, resolution, framerate);
 	} catch (err) {
-		console.error(err);
+		console.error(`${pc.red("[selectSource]")} An error occured:`, err);
 	}
+}
+
+const displayModes = {
+  Quality: {
+    "480p": 480,
+    "720p": 720,
+    "1080p": 1080,
+    "1440p": 1440,
+    "Source": 2160
+  },
+
+  Framerate: {
+    "15fps": 15,
+    "30fps": 30,
+    "60fps": 60
+  }
+}
+
+function generateFrameString(previousSettings: number) {
+  let result = ""
+
+  for (const frameString in displayModes.Framerate) {
+    const fps = displayModes.Framerate[frameString];
+    result = result + `<option value="${fps}" ${previousSettings === fps ? "selected" : ""}> ${frameString} </option>\n`
+  }
+
+  return result
+}
+
+function generateQualityString(previousSettings: number) {
+  let result = ""
+
+  for (const qualityString in displayModes.Quality) {
+    const quality = displayModes.Quality[qualityString];
+    result = result + `<option value="${quality}" ${previousSettings === quality ? "selected" : ""}> ${qualityString} </option>\n`
+  }
+
+  return result
 }
 
 async function addDisplays() {
 	ipcRenderer.once("getSources", (_event, arg) => {
 		const sources: IPCSources[] = arg;
-		console.log(sources);
 
 		const closeButton = document.createElement("button");
 		closeButton.classList.add("closeButton");
@@ -88,15 +126,15 @@ async function addDisplays() {
                   <option value="motion" ${previousSettings[3] !== "detail" ? "selected" : ""}>${ipcRenderer.sendSync("localization:i", "screenshare-optimization-motion")}</option>
                   <option value="detail" ${previousSettings[3] === "detail" ? "selected" : ""}>${ipcRenderer.sendSync("localization:i", "screenshare-optimization-detail")}</option>
                 </select>
-                <label for="audio-checkbox">${ipcRenderer.sendSync("localization:i", "screenshare-optimization")}</label>
+                <label for="content-hint-select">${ipcRenderer.sendSync("localization:i", "screenshare-optimization")}</label>
               </div>
               <div class="subcontainer">
-                <input id="resolution-textbox" type="text" value="${previousSettings[0]}" />
-                <label for="resolution-textbox">${ipcRenderer.sendSync("localization:i", "screenshare-resolution")}</label>
+                <select id="resolution-select"> ${generateQualityString(previousSettings[0])} </select>
+                <label for="resolution-select">${ipcRenderer.sendSync("localization:i", "screenshare-resolution")} !!</label>
               </div>
               <div class="subcontainer">
-                <input id="framerate-textbox" type="text" value="${previousSettings[1]}"/>
-                <label for="framerate-textbox">${ipcRenderer.sendSync("localization:i", "screenshare-framerate")}</label>
+                <select id="framerate-select"> ${generateFrameString(previousSettings[1])} </select>
+                <label for="framerate-select"> ${ipcRenderer.sendSync("localization:i", "screenshare-framerate")} </label>
               </div>
             </div>
         `;
