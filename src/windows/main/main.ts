@@ -46,6 +46,7 @@ async function doAfterDefiningTheWindow() {
 	let windowSpoofOn = getConfig("windowsSpoof")
 
 	if (windowSpoofOn) {
+	    console.info(`${pc.blue("[WindowsSpoof]")} Setting is enabled!`);
       let AgentInfo: AgentReplace = {
           platform: "win32",
           version: "10.0",
@@ -70,8 +71,16 @@ async function doAfterDefiningTheWindow() {
         }
       }
 
+    try {
       mainWindow.webContents.debugger.attach('1.3');
+      mainWindow.webContents.debugger.on('detach', (event, reason) => {
+        console.info(`${pc.blue("[WindowsSpoof]")} Debugger detached due to : `, reason)
+      })
+
       mainWindow.webContents.debugger.sendCommand("Emulation.setUserAgentOverride", spoofInfo)
+    } catch(error) {
+      console.error(`${pc.red("[WindowsSpoof]")} Debugger attach failed : `, error)
+    }
 	} else {
 	  mainWindow.webContents.userAgent = getUserAgent(process.versions.chrome);
 	}
