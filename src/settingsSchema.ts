@@ -360,6 +360,18 @@ export const settingsSchema = {
 			description: "Enables additional Chromium flags for performance. Recommended ON unless causes issues.",
 			inputType: "checkbox",
 		},
+  windowsSpoof: {
+      name: "Spoof Windows (VPN block bypass)",
+      defaultValue: false,
+      inputType: "checkbox",
+      description: "Emulates the Windows platform. Enable this if Discord fails to load with a VPN.",
+     	showAfter: {
+        key: "windowsSpoof",
+        condition: (value: boolean) => {
+          return process.platform !== "win32";
+        },
+      }
+    },
 		disableGpuCompositing: {
 			defaultValue: false,
 			outputType: "boolean",

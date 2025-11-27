@@ -3,7 +3,7 @@ import { app, BrowserWindow, ipcMain, shell } from "electron";
 import pc from "picocolors";
 import adblocker from "../../../assets/adblocker.js" with { type: "text" };
 import { getConfig } from "../../config.ts";
-import { getUserAgent } from "../../modules/agent.ts";
+import { AgentReplace, getUserAgent } from "../../modules/agent.ts";
 import { adjustWindow } from "../../modules/windowStateManager.ts";
 import { dirname, getCustomIcon } from "../../utils.ts";
 import { registerScreenshareHandler } from "../screenshare/main.ts";
@@ -42,16 +42,57 @@ export async function createMainWindow() {
 
 async function doAfterDefiningTheWindow() {
 	console.log(`${pc.blue("[Window]")} Setting up window...`);
+	let chromeVer = process.versions.chrome.split(".")[0]
+	let windowsSpoofOn = getConfig("windowsSpoof")
 
-	// Set the user agent for the web contents based on the Chrome version.
-	mainWindow.webContents.userAgent = getUserAgent(process.versions.chrome);
+	if (windowsSpoofOn) {
+	    console.info(`${pc.blue("[WindowsSpoof]")} Setting is enabled!`);
+      let AgentInfo: AgentReplace = {
+          platform: "win32",
+          version: "10.0",
+          arch: "win64"
+      }
+
+      const spoofInfo = {
+        userAgent: getUserAgent(process.versions.chrome, false, AgentInfo),
+        platform: "Win32",
+        userAgentMetadata: {
+          brands: [
+            {brand: "Chromium", version: chromeVer}
+          ],
+          fullVersionList: [
+            {brand: "Chromium", version: chromeVer}
+          ],
+          platform: "Windows",
+          platformVersion: "WT 10",
+          architecture: "x64",
+          model: "Windows",
+          mobile: false
+        }
+      }
+
+    try {
+      mainWindow.webContents.debugger.attach('1.3');
+      mainWindow.webContents.debugger.on('detach', (event, reason) => {
+        console.info(`${pc.blue("[WindowsSpoof]")} Debugger detached due to : `, reason)
+      })
+
+      mainWindow.webContents.debugger.sendCommand("Emulation.setUserAgentOverride", spoofInfo)
+      //await delay(1000)
+    } catch(error) {
+      console.error(`${pc.red("[WindowsSpoof]")} Debugger attach failed : `, error)
+    }
+	} else {
+	  mainWindow.webContents.userAgent = getUserAgent(process.versions.chrome);
+	}
 
 	const spellcheckLanguages = getConfig("spellcheckLanguages");
 	if (spellcheckLanguages) {
 		mainWindow.webContents.session.setSpellCheckerLanguages(spellcheckLanguages);
 	}
 
-	void mainWindow.loadURL(getConfig("discordUrl"));
+  void mainWindow.loadURL(getConfig("discordUrl"));
+  if(windowsSpoofOn) void mainWindow.reload();
 
 	mainWindow.on("close", (event) => {
 		if (getConfig("minimizeToTray") || process.platform === "darwin") {

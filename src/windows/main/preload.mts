@@ -21,6 +21,7 @@ if (document.location.hostname.includes("discord")) {
 
 	document.addEventListener("DOMContentLoaded", () => {
 		assets.styles.push(["discord.css", discordCss]);
+
 		if (ipcRenderer.sendSync("config:getConfig", "renderingOptimizations")) {
 			assets.styles.push([
 				"renderingOptimizations",

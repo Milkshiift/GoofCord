@@ -21,7 +21,7 @@ export async function renderSettings() {
 
 		panelHtml += `
             <div id="${panelId}" class="content-panel ${isActive}">
-                
+
                 <form class="settingsContainer">
                     ${settingsHtml}
                     ${buttonsHtml ? `<div class="buttonContainer">${buttonsHtml}</div>` : ""}
@@ -48,7 +48,7 @@ export async function renderSettings() {
 					${tabHtml}
 				</nav>
 			</header>
-			
+
 			${
 				ipcRenderer.sendSync("utils:isEncryptionAvailable")
 					? ""
@@ -58,7 +58,7 @@ export async function renderSettings() {
 				</div>
 			`
 			}
-			
+
             <div class="settings-content">
                 ${panelHtml}
             </div>
