@@ -10,8 +10,6 @@ import { registerScreenshareHandler } from "../screenshare/main.ts";
 
 export let mainWindow: BrowserWindow;
 
-const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
-
 export async function createMainWindow() {
 	if (process.argv.some((arg) => arg === "--headless")) return;
 
@@ -45,9 +43,9 @@ export async function createMainWindow() {
 async function doAfterDefiningTheWindow() {
 	console.log(`${pc.blue("[Window]")} Setting up window...`);
 	let chromeVer = process.versions.chrome.split(".")[0]
-	let windowSpoofOn = getConfig("windowsSpoof")
+	let windowsSpoofOn = getConfig("windowsSpoof")
 
-	if (windowSpoofOn) {
+	if (windowsSpoofOn) {
 	    console.info(`${pc.blue("[WindowsSpoof]")} Setting is enabled!`);
       let AgentInfo: AgentReplace = {
           platform: "win32",
@@ -93,8 +91,8 @@ async function doAfterDefiningTheWindow() {
 		mainWindow.webContents.session.setSpellCheckerLanguages(spellcheckLanguages);
 	}
 
-	void mainWindow.loadURL(getConfig("discordUrl"))
-  void mainWindow.reload();
+  void mainWindow.loadURL(getConfig("discordUrl"));
+  if(windowsSpoofOn) void mainWindow.reload();
 
 	mainWindow.on("close", (event) => {
 		if (getConfig("minimizeToTray") || process.platform === "darwin") {
