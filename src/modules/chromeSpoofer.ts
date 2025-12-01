@@ -100,7 +100,7 @@ function generateClientHints(platform: "win32" | "darwin" | "linux", arch: strin
 }
 
 function getProfile(): Profile {
-	const isWindowsSpoof = getConfig("windowsSpoof");
+	const isWindowsSpoof = getConfig("spoofWindows");
 	const fullChromeVersion = process.versions.chrome;
 	const majorVersion = fullChromeVersion.split(".")[0];
 
@@ -133,6 +133,8 @@ function getProfile(): Profile {
 export async function spoofChrome(mainWindow: BrowserWindow) {
 	const profile = getProfile();
 	mainWindow.webContents.userAgent = profile.userAgent;
+
+	if (!getConfig("spoofChrome")) return;
 
 	const applySpoofing = async () => {
 		try {
