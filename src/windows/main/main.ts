@@ -3,7 +3,7 @@ import { app, BrowserWindow, ipcMain, shell } from "electron";
 import pc from "picocolors";
 import adblocker from "../../../assets/adblocker.js" with { type: "text" };
 import { getConfig } from "../../config.ts";
-import { AgentReplace, getUserAgent } from "../../modules/agent.ts";
+import { type AgentReplace, getUserAgent } from "../../modules/agent.ts";
 import { adjustWindow } from "../../modules/windowStateManager.ts";
 import { dirname, getCustomIcon } from "../../utils.ts";
 import { registerScreenshareHandler } from "../screenshare/main.ts";
@@ -42,48 +42,54 @@ export async function createMainWindow() {
 
 async function doAfterDefiningTheWindow() {
 	console.log(`${pc.blue("[Window]")} Setting up window...`);
-	let chromeVer = process.versions.chrome.split(".")[0]
-	let windowsSpoofOn = getConfig("windowsSpoof")
 
-	if (windowsSpoofOn) {
-	    console.info(`${pc.blue("[WindowsSpoof]")} Setting is enabled!`);
-      let AgentInfo: AgentReplace = {
-          platform: "win32",
-          version: "10.0",
-          arch: "win64"
-      }
+	mainWindow.webContents.userAgent = getUserAgent(process.versions.chrome);
 
-      const spoofInfo = {
-        userAgent: getUserAgent(process.versions.chrome, false, AgentInfo),
-        platform: "Win32",
-        userAgentMetadata: {
-          brands: [
-            {brand: "Chromium", version: chromeVer}
-          ],
-          fullVersionList: [
-            {brand: "Chromium", version: chromeVer}
-          ],
-          platform: "Windows",
-          platformVersion: "WT 10",
-          architecture: "x64",
-          model: "Windows",
-          mobile: false
-        }
-      }
+	if (getConfig("windowsSpoof")) {
+		console.info(`${pc.blue("[Window]")} Spoofing Windows 🥸`);
+		const AgentInfo: AgentReplace = {
+			platform: "win32",
+			version: "10.0",
+			arch: "win64",
+		};
 
-    try {
-      mainWindow.webContents.debugger.attach('1.3');
-      mainWindow.webContents.debugger.on('detach', (event, reason) => {
-        console.info(`${pc.blue("[WindowsSpoof]")} Debugger detached due to : `, reason)
-      })
+		const majorVersion = process.versions.chrome.split('.')[0];
+		const fullVersionString = process.versions.chrome;
+		const spoofInfo = {
+			userAgent: getUserAgent(fullVersionString, false, AgentInfo),
+			platform: "Win32",
+			userAgentMetadata: {
+				brands: [
+					{brand: "Chromium", version: majorVersion},
+					{brand: "Google Chrome", version: majorVersion},
+					{brand: "Not_A Brand", version: "99"},
+				],
+				fullVersionList: [
+					{brand: "Chromium", version: fullVersionString},
+					{brand: "Google Chrome", version: fullVersionString},
+					{brand: "Not_A Brand", version: "99.0.0.0"},
+				],
+				platform: "Windows",
+				platformVersion: "10.0.0",
+				architecture: "x86",
+				model: "",
+				mobile: false,
+				bitness: "64",
+				wow64: false
+			},
+		};
 
-      mainWindow.webContents.debugger.sendCommand("Emulation.setUserAgentOverride", spoofInfo)
-      //await delay(1000)
-    } catch(error) {
-      console.error(`${pc.red("[WindowsSpoof]")} Debugger attach failed : `, error)
-    }
-	} else {
-	  mainWindow.webContents.userAgent = getUserAgent(process.versions.chrome);
+		try {
+			mainWindow.webContents.debugger.attach("1.3");
+		} catch (error) {
+			console.error(`${pc.red("[WindowsSpoof]")} Debugger attach failed : `, error);
+		}
+
+		mainWindow.webContents.debugger.on("detach", (_event, reason) => {
+			console.info(`${pc.blue("[WindowsSpoof]")} Debugger detached due to : `, reason);
+		});
+
+		void mainWindow.webContents.debugger.sendCommand("Emulation.setUserAgentOverride", spoofInfo);
 	}
 
 	const spellcheckLanguages = getConfig("spellcheckLanguages");
@@ -91,8 +97,7 @@ async function doAfterDefiningTheWindow() {
 		mainWindow.webContents.session.setSpellCheckerLanguages(spellcheckLanguages);
 	}
 
-  void mainWindow.loadURL(getConfig("discordUrl"));
-  if(windowsSpoofOn) void mainWindow.reload();
+	void mainWindow.loadURL(getConfig("discordUrl"));
 
 	mainWindow.on("close", (event) => {
 		if (getConfig("minimizeToTray") || process.platform === "darwin") {

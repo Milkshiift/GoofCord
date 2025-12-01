@@ -43,7 +43,7 @@ export function registerScreenshareHandler() {
 		ipcMain.handleOnce("selectScreenshareSource", async (_event, id, name, audio, contentHint, resolution, framerate) => {
 			capturerWindow.close();
 
-			console.info(`${pc.green("[selectScreenshare]")} values are:\nid:${id}\nname:${name}\naudio:${audio}\nresolution:${resolution}\nframerate:${framerate}` )
+			console.info(`${pc.green("[selectScreenshare]")} values are:\nid:${id}\nname:${name}\naudio:${audio}\nresolution:${resolution}\nframerate:${framerate}`);
 
 			if (!id) return callback({});
 

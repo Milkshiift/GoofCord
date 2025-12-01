@@ -360,18 +360,18 @@ export const settingsSchema = {
 			description: "Enables additional Chromium flags for performance. Recommended ON unless causes issues.",
 			inputType: "checkbox",
 		},
-  windowsSpoof: {
-      name: "Spoof Windows (VPN block bypass)",
-      defaultValue: false,
-      inputType: "checkbox",
-      description: "Emulates the Windows platform. Enable this if Discord fails to load with a VPN.",
-     	showAfter: {
-        key: "windowsSpoof",
-        condition: (value: boolean) => {
-          return process.platform !== "win32";
-        },
-      }
-    },
+		windowsSpoof: {
+			name: "Spoof Windows (VPN block bypass)",
+			defaultValue: false,
+			inputType: "checkbox",
+			description: "Emulates the Windows platform. Enable this if Discord fails to load with a VPN.",
+			showAfter: {
+				key: "windowsSpoof",
+				condition: (value: boolean) => {
+					return process.platform !== "win32";
+				},
+			},
+		},
 		disableGpuCompositing: {
 			defaultValue: false,
 			outputType: "boolean",
@@ -440,7 +440,7 @@ export const settingsSchema = {
 			name: "Custom user agent",
 			defaultValue: "",
 			inputType: "textfield",
-			description: "Changing may make your traffic suspicious. Leave empty for default."
+			description: "Changing may make your traffic suspicious. Leave empty for default.",
 		},
 		screensharePreviousSettings: {
 			defaultValue: ["720", "30", false, "motion"],

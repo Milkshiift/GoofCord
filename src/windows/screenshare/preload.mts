@@ -56,42 +56,42 @@ async function selectSource(id: string | null, title: string | null) {
 
 // display settings, ID is the display text, Value is the value (makes sense)
 const displayModes = {
-  Quality: {
-    "480p": 480,
-    "720p": 720,
-    "1080p": 1080,
-    "1440p": 1440,
-    "Source": 2160
-  },
+	Quality: {
+		"480p": 480,
+		"720p": 720,
+		"1080p": 1080,
+		"1440p": 1440,
+		Source: 2160,
+	},
 
-  Framerate: {
-    "15fps": 15,
-    "30fps": 30,
-    "60fps": 60
-  }
-}
+	Framerate: {
+		"15fps": 15,
+		"30fps": 30,
+		"60fps": 60,
+	},
+};
 
 // 2 functions to generate the framerate / quality HTML content
 function generateFrameString(previousSetting: number) {
-  let result = ""
+	let result = "";
 
-  for (const frameString in displayModes.Framerate) {
-    const fps = displayModes.Framerate[frameString];
-    result = result + `<option value="${fps}" ${previousSetting === fps ? "selected" : ""}> ${frameString} </option>\n`
-  }
+	for (const frameString in displayModes.Framerate) {
+		const fps = displayModes.Framerate[frameString];
+		result = result + `<option value="${fps}" ${previousSetting === fps ? "selected" : ""}> ${frameString} </option>\n`;
+	}
 
-  return result
+	return result;
 }
 
 function generateQualityString(previousSetting: number) {
-  let result = ""
+	let result = "";
 
-  for (const qualityString in displayModes.Quality) {
-    const quality = displayModes.Quality[qualityString];
-    result = result + `<option value="${quality}" ${previousSetting === quality ? "selected" : ""}> ${qualityString} </option>\n`
-  }
+	for (const qualityString in displayModes.Quality) {
+		const quality = displayModes.Quality[qualityString];
+		result = result + `<option value="${quality}" ${previousSetting === quality ? "selected" : ""}> ${qualityString} </option>\n`;
+	}
 
-  return result
+	return result;
 }
 
 async function addDisplays() {
