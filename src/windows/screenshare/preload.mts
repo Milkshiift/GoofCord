@@ -41,7 +41,7 @@ function escapeHtml(text: string): string {
 	return div.innerHTML;
 }
 
-function t(key: string): string {
+function i(key: string): string {
 	return ipcRenderer.sendSync("localization:i", key) as string;
 }
 
@@ -129,39 +129,38 @@ function addDisplays(): void {
 			const selectionElem = document.createElement("div");
 			selectionElem.classList.add("desktop-capturer-selection");
 			selectionElem.innerHTML = `
-        <h1 style="margin-bottom: 0">${escapeHtml(t("screenshare-screenshare"))}</h1>
-        <div class="desktop-capturer-selection__scroller">
-          <ul class="desktop-capturer-selection__list">
-            ${sources.map(createSourceItemHtml).join("")}
-          </ul>
-        </div>
-        <div class="checkbox-container">
-          <div class="subcontainer">
-            <input id="audio-checkbox" type="checkbox" ${previousSettings.audio ? "checked" : ""} />
-            <label for="audio-checkbox">${escapeHtml(t("screenshare-audio"))}</label>
-          </div>
-          <div class="subcontainer">
-            <select id="content-hint-select">
-              <option value="motion" ${previousSettings.contentHint !== "detail" ? "selected" : ""}>${escapeHtml(t("screenshare-optimization-motion"))}</option>
-              <option value="detail" ${previousSettings.contentHint === "detail" ? "selected" : ""}>${escapeHtml(t("screenshare-optimization-detail"))}</option>
-            </select>
-            <label for="content-hint-select">${escapeHtml(t("screenshare-optimization"))}</label>
-          </div>
-          <div class="subcontainer">
-            <select id="resolution-select">${generateOptionsHtml(DISPLAY_MODES.Quality, previousSettings.resolution)}</select>
-            <label for="resolution-select">${escapeHtml(t("screenshare-resolution"))}</label>
-          </div>
-          <div class="subcontainer">
-            <select id="framerate-select">${generateOptionsHtml(DISPLAY_MODES.Framerate, previousSettings.framerate)}</select>
-            <label for="framerate-select">${escapeHtml(t("screenshare-framerate"))}</label>
-          </div>
-        </div>
-      `;
+				<h1 style="margin-bottom: 0">${escapeHtml(i("screenshare-screenshare"))}</h1>
+				<div class="desktop-capturer-selection__scroller">
+				  <ul class="desktop-capturer-selection__list">
+					${sources.map(createSourceItemHtml).join("")}
+				  </ul>
+				</div>
+				<div class="checkbox-container">
+				  <div class="subcontainer">
+					<input id="audio-checkbox" type="checkbox" ${previousSettings.audio ? "checked" : ""} />
+					<label for="audio-checkbox">${escapeHtml(i("screenshare-audio"))}</label>
+				  </div>
+				  <div class="subcontainer">
+					<select id="content-hint-select">
+					  <option value="motion" ${previousSettings.contentHint !== "detail" ? "selected" : ""}>${escapeHtml(i("screenshare-optimization-motion"))}</option>
+					  <option value="detail" ${previousSettings.contentHint === "detail" ? "selected" : ""}>${escapeHtml(i("screenshare-optimization-detail"))}</option>
+					</select>
+					<label for="content-hint-select">${escapeHtml(i("screenshare-optimization"))}</label>
+				  </div>
+				  <div class="subcontainer">
+					<select id="resolution-select">${generateOptionsHtml(DISPLAY_MODES.Quality, previousSettings.resolution)}</select>
+					<label for="resolution-select">${escapeHtml(i("screenshare-resolution"))}</label>
+				  </div>
+				  <div class="subcontainer">
+					<select id="framerate-select">${generateOptionsHtml(DISPLAY_MODES.Framerate, previousSettings.framerate)}</select>
+					<label for="framerate-select">${escapeHtml(i("screenshare-framerate"))}</label>
+				  </div>
+				</div>
+			`;
 
 			document.body.appendChild(closeButton);
 			document.body.appendChild(selectionElem);
 
-			// Use event delegation for button clicks
 			selectionElem.addEventListener("click", (event) => {
 				const button = (event.target as HTMLElement).closest(".desktop-capturer-selection__btn");
 				if (button instanceof HTMLElement) {
