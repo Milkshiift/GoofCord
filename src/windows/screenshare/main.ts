@@ -30,8 +30,8 @@ export function registerScreenshareHandler() {
 			frame: false,
 			autoHideMenuBar: true,
 			webPreferences: {
-				sandbox: false,
-				preload: path.join(dirname(), "windows/screenshare/preload.mjs"),
+				sandbox: true,
+				preload: path.join(dirname(), "windows/screenshare/preload.js"),
 			},
 		});
 		capturerWindow.center();

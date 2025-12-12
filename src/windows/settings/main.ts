@@ -32,9 +32,8 @@ export async function createSettingsWindow<IPCHandle>() {
 		backgroundColor: "#2f3136",
 		autoHideMenuBar: true,
 		webPreferences: {
-			sandbox: false,
-			preload: path.join(dirname(), "windows/settings/preload.mjs"),
-			nodeIntegrationInSubFrames: false,
+			sandbox: true,
+			preload: path.join(dirname(), "windows/settings/preload.js"),
 		},
 	});
 	isOpen = true;

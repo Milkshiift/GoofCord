@@ -26,10 +26,8 @@ export async function createMainWindow() {
 		transparent: transparency,
 		backgroundMaterial: transparency ? "acrylic" : "none",
 		webPreferences: {
-			sandbox: false,
-			preload: path.join(dirname(), "windows/main/preload.mjs"),
-			nodeIntegrationInSubFrames: false,
-			enableWebSQL: false,
+			sandbox: true,
+			preload: path.join(dirname(), "windows/main/preload.js"),
 			spellcheck: getConfig("spellcheck"),
 			enableBlinkFeatures: getConfig("autoscroll") ? "MiddleClickAutoscroll" : undefined,
 		},

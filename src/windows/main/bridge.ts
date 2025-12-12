@@ -13,7 +13,6 @@ contextBridge.exposeInMainWorld("goofcord", {
 		flashTitlebar: (color: string) => flashTitlebar(color),
 		flashTitlebarWithText: (color: string, text: string) => flashTitlebarWithText(color, text),
 	},
-	electron: process.versions.electron,
 	version: ipcRenderer.sendSync("utils:getVersion"),
 	displayVersion: ipcRenderer.sendSync("utils:getDisplayVersion"),
 	loadConfig: () => ipcRenderer.invoke("config:loadConfig"),

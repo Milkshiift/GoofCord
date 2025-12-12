@@ -25,26 +25,53 @@ console.timeEnd("Ipc");
 
 console.log("Building...");
 await fs.promises.mkdir("ts-out");
-const bundleResult = await Bun.build({
+
+const preloadFiles = await searchPreloadFiles("src", []);
+const mainEntrypoints = [path.join("src", "main.ts"), path.join("src", "modules", "arrpcWorker.ts")];
+
+// ESM with splitting
+const mainBundleResult = await Bun.build({
   minify: true,
   sourcemap: isDev ? "linked" : undefined,
   format: "esm",
   external: ["electron"],
   target: "node",
   splitting: true,
-  entrypoints: await searchPreloadFiles("src", [path.join("src", "main.ts"), path.join("src", "modules", "arrpcWorker.ts")]),
+  entrypoints: mainEntrypoints,
   outdir: "ts-out",
   packages: "bundle",
   plugins: [globImporterPlugin],
 });
-if (bundleResult.logs.length) console.log(bundleResult.logs);
+if (mainBundleResult.logs.length) console.log(mainBundleResult.logs);
+
+// CommonJS, no splitting
+for (const preloadFile of preloadFiles) {
+  const relativePath = path.relative("src", preloadFile);
+  const outDir = path.join("ts-out", path.dirname(relativePath));
+
+  await fs.promises.mkdir(outDir, { recursive: true });
+
+  const preloadBundleResult = await Bun.build({
+    minify: true,
+    sourcemap: isDev ? "linked" : undefined,
+    format: "cjs",
+    external: ["electron"],
+    target: "node",
+    splitting: false,
+    entrypoints: [preloadFile],
+    outdir: outDir,
+    packages: "bundle",
+    plugins: [globImporterPlugin],
+  });
+
+  if (preloadBundleResult.logs.length) console.log(preloadBundleResult.logs);
+}
 
 await copyVenmic();
 await copyVenbind();
 
 if (process.platform !== "win32") await removeKoffi("./ts-out");
 
-await renamePreloadFiles("./ts-out");
 await fs.promises.cp("./assets/", "./ts-out/assets", { recursive: true });
 // Lang files are prebaked
 await fs.promises.rm("./ts-out/assets/lang", { recursive: true, force: true });
@@ -56,15 +83,6 @@ async function searchPreloadFiles(directory: string, result: string[] = []) {
     }
   });
   return result;
-}
-
-async function renamePreloadFiles(directoryPath: string) {
-  await traverseDirectory(directoryPath, async (filePath: string) => {
-    if (filePath.endsWith("preload.js")) {
-      const newFilePath = filePath.replace("preload.js", "preload.mjs");
-      await fs.promises.rename(filePath, newFilePath);
-    }
-  });
 }
 
 async function traverseDirectory(
