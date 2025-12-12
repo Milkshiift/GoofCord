@@ -27,7 +27,7 @@ console.log("Building...");
 await fs.promises.mkdir("ts-out");
 
 const preloadFiles = await searchPreloadFiles("src", []);
-const mainEntrypoints = [path.join("src", "main.ts"), path.join("src", "modules", "arrpcWorker.ts")];
+const mainEntrypoints = [path.join("src", "main.ts")];
 
 // ESM with splitting
 const mainBundleResult = await Bun.build({
