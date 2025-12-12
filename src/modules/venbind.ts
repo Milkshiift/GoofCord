@@ -2,7 +2,7 @@ import { createRequire } from "node:module";
 import pc from "picocolors";
 import type { Venbind as VenbindType } from "venbind";
 import { getAsset } from "../utils.ts";
-import { mainWindow } from "../windows/main/main.ts";
+import { mainWindow } from "../windows/main";
 
 let venbind: VenbindType | undefined;
 let venbindLoadAttempted = false;

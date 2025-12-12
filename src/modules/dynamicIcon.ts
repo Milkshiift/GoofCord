@@ -1,7 +1,7 @@
 import { app, type NativeImage, nativeImage } from "electron";
 import { getConfig } from "../config.ts";
-import { getTrayIcon, tray } from "../tray.ts";
-import { mainWindow } from "../windows/main/main.ts";
+import { mainWindow } from "../windows/main";
+import { getTrayIcon, tray } from "./tray.ts";
 
 const BADGE_GENERATOR_CODE = `
 	function generateBadge(num) {

@@ -1,7 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron";
 import type { ConfigKey, ConfigValue } from "../../configTypes";
 import { type SettingEntry, settingsSchema } from "../../settingsSchema.ts";
-import { findKeyAtDepth } from "../preloadUtils.ts";
 import { renderSettings } from "./settingsRenderer.ts";
 
 console.log("GoofCord Settings");
@@ -157,6 +156,23 @@ export function decryptSetting(settingValue: ConfigValue<ConfigKey>) {
 		return settingValue.map((value: unknown) => ipcRenderer.sendSync("utils:decryptSafeStorage", value));
 	}
 	return settingValue;
+}
+
+export function findKeyAtDepth(obj: object, targetKey: string, depth: number) {
+	if (depth === 1) {
+		return obj[targetKey] || undefined;
+	}
+
+	for (const key in obj) {
+		if (typeof obj[key] === "object" && obj[key] !== null) {
+			const result = findKeyAtDepth(obj[key], targetKey, depth - 1);
+			if (result !== undefined) {
+				return result;
+			}
+		}
+	}
+
+	return undefined;
 }
 
 initSettings().catch(console.error);

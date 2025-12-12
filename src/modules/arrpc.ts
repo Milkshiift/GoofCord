@@ -2,7 +2,7 @@ import { Worker } from "node:worker_threads";
 import { dialog } from "electron";
 import { getConfig } from "../config.ts";
 import { getGoofCordFolderPath } from "../utils.ts";
-import { mainWindow } from "../windows/main/main.ts";
+import { mainWindow } from "../windows/main";
 
 const workerString = `
 	import { parentPort, workerData } from "node:worker_threads";

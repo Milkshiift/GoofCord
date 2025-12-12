@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from "electron";
-import type { ConfigKey } from "../../configTypes";
+import type { ConfigKey } from "../../../configTypes";
 import { flashTitlebar, flashTitlebarWithText } from "./titlebar.ts";
 
 contextBridge.exposeInMainWorld("goofcord", {

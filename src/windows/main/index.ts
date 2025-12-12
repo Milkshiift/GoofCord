@@ -6,7 +6,7 @@ import { getConfig } from "../../config.ts";
 import { spoofChrome } from "../../modules/chromeSpoofer.ts";
 import { adjustWindow } from "../../modules/windowStateManager.ts";
 import { dirname, getCustomIcon } from "../../utils.ts";
-import { registerScreenshareHandler } from "../screenshare/main.ts";
+import { registerScreenshareHandler } from "../screenshare";
 
 export let mainWindow: BrowserWindow;
 
@@ -27,7 +27,7 @@ export async function createMainWindow() {
 		backgroundMaterial: transparency ? "acrylic" : "none",
 		webPreferences: {
 			sandbox: true,
-			preload: path.join(dirname(), "windows/main/preload.js"),
+			preload: path.join(dirname(), "windows/main/preload/preload.js"),
 			spellcheck: getConfig("spellcheck"),
 			enableBlinkFeatures: getConfig("autoscroll") ? "MiddleClickAutoscroll" : undefined,
 		},

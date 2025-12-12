@@ -1,10 +1,10 @@
 import { app, dialog, Menu, nativeImage, Tray } from "electron";
-import { getConfig } from "./config.ts";
-import { i } from "./modules/localization.ts";
-import { saveState } from "./modules/windowStateManager.ts";
-import { getAsset, getCustomIcon, getDisplayVersion } from "./utils.ts";
-import { mainWindow } from "./windows/main/main.ts";
-import { createSettingsWindow } from "./windows/settings/main.ts";
+import { getConfig } from "../config.ts";
+import { getAsset, getCustomIcon, getDisplayVersion } from "../utils.ts";
+import { mainWindow } from "../windows/main";
+import { createSettingsWindow } from "../windows/settings";
+import { i } from "./localization.ts";
+import { saveState } from "./windowStateManager.ts";
 
 export let tray: Tray;
 export async function createTray() {

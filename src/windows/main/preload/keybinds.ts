@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer, webFrame } from "electron";
-import { warn } from "../../modules/logger.ts";
+import { warn } from "../../../modules/logger.ts";
 import { addPatch } from "./defaultScripts.ts";
 
 addPatch({

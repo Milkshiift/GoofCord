@@ -1,11 +1,11 @@
 import "./bridge.ts";
 import { ipcRenderer, webFrame } from "electron";
-import { error, log } from "../../modules/logger.ts";
+import { error, log } from "../../../modules/logger.ts";
 import { getDefaultScripts } from "./defaultScripts.ts";
 import { injectTitlebar } from "./titlebar.ts";
 import "./screenshare.ts";
 // @ts-expect-error
-import discordCss from "../../../assets/css/discord.css" with { type: "text" };
+import discordCss from "../../../../assets/css/discord.css" with { type: "text" };
 import { startKeybindWatcher } from "./keybinds.ts";
 
 if (document.location.hostname.includes("discord")) {
