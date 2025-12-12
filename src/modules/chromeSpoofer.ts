@@ -131,7 +131,6 @@ function getProfile(): Profile {
 }
 
 export async function spoofChrome(mainWindow: BrowserWindow) {
-	const profile = getProfile();
 	mainWindow.webContents.userAgent = profile.userAgent;
 
 	if (!getConfig("spoofChrome")) return;
@@ -170,3 +169,5 @@ export async function spoofChrome(mainWindow: BrowserWindow) {
 
 	await applySpoofing();
 }
+
+export const profile = getProfile();

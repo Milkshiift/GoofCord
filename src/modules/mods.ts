@@ -5,6 +5,7 @@ import pc from "picocolors";
 import { getConfig, setConfig } from "../config.ts";
 import { getErrorMessage, isPathAccessible } from "../utils.ts";
 import { assetsFolder } from "./assetLoader.ts";
+import { profile } from "./chromeSpoofer.ts";
 
 export const LOG_PREFIX = pc.yellow("[Mod Loader]");
 
@@ -29,7 +30,7 @@ async function downloadBundles(urls: Array<string | undefined>, name: string) {
 
 			const response = await fetch(url, {
 				headers: {
-					"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.3",
+					"User-Agent": profile.userAgent,
 					"If-None-Match": exists ? (cache[url] ?? "") : "",
 				},
 			});
