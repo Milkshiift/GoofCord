@@ -1,17 +1,6 @@
 (async () => {
 	while (!window.shelter?.plugins?.addRemotePlugin) await new Promise((resolve) => setTimeout(resolve, 1000));
 
-	// Spikehd changed plugin urls. Migrating.
-	// TODO: Remove in a few updated
-	for (const [pluginId, plugin] of Object.entries(window.shelter.plugins.installedPlugins())) {
-		if (plugin.src.includes("spikehd.github.io")) {
-			window.shelter.plugins.removePlugin(pluginId);
-			const newPluginUrl = plugin.src.replace("spikehd.github.io", "spikehd.dev");
-			await window.shelter.plugins.addRemotePlugin(getId(newPluginUrl), newPluginUrl);
-			await window.shelter.plugins.startPlugin(getId(newPluginUrl));
-		}
-	}
-
 	const defaultPlugins = [
 		["https://spikehd.dev/shelter-plugins/shelteRPC/", true],
 		["https://milkshiift.github.io/goofcord-shelter-plugins/dynamic-icon/", true],
