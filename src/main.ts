@@ -20,6 +20,10 @@ if (!app.requestSingleInstanceLock()) app.exit();
 async function main() {
 	await loadConfig();
 	setFlags(); // Flags should be set as early as possible
+	if (!getConfig("hardwareAcceleration")) {
+		app.disableHardwareAcceleration();
+		console.log(pc.red("[!]") + " Hardware acceleration is: " + app.isHardwareAccelerationEnabled());
+	}
 	await initLocalization();
 
 	const loader = await import("./loader");
@@ -54,7 +58,7 @@ function setFlags() {
 	];
 
 	if (getConfig("performanceFlags")) {
-		console.log("Setting performance switches");
+		console.log(pc.red("[!]") + " Setting performance switches");
 		switches.push(["ignore-gpu-blocklist"], ["enable-gpu-rasterization"], ["enable-zero-copy"], ["disable-low-res-tiling"], ["disable-site-isolation-trials"], ["enable-hardware-overlays", "single-fullscreen,single-on-top,underlay"]);
 		enableFeatures.push("CanvasOopRasterization");
 	}

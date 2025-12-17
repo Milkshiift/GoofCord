@@ -6,7 +6,7 @@ import { dirname, getAsset } from "../../utils.ts";
 
 let capturerWindow: BrowserWindow;
 const isWayland = process.platform === "linux" && (process.env.XDG_SESSION_TYPE?.toLowerCase() === "wayland" || !!process.env.WAYLAND_DISPLAY);
-if (isWayland) console.log(`You are using ${pc.greenBright("Wayland")}! >ᴗ<`);
+if (isWayland) console.log(pc.red("[!]") + ` You are using ${pc.greenBright("Wayland")}! >ᴗ<`);
 
 export function registerScreenshareHandler() {
 	const primaryDisplay = screen.getPrimaryDisplay();
