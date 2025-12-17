@@ -106,6 +106,8 @@
   "opt-forceDedicatedGPU-desc": "Forces GoofCord to use a dedicated GPU if available.",
   "opt-performanceFlags": "Performance flags",
   "opt-performanceFlags-desc": "Enables additional Chromium flags for performance. Recommended ON unless causes issues.",
+  "opt-hardwareAcceleration": "Hardware acceleration",
+  "opt-hardwareAcceleration-desc": "Disabling can help fix some rendering issues.",
   "opt-spoofChrome": "Spoof Chrome",
   "opt-spoofChrome-desc": "Emulates the Chrome web browser to better blend in with normal traffic.",
   "opt-spoofWindows": "Spoof Windows (VPN block bypass)",

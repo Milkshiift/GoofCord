@@ -360,6 +360,12 @@ export const settingsSchema = {
 			description: "Enables additional Chromium flags for performance. Recommended ON unless causes issues.",
 			inputType: "checkbox",
 		},
+		hardwareAcceleration: {
+			name: "Hardware acceleration",
+			defaultValue: true,
+			description: "Disabling can help fix some rendering issues.",
+			inputType: "checkbox",
+		},
 		disableGpuCompositing: {
 			defaultValue: false,
 			outputType: "boolean",
