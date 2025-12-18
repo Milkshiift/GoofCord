@@ -1,15 +1,19 @@
+// @ts-expect-error
+import venbindPath from "native-module:../../assets/native/venbind-*.node";
 import { createRequire } from "node:module";
 import pc from "picocolors";
 import type { Venbind as VenbindType } from "venbind";
-import { getAsset } from "../utils.ts";
 import { mainWindow } from "../windows/main";
+
+const require = createRequire(import.meta.url);
 
 let venbind: VenbindType | undefined;
 let venbindLoadAttempted = false;
+
 export async function obtainVenbind() {
 	if (venbind !== undefined || process.argv.some((arg) => arg === "--no-venbind") || venbindLoadAttempted) return venbind;
 	try {
-		venbind = createRequire(import.meta.url)(getAsset(`venbind-${process.platform}-${process.arch}.node`));
+		venbind = require(venbindPath);
 		if (!venbind) throw new Error("Venbind is undefined");
 		await startVenbind(venbind);
 		console.log(pc.green("[Venbind]"), "Loaded venbind");

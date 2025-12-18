@@ -1,12 +1,12 @@
 import * as path from "node:path";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
 import pc from "picocolors";
-import adblocker from "../../../assets/adblocker.js" with { type: "text" };
 import { getConfig } from "../../config.ts";
 import { spoofChrome } from "../../modules/chromeSpoofer.ts";
 import { adjustWindow } from "../../modules/windowStateManager.ts";
 import { dirname, getCustomIcon } from "../../utils.ts";
 import { registerScreenshareHandler } from "../screenshare";
+import adblocker from "./scripts/adblocker.js" with { type: "text" };
 
 export let mainWindow: BrowserWindow;
 

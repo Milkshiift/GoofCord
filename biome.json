@@ -29,6 +29,6 @@
 		}
 	},
 	"files": {
-		"includes": ["src/**", "!src/ipcGen.ts", "!src/configTypes.d.ts"]
+		"includes": ["src/**", "!src/ipcGen.ts", "!src/configTypes.d.ts", "build/**"]
 	}
 }

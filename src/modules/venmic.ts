@@ -1,8 +1,11 @@
+// @ts-expect-error
+import venmicPath from "native-module:../../assets/native/venmic-*.node";
 import { createRequire } from "node:module";
 import type { LinkData, PatchBay } from "@vencord/venmic";
 import { app } from "electron";
 import pc from "picocolors";
-import { getAsset } from "../utils.ts";
+
+const require = createRequire(import.meta.url);
 
 let patchBay: typeof PatchBay;
 let venmic: PatchBay;
@@ -11,7 +14,9 @@ export let hasPipewirePulse = false;
 export async function initVenmic() {
 	if (process.argv.some((arg) => arg === "--no-venmic") || patchBay !== undefined) return;
 	try {
-		patchBay = (createRequire(import.meta.url)(getAsset(`venmic-${process.arch}.node`)) as typeof import("@vencord/venmic")).PatchBay;
+		const binding = require(venmicPath) as typeof import("@vencord/venmic");
+
+		patchBay = binding.PatchBay;
 		venmic = new patchBay();
 		hasPipewirePulse = patchBay.hasPipeWire();
 	} catch (e: unknown) {
@@ -29,11 +34,13 @@ function getRendererAudioServicePid() {
 }
 
 export function venmicList() {
+	if (!venmic) return [];
 	const audioPid = getRendererAudioServicePid();
 	return venmic.list(["node.name"]).filter((s) => s["application.process.id"] !== audioPid);
 }
 
 export function venmicStartSystem() {
+	if (!venmic) return;
 	const pid = getRendererAudioServicePid();
 
 	// A totally awesome config made by trial and error that hopefully works for most cases.

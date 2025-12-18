@@ -6,5 +6,4 @@ ts-out
 .idea
 .vscode/
 assets/lang/test-TEST.json
-assets/venmic*
-assets/venbind*
+assets/native/

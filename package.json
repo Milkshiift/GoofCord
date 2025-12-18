@@ -6,11 +6,10 @@
   "scripts": {
     "build": "bun build/build.ts",
     "start": "bun run build --dev && electron ./ts-out/main.js --dev --enable-source-maps",
-    "startWithLoginFix": "bun run fixLogin && bun run start",
-    "packageLinux": "bun run build && electron-builder --linux",
-    "packageWindows": "bun run build && electron-builder --win",
-    "packageMac": "bun run build && electron-builder --mac",
-    "fixLogin": "rm -rf ~/.config/Electron/Local\\ Storage && cp -r ~/.config/goofcord/Local\\ Storage ~/.config/Electron/",
+    "packageLinux": "electron-builder --linux",
+    "packageWindows": "electron-builder --win",
+    "packageMac": "electron-builder --mac",
+    "loginFix": "rm -rf ~/.config/Electron/Local\\ Storage && cp -r ~/.config/goofcord/Local\\ Storage ~/.config/Electron/",
     "lint": "biome check --unsafe --fix ."
   },
   "repository": {

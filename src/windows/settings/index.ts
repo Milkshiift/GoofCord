@@ -3,8 +3,9 @@ import { BrowserWindow, ipcMain, shell } from "electron";
 import { cachedConfig, getConfig } from "../../config.ts";
 import type { Config } from "../../configTypes.d.ts";
 import { i, initLocalization } from "../../modules/localization.ts";
-import { dirname, getAsset, getCustomIcon, getDisplayVersion, userDataPath } from "../../utils.ts";
-import { saveCloud } from "./cloud/cloud.ts";
+import { dirname, getCustomIcon, getDisplayVersion, relToAbs, userDataPath } from "../../utils.ts";
+import { saveCloud } from "./preload/cloud/cloud.ts";
+import html from "./renderer/settings.html";
 
 export let settingsWindow: BrowserWindow;
 let isOpen = false;
@@ -33,7 +34,7 @@ export async function createSettingsWindow<IPCHandle>() {
 		autoHideMenuBar: true,
 		webPreferences: {
 			sandbox: true,
-			preload: path.join(dirname(), "windows/settings/preload.js"),
+			preload: path.join(dirname(), "windows/settings/preload/preload.js"),
 		},
 	});
 	isOpen = true;
@@ -43,7 +44,7 @@ export async function createSettingsWindow<IPCHandle>() {
 		return { action: "deny" };
 	});
 
-	await settingsWindow.loadURL(`file://${getAsset("html/settings.html")}`);
+	await settingsWindow.loadFile(relToAbs(html.index));
 
 	settingsWindow.on("close", async (event) => {
 		isOpen = false;

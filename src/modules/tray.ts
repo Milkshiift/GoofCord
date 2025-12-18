@@ -1,6 +1,8 @@
 import { app, dialog, Menu, nativeImage, Tray } from "electron";
+import symbolicIconBlack from "../../assets/gf_symbolic_black.png";
+import symbolicIconWhite from "../../assets/gf_symbolic_white.png";
 import { getConfig } from "../config.ts";
-import { getAsset, getCustomIcon, getDisplayVersion } from "../utils.ts";
+import { getCustomIcon, getDisplayVersion, relToAbs } from "../utils.ts";
 import { mainWindow } from "../windows/main";
 import { createSettingsWindow } from "../windows/settings";
 import { i } from "./localization.ts";
@@ -8,7 +10,7 @@ import { saveState } from "./windowStateManager.ts";
 
 export let tray: Tray;
 export async function createTray() {
-	const trayImage = nativeImage.createFromPath(await getTrayIcon());
+	const trayImage = nativeImage.createFromPath(getTrayIcon());
 
 	const getTrayMenuIcon = () => {
 		if (process.platform === "win32") return trayImage.resize({ height: 16 });
@@ -77,8 +79,8 @@ export async function createTray() {
 	}
 }
 
-export async function getTrayIcon() {
-	if (getConfig("trayIcon") === "symbolic_black") return getAsset("gf_symbolic_black.png");
-	if (getConfig("trayIcon") === "symbolic_white") return getAsset("gf_symbolic_white.png");
+export function getTrayIcon() {
+	if (getConfig("trayIcon") === "symbolic_black") return relToAbs(symbolicIconBlack);
+	if (getConfig("trayIcon") === "symbolic_white") return relToAbs(symbolicIconWhite);
 	return getCustomIcon();
 }

@@ -2,6 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { app, safeStorage } from "electron";
+import gfIconIco from "../assets/gf_icon.ico";
+import gfIconPng from "../assets/gf_icon.png";
 import packageInfo from "../package.json" with { type: "json" };
 import { getConfig } from "./config.ts";
 
@@ -42,15 +44,11 @@ export function getDisplayVersion<IPCOn>() {
 	return packageVersion;
 }
 
-export function getAsset<IPCOn>(assetName: string) {
-	return path.join(dirname(), "/assets/", assetName);
-}
-
 export function getCustomIcon() {
 	const customIconPath = getConfig("customIconPath");
 	if (customIconPath !== "") return customIconPath;
-	if (process.platform === "win32") return getAsset("gf_icon.ico");
-	return getAsset("gf_icon.png");
+	if (process.platform === "win32") return relToAbs(gfIconIco);
+	return relToAbs(gfIconPng);
 }
 
 export async function readOrCreateFolder(path: string) {
@@ -136,4 +134,8 @@ export async function isPathAccessible(filePath: string) {
 	} catch (error) {
 		return false;
 	}
+}
+
+export function relToAbs(relative: string) {
+	return path.join(dirname(), relative);
 }

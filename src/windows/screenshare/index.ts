@@ -2,7 +2,8 @@ import path from "node:path";
 import { BrowserWindow, desktopCapturer, ipcMain, screen, session } from "electron";
 import pc from "picocolors";
 import { hasPipewirePulse, initVenmic, venmicList, venmicStartSystem } from "../../modules/venmic.ts";
-import { dirname, getAsset } from "../../utils.ts";
+import { dirname, relToAbs } from "../../utils.ts";
+import html from "./renderer/screenshare.html";
 
 let capturerWindow: BrowserWindow;
 const isWayland = process.platform === "linux" && (process.env.XDG_SESSION_TYPE?.toLowerCase() === "wayland" || !!process.env.WAYLAND_DISPLAY);
@@ -31,13 +32,13 @@ export function registerScreenshareHandler() {
 			autoHideMenuBar: true,
 			webPreferences: {
 				sandbox: true,
-				preload: path.join(dirname(), "windows/screenshare/preload.js"),
+				preload: path.join(dirname(), "windows/screenshare/preload/preload.js"),
 			},
 		});
 		capturerWindow.center();
 		capturerWindow.maximize();
 
-		await capturerWindow.loadURL(`file://${getAsset("html/picker.html")}`);
+		await capturerWindow.loadFile(relToAbs(html.index));
 		capturerWindow.webContents.send("getSources", sources);
 
 		ipcMain.handleOnce("selectScreenshareSource", async (_event, id, name, audio, contentHint, resolution, framerate) => {

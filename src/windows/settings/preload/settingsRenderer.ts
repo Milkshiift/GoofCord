@@ -1,6 +1,6 @@
 import { ipcRenderer, webFrame } from "electron";
-import type { ConfigKey, ConfigValue } from "../../configTypes.d.ts";
-import { type ButtonEntry, type SettingEntry, settingsSchema } from "../../settingsSchema.ts";
+import type { ConfigKey, ConfigValue } from "../../../configTypes.d.ts";
+import { type ButtonEntry, type SettingEntry, settingsSchema } from "../../../settingsSchema.ts";
 import { decryptSetting, evaluateShowAfter } from "./preload.mts";
 
 function sanitizeForId(name: string): string {

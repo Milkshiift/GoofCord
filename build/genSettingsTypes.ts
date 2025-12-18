@@ -8,7 +8,7 @@ const TYPE_MAPPING: Record<string, string> = {
 	dropdown: "string",
 	file: "string",
 	textarea: "string[]",
-	"dropdown-multiselect": "string[]"
+	"dropdown-multiselect": "string[]",
 };
 
 function inferType(inputType: string): string {
@@ -36,8 +36,8 @@ function generateSettingsMappings(data: string): string[] {
 
 function generateType(data: string): string {
 	const settingKeys: string[] = extractKeysAtLevel(data, 2)
-		.filter(key => !key.startsWith("button-"))
-		.map(key => `"${key}"`);
+		.filter((key) => !key.startsWith("button-"))
+		.map((key) => `"${key}"`);
 	const settingsMappings = generateSettingsMappings(data);
 	const lines = [
 		"// This file is auto-generated. Any changes will be lost. See genSettingsTypes.mjs script",
@@ -50,7 +50,7 @@ function generateType(data: string): string {
 		...settingsMappings,
 		"}[K] : never;",
 		"",
-		"export type Config = Map<ConfigKey, ConfigValue<ConfigKey>>;"
+		"export type Config = Map<ConfigKey, ConfigValue<ConfigKey>>;",
 	];
 
 	return lines.join("\n");
@@ -59,9 +59,7 @@ function generateType(data: string): string {
 const dtsPath = path.join(import.meta.dir, "..", "src", "configTypes.d.ts");
 
 export async function generateDTSFile(): Promise<void> {
-	const file = (await Bun.file(path.join(import.meta.dir, "..", "src", "settingsSchema.ts")).text())
-		.split("settingsSchema = ")
-		.pop()!;
+	const file = (await Bun.file(path.join(import.meta.dir, "..", "src", "settingsSchema.ts")).text()).split("settingsSchema = ").pop()!;
 	const dtsContent = generateType(file);
 	await Bun.write(dtsPath, dtsContent);
 }

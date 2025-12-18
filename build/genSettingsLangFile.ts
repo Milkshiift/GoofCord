@@ -30,12 +30,7 @@ export async function genSettingsLangFile() {
 		return result;
 	}
 
-	const settingsSchemaPath = path.join(
-		import.meta.dir,
-		"..",
-		"src",
-		"settingsSchema.ts",
-	);
+	const settingsSchemaPath = path.join(import.meta.dir, "..", "src", "settingsSchema.ts");
 	const settingsSchemaFile = Bun.file(settingsSchemaPath);
 	const fileContent = await settingsSchemaFile.text();
 	const file = fileContent.split("settingsSchema = ").pop();
@@ -46,13 +41,7 @@ export async function genSettingsLangFile() {
 
 	const extractedStrings = extractNames(file);
 
-	const engLangPath = path.join(
-		import.meta.dir,
-		"..",
-		"assets",
-		"lang",
-		"en-US.json",
-	);
+	const engLangPath = path.join(import.meta.dir, "..", "assets", "lang", "en-US.json");
 	const engLangFile = Bun.file(engLangPath);
 	const engLang = JSON.parse(await engLangFile.text());
 
@@ -61,7 +50,6 @@ export async function genSettingsLangFile() {
 			delete engLang[key];
 		}
 		engLang[key] = extractedStrings[key];
-
 	}
 
 	await Bun.write(engLangPath, JSON.stringify(engLang, null, 2));
