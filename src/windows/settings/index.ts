@@ -1,4 +1,5 @@
 import path from "node:path";
+import { isDeepStrictEqual } from "node:util";
 import { BrowserWindow, ipcMain, shell } from "electron";
 import { cachedConfig, getConfig } from "../../config.ts";
 import type { Config } from "../../configTypes.d.ts";
@@ -15,18 +16,10 @@ ipcMain.handle("openFolder", async (_event, folder: string) => await shell.openP
 
 function hasConfigChanged(original: Config, current: Config): boolean {
 	if (original.size !== current.size) return true;
-
-	for (const [key, originalValue] of original) {
+	for (const [key, val] of original) {
 		if (!current.has(key)) return true;
-		const currentValue = current.get(key);
-
-		if (originalValue === currentValue) continue;
-
-		if (JSON.stringify(originalValue) !== JSON.stringify(currentValue)) {
-			return true;
-		}
+		if (!isDeepStrictEqual(val, current.get(key))) return true;
 	}
-
 	return false;
 }
 

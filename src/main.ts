@@ -31,51 +31,82 @@ async function main() {
 }
 
 function setFlags() {
-	if (process.argv.some((arg) => arg === "--no-flags")) return;
+	if (process.argv.includes("--no-flags")) return;
 
-	const disableFeatures = ["UseChromeOSDirectVideoDecoder", "HardwareMediaKeyHandling", "MediaSessionService", "WebRtcAllowInputVolumeAdjustment", "Vulkan"];
-	const enableFeatures = ["WebRTC", "WebRtcHideLocalIpsWithMdns", "PlatformHEVCEncoderSupport"];
+	const enableFeatures = new Set([
+		"WebRTC",
+		"WebRtcHideLocalIpsWithMdns",
+		"PlatformHEVCEncoderSupport",
+	]);
+
+	const disableFeatures = new Set([
+		"UseChromeOSDirectVideoDecoder",
+		"HardwareMediaKeyHandling",
+		"MediaSessionService",
+		"WebRtcAllowInputVolumeAdjustment",
+		"Vulkan",
+	]);
+
+	const switches = new Map<string, string | null>([
+		["autoplay-policy", "no-user-gesture-required"],
+		["enable-speech-dispatcher", null],
+		["disable-http-cache", null], // Work around https://github.com/electron/electron/issues/40777
+		// Prevent app unloading when backgrounded
+		["disable-renderer-backgrounding", null],
+		["disable-background-timer-throttling", null],
+		["disable-disable-backgrounding-occluded-windows", null],
+	]);
 
 	if (process.platform === "linux") {
-		enableFeatures.push("PulseaudioLoopbackForScreenShare");
-		if (!process.argv.some((arg) => arg === "--no-vaapi")) {
-			enableFeatures.push("AcceleratedVideoDecodeLinuxGL", "AcceleratedVideoEncoder", "AcceleratedVideoDecoder", "AcceleratedVideoDecodeLinuxZeroCopyGL");
+		enableFeatures.add("PulseaudioLoopbackForScreenShare");
+
+		const noVaapi = process.argv.includes("--no-vaapi");
+		if (!noVaapi) {
+			enableFeatures.add("AcceleratedVideoDecodeLinuxGL");
+			enableFeatures.add("AcceleratedVideoEncoder");
+			enableFeatures.add("AcceleratedVideoDecoder");
+			enableFeatures.add("AcceleratedVideoDecodeLinuxZeroCopyGL");
 		}
 	}
 
 	if (process.platform === "win32") {
-		disableFeatures.push("CalculateNativeWinOcclusion");
+		disableFeatures.add("CalculateNativeWinOcclusion");
 	}
-
-	const switches = [
-		["autoplay-policy", "no-user-gesture-required"],
-		["enable-speech-dispatcher"],
-		["disable-http-cache"], // Work around https://github.com/electron/electron/issues/40777
-		// disable renderer backgrounding to prevent the app from unloading when in the background
-		["disable-renderer-backgrounding"],
-		["disable-background-timer-throttling"],
-		["disable-disable-backgrounding-occluded-windows"],
-	];
 
 	if (getConfig("performanceFlags")) {
 		console.log(pc.red("[!]") + " Setting performance switches");
-		switches.push(["ignore-gpu-blocklist"], ["enable-gpu-rasterization"], ["enable-zero-copy"], ["disable-low-res-tiling"], ["disable-site-isolation-trials"], ["enable-hardware-overlays", "single-fullscreen,single-on-top,underlay"]);
-		enableFeatures.push("CanvasOopRasterization");
+		enableFeatures.add("CanvasOopRasterization");
+
+		switches.set("ignore-gpu-blocklist", null);
+		switches.set("enable-gpu-rasterization", null);
+		switches.set("enable-zero-copy", null);
+		switches.set("disable-low-res-tiling", null);
+		switches.set("disable-site-isolation-trials", null);
+		switches.set("enable-hardware-overlays", "single-fullscreen,single-on-top,underlay");
 	}
 
 	if (getConfig("disableGpuCompositing")) {
-		switches.push(["disable-gpu-compositing"]);
+		switches.set("disable-gpu-compositing", null);
 	}
 
 	if (getConfig("forceDedicatedGPU")) {
-		switches.push(["force_high_performance_gpu"]);
+		switches.set("force_high_performance_gpu", null);
 	}
 
-	switches.push(["disable-features", disableFeatures.join(",")]);
-	switches.push(["enable-features", enableFeatures.join(",")]);
+	if (disableFeatures.size > 0) {
+		app.commandLine.appendSwitch("disable-features", Array.from(disableFeatures).join(","));
+	}
 
-	for (const [key, val] of switches) {
-		app.commandLine.appendSwitch(key, val);
+	if (enableFeatures.size > 0) {
+		app.commandLine.appendSwitch("enable-features", Array.from(enableFeatures).join(","));
+	}
+	
+	for (const [flag, value] of switches) {
+		if (value === null) {
+			app.commandLine.appendSwitch(flag);
+		} else {
+			app.commandLine.appendSwitch(flag, value);
+		}
 	}
 }
 

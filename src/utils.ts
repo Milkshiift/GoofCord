@@ -60,17 +60,19 @@ export async function readOrCreateFolder(path: string) {
 	}
 }
 
-export function tryCreateFolder(path: string) {
+export function tryCreateFolder(dirPath: string): boolean {
 	try {
-		// Synchronous mkdir is literally 100 times faster than the promisified version
-		fs.mkdirSync(path, { recursive: true });
-	} catch (e: unknown) {
-		if (e instanceof Error && "code" in e && e.code !== "EEXIST") {
-			console.error(e);
-			return "EEXIST";
+		fs.mkdirSync(dirPath, { recursive: true });
+		return true;
+	} catch (e) {
+		if (e instanceof Error && (e as NodeJS.ErrnoException).code === 'EEXIST') {
+			console.error(`Cannot create directory '${dirPath}' because a file with that name already exists.`);
+			return false;
 		}
+
+		console.error(`Failed to create directory '${dirPath}':`, e);
+		return false;
 	}
-	return "OK";
 }
 
 type ErrorWithMessage = {
@@ -127,13 +129,10 @@ export async function saveFileToGCFolder<IPCHandle>(filePath: string, content: s
 	return fullPath;
 }
 
-export async function isPathAccessible(filePath: string) {
-	try {
-		await fs.promises.access(filePath, fs.constants.F_OK);
-		return true;
-	} catch (error) {
-		return false;
-	}
+export async function isPathAccessible(filePath: string): Promise<boolean> {
+	return fs.promises.access(filePath, fs.constants.F_OK)
+		.then(() => true)
+		.catch(() => false);
 }
 
 export function relToAbs(relative: string) {
