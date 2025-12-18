@@ -1,33 +1,22 @@
-// Reference: https://www.typescriptlang.org/tsconfig
 {
   "include": ["src/**/*", "build/**/*"],
-  //"exclude": ["src/**/*.test.ts"],
+  "exclude": ["node_modules"],
   "compilerOptions": {
     "rootDir": "./",
-    "outDir": "ts-out",
+    "module": "esnext",
     "moduleResolution": "bundler",
-
-    "strict": true,
-    "noImplicitAny": false,
-    "noImplicitReturns": false,
-    "noFallthroughCasesInSwitch": true,
-    "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
+    "target": "esnext",
     "lib": ["ESNext", "dom", "dom.Iterable"],
 
-    "module": "esnext",
-    "removeComments": true,
-    "inlineSourceMap": true,
-    "inlineSources": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "skipLibCheck": true,
 
-    "declaration": false,
-    "declarationMap": false,
-
-    "target": "esnext",
-    "downlevelIteration": false,
-    "importHelpers": false
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
   }
 }
