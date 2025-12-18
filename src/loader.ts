@@ -12,7 +12,7 @@ import { createTray } from "./modules/tray.ts";
 import { checkForUpdate } from "./modules/updateCheck.ts";
 import { getCustomIcon, isDev } from "./utils.ts";
 import { createMainWindow } from "./windows/main";
-import { createSettingsWindow } from "./windows/settings";
+import { createSettingsWindow, settingsWindow } from "./windows/settings";
 
 export async function load() {
 	void setAutoLaunchState();
@@ -47,14 +47,15 @@ async function waitForInternetConnection() {
 
 async function handleFirstLaunch() {
 	await createSettingsWindow();
-	await new Promise((resolve) => setTimeout(resolve, 1000));
-	await dialog.showMessageBox({
-		message: i("welcomeMessage"),
-		type: "info",
-		icon: getCustomIcon(),
-		noLink: false,
+	settingsWindow.once('ready-to-show', async () => {
+		await dialog.showMessageBox({
+			message: i("welcomeMessage"),
+			type: "info",
+			icon: getCustomIcon(),
+			noLink: false,
+		});
+		app.relaunch(); // Relaunches only when user closes settings window
 	});
-	app.relaunch(); // Relaunches only when user closes settings window
 }
 
 export async function setAutoLaunchState<IPCHandle>() {
