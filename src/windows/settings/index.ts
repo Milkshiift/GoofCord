@@ -13,6 +13,23 @@ let originalConfig: Config;
 
 ipcMain.handle("openFolder", async (_event, folder: string) => await shell.openPath(path.join(userDataPath, `/${folder}/`)));
 
+function hasConfigChanged(original: Config, current: Config): boolean {
+	if (original.size !== current.size) return true;
+
+	for (const [key, originalValue] of original) {
+		if (!current.has(key)) return true;
+		const currentValue = current.get(key);
+
+		if (originalValue === currentValue) continue;
+
+		if (JSON.stringify(originalValue) !== JSON.stringify(currentValue)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 export async function createSettingsWindow<IPCHandle>() {
 	if (isOpen) {
 		settingsWindow.show();
@@ -20,7 +37,7 @@ export async function createSettingsWindow<IPCHandle>() {
 		return;
 	}
 
-	originalConfig = { ...cachedConfig };
+	originalConfig = new Map(cachedConfig);
 
 	console.log("Creating a settings window.");
 	settingsWindow = new BrowserWindow({
@@ -48,11 +65,13 @@ export async function createSettingsWindow<IPCHandle>() {
 
 	settingsWindow.on("close", async (event) => {
 		isOpen = false;
-		if (originalConfig !== cachedConfig && getConfig("autoSaveCloud")) {
+
+		if (getConfig("autoSaveCloud") && hasConfigChanged(originalConfig, cachedConfig)) {
 			event.preventDefault();
 			try {
+				console.log("Settings changed, auto-saving to cloud...");
 				await saveCloud(true);
-				settingsWindow.destroy(); // Not trigger close event
+				settingsWindow.destroy();
 			} catch (error) {
 				console.error("Error saving config before closing:", error);
 				settingsWindow.destroy();
