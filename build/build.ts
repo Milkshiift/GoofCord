@@ -31,7 +31,6 @@ const targetArch = getArg("arch") || process.arch;
 console.log(pc.cyan(`Build Target: ${targetPlatform}-${targetArch} ${isDev ? "(Dev)" : "(Prod)"}`));
 // ------------------------
 
-
 await copyNativeModules();
 
 await fs.promises.rm("ts-out", { recursive: true, force: true });
@@ -117,25 +116,13 @@ async function traverseDirectory(directory: string, fileHandler: (filePath: stri
 async function copyNativeModules() {
 	try {
 		return await Promise.all([
-			copyFile(
-				"./node_modules/@vencord/venmic/prebuilds/venmic-addon-linux-x64/node-napi-v7.node",
-				"./assets/native/venmic-linux-x64.node"),
-			copyFile(
-				"./node_modules/@vencord/venmic/prebuilds/venmic-addon-linux-arm64/node-napi-v7.node",
-				"./assets/native/venmic-linux-arm64.node"),
+			copyFile("./node_modules/@vencord/venmic/prebuilds/venmic-addon-linux-x64/node-napi-v7.node", "./assets/native/venmic-linux-x64.node"),
+			copyFile("./node_modules/@vencord/venmic/prebuilds/venmic-addon-linux-arm64/node-napi-v7.node", "./assets/native/venmic-linux-arm64.node"),
 
-			copyFile(
-				"./node_modules/venbind/prebuilds/windows-x86_64/venbind-windows-x86_64.node",
-				"./assets/native/venbind-win32-x64.node"),
-			copyFile(
-				"./node_modules/venbind/prebuilds/windows-aarch64/venbind-windows-aarch64.node",
-				"./assets/native/venbind-win32-arm64.node"),
-			copyFile(
-				"./node_modules/venbind/prebuilds/linux-x86_64/venbind-linux-x86_64.node",
-				"./assets/native/venbind-linux-x64.node"),
-			copyFile(
-				"./node_modules/venbind/prebuilds/linux-aarch64/venbind-linux-aarch64.node",
-				"./assets/native/venbind-linux-arm64.node"),
+			copyFile("./node_modules/venbind/prebuilds/windows-x86_64/venbind-windows-x86_64.node", "./assets/native/venbind-win32-x64.node"),
+			copyFile("./node_modules/venbind/prebuilds/windows-aarch64/venbind-windows-aarch64.node", "./assets/native/venbind-win32-arm64.node"),
+			copyFile("./node_modules/venbind/prebuilds/linux-x86_64/venbind-linux-x86_64.node", "./assets/native/venbind-linux-x64.node"),
+			copyFile("./node_modules/venbind/prebuilds/linux-aarch64/venbind-linux-aarch64.node", "./assets/native/venbind-linux-arm64.node"),
 		]);
 	} catch {
 		return console.warn("Failed to copy native modules.");

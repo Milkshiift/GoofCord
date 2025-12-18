@@ -17,7 +17,7 @@ server.on("invite", (code: string) => {
 		cmd: "INVITE_BROWSER",
 		args: {
 			code: code,
-		}
+		},
 	});
 });
 

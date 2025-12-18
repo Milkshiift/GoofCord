@@ -25,7 +25,7 @@ export const nativeModulePlugin = (options: NativePluginOptions = {}): BunPlugin
 		});
 
 		build.onLoad({ filter: /.*/, namespace }, async (args: OnLoadArgs) => {
-			const [importerDir, globPattern] = args.path.split('\0');
+			const [importerDir, globPattern] = args.path.split("\0");
 
 			const targetPlatform = options.targetPlatform || process.platform;
 			const targetArch = options.targetArch || process.arch;
@@ -33,23 +33,24 @@ export const nativeModulePlugin = (options: NativePluginOptions = {}): BunPlugin
 			const glob = new Bun.Glob(globPattern);
 			const files = await Array.fromAsync(glob.scan(importerDir));
 
-			const matchedFile = files.find(file => {
+			const matchedFile = files.find((file) => {
 				const lower = file.toLowerCase();
-				return lower.includes(targetPlatform.toLowerCase()) &&
-					lower.includes(targetArch.toLowerCase());
+				return lower.includes(targetPlatform.toLowerCase()) && lower.includes(targetArch.toLowerCase());
 			});
 
 			if (!matchedFile) {
 				return {
-					errors: [{
-						text: `Could not find native module for ${targetPlatform}-${targetArch} matching pattern: ${globPattern} in ${importerDir}`,
-					}]
+					errors: [
+						{
+							text: `Could not find native module for ${targetPlatform}-${targetArch} matching pattern: ${globPattern} in ${importerDir}`,
+						},
+					],
 				};
 			}
 
 			const absolutePath = path.resolve(importerDir, matchedFile);
 
-			const importPath = absolutePath.replace(/\\/g, '/');
+			const importPath = absolutePath.replace(/\\/g, "/");
 
 			const contents = `
                 import path from "${importPath}" with { type: "file" };

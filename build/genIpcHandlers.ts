@@ -24,9 +24,7 @@ function isTsFunctionAsync(node: ts.FunctionDeclaration, sourceFile: ts.SourceFi
 
 function generateHandler(channelName: string, funcName: string, parameters: string, isAsync: boolean, type: "handle" | "on"): string {
 	const prefix = type === "handle" ? "ipcMain.handle" : "ipcMain.on";
-	const body = type === "handle"
-		? (isAsync ? `return await ${funcName}(${parameters});` : `return ${funcName}(${parameters});`)
-		: (isAsync ? `event.returnValue = await ${funcName}(${parameters});` : `event.returnValue = ${funcName}(${parameters});`);
+	const body = type === "handle" ? (isAsync ? `return await ${funcName}(${parameters});` : `return ${funcName}(${parameters});`) : isAsync ? `event.returnValue = await ${funcName}(${parameters});` : `event.returnValue = ${funcName}(${parameters});`;
 
 	const asyncKw = isAsync ? "async " : "";
 	return `${prefix}("${channelName}", ${asyncKw}(event, ${parameters}) => { ${body} });`;
@@ -45,59 +43,56 @@ export async function genIpcHandlers() {
 		allFilePaths.push(path.join(srcRoot, fileRelative));
 	}
 
-	const results = await Promise.all(allFilePaths.map(async (filePath) => {
-		const absolutePath = path.resolve(filePath);
+	const results = await Promise.all(
+		allFilePaths.map(async (filePath) => {
+			const absolutePath = path.resolve(filePath);
 
-		if (filePath.endsWith(".d.ts") || absolutePath === ipcGenFileAbsolutePath) return null;
+			if (filePath.endsWith(".d.ts") || absolutePath === ipcGenFileAbsolutePath) return null;
 
-		const content = await Bun.file(absolutePath).text();
+			const content = await Bun.file(absolutePath).text();
 
-		if (!content.includes("IPC")) return null;
+			if (!content.includes("IPC")) return null;
 
-		const sourceFile = ts.createSourceFile(
-			absolutePath,
-			content,
-			ts.ScriptTarget.ESNext,
-			true
-		);
+			const sourceFile = ts.createSourceFile(absolutePath, content, ts.ScriptTarget.ESNext, true);
 
-		const fileImports = new Set<string>();
-		const fileHandlers: string[] = [];
-		const filename = path.basename(sourceFile.fileName, path.extname(sourceFile.fileName));
+			const fileImports = new Set<string>();
+			const fileHandlers: string[] = [];
+			const filename = path.basename(sourceFile.fileName, path.extname(sourceFile.fileName));
 
-		ts.forEachChild(sourceFile, (node) => {
-			if (ts.isFunctionDeclaration(node) && node.name && isNodeExported(node)) {
-				if (!node.typeParameters || node.typeParameters.length === 0) return;
+			ts.forEachChild(sourceFile, (node) => {
+				if (ts.isFunctionDeclaration(node) && node.name && isNodeExported(node)) {
+					if (!node.typeParameters || node.typeParameters.length === 0) return;
 
-				const typeParametersString = node.typeParameters.map((tp) => tp.getText(sourceFile)).join(", ");
+					const typeParametersString = node.typeParameters.map((tp) => tp.getText(sourceFile)).join(", ");
 
-				if (typeParametersString.includes("IPC")) {
-					const funcName = node.name.getText(sourceFile);
-					const parameters = node.parameters.map((param) => param.name.getText(sourceFile)).join(", ");
-					const channelName = `${filename}:${funcName}`;
-					const isAsync = isTsFunctionAsync(node, sourceFile);
+					if (typeParametersString.includes("IPC")) {
+						const funcName = node.name.getText(sourceFile);
+						const parameters = node.parameters.map((param) => param.name.getText(sourceFile)).join(", ");
+						const channelName = `${filename}:${funcName}`;
+						const isAsync = isTsFunctionAsync(node, sourceFile);
 
-					if (typeParametersString.includes("IPCHandle")) {
-						fileHandlers.push(generateHandler(channelName, funcName, parameters, isAsync, "handle"));
-					} else if (typeParametersString.includes("IPCOn")) {
-						fileHandlers.push(generateHandler(channelName, funcName, parameters, isAsync, "on"));
-					} else {
-						return;
+						if (typeParametersString.includes("IPCHandle")) {
+							fileHandlers.push(generateHandler(channelName, funcName, parameters, isAsync, "handle"));
+						} else if (typeParametersString.includes("IPCOn")) {
+							fileHandlers.push(generateHandler(channelName, funcName, parameters, isAsync, "on"));
+						} else {
+							return;
+						}
+
+						let relativeImportPath = path.relative(ipcGenDir, sourceFile.fileName);
+						relativeImportPath = relativeImportPath.replace(/\\/g, "/").replace(/\.(ts|js|tsx|jsx)$/, "");
+						if (!relativeImportPath.startsWith(".")) {
+							relativeImportPath = "./" + relativeImportPath;
+						}
+
+						fileImports.add(`${relativeImportPath}::${funcName}`);
 					}
-
-					let relativeImportPath = path.relative(ipcGenDir, sourceFile.fileName);
-					relativeImportPath = relativeImportPath.replace(/\\/g, "/").replace(/\.(ts|js|tsx|jsx)$/, "");
-					if (!relativeImportPath.startsWith(".")) {
-						relativeImportPath = "./" + relativeImportPath;
-					}
-
-					fileImports.add(`${relativeImportPath}::${funcName}`);
 				}
-			}
-		});
+			});
 
-		return { handlers: fileHandlers, imports: fileImports };
-	}));
+			return { handlers: fileHandlers, imports: fileImports };
+		}),
+	);
 
 	const collectedImports = new Map<string, Set<string>>();
 	const handlerStatements: string[] = [];
