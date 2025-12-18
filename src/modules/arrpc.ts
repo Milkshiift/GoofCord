@@ -1,31 +1,12 @@
+import path from "node:path";
 import { Worker } from "node:worker_threads";
 import { dialog } from "electron";
 import { getConfig } from "../config.ts";
-import { getGoofCordFolderPath } from "../utils.ts";
+import { dirname, getGoofCordFolderPath } from "../utils.ts";
 import { mainWindow } from "../windows/main";
 
-const workerString = `
-	import { parentPort, workerData } from "node:worker_threads";
-	import Server from "arrpc";
-	
-	const server = await new Server(workerData.detectablePath);
-	const Bridge = await import("arrpc/src/bridge.js");
-	
-	server.on("activity", (data) => Bridge.send(data));
-	server.on("invite", (code) => {
-		parentPort?.postMessage({
-			eventType: "showMainWindow",
-		});
-		Bridge.send({
-			cmd: "INVITE_BROWSER",
-			args: {
-				code: code,
-			},
-		});
-	});
-`;
-
 let worker: Worker | undefined;
+
 export async function initArrpc<IPCHandle>() {
 	if (worker) {
 		await worker.terminate();
@@ -34,8 +15,7 @@ export async function initArrpc<IPCHandle>() {
 	if (!getConfig("arrpc")) return;
 
 	try {
-		worker = new Worker(workerString, {
-			eval: true,
+		worker = new Worker(path.join(dirname(), "./modules/arrpcWorker.js"), {
 			workerData: {
 				detectablePath: getGoofCordFolderPath() + "/detectable.json",
 			},

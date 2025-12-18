@@ -27,7 +27,7 @@ console.log("Building...");
 await fs.promises.mkdir("ts-out");
 
 const preloadFiles = await searchPreloadFiles("src", []);
-const mainEntrypoints = [path.join("src", "main.ts")];
+const mainEntrypoints = [path.join("src", "main.ts"), path.join("src", "modules", "arrpcWorker.ts")];
 
 // ESM with splitting
 const mainBundleResult = await Bun.build({
@@ -69,8 +69,6 @@ for (const preloadFile of preloadFiles) {
 
 await copyVenmic();
 await copyVenbind();
-
-if (process.platform !== "win32") await removeKoffi("./ts-out");
 
 await fs.promises.cp("./assets/", "./ts-out/assets", { recursive: true });
 // Lang files are prebaked
@@ -155,28 +153,6 @@ function copyVenbind() {
 
 async function copyFile(src: string, dest: string) {
   await Bun.write(dest, Bun.file(src));
-}
-
-// Koffi is an arrpc dependency that is only used in Windows
-async function removeKoffi(directory: string) {
-  try {
-    const files = await fs.promises.readdir(directory);
-    let removedCount = 0;
-
-    for (const file of files) {
-      if (file.startsWith('koffi')) {
-        const filePath = path.join(directory, file);
-        try {
-          await Bun.file(filePath).delete();
-          removedCount++;
-        } catch (error) {
-          console.error(`Error removing ${filePath}:`, error);
-        }
-      }
-    }
-  } catch (error) {
-    console.error(`Error reading directory ${directory}:`, error);
-  }
 }
 
 console.log(pc.green("✅ Build completed! 🎉"));
