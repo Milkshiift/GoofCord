@@ -1,7 +1,7 @@
 import path from "node:path";
 import { isDeepStrictEqual } from "node:util";
-import { BrowserWindow, ipcMain, shell } from "electron";
-import { cachedConfig, getConfig } from "../../config.ts";
+import { app, BrowserWindow, dialog, ipcMain, shell } from "electron";
+import { cachedConfig, firstLaunch, getConfig } from "../../config.ts";
 import type { Config } from "../../configTypes.d.ts";
 import { i, initLocalization } from "../../modules/localization.ts";
 import { dirname, getCustomIcon, getDisplayVersion, relToAbs, userDataPath } from "../../utils.ts";
@@ -55,6 +55,17 @@ export async function createSettingsWindow<IPCHandle>() {
 	});
 
 	await settingsWindow.loadFile(relToAbs(html.index));
+
+	if (firstLaunch) {
+		await new Promise((resolve) => setTimeout(resolve, 100));
+		await dialog.showMessageBox({
+			message: i("welcomeMessage"),
+			type: "info",
+			icon: getCustomIcon(),
+			noLink: false,
+		});
+		app.relaunch(); // Relaunches only when user closes settings window
+	}
 
 	settingsWindow.on("close", async (event) => {
 		isOpen = false;

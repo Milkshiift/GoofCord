@@ -1,18 +1,17 @@
-import { app, dialog, net, session, systemPreferences } from "electron";
+import { app, net, session, systemPreferences } from "electron";
 import pc from "picocolors";
 import { firstLaunch, getConfig } from "./config.ts";
 import { initArrpc } from "./modules/arrpc.ts";
 import { categorizeAllAssets, startStyleWatcher } from "./modules/assetLoader.ts";
 import { initFirewall, unstrictCSP } from "./modules/firewall.ts";
-import { i } from "./modules/localization.ts";
 import { setMenu } from "./modules/menu.ts";
 import { initEncryption } from "./modules/messageEncryption.ts";
 import { manageMods, updateMods } from "./modules/mods.ts";
 import { createTray } from "./modules/tray.ts";
 import { checkForUpdate } from "./modules/updateCheck.ts";
-import { getCustomIcon, isDev } from "./utils.ts";
+import { isDev } from "./utils.ts";
 import { createMainWindow } from "./windows/main";
-import { createSettingsWindow, settingsWindow } from "./windows/settings";
+import { createSettingsWindow } from "./windows/settings";
 
 export async function load() {
 	void setAutoLaunchState();
@@ -27,7 +26,7 @@ export async function load() {
 	initEncryption();
 	initFirewall();
 	await Promise.all([preReady, waitForInternetConnection(), setPermissions(), unstrictCSP()]);
-	firstLaunch ? await handleFirstLaunch() : await createMainWindow();
+	firstLaunch ? await createSettingsWindow() : await createMainWindow();
 
 	console.timeEnd(pc.green("[Timer]") + " GoofCord fully loaded in");
 
@@ -43,19 +42,6 @@ async function waitForInternetConnection() {
 	while (!net.isOnline()) {
 		await new Promise((resolve) => setTimeout(resolve, 1000));
 	}
-}
-
-async function handleFirstLaunch() {
-	await createSettingsWindow();
-	settingsWindow.once("ready-to-show", async () => {
-		await dialog.showMessageBox({
-			message: i("welcomeMessage"),
-			type: "info",
-			icon: getCustomIcon(),
-			noLink: false,
-		});
-		app.relaunch(); // Relaunches only when user closes settings window
-	});
 }
 
 export async function setAutoLaunchState<IPCHandle>() {
