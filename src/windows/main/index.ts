@@ -6,6 +6,7 @@ import { spoofChrome } from "../../modules/chromeSpoofer.ts";
 import { adjustWindow } from "../../modules/windowStateManager.ts";
 import { dirname, getCustomIcon } from "../../utils.ts";
 import { registerScreenshareHandler } from "../screenshare";
+// @ts-expect-error
 import adblocker from "./scripts/adblocker.js" with { type: "text" };
 
 export let mainWindow: BrowserWindow;

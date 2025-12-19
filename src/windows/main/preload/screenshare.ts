@@ -1,4 +1,5 @@
 import { addPatch, scripts } from "./defaultScripts.ts";
+// @ts-expect-error
 import screensharePatch from "./scripts/screensharePatch.js" with { type: "text" };
 
 addPatch({

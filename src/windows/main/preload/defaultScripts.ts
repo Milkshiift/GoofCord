@@ -1,7 +1,10 @@
 import type { Patch } from "@vencord/types/utils/types";
 import { ipcRenderer } from "electron";
+// @ts-expect-error
 import domOptimizer from "./scripts/domOptimizer.js" with { type: "text" };
+// @ts-expect-error
 import notificationFix from "./scripts/notificationFix.js" with { type: "text" };
+// @ts-expect-error
 import shelterPluginInit from "./scripts/shelterPluginInit.js" with { type: "text" };
 
 let patchesScript = `
