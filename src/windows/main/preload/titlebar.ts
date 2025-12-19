@@ -1,6 +1,6 @@
 import { ipcRenderer, webFrame } from "electron";
 // @ts-expect-error
-import titlebarCss from "../styles/titlebar.css";
+import titlebarCss from "../styles/titlebar.css" with { type: "text" };
 
 interface TitlebarElements {
 	titlebar: HTMLElement | null;

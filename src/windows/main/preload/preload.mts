@@ -5,7 +5,7 @@ import { getDefaultScripts } from "./defaultScripts.ts";
 import { injectTitlebar } from "./titlebar.ts";
 import "./screenshare.ts";
 // @ts-expect-error
-import discordCss from "../styles/discord.css";
+import discordCss from "../styles/discord.css" with { type: "text" };
 import { startKeybindWatcher } from "./keybinds.ts";
 
 if (document.location.hostname.includes("discord")) {
