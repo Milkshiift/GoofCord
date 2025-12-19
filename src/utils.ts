@@ -65,7 +65,7 @@ export function tryCreateFolder(dirPath: string): boolean {
 		fs.mkdirSync(dirPath, { recursive: true });
 		return true;
 	} catch (e) {
-		if (e instanceof Error && (e as NodeJS.ErrnoException).code === 'EEXIST') {
+		if (e instanceof Error && (e as NodeJS.ErrnoException).code === "EEXIST") {
 			console.error(`Cannot create directory '${dirPath}' because a file with that name already exists.`);
 			return false;
 		}
@@ -130,7 +130,8 @@ export async function saveFileToGCFolder<IPCHandle>(filePath: string, content: s
 }
 
 export async function isPathAccessible(filePath: string): Promise<boolean> {
-	return fs.promises.access(filePath, fs.constants.F_OK)
+	return fs.promises
+		.access(filePath, fs.constants.F_OK)
 		.then(() => true)
 		.catch(() => false);
 }

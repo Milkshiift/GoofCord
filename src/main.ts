@@ -33,19 +33,9 @@ async function main() {
 function setFlags() {
 	if (process.argv.includes("--no-flags")) return;
 
-	const enableFeatures = new Set([
-		"WebRTC",
-		"WebRtcHideLocalIpsWithMdns",
-		"PlatformHEVCEncoderSupport",
-	]);
+	const enableFeatures = new Set(["WebRTC", "WebRtcHideLocalIpsWithMdns", "PlatformHEVCEncoderSupport"]);
 
-	const disableFeatures = new Set([
-		"UseChromeOSDirectVideoDecoder",
-		"HardwareMediaKeyHandling",
-		"MediaSessionService",
-		"WebRtcAllowInputVolumeAdjustment",
-		"Vulkan",
-	]);
+	const disableFeatures = new Set(["UseChromeOSDirectVideoDecoder", "HardwareMediaKeyHandling", "MediaSessionService", "WebRtcAllowInputVolumeAdjustment", "Vulkan"]);
 
 	const switches = new Map<string, string | null>([
 		["autoplay-policy", "no-user-gesture-required"],
@@ -100,7 +90,7 @@ function setFlags() {
 	if (enableFeatures.size > 0) {
 		app.commandLine.appendSwitch("enable-features", Array.from(enableFeatures).join(","));
 	}
-	
+
 	for (const [flag, value] of switches) {
 		if (value === null) {
 			app.commandLine.appendSwitch(flag);
