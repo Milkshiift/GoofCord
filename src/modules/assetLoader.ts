@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import pc from "picocolors";
 import { getGoofCordFolderPath, readOrCreateFolder } from "../utils.ts";
-import { mainWindow } from "../windows/main";
+import { mainWindow } from "../windows/main/main.ts";
 
 export const LOG_PREFIX = pc.yellowBright("[Asset Loader]");
 

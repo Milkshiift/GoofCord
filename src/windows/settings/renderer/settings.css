@@ -605,13 +605,13 @@ input[type="file"]::file-selector-button:active {
 
 /* ==================== Utility Classes ==================== */
 .slim-checkbox {
-	width: 0 !important;
-	border: none !important;
-	background-image: none !important;
+	width: 0;
+	border: none;
+	background-image: none;
 }
 
 .hidden {
-	display: none !important;
+	display: none;
 }
 
 /* ==================== Message Box ==================== */

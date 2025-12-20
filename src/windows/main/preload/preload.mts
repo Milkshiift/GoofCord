@@ -1,21 +1,25 @@
 import "./bridge.ts";
 import { ipcRenderer, webFrame } from "electron";
 import { error, log } from "../../../modules/logger.ts";
-import { getDefaultScripts } from "./defaultScripts.ts";
-import { injectTitlebar } from "./titlebar.ts";
-import "./screenshare.ts";
 // @ts-expect-error
 import discordCss from "../styles/discord.css" with { type: "text" };
+// @ts-expect-error
+import rendererScript from "../../../../ts-out/windows/main/renderer/renderer.js" with { type: "text" };
 import { startKeybindWatcher } from "./keybinds.ts";
+import { injectFlashbar } from "./titlebarFlash.ts";
+import { patchVencord } from "./vencordPatcher.ts";
 
 if (document.location.hostname.includes("discord")) {
-	void injectTitlebar();
-
 	const assets: Record<string, string[][]> = ipcRenderer.sendSync("assetLoader:getAssets");
-	assets.scripts.push(...getDefaultScripts());
+	assets.scripts.unshift(["Renderer", rendererScript]);
 	for (const script of assets.scripts) {
+		if (script[1].substring(0, 200).toLowerCase().includes("vencord")) {
+			script[1] = patchVencord(script[1]);
+		}
 		webFrame.executeJavaScript(script[1]).then(() => log(`Loaded script: ${script[0]}`));
 	}
+
+	void injectFlashbar();
 
 	startKeybindWatcher();
 

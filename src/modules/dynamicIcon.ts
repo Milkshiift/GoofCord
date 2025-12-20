@@ -1,6 +1,6 @@
 import { app, type NativeImage, nativeImage } from "electron";
 import { getConfig } from "../config.ts";
-import { mainWindow } from "../windows/main";
+import { mainWindow } from "../windows/main/main.ts";
 import { getTrayIcon, tray } from "./tray.ts";
 
 const BADGE_GENERATOR_CODE = `

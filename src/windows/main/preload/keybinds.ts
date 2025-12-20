@@ -1,24 +1,5 @@
 import { contextBridge, ipcRenderer, webFrame } from "electron";
 import { warn } from "../../../modules/logger.ts";
-import { addPatch } from "./defaultScripts.ts";
-
-addPatch({
-	patches: [
-		{
-			find: "keybindActionTypes",
-			replacement: [
-				{
-					match: /(?:[A-Za-z_$][\w$]*)\.isPlatformEmbedded/g,
-					replace: "true",
-				},
-				{
-					match: /\(0,(?:[A-Za-z_$][\w$]*)\.isDesktop\)\(\)/g,
-					replace: "true",
-				},
-			],
-		},
-	],
-});
 
 interface Keybind {
 	shortcut: string;

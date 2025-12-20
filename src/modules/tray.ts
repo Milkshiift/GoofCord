@@ -3,8 +3,8 @@ import symbolicIconBlack from "../../assets/gf_symbolic_black.png";
 import symbolicIconWhite from "../../assets/gf_symbolic_white.png";
 import { getConfig } from "../config.ts";
 import { getCustomIcon, getDisplayVersion, relToAbs } from "../utils.ts";
-import { mainWindow } from "../windows/main";
-import { createSettingsWindow } from "../windows/settings";
+import { mainWindow } from "../windows/main/main.ts";
+import { createSettingsWindow } from "../windows/settings/settings.ts";
 import { i } from "./localization.ts";
 import { saveState } from "./windowStateManager.ts";
 

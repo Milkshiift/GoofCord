@@ -1,4 +1,4 @@
-(() => {
+export function patchScreenshare() {
 	const original = navigator.mediaDevices.getDisplayMedia;
 
 	async function getVirtmic() {
@@ -73,4 +73,4 @@
 			}
 		});
 	}, 5000); // Time for shelter flux to initialize
-})();
+}

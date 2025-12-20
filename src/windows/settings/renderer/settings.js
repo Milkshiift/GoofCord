@@ -37,8 +37,8 @@ window.initSwitcher = () => {
 	function generateSecretSequence(tabCount) {
 		if (tabCount < 3) return [];
 		const sequence = [];
-		let left = 0,
-			right = tabCount - 1;
+		let left = 0;
+		let right = tabCount - 1;
 		while (left <= right) {
 			sequence.push(left);
 			if (left !== right) sequence.push(right);

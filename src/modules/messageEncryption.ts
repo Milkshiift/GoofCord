@@ -3,7 +3,7 @@ import pc from "picocolors";
 import StegCloak from "stegcloak";
 import { getConfig } from "../config.ts";
 import { decryptSafeStorage, getErrorMessage } from "../utils.ts";
-import { mainWindow } from "../windows/main";
+import { mainWindow } from "../windows/main/main.ts";
 
 let stegcloak: StegCloak;
 export const encryptionPasswords: string[] = [];

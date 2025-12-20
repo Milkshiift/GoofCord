@@ -1,13 +1,13 @@
 import * as path from "node:path";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
 import pc from "picocolors";
+// @ts-expect-error
+import adblocker from "../../../assets/adblocker.js" with { type: "text" };
 import { getConfig } from "../../config.ts";
 import { spoofChrome } from "../../modules/chromeSpoofer.ts";
 import { adjustWindow } from "../../modules/windowStateManager.ts";
 import { dirname, getCustomIcon } from "../../utils.ts";
-import { registerScreenshareHandler } from "../screenshare";
-// @ts-expect-error
-import adblocker from "./scripts/adblocker.js" with { type: "text" };
+import { registerScreenshareHandler } from "../screenshare/screenshare.ts";
 
 export let mainWindow: BrowserWindow;
 
@@ -90,13 +90,19 @@ function subscribeToAppEvents() {
 	app.on("activate", () => {
 		mainWindow.show();
 	});
-	ipcMain.handle("window:Maximize", () => mainWindow.maximize());
+	ipcMain.handle("window:Maximize", () => {
+		if (mainWindow.isMaximized()) {
+			mainWindow.unmaximize();
+		} else {
+			mainWindow.maximize();
+		}
+	});
 	ipcMain.handle("window:IsMaximized", () => mainWindow.isMaximized());
 	ipcMain.handle("window:Minimize", () => mainWindow.minimize());
 	ipcMain.handle("window:Unmaximize", () => mainWindow.unmaximize());
 	ipcMain.handle("window:Show", () => mainWindow.show());
 	ipcMain.handle("window:Hide", () => mainWindow.hide());
-	ipcMain.handle("window:Quit", () => mainWindow.close());
+	ipcMain.handle("window:Close", () => mainWindow.close());
 	ipcMain.handle("flashTitlebar", (_event, color: string) => {
 		void mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebar("${color}")`);
 	});

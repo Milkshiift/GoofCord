@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron";
 import type { ConfigKey } from "../../../configTypes";
-import { flashTitlebar, flashTitlebarWithText } from "./titlebar.ts";
+import { flashTitlebar, flashTitlebarWithText } from "./titlebarFlash.ts";
 
 contextBridge.exposeInMainWorld("goofcord", {
 	window: {
@@ -8,6 +8,7 @@ contextBridge.exposeInMainWorld("goofcord", {
 		hide: () => ipcRenderer.invoke("window:Hide"),
 		minimize: () => ipcRenderer.invoke("window:Minimize"),
 		maximize: () => ipcRenderer.invoke("window:Maximize"),
+		close: () => ipcRenderer.invoke("window:Close"),
 	},
 	titlebar: {
 		flashTitlebar: (color: string) => flashTitlebar(color),
@@ -21,7 +22,7 @@ contextBridge.exposeInMainWorld("goofcord", {
 	encryptMessage: (message: string) => ipcRenderer.sendSync("messageEncryption:encryptMessage", message),
 	decryptMessage: (message: string) => ipcRenderer.sendSync("messageEncryption:decryptMessage", message),
 	cycleThroughPasswords: () => ipcRenderer.invoke("messageEncryption:cycleThroughPasswords"),
-	openSettingsWindow: () => ipcRenderer.invoke("main:createSettingsWindow"),
+	openSettingsWindow: () => ipcRenderer.invoke("settings:createSettingsWindow"),
 	setBadgeCount: (count: number) => ipcRenderer.invoke("dynamicIcon:setBadgeCount", count),
 	stopVenmic: () => ipcRenderer.invoke("venmic:stopVenmic"),
 });

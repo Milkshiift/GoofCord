@@ -8,6 +8,7 @@ import { generateDTSFile } from "./genSettingsTypes.ts";
 import pc from "picocolors";
 import { globImporterPlugin } from "./globbyGlob.ts";
 import { nativeModulePlugin } from "./nativeImport";
+import { globImportPlugin } from "bun-plugin-glob-import";
 
 // --- Argument Parsing ---
 const args = process.argv;
@@ -52,7 +53,6 @@ await fs.promises.mkdir("ts-out");
 const preloadFiles = await searchPreloadFiles("src", []);
 const mainEntrypoints = [path.join("src", "main.ts"), path.join("src", "modules", "arrpcWorker.ts")];
 
-// ESM with splitting
 const mainBundleResult = await Bun.build({
 	minify: true,
 	sourcemap: isDev ? "linked" : undefined,
@@ -67,7 +67,22 @@ const mainBundleResult = await Bun.build({
 });
 if (mainBundleResult.logs.length) console.log(mainBundleResult.logs);
 
-// CommonJS, no splitting
+const rendererPath = path.join("src", "windows", "main", "renderer", "renderer.ts");
+const relativePath = path.relative("src", rendererPath);
+const outDir = path.join("ts-out", path.dirname(relativePath));
+const rendererBundleResult = await Bun.build({
+	minify: false,
+	sourcemap: false,
+	format: "esm",
+	target: "browser",
+	splitting: false,
+	entrypoints: [rendererPath],
+	outdir: outDir,
+	packages: "bundle",
+	plugins: [globImportPlugin()],
+});
+if (rendererBundleResult.logs.length) console.log(rendererBundleResult.logs);
+
 for (const preloadFile of preloadFiles) {
 	const relativePath = path.relative("src", preloadFile);
 	const outDir = path.join("ts-out", path.dirname(relativePath));

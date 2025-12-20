@@ -1,13 +1,14 @@
-(async () => {
+export async function initShelterPlugins() {
+	if (!goofcord.getConfig("modNames").includes("shelter") || !goofcord.getConfig("installDefaultShelterPlugins")) return;
+
 	while (!window.shelter?.plugins?.addRemotePlugin) await new Promise((resolve) => setTimeout(resolve, 1000));
 
-	const defaultPlugins = [
+	const defaultPlugins: [string, boolean][] = [
 		["https://spikehd.dev/shelter-plugins/shelteRPC/", true],
 		["https://milkshiift.github.io/goofcord-shelter-plugins/dynamic-icon/", true],
 		["https://milkshiift.github.io/goofcord-shelter-plugins/message-encryption/", true],
 		["https://milkshiift.github.io/goofcord-shelter-plugins/invidious-embeds/", true],
 		["https://milkshiift.github.io/goofcord-shelter-plugins/settings-category/", true],
-		["https://milkshiift.github.io/goofcord-shelter-plugins/webpack-magic/", true],
 	];
 	for (const plugin of defaultPlugins) {
 		try {
@@ -16,7 +17,7 @@
 		} catch (e) {}
 	}
 	console.log("Added default Shelter plugins");
-	function getId(url) {
+	function getId(url: string) {
 		return url.replace("https://", "");
 	}
-})();
+}

@@ -12,8 +12,8 @@ import { updateModsFull } from "./modules/mods";
 import { isVenbindLoaded, setKeybinds } from "./modules/venbind";
 import { stopVenmic } from "./modules/venmic";
 import { decryptSafeStorage, encryptSafeStorage, getDisplayVersion, getVersion, isEncryptionAvailable, saveFileToGCFolder } from "./utils";
-import { createSettingsWindow, hotreloadLocale } from "./windows/settings/index";
 import { deleteCloud, loadCloud, saveCloud } from "./windows/settings/preload/cloud/cloud";
+import { createSettingsWindow, hotreloadLocale } from "./windows/settings/settings";
 
 ipcMain.handle("config:loadConfig", async (event, ) => { return await loadConfig(); });
 ipcMain.on("config:getConfig", (event, key, bypassDefault) => { event.returnValue = getConfig(key, bypassDefault); });
@@ -28,8 +28,8 @@ ipcMain.on("utils:encryptSafeStorage", (event, plaintextString) => { event.retur
 ipcMain.on("utils:decryptSafeStorage", (event, encryptedBase64) => { event.returnValue = decryptSafeStorage(encryptedBase64); });
 ipcMain.handle("utils:saveFileToGCFolder", async (event, filePath, content) => { return await saveFileToGCFolder(filePath, content); });
 ipcMain.handle("loader:setAutoLaunchState", async (event, ) => { return await setAutoLaunchState(); });
-ipcMain.handle("index:createSettingsWindow", async (event, ) => { return await createSettingsWindow(); });
-ipcMain.handle("index:hotreloadLocale", async (event, ) => { return await hotreloadLocale(); });
+ipcMain.handle("settings:createSettingsWindow", async (event, ) => { return await createSettingsWindow(); });
+ipcMain.handle("settings:hotreloadLocale", async (event, ) => { return await hotreloadLocale(); });
 ipcMain.handle("cloud:loadCloud", async (event, ) => { return await loadCloud(); });
 ipcMain.handle("cloud:saveCloud", async (event, silent) => { return await saveCloud(silent); });
 ipcMain.handle("cloud:deleteCloud", async (event, ) => { return await deleteCloud(); });

@@ -1,7 +1,7 @@
 import { BrowserWindow } from "electron";
 import { getConfig, setConfig } from "../../../../config.ts";
-import { mainWindow } from "../../../main";
-import { settingsWindow } from "../../index.ts";
+import { mainWindow } from "../../../main/main.ts";
+import { settingsWindow } from "../../settings.ts";
 import { ENDPOINT_VERSION, LOG_PREFIX } from "./cloud.ts";
 
 const MIN_TOKEN_LENGTH = 32;

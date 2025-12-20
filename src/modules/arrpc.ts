@@ -3,7 +3,7 @@ import { Worker } from "node:worker_threads";
 import { dialog } from "electron";
 import { getConfig } from "../config.ts";
 import { dirname, getGoofCordFolderPath } from "../utils.ts";
-import { mainWindow } from "../windows/main";
+import { mainWindow } from "../windows/main/main.ts";
 
 let worker: Worker | undefined;
 

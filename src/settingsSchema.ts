@@ -90,7 +90,7 @@ export const settingsSchema = {
 			description: 'This is different from Discord\'s language. You can translate GoofCord <a target="_blank" href="https://hosted.weblate.org/projects/goofcord/goofcord/">here</a>.',
 			inputType: "dropdown",
 			options: allLangs,
-			onChange: "main:hotreloadLocale",
+			onChange: "settings:hotreloadLocale",
 		},
 		discordUrl: {
 			name: "Discord URL",

@@ -3,7 +3,7 @@ import venbindPath from "native-module:../../assets/native/venbind-*.node";
 import { createRequire } from "node:module";
 import pc from "picocolors";
 import type { Venbind as VenbindType } from "venbind";
-import { mainWindow } from "../windows/main";
+import { mainWindow } from "../windows/main/main.ts";
 
 const require = createRequire(import.meta.url);
 

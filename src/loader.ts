@@ -10,8 +10,8 @@ import { manageMods, updateMods } from "./modules/mods.ts";
 import { createTray } from "./modules/tray.ts";
 import { checkForUpdate } from "./modules/updateCheck.ts";
 import { isDev } from "./utils.ts";
-import { createMainWindow } from "./windows/main";
-import { createSettingsWindow } from "./windows/settings";
+import { createMainWindow } from "./windows/main/main.ts";
+import { createSettingsWindow } from "./windows/settings/settings.ts";
 
 export async function load() {
 	void setAutoLaunchState();

@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { app } from "electron";
-import { mainWindow } from "../windows/main";
+import { mainWindow } from "../windows/main/main.ts";
 
 export async function clearCache<IPCHandle>() {
 	console.log("Clearing cache");

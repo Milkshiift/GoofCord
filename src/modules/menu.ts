@@ -1,7 +1,7 @@
 import { app, BrowserWindow, Menu } from "electron";
 import contextMenu from "electron-context-menu";
-import { mainWindow } from "../windows/main";
-import { createSettingsWindow } from "../windows/settings";
+import { mainWindow } from "../windows/main/main.ts";
+import { createSettingsWindow } from "../windows/settings/settings.ts";
 import { i } from "./localization.ts";
 import { cycleThroughPasswords } from "./messageEncryption.ts";
 import { saveState } from "./windowStateManager.ts";
