@@ -20,9 +20,9 @@ export interface IpcHandleChannels {
   "config:setConfig": typeof setConfig;
   "config:setConfigBulk": typeof setConfigBulk;
   "loader:setAutoLaunchState": typeof setAutoLaunchState;
-  "utils:saveFileToGCFolder": typeof saveFileToGCFolder;
   "settings:createSettingsWindow": typeof createSettingsWindow;
   "settings:hotreloadLocale": typeof hotreloadLocale;
+  "utils:saveFileToGCFolder": typeof saveFileToGCFolder;
   "cloud:loadCloud": typeof loadCloud;
   "cloud:saveCloud": typeof saveCloud;
   "cloud:deleteCloud": typeof deleteCloud;

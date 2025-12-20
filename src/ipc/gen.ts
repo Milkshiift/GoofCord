@@ -24,14 +24,14 @@ export function registerAllHandlers() {
   ipcMain.handle("config:setConfigBulk", async (event, toSet) => { return await setConfigBulk(toSet); });
   ipcMain.on("config:getDefaultValue", (event, entry) => { event.returnValue = getDefaultValue(entry); });
   ipcMain.handle("loader:setAutoLaunchState", async (event) => { return await setAutoLaunchState(); });
+  ipcMain.handle("settings:createSettingsWindow", async (event) => { return await createSettingsWindow(); });
+  ipcMain.handle("settings:hotreloadLocale", async (event) => { return await hotreloadLocale(); });
   ipcMain.on("utils:getVersion", (event) => { event.returnValue = getVersion(); });
   ipcMain.on("utils:getDisplayVersion", (event) => { event.returnValue = getDisplayVersion(); });
   ipcMain.on("utils:isEncryptionAvailable", (event) => { event.returnValue = isEncryptionAvailable(); });
   ipcMain.on("utils:encryptSafeStorage", (event, plaintextString) => { event.returnValue = encryptSafeStorage(plaintextString); });
   ipcMain.on("utils:decryptSafeStorage", (event, encryptedBase64) => { event.returnValue = decryptSafeStorage(encryptedBase64); });
   ipcMain.handle("utils:saveFileToGCFolder", async (event, filePath, content) => { return await saveFileToGCFolder(filePath, content); });
-  ipcMain.handle("settings:createSettingsWindow", async (event) => { return await createSettingsWindow(); });
-  ipcMain.handle("settings:hotreloadLocale", async (event) => { return await hotreloadLocale(); });
   ipcMain.handle("cloud:loadCloud", async (event) => { return await loadCloud(); });
   ipcMain.handle("cloud:saveCloud", async (event, silent) => { return await saveCloud(silent); });
   ipcMain.handle("cloud:deleteCloud", async (event) => { return await deleteCloud(); });

@@ -5,8 +5,8 @@ export default definePatch({
 		{
 			find: "keybindActionTypes",
 			replacement: [
-				{ match: /i\.isPlatformEmbedded/g, replace: "true" },
-				{ match: /\(0,i\.isDesktop\)\(\)/g, replace: "true" },
+				{ match: /\i\.isPlatformEmbedded/g, replace: "true" },
+				{ match: /\(0,\i\.isDesktop\)\(\)/g, replace: "true" },
 			],
 		},
 	],

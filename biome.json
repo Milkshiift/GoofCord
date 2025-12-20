@@ -26,7 +26,8 @@
 			},
 			"complexity": {
 				"noForEach": "error",
-				"useLiteralKeys": "error"
+				"useLiteralKeys": "error",
+				"noUselessEscapeInRegex": "off"
 			}
 		}
 	},
