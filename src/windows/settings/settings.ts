@@ -1,8 +1,9 @@
 import path from "node:path";
 import { isDeepStrictEqual } from "node:util";
-import { app, BrowserWindow, dialog, ipcMain, shell } from "electron";
+import { app, BrowserWindow, dialog, shell } from "electron";
 import { cachedConfig, firstLaunch, getConfig } from "../../config.ts";
 import type { Config } from "../../configTypes.d.ts";
+import { registerHandle } from "../../ipc/registry.ts";
 import { i, initLocalization } from "../../modules/localization.ts";
 import { dirname, getCustomIcon, getDisplayVersion, relToAbs, userDataPath } from "../../utils.ts";
 import { saveCloud } from "./preload/cloud/cloud.ts";
@@ -12,7 +13,7 @@ export let settingsWindow: BrowserWindow;
 let isOpen = false;
 let originalConfig: Config;
 
-ipcMain.handle("openFolder", async (_event, folder: string) => await shell.openPath(path.join(userDataPath, `/${folder}/`)));
+registerHandle("openFolder", async (_event, folder: string) => await shell.openPath(path.join(userDataPath, `/${folder}/`)));
 
 function hasConfigChanged(original: Config, current: Config): boolean {
 	if (original.size !== current.size) return true;

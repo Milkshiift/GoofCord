@@ -1,6 +1,7 @@
 import { app, net, session, systemPreferences } from "electron";
 import pc from "picocolors";
 import { firstLaunch, getConfig } from "./config.ts";
+import { registerAllHandlers } from "./ipc/gen.ts";
 import { initArrpc } from "./modules/arrpc.ts";
 import { categorizeAllAssets, startStyleWatcher } from "./modules/assetLoader.ts";
 import { initFirewall, unstrictCSP } from "./modules/firewall.ts";
@@ -17,7 +18,7 @@ export async function load() {
 	void setAutoLaunchState();
 	void setMenu();
 	void createTray();
-	const preReady = Promise.all([import("./ipcGen.ts"), manageMods().then(() => categorizeAllAssets())]);
+	const preReady = Promise.all([registerAllHandlers(), manageMods().then(() => categorizeAllAssets())]);
 
 	console.time(pc.green("[Timer]") + " Electron loaded in");
 	await app.whenReady();

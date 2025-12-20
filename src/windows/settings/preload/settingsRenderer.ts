@@ -1,5 +1,6 @@
-import { ipcRenderer, webFrame } from "electron";
+import { webFrame } from "electron";
 import type { ConfigKey, ConfigValue } from "../../../configTypes.d.ts";
+import { sendSync } from "../../../ipc/client.ts";
 import { type ButtonEntry, type SettingEntry, settingsSchema } from "../../../settingsSchema.ts";
 import { decryptSetting, evaluateShowAfter } from "./preload.mts";
 
@@ -34,7 +35,7 @@ export async function renderSettings() {
 	categoryKeys.forEach((categoryName, index) => {
 		const panelId = `panel-${sanitizeForId(categoryName)}`;
 		const isActive = index === 0 ? "active" : "";
-		const categoryTitle = ipcRenderer.sendSync("localization:i", `category-${categoryName.toLowerCase().split(" ")[0]}`);
+		const categoryTitle = sendSync("localization:i", `category-${categoryName.toLowerCase().split(" ")[0]}`);
 
 		tabHtml += `
             <button class="tab-item ${isActive}" data-target="${panelId}">${categoryTitle}</button>
@@ -50,11 +51,11 @@ export async function renderSettings() {
 			</header>
 
 			${
-				ipcRenderer.sendSync("utils:isEncryptionAvailable")
+				sendSync("utils:isEncryptionAvailable")
 					? ""
 					: `
 				<div class="message warning">
-					<p>${ipcRenderer.sendSync("localization:i", "settings-encryption-unavailable")}</p>
+					<p>${sendSync("localization:i", "settings-encryption-unavailable")}</p>
 				</div>
 			`
 			}
@@ -84,7 +85,7 @@ function generatePanelInnerContent(categoryName: string): { settingsHtml: string
 }
 
 function createSetting(setting: ConfigKey, entry: SettingEntry): string | "" {
-	let value: ConfigValue<ConfigKey> = ipcRenderer.sendSync("config:getConfig", setting);
+	let value: ConfigValue<ConfigKey> = sendSync("config:getConfig", setting);
 
 	if (entry.encrypted && typeof value === "string") {
 		value = decryptSetting(value);
@@ -96,12 +97,12 @@ function createSetting(setting: ConfigKey, entry: SettingEntry): string | "" {
 		entry.inputType = "textfield";
 	}
 	if (entry.showAfter) {
-		const controllingValue = ipcRenderer.sendSync("config:getConfig", entry.showAfter.key as ConfigKey);
+		const controllingValue = sendSync("config:getConfig", entry.showAfter.key as ConfigKey);
 		isHidden = !evaluateShowAfter(entry.showAfter.condition, controllingValue);
 	}
 
-	const name = ipcRenderer.sendSync("localization:i", `opt-${setting}`) ?? setting;
-	const description = ipcRenderer.sendSync("localization:i", `opt-${setting}-desc`) ?? "";
+	const name = sendSync("localization:i", `opt-${setting}`) ?? setting;
+	const description = sendSync("localization:i", `opt-${setting}-desc`) ?? "";
 
 	return `
         <fieldset class="${(isHidden ? "hidden" : "") + " " + (entry.showAfter && entry.showAfter.key !== setting ? "offset" : "")}">
@@ -116,7 +117,7 @@ function createSetting(setting: ConfigKey, entry: SettingEntry): string | "" {
 }
 
 function createButton(id: string, entry: ButtonEntry): string {
-	const buttonText = ipcRenderer.sendSync("localization:i", `opt-${id}`);
+	const buttonText = sendSync("localization:i", `opt-${id}`);
 	return `<button type="button" onclick="${entry.onClick}">${buttonText}</button>`;
 }
 

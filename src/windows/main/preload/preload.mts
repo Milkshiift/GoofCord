@@ -2,15 +2,16 @@ import "./bridge.ts";
 import { ipcRenderer, webFrame } from "electron";
 import { error, log } from "../../../modules/logger.ts";
 // @ts-expect-error
-import discordCss from "../styles/discord.css" with { type: "text" };
+import discordCss from "./discord.css" with { type: "text" };
 // @ts-expect-error
 import rendererScript from "../../../../ts-out/windows/main/renderer/renderer.js" with { type: "text" };
 import { startKeybindWatcher } from "./keybinds.ts";
 import { injectFlashbar } from "./titlebarFlash.ts";
 import { patchVencord } from "./vencordPatcher.ts";
+import { sendSync } from "../../../ipc/client.ts";
 
 if (document.location.hostname.includes("discord")) {
-	const assets: Record<string, string[][]> = ipcRenderer.sendSync("assetLoader:getAssets");
+	const assets: Record<string, string[][]> = sendSync("assetLoader:getAssets");
 	assets.scripts.unshift(["Renderer", rendererScript]);
 	for (const script of assets.scripts) {
 		if (script[1].substring(0, 200).toLowerCase().includes("vencord")) {
@@ -26,7 +27,7 @@ if (document.location.hostname.includes("discord")) {
 	document.addEventListener("DOMContentLoaded", () => {
 		assets.styles.push(["discord.css", discordCss]);
 
-		if (ipcRenderer.sendSync("config:getConfig", "renderingOptimizations")) {
+		if (sendSync("config:getConfig", "renderingOptimizations")) {
 			assets.styles.push([
 				"renderingOptimizations",
 				`
@@ -66,7 +67,7 @@ function updateStyle(style: string, id: string) {
 	loadedStyles.set(id, styleElement);
 }
 
-if (ipcRenderer.sendSync("config:getConfig", "disableAltMenu")) {
+if (sendSync("config:getConfig", "disableAltMenu")) {
 	// https://github.com/electron/electron/issues/34211
 	window.addEventListener("keydown", (e) => {
 		if (e.code === "AltLeft") e.preventDefault();

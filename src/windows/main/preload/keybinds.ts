@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer, webFrame } from "electron";
+import { invoke } from "../../../ipc/client.ts";
 import { warn } from "../../../modules/logger.ts";
 
 interface Keybind {
@@ -80,7 +81,11 @@ let activeKeybinds: Map<string, Keybind> = getActiveKeybinds();
 
 function updateKeybinds() {
 	activeKeybinds = getActiveKeybinds();
-	const toSend: object[] = [];
+	const toSend: {
+		id: string;
+		name?: string | undefined;
+		shortcut?: string | undefined;
+	}[] = [];
 
 	for (const [key, value] of activeKeybinds) {
 		toSend.push({
@@ -90,7 +95,7 @@ function updateKeybinds() {
 		});
 	}
 	console.log(toSend);
-	void ipcRenderer.invoke("venbind:setKeybinds", toSend);
+	void invoke("venbind:setKeybinds", toSend);
 }
 
 export function startKeybindWatcher() {

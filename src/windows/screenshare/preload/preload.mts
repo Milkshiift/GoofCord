@@ -1,4 +1,5 @@
 import { ipcRenderer } from "electron";
+import { invoke, sendSync } from "../../../ipc/client.ts";
 
 interface IPCSource {
 	id: string;
@@ -42,7 +43,7 @@ function escapeHtml(text: string): string {
 }
 
 function i(key: string): string {
-	return ipcRenderer.sendSync("localization:i", key) as string;
+	return sendSync("localization:i", key) as string;
 }
 
 function generateOptionsHtml(options: Record<string, number>, selectedValue: number): string {
@@ -105,8 +106,8 @@ async function selectSource(id: string | null, title: string | null): Promise<vo
 	}
 
 	try {
-		void ipcRenderer.invoke("flashTitlebar", "#5865F2");
-		void ipcRenderer.invoke("config:setConfig", "screensharePreviousSettings", [settings.resolution, settings.framerate, settings.audio, settings.contentHint]);
+		void invoke("flashTitlebar", "#5865F2");
+		void invoke("config:setConfig", "screensharePreviousSettings", [settings.resolution, settings.framerate, settings.audio, settings.contentHint]);
 
 		void ipcRenderer.invoke("selectScreenshareSource", id, title, settings.audio, settings.contentHint, settings.resolution, settings.framerate);
 	} catch (err) {
@@ -117,7 +118,7 @@ async function selectSource(id: string | null, title: string | null): Promise<vo
 function addDisplays(): void {
 	ipcRenderer.once("getSources", (_event, sources: IPCSource[]) => {
 		try {
-			const previousSettingsRaw = ipcRenderer.sendSync("config:getConfig", "screensharePreviousSettings");
+			const previousSettingsRaw = sendSync("config:getConfig", "screensharePreviousSettings");
 			const previousSettings = parseStoredSettings(previousSettingsRaw);
 
 			const closeButton = document.createElement("button");

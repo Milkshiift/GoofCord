@@ -2,15 +2,16 @@ import { contextBridge, ipcRenderer } from "electron";
 import type { ConfigKey, ConfigValue } from "../../../configTypes";
 import { type SettingEntry, settingsSchema } from "../../../settingsSchema.ts";
 import { renderSettings } from "./settingsRenderer.ts";
+import { invoke, sendSync } from "../../../ipc/client.ts";
 
 console.log("GoofCord Settings");
 
 contextBridge.exposeInMainWorld("settings", {
-	loadCloud: () => ipcRenderer.invoke("cloud:loadCloud"),
-	deleteCloud: () => ipcRenderer.invoke("cloud:deleteCloud"),
-	saveCloud: () => ipcRenderer.invoke("cloud:saveCloud"),
-	openFolder: (folder: string) => ipcRenderer.invoke("openFolder", folder),
-	clearCache: () => ipcRenderer.invoke("cacheManager:clearCache"),
+	loadCloud: () => invoke("cloud:loadCloud"),
+	deleteCloud: () => invoke("cloud:deleteCloud"),
+	saveCloud: () => invoke("cloud:saveCloud"),
+	openFolder: (folder: string) => invoke("openFolder", folder),
+	clearCache: () => invoke("cacheManager:clearCache"),
 });
 
 const settingsData: Record<string, SettingEntry> = {};
@@ -44,9 +45,9 @@ async function saveSettings(changedElement: HTMLElement) {
 	if (settingValue === undefined) return;
 	if (settingData.encrypted) settingValue = encryptSetting(settingValue);
 
-	void ipcRenderer.invoke("config:setConfig", settingName, settingValue);
+	void invoke("config:setConfig", settingName as ConfigKey, settingValue as ConfigValue<ConfigKey>);
 	updateVisibility(settingName, settingValue);
-	void ipcRenderer.invoke("flashTitlebar", "#5865F2");
+	void invoke("flashTitlebar", "#5865F2");
 
 	if (settingData.onChange) void ipcRenderer.invoke(settingData.onChange);
 }
@@ -86,7 +87,7 @@ async function getSettingValue<K extends ConfigKey>(element: HTMLElement, settin
 						if (typeof fileContent === "string") return reject(new Error("File content is a string"));
 
 						try {
-							const result = await ipcRenderer.invoke("utils:saveFileToGCFolder", settingName, Buffer.from(new Uint8Array(fileContent)));
+							const result = await invoke("utils:saveFileToGCFolder", settingName, Buffer.from(new Uint8Array(fileContent)));
 							resolve(result as ConfigValue<K>);
 						} catch (ipcError) {
 							reject(ipcError);
@@ -118,8 +119,8 @@ export async function revertSetting(setting: HTMLElement) {
 		if (setting.type === "checkbox" && typeof defaultValue === "boolean") {
 			setting.checked = defaultValue;
 		} else if (setting.type === "file") {
-			void ipcRenderer.invoke("config:setConfig", elementName, defaultValue);
-			void ipcRenderer.invoke("flashTitlebar", "#5865F2");
+			void invoke("config:setConfig", elementName, defaultValue);
+			void invoke("flashTitlebar", "#5865F2");
 			return;
 		} else if (typeof defaultValue === "string") {
 			setting.value = defaultValue;
@@ -140,20 +141,20 @@ function createArrayFromTextarea(input: string): string[] {
 
 export function encryptSetting(settingValue: ConfigValue<ConfigKey>) {
 	if (typeof settingValue === "string") {
-		return ipcRenderer.sendSync("utils:encryptSafeStorage", settingValue);
+		return sendSync("utils:encryptSafeStorage", settingValue);
 	}
 	if (Array.isArray(settingValue)) {
-		return settingValue.map((value: unknown) => ipcRenderer.sendSync("utils:encryptSafeStorage", value));
+		return settingValue.map((value: unknown) => sendSync("utils:encryptSafeStorage", value));
 	}
 	return settingValue;
 }
 
 export function decryptSetting(settingValue: ConfigValue<ConfigKey>) {
 	if (typeof settingValue === "string") {
-		return ipcRenderer.sendSync("utils:decryptSafeStorage", settingValue);
+		return sendSync("utils:decryptSafeStorage", settingValue);
 	}
 	if (Array.isArray(settingValue)) {
-		return settingValue.map((value: unknown) => ipcRenderer.sendSync("utils:decryptSafeStorage", value));
+		return settingValue.map((value: unknown) => sendSync("utils:decryptSafeStorage", value));
 	}
 	return settingValue;
 }

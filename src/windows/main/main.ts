@@ -1,9 +1,10 @@
 import * as path from "node:path";
-import { app, BrowserWindow, ipcMain, shell } from "electron";
+import { app, BrowserWindow, shell } from "electron";
 import pc from "picocolors";
 // @ts-expect-error
 import adblocker from "../../../assets/adblocker.js" with { type: "text" };
 import { getConfig } from "../../config.ts";
+import { registerHandle } from "../../ipc/registry.ts";
 import { spoofChrome } from "../../modules/chromeSpoofer.ts";
 import { adjustWindow } from "../../modules/windowStateManager.ts";
 import { dirname, getCustomIcon } from "../../utils.ts";
@@ -90,23 +91,23 @@ function subscribeToAppEvents() {
 	app.on("activate", () => {
 		mainWindow.show();
 	});
-	ipcMain.handle("window:Maximize", () => {
+	registerHandle("window:Maximize", () => {
 		if (mainWindow.isMaximized()) {
 			mainWindow.unmaximize();
 		} else {
 			mainWindow.maximize();
 		}
 	});
-	ipcMain.handle("window:IsMaximized", () => mainWindow.isMaximized());
-	ipcMain.handle("window:Minimize", () => mainWindow.minimize());
-	ipcMain.handle("window:Unmaximize", () => mainWindow.unmaximize());
-	ipcMain.handle("window:Show", () => mainWindow.show());
-	ipcMain.handle("window:Hide", () => mainWindow.hide());
-	ipcMain.handle("window:Close", () => mainWindow.close());
-	ipcMain.handle("flashTitlebar", (_event, color: string) => {
+	registerHandle("window:IsMaximized", () => mainWindow.isMaximized());
+	registerHandle("window:Minimize", () => mainWindow.minimize());
+	registerHandle("window:Unmaximize", () => mainWindow.unmaximize());
+	registerHandle("window:Show", () => mainWindow.show());
+	registerHandle("window:Hide", () => mainWindow.hide());
+	registerHandle("window:Close", () => mainWindow.close());
+	registerHandle("flashTitlebar", (_event, color: string) => {
 		void mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebar("${color}")`);
 	});
-	ipcMain.handle("flashTitlebarWithText", (_event, color: string, text: string) => {
+	registerHandle("flashTitlebarWithText", (_event, color: string, text: string) => {
 		void mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebarWithText("${color}", "${text}")`);
 	});
 }
