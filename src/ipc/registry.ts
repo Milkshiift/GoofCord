@@ -1,26 +1,28 @@
 import { ipcMain } from "electron";
 
-type AnyFunction = (...args: any[]) => any;
+export type IpcHandler<Args extends unknown[], Return> = (...args: Args) => Promise<Return> | Return;
 
-export const ipcHandleRegistry = {} as Record<string, AnyFunction>;
-export const ipcOnRegistry = {} as Record<string, AnyFunction>;
+export const ipcHandleRegistry = new Map<string, IpcHandler<unknown[], unknown>>();
+export const ipcOnRegistry = new Map<string, IpcHandler<unknown[], unknown>>();
 
-export function registerHandle<TChannel extends string, THandler extends AnyFunction>(
-    channel: TChannel,
-    handler: THandler
+export function registerHandle<Args extends unknown[], Return>(
+    channel: string,
+    handler: IpcHandler<Args, Return>
 ): void {
-    ipcHandleRegistry[channel] = handler;
+    ipcHandleRegistry.set(channel, handler as IpcHandler<unknown[], unknown>);
+
     ipcMain.handle(channel, async (_event, ...args) => {
-        return await handler(...args);
+        return handler(...(args as Args));
     });
 }
 
-export function registerOn<TChannel extends string, THandler extends AnyFunction>(
-    channel: TChannel,
-    handler: THandler
+export function registerOn<Args extends unknown[], Return>(
+    channel: string,
+    handler: IpcHandler<Args, Return>
 ): void {
-    ipcOnRegistry[channel] = handler;
+    ipcOnRegistry.set(channel, handler as IpcHandler<unknown[], unknown>);
+
     ipcMain.on(channel, (event, ...args) => {
-        event.returnValue = handler(...args);
+        event.returnValue = handler(...(args as Args));
     });
 }

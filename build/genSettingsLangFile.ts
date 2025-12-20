@@ -5,8 +5,6 @@ const SCHEMA_PATH = path.join(import.meta.dir, "..", "src", "settingsSchema.ts")
 const LANG_PATH = path.join(import.meta.dir, "..", "assets", "lang", "en-US.json");
 
 export async function genSettingsLangFile() {
-	console.log("Parsing settings schema via AST...");
-
 	const fileContent = await Bun.file(SCHEMA_PATH).text();
 
 	const sourceFile = ts.createSourceFile("settingsSchema.ts", fileContent, ts.ScriptTarget.Latest, true);
@@ -49,7 +47,7 @@ export async function genSettingsLangFile() {
 	Object.assign(langData, extractedKeys);
 
 	await Bun.write(LANG_PATH, JSON.stringify(langData, null, 2) + "\n");
-	console.log(`Updated i18n file with ${Object.keys(extractedKeys).length} extracted keys.`);
+	console.log(`🌐 Updated i18n file with ${Object.keys(extractedKeys).length} extracted keys.`);
 }
 
 function unwrapExpression(node: ts.Expression): ts.Expression {
