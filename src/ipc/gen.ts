@@ -41,9 +41,9 @@ export function registerAllHandlers() {
   ipcMain.handle("messageEncryption:cycleThroughPasswords", (event) => { return cycleThroughPasswords(); });
   ipcMain.handle("cacheManager:clearCache", async (event) => { return await clearCache(); });
   ipcMain.handle("venmic:stopVenmic", (event) => { return stopVenmic(); });
+  ipcMain.handle("dynamicIcon:setBadgeCount", async (event, requestedCount) => { return await setBadgeCount(requestedCount); });
   ipcMain.handle("venbind:setKeybinds", async (event, keybinds) => { return await setKeybinds(keybinds); });
   ipcMain.handle("venbind:isVenbindLoaded", async (event) => { return await isVenbindLoaded(); });
-  ipcMain.handle("dynamicIcon:setBadgeCount", async (event, requestedCount) => { return await setBadgeCount(requestedCount); });
   ipcMain.handle("mods:updateModsFull", async (event) => { return await updateModsFull(); });
   ipcMain.on("assetLoader:getAssets", (event) => { event.returnValue = getAssets(); });
   ipcMain.handle("arrpc:initArrpc", async (event) => { return await initArrpc(); });

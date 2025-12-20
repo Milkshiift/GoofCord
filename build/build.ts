@@ -4,7 +4,6 @@ import fs from "node:fs";
 import path from "node:path";
 import { genIpcHandlers } from "./genIpcHandlers.ts";
 import { genSettingsLangFile } from "./genSettingsLangFile.ts";
-import { generateDTSFile } from "./genSettingsTypes.ts";
 import pc from "picocolors";
 import { globImporterPlugin } from "./globbyGlob.ts";
 import { nativeModulePlugin } from "./nativeImport";
@@ -37,9 +36,6 @@ await copyNativeModules();
 await fs.promises.rm("ts-out", { recursive: true, force: true });
 
 console.log("Preprocessing...");
-console.time("dtc");
-await generateDTSFile();
-console.timeEnd("dtc");
 console.time("lang");
 await genSettingsLangFile();
 console.timeEnd("lang");

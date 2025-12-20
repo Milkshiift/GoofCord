@@ -83,11 +83,9 @@ function MultiselectDropdown(options) {
 		}
 
 		const refreshDropdown = () => {
-			dropdownContainer
-				.querySelectorAll("span.optext, span.placeholder")
-				.forEach((el) => {
-					dropdownContainer.removeChild(el);
-				});
+			dropdownContainer.querySelectorAll("span.optext, span.placeholder").forEach((el) => {
+				dropdownContainer.removeChild(el);
+			});
 			const selectedOptions = Array.from(selectElement.selectedOptions);
 			if (selectedOptions.length === 0) {
 				dropdownContainer.appendChild(createElement("span", { class: "placeholder", text: config.placeholder }));

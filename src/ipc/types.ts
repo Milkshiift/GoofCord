@@ -29,9 +29,9 @@ export interface IpcHandleChannels {
   "messageEncryption:cycleThroughPasswords": typeof cycleThroughPasswords;
   "cacheManager:clearCache": typeof clearCache;
   "venmic:stopVenmic": typeof stopVenmic;
+  "dynamicIcon:setBadgeCount": typeof setBadgeCount;
   "venbind:setKeybinds": typeof setKeybinds;
   "venbind:isVenbindLoaded": typeof isVenbindLoaded;
-  "dynamicIcon:setBadgeCount": typeof setBadgeCount;
   "mods:updateModsFull": typeof updateModsFull;
   "arrpc:initArrpc": typeof initArrpc;
 }

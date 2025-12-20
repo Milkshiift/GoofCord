@@ -236,11 +236,7 @@ function extractRegistryHandlers(sourceFile: ts.SourceFile): RegistryHandler[] {
 			let paramsToUse = parameters;
 			if (firstParam) {
 				const firstName = firstParam.name.getText(sourceFile);
-				const isEventParam =
-					firstName === "event" ||
-					firstName === "_event" ||
-					(firstParam.type &&
-						/IpcMain(Event|InvokeEvent)/.test(firstParam.type.getText(sourceFile)));
+				const isEventParam = firstName === "event" || firstName === "_event" || (firstParam.type && /IpcMain(Event|InvokeEvent)/.test(firstParam.type.getText(sourceFile)));
 
 				if (isEventParam) {
 					paramsToUse = parameters.slice(1);
@@ -429,4 +425,8 @@ export async function genIpcHandlers(config: Partial<GeneratorConfig> = {}) {
 	if (errors.length > 0) {
 		console.log(`   - ${errors.length} errors encountered`);
 	}
+}
+
+if (import.meta.main) {
+	genIpcHandlers();
 }

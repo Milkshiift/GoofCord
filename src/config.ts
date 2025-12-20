@@ -1,8 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { app, dialog, shell } from "electron";
-import type { Config, ConfigKey, ConfigValue } from "./configTypes.d.ts";
-import { settingsSchema } from "./settingsSchema.ts";
+import { type Config, type ConfigKey, type ConfigValue, settingsSchema } from "./settingsSchema.ts";
 import { getErrorMessage, getGoofCordFolderPath, tryCreateFolder } from "./utils.ts";
 
 export let cachedConfig: Config;

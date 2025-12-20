@@ -1,6 +1,5 @@
 // @ts-expect-error See /build/globbyGlob.ts
 import allLangs from "glob-filenames:../assets/lang/*.json";
-import type { ConfigKey, ConfigValue } from "./configTypes";
 
 const spellcheckLangs = [
 	"af",
@@ -61,25 +60,45 @@ const spellcheckLangs = [
 	"vi",
 ];
 
-export interface SettingEntry {
-	name: ConfigKey;
-	description: string;
-	inputType: string;
-	defaultValue: ConfigValue<ConfigKey>;
+// biome-ignore lint/suspicious/noExplicitAny: No way around it
+type DynamicConfigValue = any;
+type InputType = "checkbox" | "textfield" | "dropdown" | "dropdown-multiselect" | "file" | "textarea";
+
+interface BaseEntry {
+	description?: string;
+	defaultValue?: unknown;
+}
+
+export interface SettingEntry<TDefault = unknown> extends BaseEntry {
+	name: string;
+	inputType: InputType;
+	defaultValue: TDefault;
 	accept?: string;
 	encrypted?: boolean;
-	options?: string[];
+	options?: readonly string[] | Record<string, string>;
 	showAfter?: {
 		key: string;
-		condition: (value: unknown) => boolean;
+		condition: (value: DynamicConfigValue) => boolean;
 	};
-	onChange?: string; // IPC channel to invoke
+	onChange?: string;
+}
+
+export interface HiddenEntry<TDefault = unknown> extends BaseEntry {
+	outputType?: string;
+	defaultValue: TDefault;
+	inputType?: undefined;
 }
 
 export interface ButtonEntry {
 	name: string;
 	onClick: string;
+	inputType?: undefined;
+	defaultValue?: undefined;
 }
+
+type SchemaEntry = SettingEntry | HiddenEntry | ButtonEntry;
+
+type SchemaStructure = Record<string, Record<string, SchemaEntry>>;
 
 // https://github.com/Milkshiift/GoofCord/wiki/How-to-develop-GoofCord#entries
 export const settingsSchema = {
@@ -139,7 +158,7 @@ export const settingsSchema = {
 		},
 		spellcheckLanguages: {
 			name: "Spellcheck languages",
-			defaultValue: [],
+			defaultValue: [] as string[],
 			description: "A list of languages to check spelling for. When none are selected, the system default is used.",
 			inputType: "dropdown-multiselect",
 			options: spellcheckLangs,
@@ -279,7 +298,7 @@ export const settingsSchema = {
 		},
 		noBundleUpdates: {
 			defaultValue: false,
-			inputType: "checkbox",
+			outputType: "boolean",
 		},
 		installDefaultShelterPlugins: {
 			defaultValue: true,
@@ -299,7 +318,7 @@ export const settingsSchema = {
 		},
 		encryptionPasswords: {
 			name: "Encryption passwords",
-			defaultValue: [],
+			defaultValue: [] as string[],
 			description: "Securely stored, encrypted list of passwords that will be used for encryption. A backup in a warm, safe place is recommended. Separate entries with commas.",
 			inputType: "textarea",
 			encrypted: true,
@@ -449,11 +468,11 @@ export const settingsSchema = {
 			},
 		},
 		screensharePreviousSettings: {
-			defaultValue: ["720", "30", false, "motion"],
+			defaultValue: ["720", "30", false, "motion"] as const,
 			outputType: "[number, number, boolean, string]",
 		},
 		"windowState:main": {
-			defaultValue: [true, [835, 600]],
+			defaultValue: [true, [835, 600]] as [boolean, [number, number]],
 			outputType: "[boolean, [number, number]]",
 		},
 		"button-openGoofCordFolder": {
@@ -502,4 +521,19 @@ export const settingsSchema = {
 			onClick: "settings.deleteCloud()",
 		},
 	},
-};
+} satisfies SchemaStructure;
+
+type RawSchema = typeof settingsSchema;
+type SectionKeys = keyof RawSchema;
+
+type AllKeys = {
+	[S in SectionKeys]: keyof RawSchema[S];
+}[SectionKeys];
+
+export type ConfigKey = Exclude<AllKeys, `button-${string}`>;
+
+type InferValueType<T> = T extends { inputType: "checkbox" } ? boolean : T extends { inputType: "textfield" | "dropdown" | "file" } ? string : T extends { inputType: "textarea" | "dropdown-multiselect" } ? string[] : T extends { defaultValue: infer D } ? D : unknown;
+
+export type ConfigValue<K extends ConfigKey> = { [S in SectionKeys]: K extends keyof RawSchema[S] ? InferValueType<RawSchema[S][K]> : never }[SectionKeys];
+
+export type Config = Map<ConfigKey, ConfigValue<ConfigKey>>;

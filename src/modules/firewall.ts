@@ -2,7 +2,7 @@
 import { session } from "electron";
 import pc from "picocolors";
 import { getConfig, getDefaultValue } from "../config.ts";
-import type { ConfigKey, ConfigValue } from "../configTypes.d.ts";
+import type { ConfigKey, ConfigValue } from "../settingsSchema.ts";
 
 function getConfigOrDefault<K extends ConfigKey>(toGet: K): ConfigValue<K> {
 	return getConfig("customFirewallRules") ? getConfig(toGet) : getDefaultValue(toGet);

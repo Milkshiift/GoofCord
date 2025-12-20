@@ -1,6 +1,6 @@
 import type { BrowserWindow } from "electron";
 import { getConfig, setConfig } from "../config.ts";
-import type { ConfigKey } from "../configTypes";
+import type { ConfigKey } from "../settingsSchema.ts";
 
 type NumberPair = [number, number];
 type WindowState = [boolean, NumberPair];

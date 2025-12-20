@@ -1,7 +1,6 @@
 import { webFrame } from "electron";
-import type { ConfigKey, ConfigValue } from "../../../configTypes.d.ts";
 import { sendSync } from "../../../ipc/client.ts";
-import { type ButtonEntry, type SettingEntry, settingsSchema } from "../../../settingsSchema.ts";
+import { type ButtonEntry, type ConfigKey, type ConfigValue, type SettingEntry, settingsSchema } from "../../../settingsSchema.ts";
 import { decryptSetting, evaluateShowAfter } from "./preload.mts";
 
 function sanitizeForId(name: string): string {
@@ -142,10 +141,13 @@ function getInputElement(entry: SettingEntry, setting: ConfigKey, value: ConfigV
 		case "dropdown-multiselect": {
 			const isMultiselect = entry.inputType === "dropdown-multiselect";
 			const selectValue = Array.isArray(value) ? value : [String(value)];
+
+			const optionsList = Array.isArray(entry.options) ? entry.options : entry.options ? Object.keys(entry.options) : [];
+
 			return `
                 <select setting-name="${setting}" class="left dropdown" id="${setting}" name="${setting}" ${isMultiselect ? "multiple" : ""}>
-                    ${entry.options
-											?.map((option) => {
+                    ${optionsList
+											.map((option) => {
 												const optionStr = String(option);
 												const isSelected = selectValue.includes(optionStr);
 												return `

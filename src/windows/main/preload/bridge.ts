@@ -1,6 +1,6 @@
 import { contextBridge } from "electron";
-import type { ConfigKey, ConfigValue } from "../../../configTypes";
 import { invoke, sendSync } from "../../../ipc/client.ts";
+import type { ConfigKey, ConfigValue } from "../../../settingsSchema.ts";
 import { flashTitlebar, flashTitlebarWithText } from "./titlebarFlash.ts";
 
 const api = {
