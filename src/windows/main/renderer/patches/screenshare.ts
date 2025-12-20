@@ -9,6 +9,13 @@ export default definePatch({
 				replace: "$self.patchStreamQuality($&)",
 			},
 		},
+		{
+			find: "canUseCustomStickersEverywhere:",
+			replacement: {
+				match: /(?<=canStreamQuality:)\i/,
+				replace: "() => true",
+			}
+		}
 	],
 	// biome-ignore lint/suspicious/noExplicitAny: opts structure is unknown and comes from Discord
 	patchStreamQuality(opts: any) {
