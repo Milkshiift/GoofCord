@@ -9,22 +9,24 @@
 		"enabled": true,
 		"rules": {
 			"recommended": true,
+			"suspicious": {
+				"noExplicitAny": "error",
+				"noAssignInExpressions": "error",
+				"noImplicitAnyLet": "error"
+			},
 			"style": {
-				"useTemplate": "off",
-				"noParameterAssign": "error",
-				"useAsConstAssertion": "error",
-				"useDefaultParameterLast": "error",
-				"useEnumInitializers": "error",
-				"useSelfClosingElements": "error",
-				"useSingleVarDeclarator": "error",
-				"noUnusedTemplateLiteral": "error",
-				"useNumberNamespace": "error",
-				"noInferrableTypes": "error",
-				"noUselessElse": "error"
+				"noNonNullAssertion": "error",
+				"useConst": "error",
+				"useTemplate": "off"
 			},
 			"correctness": {
 				"noUnusedVariables": "off",
-				"noUnusedFunctionParameters": "off"
+				"noUnusedFunctionParameters": "off",
+				"noUnsafeOptionalChaining": "error"
+			},
+			"complexity": {
+				"noForEach": "error",
+				"useLiteralKeys": "error"
 			}
 		}
 	},

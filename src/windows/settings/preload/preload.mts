@@ -1,7 +1,7 @@
 import { contextBridge, ipcRenderer } from "electron";
+import { invoke, sendSync } from "../../../ipc/client.ts";
 import { type ConfigKey, type ConfigValue, type SettingEntry, settingsSchema } from "../../../settingsSchema.ts";
 import { renderSettings } from "./settingsRenderer.ts";
-import { invoke, sendSync } from "../../../ipc/client.ts";
 
 console.log("GoofCord Settings");
 

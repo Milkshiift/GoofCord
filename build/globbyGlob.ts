@@ -1,5 +1,5 @@
-import type { BunPlugin, OnLoadArgs } from "bun";
 import path from "node:path";
+import type { BunPlugin, OnLoadArgs } from "bun";
 
 export const globImporterPlugin: BunPlugin = {
 	name: "bun-plugin-glob",

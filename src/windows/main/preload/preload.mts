@@ -1,14 +1,14 @@
 import "./bridge.ts";
 import { ipcRenderer, webFrame } from "electron";
+// @ts-expect-error
+import rendererScript from "../../../../ts-out/windows/main/renderer/renderer.js" with { type: "text" };
+import { sendSync } from "../../../ipc/client.ts";
 import { error, log } from "../../../modules/logger.ts";
 // @ts-expect-error
 import discordCss from "./discord.css" with { type: "text" };
-// @ts-expect-error
-import rendererScript from "../../../../ts-out/windows/main/renderer/renderer.js" with { type: "text" };
 import { startKeybindWatcher } from "./keybinds.ts";
 import { injectFlashbar } from "./titlebarFlash.ts";
 import { patchVencord } from "./vencordPatcher.ts";
-import { sendSync } from "../../../ipc/client.ts";
 
 if (document.location.hostname.includes("discord")) {
 	const assets: Record<string, string[][]> = sendSync("assetLoader:getAssets");

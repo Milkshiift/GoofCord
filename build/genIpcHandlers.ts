@@ -1,6 +1,6 @@
-import ts from "typescript";
 import path from "node:path";
 import { Glob } from "bun";
+import ts from "typescript";
 
 interface IpcFunctionInfo {
 	channelName: string;
@@ -410,9 +410,9 @@ export async function genIpcHandlers(config: Partial<GeneratorConfig> = {}) {
 
 	if (errors.length > 0) {
 		console.error(`\n⚠️  Found ${errors.length} error(s):`);
-		errors.forEach((err) => {
+		for (const err of errors) {
 			console.error(`  - ${err.message}`);
-		});
+		}
 		console.error("");
 	}
 

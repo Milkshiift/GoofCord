@@ -19,9 +19,9 @@ export function registerScreenshareHandler() {
 		});
 		if (!sources) return callback({});
 
-		sources.forEach((source) => {
+		for (const source of sources) {
 			if (!source.name) source.name = "unknown";
-		});
+		}
 
 		capturerWindow = new BrowserWindow({
 			width: width,

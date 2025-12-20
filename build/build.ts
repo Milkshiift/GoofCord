@@ -2,12 +2,12 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { globImportPlugin } from "bun-plugin-glob-import";
+import pc from "picocolors";
 import { genIpcHandlers } from "./genIpcHandlers.ts";
 import { genSettingsLangFile } from "./genSettingsLangFile.ts";
-import pc from "picocolors";
 import { globImporterPlugin } from "./globbyGlob.ts";
 import { nativeModulePlugin } from "./nativeImport";
-import { globImportPlugin } from "bun-plugin-glob-import";
 
 // --- Argument Parsing ---
 const args = process.argv;

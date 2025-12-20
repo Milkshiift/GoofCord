@@ -53,24 +53,26 @@ window.initSwitcher = () => {
 		const panelToActivate = document.getElementById(targetId);
 		if (!panelToActivate) return;
 
-		elements.tabs.forEach((tab) => {
+		for (const tab of elements.tabs) {
 			const isActive = tab === tabToActivate;
 			tab.classList.toggle("active", isActive);
 			tab.setAttribute("aria-selected", isActive);
-		});
+		}
 
-		elements.panels.forEach((panel) => {
+		for (const panel of elements.panels) {
 			panel.classList.toggle("active", panel === panelToActivate);
-		});
+		}
 		window.scrollTo(0, 0);
 	}
 
 	function unhideSettings(tabElement) {
 		const targetId = tabElement?.dataset.target;
 		const targetPanel = targetId && document.getElementById(targetId);
-		targetPanel?.querySelectorAll(SELECTORS.fieldset).forEach((fieldset) => {
-			fieldset.classList.remove("hidden");
-		});
+		if (targetPanel) {
+			for (const fieldset of targetPanel.querySelectorAll(SELECTORS.fieldset)) {
+				fieldset.classList.remove("hidden");
+			}
+		}
 	}
 
 	function showConfetti(event, { emoji = "✨", count = 20, fontSizeMin = 10, fontSizeMax = 25, speedMin = 50, speedMax = 150, durationMin = 0.8, durationMax = 1.4 } = {}) {
@@ -216,16 +218,16 @@ window.initSwitcher = () => {
 
 	function init() {
 		elements.container.setAttribute("role", "tablist");
-		elements.tabs.forEach((tab) => {
+		for (const tab of elements.tabs) {
 			tab.setAttribute("role", "tab");
 			tab.setAttribute("tabindex", "0");
 			tab.setAttribute("aria-controls", tab.dataset.target);
 			tab.setAttribute("aria-selected", tab.classList.contains("active"));
-		});
-		elements.panels.forEach((panel) => {
+		}
+		for (const panel of elements.panels) {
 			panel.setAttribute("role", "tabpanel");
 			panel.setAttribute("tabindex", "0");
-		});
+		}
 
 		elements.container.addEventListener("click", handleTabClick);
 		document.addEventListener("keydown", handleKeyNavigation);

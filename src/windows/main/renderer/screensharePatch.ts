@@ -58,7 +58,7 @@ export function patchScreenshare() {
 				},
 			});
 
-			stream.getAudioTracks().forEach((t) => void stream.removeTrack(t));
+			for (const t of stream.getAudioTracks()) stream.removeTrack(t);
 			stream.addTrack(audio.getAudioTracks()[0]);
 		}
 

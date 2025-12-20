@@ -1,5 +1,5 @@
-import ts from "typescript";
 import path from "node:path";
+import ts from "typescript";
 
 const SCHEMA_PATH = path.join(import.meta.dir, "..", "src", "settingsSchema.ts");
 const LANG_PATH = path.join(import.meta.dir, "..", "assets", "lang", "en-US.json");

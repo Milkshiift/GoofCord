@@ -6,21 +6,19 @@ function MultiselectDropdown(options) {
 
 	function createElement(tag, attrs = {}) {
 		const element = document.createElement(tag);
-		Object.entries(attrs).forEach(([key, value]) => {
+		for (const [key, value] of Object.entries(attrs)) {
 			if (key === "class") {
 				if (Array.isArray(value)) {
-					value
-						.filter((cls) => cls !== "")
-						.forEach((cls) => {
-							element.classList.add(cls);
-						});
+					for (const cls of value.filter((cls) => cls !== "")) {
+						element.classList.add(cls);
+					}
 				} else if (value !== "") {
 					element.classList.add(value);
 				}
 			} else if (key === "style") {
-				Object.entries(value).forEach(([styleKey, styleValue]) => {
+				for (const [styleKey, styleValue] of Object.entries(value)) {
 					element.style[styleKey] = styleValue;
-				});
+				}
 			} else if (key === "text") {
 				element.textContent = value === "" ? "\u00A0" : value;
 			} else if (key === "html") {
@@ -28,11 +26,11 @@ function MultiselectDropdown(options) {
 			} else {
 				element[key] = value;
 			}
-		});
+		}
 		return element;
 	}
 
-	document.querySelectorAll("select[multiple]").forEach((selectElement) => {
+	for (const selectElement of document.querySelectorAll("select[multiple]")) {
 		selectElement.style.display = "none";
 
 		const dropdownContainer = createElement("div", {
@@ -51,7 +49,7 @@ function MultiselectDropdown(options) {
 
 		selectElement.loadOptions = () => {
 			optionsList.innerHTML = "";
-			Array.from(selectElement.options).forEach((option) => {
+			for (const option of Array.from(selectElement.options)) {
 				const optionItem = createElement("div", {
 					class: ["multiselect-dropdown-list-option", option.selected ? "checked" : ""],
 					optEl: option,
@@ -70,7 +68,7 @@ function MultiselectDropdown(options) {
 
 				option.listitemEl = optionItem;
 				optionsList.appendChild(optionItem);
-			});
+			}
 		};
 
 		function toggleOption(optionItem) {
@@ -83,17 +81,17 @@ function MultiselectDropdown(options) {
 		}
 
 		const refreshDropdown = () => {
-			dropdownContainer.querySelectorAll("span.optext, span.placeholder").forEach((el) => {
+			for (const el of dropdownContainer.querySelectorAll("span.optext, span.placeholder")) {
 				dropdownContainer.removeChild(el);
-			});
+			}
 			const selectedOptions = Array.from(selectElement.selectedOptions);
 			if (selectedOptions.length === 0) {
 				dropdownContainer.appendChild(createElement("span", { class: "placeholder", text: config.placeholder }));
 			} else {
-				selectedOptions.forEach((option) => {
+				for (const option of selectedOptions) {
 					const tag = createElement("span", { class: "optext", text: option.text, srcOption: option });
 					dropdownContainer.appendChild(tag);
-				});
+				}
 			}
 		};
 
@@ -106,9 +104,9 @@ function MultiselectDropdown(options) {
 
 		function updateHighlight() {
 			const allOptions = optionsList.querySelectorAll(".multiselect-dropdown-list-option");
-			allOptions.forEach((item) => {
+			for (const item of allOptions) {
 				item.classList.remove("highlighted");
-			});
+			}
 
 			if (highlightIndex >= 0 && highlightIndex < allOptions.length) {
 				const highlightedItem = allOptions[highlightIndex];
@@ -195,7 +193,7 @@ function MultiselectDropdown(options) {
 		});
 
 		selectElement.addEventListener("change", refreshDropdown);
-	});
+	}
 }
 
 window.initMultiselect = () => {
