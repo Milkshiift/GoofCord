@@ -14,6 +14,8 @@ import { isDev } from "./utils.ts";
 import { createMainWindow } from "./windows/main/main.ts";
 import { createSettingsWindow } from "./windows/settings/settings.ts";
 
+declare module "auto-launch";
+
 export async function load() {
 	void setAutoLaunchState();
 	void setMenu();

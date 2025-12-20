@@ -10,7 +10,8 @@
     "packageWindows": "electron-builder --win",
     "packageMac": "electron-builder --mac",
     "loginFix": "rm -rf ~/.config/Electron/Local\\ Storage && cp -r ~/.config/goofcord/Local\\ Storage ~/.config/Electron/",
-    "lint": "biome check --unsafe --fix ."
+    "lint": "biome check --unsafe .",
+    "check": "tsgo"
   },
   "repository": {
     "type": "git",

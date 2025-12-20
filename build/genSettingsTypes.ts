@@ -20,13 +20,14 @@ function generateSettingsMappings(data: string): string[] {
 
 	const categories = extractKeysAtLevel(data, 1);
 	for (const category of categories) {
-		const settings = extractJSON(data, [category])!;
+		const settings = extractJSON(data, [category]);
+		if (!settings) throw new Error(`Failed to extract JSON for category: ${category}`);
 		const settingKeys = extractKeysAtLevel(settings, 1);
 		for (const key of settingKeys) {
 			if (key.startsWith("button-")) continue;
 			const outputType = extractJSON(settings, [key, "outputType"]);
 			const inputType = extractJSON(settings, [key, "inputType"]);
-			const type = outputType ?? inferType(inputType!);
+			const type = outputType ?? inferType(inputType ?? "unknown");
 			lines.push(`    "${key}": ${type};`);
 		}
 	}
@@ -59,7 +60,12 @@ function generateType(data: string): string {
 const dtsPath = path.join(import.meta.dir, "..", "src", "configTypes.d.ts");
 
 export async function generateDTSFile(): Promise<void> {
-	const file = (await Bun.file(path.join(import.meta.dir, "..", "src", "settingsSchema.ts")).text()).split("settingsSchema = ").pop()!;
+	const fileContent = await Bun.file(path.join(import.meta.dir, "..", "src", "settingsSchema.ts")).text();
+	const splitContent = fileContent.split("settingsSchema = ");
+	if (splitContent.length < 2) throw new Error("Could not find settingsSchema assignment in file");
+	const file = splitContent.pop();
+	if (!file) throw new Error("settingsSchema content is empty");
+
 	const dtsContent = generateType(file);
 	await Bun.write(dtsPath, dtsContent);
 }

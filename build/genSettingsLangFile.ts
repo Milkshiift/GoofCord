@@ -13,7 +13,9 @@ export async function genSettingsLangFile() {
 		for (const category of categories) {
 			result[`category-${category.toLowerCase().split(" ")[0]}`] = category;
 
-			const settings = extractJSON(data, [category])!;
+			const settings = extractJSON(data, [category]);
+			if (!settings) throw new Error(`Failed to extract JSON for category: ${category}`);
+
 			const settingKeys = extractKeysAtLevel(settings, 1);
 			for (const key of settingKeys) {
 				const name = extractJSON(settings, [key, "name"]);

@@ -41,7 +41,7 @@ const getActiveKeybinds = (): Map<string, Keybind> => {
 		};
 
 		// Filter out modifier keys
-		const mainKeys = keys.filter((key) => ![MODIFIERS.CTRL, MODIFIERS.ALT, MODIFIERS.SHIFT].includes(key));
+		const mainKeys = keys.filter((key: number) => ![MODIFIERS.CTRL, MODIFIERS.ALT, MODIFIERS.SHIFT].includes(key));
 
 		// Build keyboard shortcut string
 		const keyParts: string[] = [];

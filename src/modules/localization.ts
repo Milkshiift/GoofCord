@@ -21,7 +21,7 @@ export async function initLocalization() {
 
 // Gets localized string. Shortened because it's used very often
 export function i<IPCOn>(key: string) {
-	const translated = localization[key];
+	const translated = (localization as Record<string, string>)[key];
 	if (translated !== undefined) return translated;
-	return defaultLang[key];
+	return (defaultLang as Record<string, string>)[key];
 }

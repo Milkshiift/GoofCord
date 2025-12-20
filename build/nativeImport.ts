@@ -1,5 +1,5 @@
 import type { BunPlugin, OnLoadArgs } from "bun";
-import path from "path";
+import path from "node:path";
 
 interface NativePluginOptions {
 	targetPlatform?: string;
@@ -24,7 +24,7 @@ export const nativeModulePlugin = (options: NativePluginOptions = {}): BunPlugin
 			};
 		});
 
-		build.onLoad({ filter: /.*/, namespace }, async (args: OnLoadArgs) => {
+		build.onLoad({ filter: /.*/, namespace }, async (args: OnLoadArgs): Promise<import("bun").OnLoadResult> => {
 			const [importerDir, globPattern] = args.path.split("\0");
 
 			const targetPlatform = options.targetPlatform || process.platform;
@@ -40,6 +40,7 @@ export const nativeModulePlugin = (options: NativePluginOptions = {}): BunPlugin
 
 			if (!matchedFile) {
 				return {
+					// @ts-expect-error
 					errors: [
 						{
 							text: `Could not find native module for ${targetPlatform}-${targetArch} matching pattern: ${globPattern} in ${importerDir}`,

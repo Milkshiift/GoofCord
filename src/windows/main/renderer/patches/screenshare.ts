@@ -10,8 +10,8 @@ export default definePatch({
 			},
 		},
 	],
+	// biome-ignore lint/suspicious/noExplicitAny: opts structure is unknown and comes from Discord
 	patchStreamQuality(opts: any) {
-		// @ts-expect-error
 		const screenshareQuality = window.screenshareSettings;
 		if (!screenshareQuality) return opts;
 

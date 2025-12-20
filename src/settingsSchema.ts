@@ -145,7 +145,7 @@ export const settingsSchema = {
 			options: spellcheckLangs,
 			showAfter: {
 				key: "spellcheck",
-				condition: (value) => value,
+				condition: (value: unknown) => !!value,
 			},
 		},
 	},
@@ -163,7 +163,7 @@ export const settingsSchema = {
 			inputType: "checkbox",
 			showAfter: {
 				key: "customTitlebar",
-				condition: (value) => {
+				condition: (value: unknown) => {
 					return value === false;
 				},
 			},
@@ -187,8 +187,8 @@ export const settingsSchema = {
 			inputType: "checkbox",
 			showAfter: {
 				key: "dynamicIcon",
-				condition: (value) => {
-					return value;
+				condition: (value: unknown) => {
+					return value === true;
 				},
 			},
 		},
@@ -207,7 +207,7 @@ export const settingsSchema = {
 			options: ["default", "symbolic_black", "symbolic_white"],
 			showAfter: {
 				key: "trayIcon",
-				condition: (value) => {
+				condition: (_value: unknown) => {
 					return process.platform === "linux";
 				},
 			},
@@ -219,7 +219,7 @@ export const settingsSchema = {
 			inputType: "checkbox",
 			showAfter: {
 				key: "autoscroll",
-				condition: (value) => {
+				condition: (_value: unknown) => {
 					return process.platform === "linux";
 				},
 			},

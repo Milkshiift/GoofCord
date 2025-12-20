@@ -31,14 +31,14 @@ async function downloadBundles(urls: Array<string | undefined>, name: string) {
 			const response = await fetch(url, {
 				headers: {
 					"User-Agent": profile.userAgent,
-					"If-None-Match": exists ? (cache[url] ?? "") : "",
+					"If-None-Match": exists ? (cache[url as keyof typeof cache] ?? "") : "",
 				},
 			});
 
 			// Up to date
 			if (response.status === 304) continue;
 
-			cache[url] = response.headers.get("ETag");
+			(cache[url as keyof typeof cache] as string) = response.headers.get("ETag") ?? "";
 
 			if (!logged) console.log(LOG_PREFIX, "Downloading mod bundles for:", name);
 			logged = true;

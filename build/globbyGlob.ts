@@ -1,5 +1,5 @@
 import type { BunPlugin, OnLoadArgs } from "bun";
-import path from "path";
+import path from "node:path";
 
 export const globImporterPlugin: BunPlugin = {
 	name: "bun-plugin-glob",
@@ -7,7 +7,7 @@ export const globImporterPlugin: BunPlugin = {
 		const namespace = "glob-plugin";
 		const filter = /^glob-(import|filenames):/;
 
-		// @ts-ignore
+		// @ts-expect-error
 		build.onResolve({ filter }, (args) => {
 			if (!args.importer) {
 				return {
@@ -16,8 +16,8 @@ export const globImporterPlugin: BunPlugin = {
 			}
 
 			const match = args.path.match(filter);
-			const command = match![1];
-			const globPattern = args.path.slice(match![0].length);
+			const command = match?.[1];
+			const globPattern = args.path.slice(match?.[0].length);
 
 			return {
 				path: `${command}\0${globPattern}\0${args.importer}`,
@@ -25,7 +25,7 @@ export const globImporterPlugin: BunPlugin = {
 			};
 		});
 
-		// @ts-ignore
+		// @ts-expect-error
 		build.onLoad({ filter: /.*/, namespace }, async (args: OnLoadArgs) => {
 			const [command, globPattern, importer] = args.path.split("\0");
 

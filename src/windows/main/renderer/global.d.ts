@@ -1,3 +1,4 @@
+import type { Patch } from "@vencord/types/utils/types";
 import type { GoofCordApi } from "../preload/bridge";
 
 declare global {
@@ -9,7 +10,9 @@ declare global {
 			contentHint?: string;
 			width?: number;
 		};
-		__GOOFCORD_PATCHES__: any[];
-		GoofCordPatchGlobals: Record<string, any>;
+		__GOOFCORD_PATCHES__: Patch[];
+		GoofCordPatchGlobals: Record<string, { [p: string]: unknown }>;
+		// biome-ignore lint/suspicious/noExplicitAny: Shelter
+		shelter: any;
 	}
 }

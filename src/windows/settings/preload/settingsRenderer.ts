@@ -73,6 +73,7 @@ function generatePanelInnerContent(categoryName: string): { settingsHtml: string
 	let buttonsHtml = "";
 	let settingsHtml = "";
 
+	// @ts-expect-error
 	for (const [setting, entry] of Object.entries(settingsSchema[categoryName])) {
 		if (setting.startsWith("button-")) {
 			buttonsHtml += createButton(setting, entry as ButtonEntry);

@@ -2,7 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { app, safeStorage } from "electron";
+// @ts-expect-error
 import gfIconIco from "../assets/gf_icon.ico";
+// @ts-expect-error
 import gfIconPng from "../assets/gf_icon.png";
 import packageInfo from "../package.json" with { type: "json" };
 import { getConfig } from "./config.ts";

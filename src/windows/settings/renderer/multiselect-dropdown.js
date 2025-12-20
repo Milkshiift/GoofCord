@@ -9,7 +9,11 @@ function MultiselectDropdown(options) {
 		Object.entries(attrs).forEach(([key, value]) => {
 			if (key === "class") {
 				if (Array.isArray(value)) {
-					value.filter((cls) => cls !== "").forEach((cls) => element.classList.add(cls));
+					value
+						.filter((cls) => cls !== "")
+						.forEach((cls) => {
+							element.classList.add(cls);
+						});
 				} else if (value !== "") {
 					element.classList.add(value);
 				}
@@ -79,7 +83,11 @@ function MultiselectDropdown(options) {
 		}
 
 		const refreshDropdown = () => {
-			dropdownContainer.querySelectorAll("span.optext, span.placeholder").forEach((el) => dropdownContainer.removeChild(el));
+			dropdownContainer
+				.querySelectorAll("span.optext, span.placeholder")
+				.forEach((el) => {
+					dropdownContainer.removeChild(el);
+				});
 			const selectedOptions = Array.from(selectElement.selectedOptions);
 			if (selectedOptions.length === 0) {
 				dropdownContainer.appendChild(createElement("span", { class: "placeholder", text: config.placeholder }));
@@ -100,7 +108,9 @@ function MultiselectDropdown(options) {
 
 		function updateHighlight() {
 			const allOptions = optionsList.querySelectorAll(".multiselect-dropdown-list-option");
-			allOptions.forEach((item) => item.classList.remove("highlighted"));
+			allOptions.forEach((item) => {
+				item.classList.remove("highlighted");
+			});
 
 			if (highlightIndex >= 0 && highlightIndex < allOptions.length) {
 				const highlightedItem = allOptions[highlightIndex];

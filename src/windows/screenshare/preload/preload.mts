@@ -109,7 +109,7 @@ async function selectSource(id: string | null, title: string | null): Promise<vo
 		void invoke("flashTitlebar", "#5865F2");
 		void invoke("config:setConfig", "screensharePreviousSettings", [settings.resolution, settings.framerate, settings.audio, settings.contentHint]);
 
-		void ipcRenderer.invoke("selectScreenshareSource", id, title, settings.audio, settings.contentHint, settings.resolution, settings.framerate);
+		void ipcRenderer.invoke("selectScreenshareSource", id ?? "", title ?? "", settings.audio, settings.contentHint, settings.resolution, settings.framerate);
 	} catch (err) {
 		console.error("[selectSource] An error occurred:", err);
 	}

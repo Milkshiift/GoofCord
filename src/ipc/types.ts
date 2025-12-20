@@ -19,39 +19,40 @@ export interface IpcHandleChannels {
   "config:loadConfig": typeof loadConfig;
   "config:setConfig": typeof setConfig;
   "config:setConfigBulk": typeof setConfigBulk;
+  "loader:setAutoLaunchState": typeof setAutoLaunchState;
   "settings:createSettingsWindow": typeof createSettingsWindow;
   "settings:hotreloadLocale": typeof hotreloadLocale;
-  "loader:setAutoLaunchState": typeof setAutoLaunchState;
   "cloud:loadCloud": typeof loadCloud;
   "cloud:saveCloud": typeof saveCloud;
   "cloud:deleteCloud": typeof deleteCloud;
+  "utils:saveFileToGCFolder": typeof saveFileToGCFolder;
   "messageEncryption:cycleThroughPasswords": typeof cycleThroughPasswords;
   "cacheManager:clearCache": typeof clearCache;
-  "mods:updateModsFull": typeof updateModsFull;
   "venmic:stopVenmic": typeof stopVenmic;
   "venbind:setKeybinds": typeof setKeybinds;
   "venbind:isVenbindLoaded": typeof isVenbindLoaded;
   "dynamicIcon:setBadgeCount": typeof setBadgeCount;
+  "mods:updateModsFull": typeof updateModsFull;
   "arrpc:initArrpc": typeof initArrpc;
-  "utils:saveFileToGCFolder": typeof saveFileToGCFolder;
 }
 
 export interface IpcOnChannels {
   "config:getConfig": typeof getConfig;
   "config:getConfigBulk": typeof getConfigBulk;
   "config:getDefaultValue": typeof getDefaultValue;
-  "localization:i": typeof i;
-  "messageEncryption:encryptMessage": typeof encryptMessage;
-  "messageEncryption:decryptMessage": typeof decryptMessage;
-  "assetLoader:getAssets": typeof getAssets;
   "utils:getVersion": typeof getVersion;
   "utils:getDisplayVersion": typeof getDisplayVersion;
   "utils:isEncryptionAvailable": typeof isEncryptionAvailable;
   "utils:encryptSafeStorage": typeof encryptSafeStorage;
   "utils:decryptSafeStorage": typeof decryptSafeStorage;
+  "localization:i": typeof i;
+  "messageEncryption:encryptMessage": typeof encryptMessage;
+  "messageEncryption:decryptMessage": typeof decryptMessage;
+  "assetLoader:getAssets": typeof getAssets;
 }
 
 export interface RegisteredIpcHandleChannels {
+  "openFolder": (folder: string) => void;
   "window:Maximize": () => void;
   "window:IsMaximized": () => void;
   "window:Minimize": () => void;
@@ -59,8 +60,8 @@ export interface RegisteredIpcHandleChannels {
   "window:Show": () => void;
   "window:Hide": () => void;
   "window:Close": () => void;
-  "flashTitlebar": (_event: any, color: string) => void;
-  "flashTitlebarWithText": (_event: any, color: string, text: string) => void;
+  "flashTitlebar": (color: string) => void;
+  "flashTitlebarWithText": (color: string, text: string) => void;
 }
 
 export interface RegisteredIpcOnChannels {

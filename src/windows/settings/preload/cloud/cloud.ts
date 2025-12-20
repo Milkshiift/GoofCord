@@ -38,7 +38,7 @@ function getEncryptionKey(): string {
 
 export async function loadCloud<IPCHandle>(): Promise<void> {
 	return withLock("load", async () => {
-		const response = await callEndpoint("load", "GET");
+		const response = (await callEndpoint("load", "GET")) as { settings: string };
 		if (!response?.settings || response.settings.length < 50) {
 			await showDialog("info", "Cloud Settings", "Nothing to load");
 			return;

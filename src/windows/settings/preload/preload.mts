@@ -87,7 +87,7 @@ async function getSettingValue<K extends ConfigKey>(element: HTMLElement, settin
 						if (typeof fileContent === "string") return reject(new Error("File content is a string"));
 
 						try {
-							const result = await invoke("utils:saveFileToGCFolder", settingName, Buffer.from(new Uint8Array(fileContent)));
+							const result = await invoke("utils:saveFileToGCFolder", settingName, Buffer.from(new Uint8Array(fileContent)) as unknown as string);
 							resolve(result as ConfigValue<K>);
 						} catch (ipcError) {
 							reject(ipcError);
@@ -119,6 +119,7 @@ export async function revertSetting(setting: HTMLElement) {
 		if (setting.type === "checkbox" && typeof defaultValue === "boolean") {
 			setting.checked = defaultValue;
 		} else if (setting.type === "file") {
+			// @ts-expect-error
 			void invoke("config:setConfig", elementName, defaultValue);
 			void invoke("flashTitlebar", "#5865F2");
 			return;
@@ -144,7 +145,7 @@ export function encryptSetting(settingValue: ConfigValue<ConfigKey>) {
 		return sendSync("utils:encryptSafeStorage", settingValue);
 	}
 	if (Array.isArray(settingValue)) {
-		return settingValue.map((value: unknown) => sendSync("utils:encryptSafeStorage", value));
+		return settingValue.map((value: unknown) => sendSync("utils:encryptSafeStorage", value as string));
 	}
 	return settingValue;
 }
@@ -154,12 +155,13 @@ export function decryptSetting(settingValue: ConfigValue<ConfigKey>) {
 		return sendSync("utils:decryptSafeStorage", settingValue);
 	}
 	if (Array.isArray(settingValue)) {
-		return settingValue.map((value: unknown) => sendSync("utils:decryptSafeStorage", value));
+		return settingValue.map((value: unknown) => sendSync("utils:decryptSafeStorage", value as string));
 	}
 	return settingValue;
 }
 
-export function findKeyAtDepth(obj: object, targetKey: string, depth: number) {
+// biome-ignore lint/suspicious/noExplicitAny: Generic object traversal requires any
+export function findKeyAtDepth(obj: Record<string, any>, targetKey: string, depth: number): any {
 	if (depth === 1) {
 		return obj[targetKey] || undefined;
 	}

@@ -37,16 +37,16 @@ export function extractJSON(input: string, path: Array<string>): string | undefi
 	let lookup = path[0]; // Holds key what we should find next
 
 	let record = false; // Triggers setting of next variables.
-	let start = 0,
-		end = 0; // Holds found offsets in input.
-	let stringStart = -1,
-		stringEnd = -1; // Track start and end of string values
+	let start = 0;
+	let end = 0; // Holds found offsets in input.
+	let stringStart = -1;
+	let stringEnd = -1; // Track start and end of string values
 	let quoteType: string | null = null; // Track the type of quotes used for the current string (' or ")
 
 	const stack: number[] = []; // Count brackets and ":" sign.
-	const isKeys = 0,
-		isArray = 1,
-		isValue = 2;
+	const isKeys = 0;
+	const isArray = 1;
+	const isValue = 2;
 	let level = 0; // Current depth level.
 	let on = 1; // What level we are expecting right now.
 	let pathIndex = 0; // Track the current index in the path array
@@ -218,12 +218,14 @@ export function extractJSON(input: string, path: Array<string>): string | undefi
 		});
 
 		return unescapedString;
-	} else if (start !== 0 && start <= end) {
+	}if (start !== 0 && start <= end) {
 		const part = input.slice(start, end + 1); // We found it.
 		return part;
-	} else if (level !== 0) {
-		throw new SyntaxError(`JSON parse error`);
+	}if (level !== 0) {
+		throw new SyntaxError("JSON parse error");
 	}
+
+	return undefined;
 }
 
 /**
@@ -237,9 +239,9 @@ export function extractJSON(input: string, path: Array<string>): string | undefi
 export function extractKeysAtLevel(input: string, targetLevel: number): string[] {
 	const keys: string[] = [];
 	const stack: number[] = [];
-	const isKeys = 0,
-		isArray = 1,
-		isValue = 2;
+	const isKeys = 0;
+	const isArray = 1;
+	const isValue = 2;
 	let level = 0;
 
 	for (let i = 0, len = input.length; i < len; i++) {
@@ -250,13 +252,14 @@ export function extractKeysAtLevel(input: string, targetLevel: number): string[]
 				level++;
 				break;
 
-			case "}":
+			case "}": {
 				const t = stack.pop();
 				if (t !== isValue && t !== isKeys) {
 					throw new SyntaxError(`Unexpected token ${ch} in JSON at position ${i}`);
 				}
 				level--;
 				break;
+			}
 
 			case "[":
 				stack.push(isArray);
@@ -282,7 +285,7 @@ export function extractKeysAtLevel(input: string, targetLevel: number): string[]
 				}
 				break;
 
-			case '"':
+			case '"': {
 				let j = ++i; // next char after "
 
 				// Consume whole string till next " symbol.
@@ -302,6 +305,7 @@ export function extractKeysAtLevel(input: string, targetLevel: number): string[]
 
 				i = j; // Continue from end of string.
 				break;
+			}
 
 			default:
 				// Handle unquoted keys
@@ -318,7 +322,7 @@ export function extractKeysAtLevel(input: string, targetLevel: number): string[]
 	}
 
 	if (level !== 0) {
-		throw new SyntaxError(`JSON parse error`);
+		throw new SyntaxError("JSON parse error");
 	}
 
 	return keys;

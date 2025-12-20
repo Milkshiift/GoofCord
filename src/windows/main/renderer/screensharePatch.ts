@@ -66,7 +66,7 @@ export function patchScreenshare() {
 	};
 
 	setTimeout(() => {
-		window.shelter.flux.dispatcher.subscribe("STREAM_CLOSE", ({ streamKey }) => {
+		window.shelter.flux.dispatcher.subscribe("STREAM_CLOSE", ({ streamKey }: { streamKey: string }) => {
 			const owner = streamKey.split(":").at(-1);
 			if (owner === window.shelter.flux.stores.UserStore.getCurrentUser().id) {
 				window.goofcord.stopVenmic();

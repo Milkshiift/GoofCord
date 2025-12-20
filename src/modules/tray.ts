@@ -1,5 +1,7 @@
 import { app, dialog, Menu, nativeImage, Tray } from "electron";
+// @ts-expect-error
 import symbolicIconBlack from "../../assets/gf_symbolic_black.png";
+// @ts-expect-error
 import symbolicIconWhite from "../../assets/gf_symbolic_white.png";
 import { getConfig } from "../config.ts";
 import { getCustomIcon, getDisplayVersion, relToAbs } from "../utils.ts";

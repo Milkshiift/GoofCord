@@ -103,9 +103,11 @@ export function getDefaults(): Config {
 	if (defaults.size > 0) return defaults; // Caching
 
 	for (const category in settingsSchema) {
-		const categorySettings = settingsSchema[category];
+		const categorySettings = settingsSchema[category as keyof typeof settingsSchema];
 		for (const setting in categorySettings) {
-			defaults.set(setting as ConfigKey, categorySettings[setting].defaultValue);
+			const settingKey = setting as keyof typeof categorySettings;
+			// @ts-expect-error
+			defaults.set(setting as ConfigKey, categorySettings[settingKey].defaultValue);
 		}
 	}
 
