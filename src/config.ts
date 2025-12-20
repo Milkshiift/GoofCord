@@ -38,6 +38,7 @@ async function handleConfigError(e: unknown) {
 				return true;
 		}
 	}
+	return false;
 }
 
 export async function loadConfig<IPCHandle>(): Promise<void> {

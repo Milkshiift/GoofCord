@@ -1,5 +1,5 @@
 export function startDomOptimizer() {
-	if (!goofcord.getConfig("domOptimizer")) return;
+	if (!window.goofcord.getConfig("domOptimizer")) return;
 
 	function optimize(orig: typeof Element.prototype.removeChild) {
 		const delayedClasses = ["activity", "gif", "avatar", "imagePlaceholder", "hoverBar"];

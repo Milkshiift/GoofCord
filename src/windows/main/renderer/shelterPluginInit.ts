@@ -1,5 +1,5 @@
 export async function initShelterPlugins() {
-	if (!goofcord.getConfig("modNames").includes("shelter") || !goofcord.getConfig("installDefaultShelterPlugins")) return;
+	if (!window.goofcord.getConfig("modNames").includes("shelter") || !window.goofcord.getConfig("installDefaultShelterPlugins")) return;
 
 	while (!window.shelter?.plugins?.addRemotePlugin) await new Promise((resolve) => setTimeout(resolve, 1000));
 

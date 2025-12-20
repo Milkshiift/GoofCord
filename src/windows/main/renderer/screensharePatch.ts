@@ -68,8 +68,8 @@ export function patchScreenshare() {
 	setTimeout(() => {
 		window.shelter.flux.dispatcher.subscribe("STREAM_CLOSE", ({ streamKey }) => {
 			const owner = streamKey.split(":").at(-1);
-			if (owner === shelter.flux.stores.UserStore.getCurrentUser().id) {
-				goofcord.stopVenmic();
+			if (owner === window.shelter.flux.stores.UserStore.getCurrentUser().id) {
+				window.goofcord.stopVenmic();
 			}
 		});
 	}, 5000); // Time for shelter flux to initialize

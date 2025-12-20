@@ -4,7 +4,7 @@ export function fixNotifications() {
 		set(onClick) {
 			originalSetter?.call(this, (...args: unknown[]) => {
 				onClick.apply(this, args);
-				goofcord.window.show();
+				window.goofcord.window.show();
 			});
 		},
 		configurable: true,
