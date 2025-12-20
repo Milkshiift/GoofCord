@@ -21,17 +21,17 @@ export interface IpcHandleChannels {
   "config:setConfigBulk": typeof setConfigBulk;
   "loader:setAutoLaunchState": typeof setAutoLaunchState;
   "utils:saveFileToGCFolder": typeof saveFileToGCFolder;
+  "settings:createSettingsWindow": typeof createSettingsWindow;
+  "settings:hotreloadLocale": typeof hotreloadLocale;
   "cloud:loadCloud": typeof loadCloud;
   "cloud:saveCloud": typeof saveCloud;
   "cloud:deleteCloud": typeof deleteCloud;
-  "settings:createSettingsWindow": typeof createSettingsWindow;
-  "settings:hotreloadLocale": typeof hotreloadLocale;
   "messageEncryption:cycleThroughPasswords": typeof cycleThroughPasswords;
   "cacheManager:clearCache": typeof clearCache;
   "venmic:stopVenmic": typeof stopVenmic;
+  "dynamicIcon:setBadgeCount": typeof setBadgeCount;
   "venbind:setKeybinds": typeof setKeybinds;
   "venbind:isVenbindLoaded": typeof isVenbindLoaded;
-  "dynamicIcon:setBadgeCount": typeof setBadgeCount;
   "mods:updateModsFull": typeof updateModsFull;
   "arrpc:initArrpc": typeof initArrpc;
 }

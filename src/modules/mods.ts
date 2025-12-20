@@ -4,7 +4,7 @@ import { Notification } from "electron";
 import pc from "picocolors";
 import { getConfig, setConfig } from "../config.ts";
 import { getErrorMessage, isPathAccessible } from "../utils.ts";
-import { assetsFolder } from "./assetLoader.ts";
+import { ASSETS_FOLDER } from "./assetLoader.ts";
 import { profile } from "./chromeSpoofer.ts";
 
 export const LOG_PREFIX = pc.yellow("[Mod Loader]");
@@ -24,7 +24,7 @@ async function downloadBundles(urls: Array<string | undefined>, name: string) {
 	for (const url of urls) {
 		if (!url) continue;
 		try {
-			const filepath = path.join(assetsFolder, `${name}${path.extname(url)}`);
+			const filepath = path.join(ASSETS_FOLDER, `${name}${path.extname(url)}`);
 
 			const exists = await isPathAccessible(filepath);
 
@@ -69,7 +69,7 @@ export async function manageMods() {
 	const modNames: string[] = getConfig("modNames");
 	const possibleMods = Object.keys(MOD_BUNDLES_URLS);
 	for (const possibleMod of possibleMods) {
-		const possibleModPath = path.join(assetsFolder, possibleMod);
+		const possibleModPath = path.join(ASSETS_FOLDER, possibleMod);
 		if (modNames.includes(possibleMod)) {
 			enabledMods.push(possibleMod);
 			try {
