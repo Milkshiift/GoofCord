@@ -3,6 +3,11 @@ import { invoke, sendSync } from "../../../ipc/client.ts";
 import type { ConfigKey, ConfigValue } from "../../../settingsSchema.ts";
 import { flashTitlebar, flashTitlebarWithText } from "./titlebarFlash.ts";
 
+export let isVencordPresent = false;
+export function setVencordPresent(value: boolean) {
+	isVencordPresent = value;
+}
+
 const api = {
 	window: {
 		show: () => invoke("window:Show"),
@@ -25,6 +30,7 @@ const api = {
 	openSettingsWindow: () => invoke("settings:createSettingsWindow"),
 	setBadgeCount: (count: number) => invoke("dynamicIcon:setBadgeCount", count),
 	stopVenmic: () => invoke("venmic:stopVenmic"),
+	isVencordPresent: () => isVencordPresent,
 };
 
 contextBridge.exposeInMainWorld("goofcord", api);

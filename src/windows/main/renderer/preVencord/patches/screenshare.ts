@@ -1,4 +1,4 @@
-import { definePatch } from "../patchManager";
+import { definePatch } from "../patchManager.ts";
 
 export default definePatch({
 	patches: [
@@ -14,8 +14,8 @@ export default definePatch({
 			replacement: {
 				match: /(?<=canStreamQuality:)\i/,
 				replace: "() => true",
-			}
-		}
+			},
+		},
 	],
 	// biome-ignore lint/suspicious/noExplicitAny: opts structure is unknown and comes from Discord
 	patchStreamQuality(opts: any) {

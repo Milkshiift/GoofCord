@@ -1,4 +1,4 @@
-import { definePatch } from "../patchManager";
+import { definePatch } from "../patchManager.ts";
 
 export default definePatch({
 	patches: [

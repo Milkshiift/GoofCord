@@ -63,21 +63,35 @@ const mainBundleResult = await Bun.build({
 });
 if (mainBundleResult.logs.length) console.log(mainBundleResult.logs);
 
-const rendererPath = path.join("src", "windows", "main", "renderer", "renderer.ts");
-const relativePath = path.relative("src", rendererPath);
-const outDir = path.join("ts-out", path.dirname(relativePath));
-const rendererBundleResult = await Bun.build({
+const rendererPath = path.join("src", "windows", "main", "renderer");
+const preVencord = path.join(rendererPath, "preVencord", "preVencord.ts");
+const postVencord = path.join(rendererPath, "postVencord", "postVencord.ts");
+const preVencordOutDir = path.join("ts-out", path.dirname(path.relative("src", preVencord)));
+const postVencordOutDir = path.join("ts-out", path.dirname(path.relative("src", postVencord)));
+const preVencordBundleResult = await Bun.build({
 	minify: false,
 	sourcemap: false,
 	format: "esm",
 	target: "browser",
 	splitting: false,
-	entrypoints: [rendererPath],
-	outdir: outDir,
+	entrypoints: [preVencord],
+	outdir: preVencordOutDir,
 	packages: "bundle",
 	plugins: [globImportPlugin()],
 });
-if (rendererBundleResult.logs.length) console.log(rendererBundleResult.logs);
+if (preVencordBundleResult.logs.length) console.log(preVencordBundleResult.logs);
+const postVencordBundleResult = await Bun.build({
+	minify: false,
+	sourcemap: false,
+	format: "esm",
+	target: "browser",
+	splitting: false,
+	entrypoints: [postVencord],
+	outdir: postVencordOutDir,
+	packages: "bundle",
+	plugins: [globImportPlugin()],
+});
+if (postVencordBundleResult.logs.length) console.log(postVencordBundleResult.logs);
 
 for (const preloadFile of preloadFiles) {
 	const relativePath = path.relative("src", preloadFile);

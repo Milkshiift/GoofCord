@@ -1,6 +1,7 @@
-import { definePatch } from "../patchManager";
+import { definePatch } from "../patchManager.ts";
 
 export default definePatch({
+	condition: () => window.goofcord.getConfig("customTitlebar"),
 	patches: [
 		{
 			find: ".systemBar,",

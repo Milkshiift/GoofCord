@@ -3,6 +3,9 @@
   "exclude": ["node_modules", "src/modules/arrpcWorker.ts"],
   "compilerOptions": {
     "rootDir": "./",
+    "paths": {
+      "@renderer/*": ["./ts-out/windows/main/renderer/*"]
+    },
     "module": "esnext",
     "moduleResolution": "bundler",
     "target": "esnext",

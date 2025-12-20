@@ -2,6 +2,7 @@ import type { Patch } from "@vencord/types/utils/types";
 
 export interface PatchDefinition {
 	patches: Omit<Patch, "plugin">[];
+	condition?: () => boolean;
 	[helperName: string]: unknown;
 }
 
@@ -17,7 +18,9 @@ export const definePatch = (config: PatchDefinition) => config;
 
 export function loadPatches(definitions: PatchDefinition[]) {
 	for (const def of definitions) {
-		const { patches, ...helpers } = def;
+		const { patches, condition, ...helpers } = def;
+
+		if (condition && !condition()) continue;
 
 		Object.assign(window[GLOBALS], helpers);
 

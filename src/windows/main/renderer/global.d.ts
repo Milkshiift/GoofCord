@@ -1,5 +1,5 @@
 import type { Patch } from "@vencord/types/utils/types";
-import type { GoofCordApi } from "../preload/bridge";
+import type { GoofCordApi } from "../preload/bridge.ts";
 
 declare global {
 	interface Window {
@@ -14,5 +14,6 @@ declare global {
 		GoofCordPatchGlobals: Record<string, { [p: string]: unknown }>;
 		// biome-ignore lint/suspicious/noExplicitAny: Shelter
 		shelter: any;
+		Vencord: typeof import("@vencord/types/Vencord");
 	}
 }
