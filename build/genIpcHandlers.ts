@@ -358,6 +358,8 @@ export async function genIpcHandlers(config: Partial<GeneratorConfig> = {}) {
 		allFilePaths.push(path.join(cfg.srcRoot, fileRelative));
 	}
 
+	allFilePaths.sort();
+
 	const allFunctions: IpcFunctionInfo[] = [];
 	const allRegistryHandlers: RegistryHandler[] = [];
 	const collectedImports = new Map<string, Set<string>>();
@@ -415,6 +417,9 @@ export async function genIpcHandlers(config: Partial<GeneratorConfig> = {}) {
 		}
 		console.error("");
 	}
+
+	allFunctions.sort((a, b) => a.channelName.localeCompare(b.channelName));
+	allRegistryHandlers.sort((a, b) => a.channelName.localeCompare(b.channelName));
 
 	const sortedPaths = Array.from(collectedImports.keys()).sort();
 

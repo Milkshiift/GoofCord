@@ -16,52 +16,52 @@ import type { deleteCloud, loadCloud, saveCloud } from "../windows/settings/prel
 import type { createSettingsWindow, hotreloadLocale } from "../windows/settings/settings";
 
 export interface IpcHandleChannels {
+  "arrpc:initArrpc": typeof initArrpc;
+  "cacheManager:clearCache": typeof clearCache;
+  "cloud:deleteCloud": typeof deleteCloud;
+  "cloud:loadCloud": typeof loadCloud;
+  "cloud:saveCloud": typeof saveCloud;
   "config:loadConfig": typeof loadConfig;
   "config:setConfig": typeof setConfig;
   "config:setConfigBulk": typeof setConfigBulk;
+  "dynamicIcon:setBadgeCount": typeof setBadgeCount;
   "loader:setAutoLaunchState": typeof setAutoLaunchState;
-  "utils:saveFileToGCFolder": typeof saveFileToGCFolder;
+  "messageEncryption:cycleThroughPasswords": typeof cycleThroughPasswords;
+  "mods:updateModsFull": typeof updateModsFull;
   "settings:createSettingsWindow": typeof createSettingsWindow;
   "settings:hotreloadLocale": typeof hotreloadLocale;
-  "cloud:loadCloud": typeof loadCloud;
-  "cloud:saveCloud": typeof saveCloud;
-  "cloud:deleteCloud": typeof deleteCloud;
-  "messageEncryption:cycleThroughPasswords": typeof cycleThroughPasswords;
-  "cacheManager:clearCache": typeof clearCache;
-  "venmic:stopVenmic": typeof stopVenmic;
-  "venbind:setKeybinds": typeof setKeybinds;
+  "utils:saveFileToGCFolder": typeof saveFileToGCFolder;
   "venbind:isVenbindLoaded": typeof isVenbindLoaded;
-  "dynamicIcon:setBadgeCount": typeof setBadgeCount;
-  "mods:updateModsFull": typeof updateModsFull;
-  "arrpc:initArrpc": typeof initArrpc;
+  "venbind:setKeybinds": typeof setKeybinds;
+  "venmic:stopVenmic": typeof stopVenmic;
 }
 
 export interface IpcOnChannels {
+  "assetLoader:getAssets": typeof getAssets;
   "config:getConfig": typeof getConfig;
   "config:getConfigBulk": typeof getConfigBulk;
   "config:getDefaultValue": typeof getDefaultValue;
-  "utils:getVersion": typeof getVersion;
-  "utils:getDisplayVersion": typeof getDisplayVersion;
-  "utils:isEncryptionAvailable": typeof isEncryptionAvailable;
-  "utils:encryptSafeStorage": typeof encryptSafeStorage;
-  "utils:decryptSafeStorage": typeof decryptSafeStorage;
   "localization:i": typeof i;
-  "messageEncryption:encryptMessage": typeof encryptMessage;
   "messageEncryption:decryptMessage": typeof decryptMessage;
-  "assetLoader:getAssets": typeof getAssets;
+  "messageEncryption:encryptMessage": typeof encryptMessage;
+  "utils:decryptSafeStorage": typeof decryptSafeStorage;
+  "utils:encryptSafeStorage": typeof encryptSafeStorage;
+  "utils:getDisplayVersion": typeof getDisplayVersion;
+  "utils:getVersion": typeof getVersion;
+  "utils:isEncryptionAvailable": typeof isEncryptionAvailable;
 }
 
 export interface RegisteredIpcHandleChannels {
-  "openFolder": (folder: string) => void;
-  "window:Maximize": () => void;
-  "window:IsMaximized": () => void;
-  "window:Minimize": () => void;
-  "window:Unmaximize": () => void;
-  "window:Show": () => void;
-  "window:Hide": () => void;
-  "window:Close": () => void;
   "flashTitlebar": (color: string) => void;
   "flashTitlebarWithText": (color: string, text: string) => void;
+  "openFolder": (folder: string) => void;
+  "window:Close": () => void;
+  "window:Hide": () => void;
+  "window:IsMaximized": () => void;
+  "window:Maximize": () => void;
+  "window:Minimize": () => void;
+  "window:Show": () => void;
+  "window:Unmaximize": () => void;
 }
 
 export interface RegisteredIpcOnChannels {
