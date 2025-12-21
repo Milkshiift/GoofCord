@@ -22,6 +22,7 @@ const api = {
 	},
 	version: sendSync("utils:getVersion"),
 	displayVersion: sendSync("utils:getDisplayVersion"),
+	getVersions: () => process.versions,
 	getConfig: (toGet: ConfigKey, bypassDefault = false) => sendSync("config:getConfig", toGet, bypassDefault),
 	setConfig: (key: ConfigKey, value: ConfigValue<ConfigKey>) => invoke("config:setConfig", key, value),
 	encryptMessage: (message: string) => sendSync("messageEncryption:encryptMessage", message),

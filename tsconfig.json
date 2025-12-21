@@ -9,6 +9,7 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "target": "esnext",
+    "jsx": "react",
     "lib": ["ESNext", "dom", "dom.Iterable"],
 
     "strict": true,
@@ -19,6 +20,6 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "esModuleInterop": true,
+    "esModuleInterop": true
   }
 }
