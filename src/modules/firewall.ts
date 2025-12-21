@@ -52,7 +52,7 @@ export function initFirewall() {
 	console.log(pc.red("[Firewall]"), "Firewall initialized");
 }
 
-export async function unstrictCSP() {
+export function unstrictCSP() {
 	session.defaultSession.webRequest.onHeadersReceived(({ responseHeaders, resourceType }, done) => {
 		if (!responseHeaders) return done({});
 

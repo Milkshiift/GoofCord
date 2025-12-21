@@ -1,4 +1,4 @@
-import * as path from "node:path";
+import path from "node:path";
 import { app, BrowserWindow, shell } from "electron";
 import pc from "picocolors";
 // @ts-expect-error
@@ -68,7 +68,7 @@ async function doAfterDefiningTheWindow() {
 	subscribeToAppEvents();
 	setWindowOpenHandler();
 	registerScreenshareHandler();
-	void initYoutubeAdblocker();
+	initYoutubeAdblocker();
 }
 
 let subscribed = false;
@@ -137,12 +137,12 @@ function setWindowOpenHandler() {
 	});
 }
 
-async function initYoutubeAdblocker() {
+function initYoutubeAdblocker() {
 	mainWindow.webContents.on("frame-created", (_, { frame }) => {
 		if (!frame) return;
 		frame.once("dom-ready", () => {
 			if (frame.url.includes("youtube.com/embed/") || (frame.url.includes("discordsays") && frame.url.includes("youtube.com"))) {
-				frame.executeJavaScript(adblocker);
+				void frame.executeJavaScript(adblocker);
 			}
 		});
 	});

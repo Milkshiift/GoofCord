@@ -20,15 +20,19 @@ export async function load() {
 	void setAutoLaunchState();
 	void setMenu();
 	void createTray();
-	const preReady = Promise.all([registerAllHandlers(), manageMods().then(() => categorizeAllAssets())]);
+	registerAllHandlers();
+	const modPromise = manageMods().then(() => categorizeAllAssets());
 
 	console.time(pc.green("[Timer]") + " Electron loaded in");
 	await app.whenReady();
 	console.timeEnd(pc.green("[Timer]") + " Electron loaded in");
 
 	initEncryption();
+	setPermissions();
 	initFirewall();
-	await Promise.all([preReady, waitForInternetConnection(), setPermissions(), unstrictCSP()]);
+	unstrictCSP();
+	await waitForInternetConnection();
+	await modPromise;
 	firstLaunch ? await createSettingsWindow() : await createMainWindow();
 
 	console.timeEnd(pc.green("[Timer]") + " GoofCord fully loaded in");
@@ -58,7 +62,7 @@ export async function setAutoLaunchState<IPCHandle>() {
 	getConfig("launchWithOsBoot") ? await gfAutoLaunch.enable() : await gfAutoLaunch.disable();
 }
 
-async function setPermissions() {
+function setPermissions() {
 	session.defaultSession.setPermissionRequestHandler(async (_webContents, permission, callback, details) => {
 		if (process.platform === "darwin" && "mediaTypes" in details) {
 			if (details.mediaTypes?.includes("audio")) {

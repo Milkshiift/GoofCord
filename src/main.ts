@@ -33,18 +33,34 @@ async function main() {
 function setFlags() {
 	if (process.argv.includes("--no-flags")) return;
 
-	const enableFeatures = new Set(["WebRTC", "WebRtcHideLocalIpsWithMdns", "PlatformHEVCEncoderSupport"]);
+	const enableFeatures = new Set([
+		"WebRTC",
+		"WebRtcHideLocalIpsWithMdns",
+		"PlatformHEVCEncoderSupport",
+		"TransportCallback",
+		"AudioServiceOutOfProcess"
+	]);
 
-	const disableFeatures = new Set(["UseChromeOSDirectVideoDecoder", "HardwareMediaKeyHandling", "MediaSessionService", "WebRtcAllowInputVolumeAdjustment", "Vulkan"]);
+	const disableFeatures = new Set([
+		"UseChromeOSDirectVideoDecoder",
+		"HardwareMediaKeyHandling",
+		"MediaSessionService",
+		"WebRtcAllowInputVolumeAdjustment",
+		"Vulkan",
+		"PaintHolding",
+		"DestroyProfileOnBrowserClose",
+	]);
 
 	const switches = new Map<string, string | null>([
 		["autoplay-policy", "no-user-gesture-required"],
 		["enable-speech-dispatcher", null],
-		["disable-http-cache", null], // Work around https://github.com/electron/electron/issues/40777
 		// Prevent app unloading when backgrounded
 		["disable-renderer-backgrounding", null],
 		["disable-background-timer-throttling", null],
 		["disable-disable-backgrounding-occluded-windows", null],
+
+		["enable-quic", null],
+		["enable-tcp-fast-open", null],
 	]);
 
 	if (process.platform === "linux") {
@@ -73,6 +89,7 @@ function setFlags() {
 		switches.set("disable-low-res-tiling", null);
 		switches.set("disable-site-isolation-trials", null);
 		switches.set("enable-hardware-overlays", "single-fullscreen,single-on-top,underlay");
+		switches.set("enable-native-gpu-memory-buffers", null);
 	}
 
 	if (getConfig("disableGpuCompositing")) {

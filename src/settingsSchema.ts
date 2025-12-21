@@ -428,7 +428,6 @@ export const settingsSchema = {
 				"https://*/api/v*/premium-marketing",
 				"https://*/api/v*/scheduled-maintenances/upcoming.json",
 				"https://*/error-reporting-proxy/*",
-				"https://*/assets/version.*",
 				"https://cdn.discordapp.com/bad-domains/*",
 				"https://www.youtube.com/youtubei/v*/next?*",
 				"https://www.youtube.com/s/desktop/*",
