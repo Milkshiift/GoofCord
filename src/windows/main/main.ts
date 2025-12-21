@@ -1,5 +1,5 @@
 import path from "node:path";
-import { app, BrowserWindow, shell } from "electron";
+import { app, BrowserWindow, session, shell } from "electron";
 import pc from "picocolors";
 // @ts-expect-error
 import adblocker from "../../../assets/adblocker.js" with { type: "text" };
@@ -10,10 +10,19 @@ import { adjustWindow } from "../../modules/windowStateManager.ts";
 import { dirname, getCustomIcon } from "../../utils.ts";
 import { registerScreenshareHandler } from "../screenshare/screenshare.ts";
 
+// Shaves off ~100ms
+async function preconnectToDiscord() {
+	const preconnect = (url: string) => session.defaultSession.preconnect({ url, numSockets: 4 });
+	preconnect(getConfig("discordUrl"));
+	preconnect("https://gateway.discord.gg");
+}
+
 export let mainWindow: BrowserWindow;
 
 export async function createMainWindow() {
 	if (process.argv.some((arg) => arg === "--headless")) return;
+
+	void preconnectToDiscord();
 
 	console.log(`${pc.blue("[Window]")} Opening window...`);
 	const transparency: boolean = getConfig("transparency");

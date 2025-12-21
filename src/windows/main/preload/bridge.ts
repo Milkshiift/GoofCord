@@ -22,7 +22,7 @@ const api = {
 	},
 	arrpc: {
 		onActivity: (callback: (dataJson: string) => void) => ipcRenderer.on("arrpc:activity", (_event, dataJson: string) => callback(dataJson)),
-		onInvite: (callback: (code: string) => void) => ipcRenderer.on("arrpc:invite", (_event, code) => callback(code))
+		onInvite: (callback: (code: string) => void) => ipcRenderer.on("arrpc:invite", (_event, code) => callback(code)),
 	},
 	version: sendSync("utils:getVersion"),
 	displayVersion: sendSync("utils:getDisplayVersion"),
