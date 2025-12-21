@@ -21,10 +21,19 @@ export async function initArrpc<IPCHandle>() {
 			},
 		} as object);
 
-		worker.on("message", (e: { eventType: string }) => {
-			const { eventType } = e;
-			if (eventType === "showMainWindow") {
-				mainWindow.show();
+		worker.on("message", (e: { eventType: string; data: string }) => {
+			const { eventType, data } = e;
+			switch (eventType) {
+				case "activity":
+					mainWindow.webContents.send("arrpc:activity", data);
+					break;
+				case "invite":
+					mainWindow.show();
+					mainWindow.webContents.send("arrpc:invite", data);
+					break;
+				default:
+					console.warn("arRPC worker sent an invalid event");
+					break;
 			}
 		});
 

@@ -1,24 +1,20 @@
 import { parentPort, workerData } from "node:worker_threads";
 import Server from "arrpc";
-import * as Bridge from "arrpc/src/bridge.ts";
 import type { BridgeMessage } from "arrpc/src/types";
-
-Bridge.init();
 
 const server = new Server(workerData.detectablePath);
 
-server.on("activity", (data: BridgeMessage) => Bridge.send(data));
-server.on("invite", (code: string) => {
+server.on("activity", (data: BridgeMessage) =>
 	parentPort?.postMessage({
-		eventType: "showMainWindow",
-	});
-	// @ts-expect-error
-	Bridge.send({
-		cmd: "INVITE_BROWSER",
-		args: {
-			code: code,
-		},
-	});
-});
+		eventType: "activity",
+		data: JSON.stringify(data),
+	}),
+);
+server.on("invite", (code: string) =>
+	parentPort?.postMessage({
+		eventType: "invite",
+		data: code,
+	}),
+);
 
 await server.start();

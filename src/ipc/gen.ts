@@ -23,13 +23,13 @@ export function registerAllHandlers() {
   ipcMain.handle("config:setConfig", async (event, entry, value) => { return await setConfig(entry, value); });
   ipcMain.handle("config:setConfigBulk", async (event, toSet) => { return await setConfigBulk(toSet); });
   ipcMain.on("config:getDefaultValue", (event, entry) => { event.returnValue = getDefaultValue(entry); });
+  ipcMain.handle("loader:setAutoLaunchState", async (event) => { return await setAutoLaunchState(); });
   ipcMain.on("utils:getVersion", (event) => { event.returnValue = getVersion(); });
   ipcMain.on("utils:getDisplayVersion", (event) => { event.returnValue = getDisplayVersion(); });
   ipcMain.on("utils:isEncryptionAvailable", (event) => { event.returnValue = isEncryptionAvailable(); });
   ipcMain.on("utils:encryptSafeStorage", (event, plaintextString) => { event.returnValue = encryptSafeStorage(plaintextString); });
   ipcMain.on("utils:decryptSafeStorage", (event, encryptedBase64) => { event.returnValue = decryptSafeStorage(encryptedBase64); });
   ipcMain.handle("utils:saveFileToGCFolder", async (event, filePath, content) => { return await saveFileToGCFolder(filePath, content); });
-  ipcMain.handle("loader:setAutoLaunchState", async (event) => { return await setAutoLaunchState(); });
   ipcMain.handle("settings:createSettingsWindow", async (event) => { return await createSettingsWindow(); });
   ipcMain.handle("settings:hotreloadLocale", async (event) => { return await hotreloadLocale(); });
   ipcMain.handle("cloud:loadCloud", async (event) => { return await loadCloud(); });
@@ -45,6 +45,6 @@ export function registerAllHandlers() {
   ipcMain.handle("venbind:isVenbindLoaded", async (event) => { return await isVenbindLoaded(); });
   ipcMain.handle("dynamicIcon:setBadgeCount", async (event, requestedCount) => { return await setBadgeCount(requestedCount); });
   ipcMain.handle("mods:updateModsFull", async (event) => { return await updateModsFull(); });
-  ipcMain.handle("arrpc:initArrpc", async (event) => { return await initArrpc(); });
   ipcMain.on("assetLoader:getAssets", (event) => { event.returnValue = getAssets(); });
+  ipcMain.handle("arrpc:initArrpc", async (event) => { return await initArrpc(); });
 }

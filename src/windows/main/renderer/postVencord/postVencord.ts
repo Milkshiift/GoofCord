@@ -1,13 +1,16 @@
 import { initDynamicIcon } from "./dynamicIcon.ts";
 import { patchScreenshare } from "./screensharePatch.ts";
-import { initSettingsButton } from "./settings.tsx";
+import { initSettingsButton } from "./settings.ts";
+import { initRichPresence } from "./richPresence.ts";
 
 async function init() {
-    await window.Vencord.Webpack.onceReady;
+	initRichPresence();
 
-    initDynamicIcon();
-    patchScreenshare();
-    initSettingsButton();
+	await window.Vencord.Webpack.onceReady;
+
+	initDynamicIcon();
+	patchScreenshare();
+	initSettingsButton();
 }
 
 void init();

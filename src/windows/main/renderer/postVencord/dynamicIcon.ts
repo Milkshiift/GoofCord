@@ -4,27 +4,27 @@ let GuildReadStateStore: any;
 let RelationshipStore: any;
 
 export function initDynamicIcon() {
-    RelationshipStore = window.Vencord.Webpack.Common.RelationshipStore;
-    GuildReadStateStore = window.Vencord.Webpack.findStore("GuildReadStateStore");
-    GuildReadStateStore.addChangeListener(setBadge);
-    RelationshipStore.addChangeListener(setBadge);
-    setBadge();
+	RelationshipStore = window.Vencord.Webpack.Common.RelationshipStore;
+	GuildReadStateStore = window.Vencord.Webpack.findStore("GuildReadStateStore");
+	GuildReadStateStore.addChangeListener(setBadge);
+	RelationshipStore.addChangeListener(setBadge);
+	setBadge();
 }
 
 function setBadge() {
-    try {
-        const mentionCount = GuildReadStateStore.getTotalMentionCount();
-        const pendingRequests = RelationshipStore.getPendingCount();
+	try {
+		const mentionCount = GuildReadStateStore.getTotalMentionCount();
+		const pendingRequests = RelationshipStore.getPendingCount();
 
-        let totalCount = mentionCount + pendingRequests;
+		let totalCount = mentionCount + pendingRequests;
 
-        if (totalCount === 0 && GuildReadStateStore.hasAnyUnread()) {
-            // Unread
-            totalCount = -1;
-        }
+		if (totalCount === 0 && GuildReadStateStore.hasAnyUnread()) {
+			// Unread
+			totalCount = -1;
+		}
 
-        void window.goofcord.setBadgeCount(totalCount);
-    } catch (e) {
-        console.error(e);
-    }
+		void window.goofcord.setBadgeCount(totalCount);
+	} catch (e) {
+		console.error(e);
+	}
 }

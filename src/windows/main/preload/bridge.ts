@@ -1,4 +1,4 @@
-import { contextBridge } from "electron";
+import { contextBridge, ipcRenderer } from "electron";
 import { invoke, sendSync } from "../../../ipc/client.ts";
 import type { ConfigKey, ConfigValue } from "../../../settingsSchema.ts";
 import { flashTitlebar, flashTitlebarWithText } from "./titlebarFlash.ts";
@@ -19,6 +19,10 @@ const api = {
 	titlebar: {
 		flashTitlebar: (color: string) => flashTitlebar(color),
 		flashTitlebarWithText: (color: string, text: string) => flashTitlebarWithText(color, text),
+	},
+	arrpc: {
+		onActivity: (callback: (dataJson: string) => void) => ipcRenderer.on("arrpc:activity", (_event, dataJson: string) => callback(dataJson)),
+		onInvite: (callback: (code: string) => void) => ipcRenderer.on("arrpc:invite", (_event, code) => callback(code))
 	},
 	version: sendSync("utils:getVersion"),
 	displayVersion: sendSync("utils:getDisplayVersion"),
