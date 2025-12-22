@@ -9,6 +9,8 @@ window.initSwitcher = () => {
 	const CONFIG = {
 		tripleClickTime: 300,
 		tripleClickCount: 3,
+		storageKey: "tabSwitcherState",
+		retentionTime: 15000,
 	};
 
 	function cacheDOMElements() {
@@ -48,6 +50,14 @@ window.initSwitcher = () => {
 		return sequence;
 	}
 
+	function saveTabState(targetId) {
+		const data = {
+			id: targetId,
+			timestamp: Date.now()
+		};
+		localStorage.setItem(CONFIG.storageKey, JSON.stringify(data));
+	}
+
 	function activateTab(tabToActivate) {
 		const targetId = tabToActivate.dataset.target;
 		const panelToActivate = document.getElementById(targetId);
@@ -62,6 +72,9 @@ window.initSwitcher = () => {
 		for (const panel of elements.panels) {
 			panel.classList.toggle("active", panel === panelToActivate);
 		}
+
+		saveTabState(targetId);
+
 		window.scrollTo(0, 0);
 	}
 
@@ -210,7 +223,6 @@ window.initSwitcher = () => {
 
 		if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
 		event.preventDefault();
-
 		const activeIndex = elements.tabs.findIndex((tab) => tab.classList.contains("active"));
 		if (activeIndex === -1) {
 			activateTab(elements.tabs[0]);
@@ -219,6 +231,27 @@ window.initSwitcher = () => {
 		const direction = event.key === "ArrowRight" ? 1 : -1;
 		const nextIndex = (activeIndex + direction + elements.tabs.length) % elements.tabs.length;
 		activateTab(elements.tabs[nextIndex]);
+	}
+
+	function determineInitialTab() {
+		const rawState = localStorage.getItem(CONFIG.storageKey);
+
+		if (rawState) {
+			try {
+				const savedState = JSON.parse(rawState);
+				const now = Date.now();
+				const elapsed = now - savedState.timestamp;
+
+				if (elapsed <= CONFIG.retentionTime) {
+					const savedTab = elements.tabs.find(tab => tab.dataset.target === savedState.id);
+					if (savedTab) return savedTab;
+				}
+			} catch (e) {
+				console.error("Error parsing tab state", e);
+			}
+		}
+
+		return elements.tabs.find(tab => tab.classList.contains("active")) || elements.tabs[0];
 	}
 
 	function init() {
@@ -237,8 +270,9 @@ window.initSwitcher = () => {
 		elements.container.addEventListener("click", handleTabClick);
 		document.addEventListener("keydown", handleKeyNavigation);
 
-		if (!elements.tabs.some((tab) => tab.classList.contains("active")) && elements.tabs.length > 0) {
-			activateTab(elements.tabs[0]);
+		if (elements.tabs.length > 0) {
+			const initialTab = determineInitialTab();
+			activateTab(initialTab);
 		}
 	}
 
