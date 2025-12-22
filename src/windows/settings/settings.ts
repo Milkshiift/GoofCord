@@ -6,6 +6,7 @@ import { registerHandle } from "../../ipc/registry.ts";
 import { i, initLocalization } from "../../modules/localization.ts";
 import type { Config } from "../../settingsSchema.ts";
 import { dirname, getCustomIcon, getDisplayVersion, relToAbs, userDataPath } from "../../utils.ts";
+import { mainWindow } from "../main/main.ts";
 import { saveCloud } from "./preload/cloud/cloud.ts";
 import html from "./renderer/settings.html";
 
@@ -14,6 +15,7 @@ let isOpen = false;
 let originalConfig: Config;
 
 registerHandle("openFolder", async (_event, folder: string) => await shell.openPath(path.join(userDataPath, `/${folder}/`)));
+registerHandle("invidiousConfigChanged", () => mainWindow.webContents.send("invidiousConfigChanged"));
 
 function hasConfigChanged(original: Config, current: Config): boolean {
 	if (original.size !== current.size) return true;

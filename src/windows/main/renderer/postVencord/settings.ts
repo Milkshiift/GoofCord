@@ -1,7 +1,7 @@
 import type SettingsPlugin from "@vencord/types/plugins/_core/settings";
 
 export function initSettingsButton() {
-	const Plugin = Vencord.Plugins.plugins.Settings as unknown as typeof SettingsPlugin;
+	const Plugin = VC.Plugins.plugins.Settings as unknown as typeof SettingsPlugin;
 	if (!Plugin) return;
 
 	let LayoutTypes = {
@@ -10,7 +10,7 @@ export function initSettingsButton() {
 		PANEL: 3,
 		PANE: 4,
 	};
-	Vencord.Webpack.waitFor(["SECTION", "SIDEBAR_ITEM", "PANEL"], (v) => {
+	VC.Webpack.waitFor(["SECTION", "SIDEBAR_ITEM", "PANEL"], (v) => {
 		LayoutTypes = v;
 	});
 
@@ -32,7 +32,7 @@ export function initSettingsButton() {
 						useTitle: () => "Settings",
 						getLegacySearchKey: () => "GOOFCORD",
 						legacySearchKey: "GOOFCORD",
-						icon: Vencord.Components.MainSettingsIcon,
+						icon: VC.Components.MainSettingsIcon,
 						onClick: () => {
 							void GoofCord.openSettingsWindow();
 						},

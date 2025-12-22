@@ -1,10 +1,10 @@
 import type arRpcPlugin from "@vencord/types/plugins/arRPC.web";
 
 export function initRichPresence() {
-	const arRPC = Vencord.Plugins.plugins["WebRichPresence (arRPC)"] as typeof arRpcPlugin;
+	const arRPC = VC.Plugins.plugins["WebRichPresence (arRPC)"] as typeof arRpcPlugin;
 
 	GoofCord.arrpc.onActivity(async (dataJson: string) => {
-		await Vencord.Webpack.onceReady;
+		await VC.Webpack.onceReady;
 
 		await arRPC.handleEvent(new MessageEvent("message", { data: dataJson }));
 	});

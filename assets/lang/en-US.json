@@ -82,7 +82,7 @@
   "opt-customCssBundle": "Custom CSS bundle",
   "opt-customCssBundle-desc": "A raw link to the JS bundle and CSS bundle of a client mod you want to use.",
   "opt-invidiousEmbeds": "Invidious embeds",
-  "opt-invidiousEmbeds-desc": "Replaces YouTube embeds with Invidious embeds. You can customize the instance from Shelter's settings.",
+  "opt-invidiousEmbeds-desc": "Replaces YouTube embeds with Invidious embeds.",
   "opt-messageEncryption": "Message encryption",
   "opt-messageEncryption-desc": "See <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/Message-Encryption\">message encryption</a>.",
   "opt-encryptionPasswords": "Encryption passwords",
@@ -127,5 +127,9 @@
   "opt-cloudEncryptionKey-desc": "Leave empty to not use encryption and not save message encryption passwords on cloud. You can't recover your password if you lose it.",
   "opt-button-loadFromCloud": "Load from cloud",
   "opt-button-saveToCloud": "Save to cloud",
-  "opt-button-deleteCloud": "Delete cloud data"
+  "opt-button-deleteCloud": "Delete cloud data",
+  "opt-invidiousInstance": "Instance",
+  "opt-invidiousInstance-desc": "What Invidious instance to use. If videos fail to load, try changing it to a different one and disabling auto-updates.",
+  "opt-autoUpdateInvidiousInstance": "Auto-update instance",
+  "opt-autoUpdateInvidiousInstance-desc": "Automatically finds an available instance with the lowest latency."
 }

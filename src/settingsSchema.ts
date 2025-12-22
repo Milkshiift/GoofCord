@@ -307,8 +307,38 @@ export const settingsSchema = {
 		invidiousEmbeds: {
 			name: "Invidious embeds",
 			defaultValue: false,
-			description: "Replaces YouTube embeds with Invidious embeds. You can customize the instance from Shelter's settings.",
+			description: "Replaces YouTube embeds with Invidious embeds.",
 			inputType: "checkbox",
+			onChange: "invidiousConfigChanged",
+		},
+		invidiousInstance: {
+			name: "Instance",
+			defaultValue: "https://invidious.nerdvpn.de",
+			description: "What Invidious instance to use. If videos fail to load, try changing it to a different one and disabling auto-updates.",
+			inputType: "textfield",
+			onChange: "invidiousConfigChanged",
+			showAfter: {
+				key: "invidiousEmbeds",
+				condition: (value: boolean) => {
+					return value === true;
+				},
+			},
+		},
+		autoUpdateInvidiousInstance: {
+			name: "Auto-update instance",
+			defaultValue: true,
+			description: "Automatically finds an available instance with the lowest latency.",
+			inputType: "checkbox",
+			showAfter: {
+				key: "invidiousEmbeds",
+				condition: (value: boolean) => {
+					return value === true;
+				},
+			},
+		},
+		lastInvidiousUpdate: {
+			defaultValue: 0,
+			outputType: "number",
 		},
 		messageEncryption: {
 			name: "Message encryption",

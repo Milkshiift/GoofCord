@@ -54,6 +54,7 @@ export interface IpcOnChannels {
 export interface RegisteredIpcHandleChannels {
   "flashTitlebar": (color: string) => void;
   "flashTitlebarWithText": (color: string, text: string) => void;
+  "invidiousConfigChanged": () => void;
   "openFolder": (folder: string) => void;
   "window:Close": () => void;
   "window:Hide": () => void;

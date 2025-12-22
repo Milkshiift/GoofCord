@@ -58,7 +58,7 @@ export function loadStyles() {
 			}
 
 			ipcRenderer.on("assetLoader:styleUpdate", (_, data) => {
-				const {file, content} = data;
+				const { file, content } = data;
 				updateStyle(content, file);
 				log(`Hot reloaded style: ${file}`);
 			});

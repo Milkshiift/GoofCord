@@ -5,7 +5,7 @@ let RelationshipStore: any;
 
 export function initDynamicIcon() {
 	RelationshipStore = Common.RelationshipStore;
-	GuildReadStateStore = Vencord.Webpack.findStore("GuildReadStateStore");
+	GuildReadStateStore = VC.Webpack.findStore("GuildReadStateStore");
 	GuildReadStateStore.addChangeListener(setBadge);
 	RelationshipStore.addChangeListener(setBadge);
 	setBadge();

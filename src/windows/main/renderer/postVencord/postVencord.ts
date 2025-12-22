@@ -1,4 +1,5 @@
 import { initDynamicIcon } from "./dynamicIcon.ts";
+import { updateInvidiousInstance } from "./invidiousEmbeds.ts";
 import { initMessageEncryption } from "./messageEncryption.ts";
 import { initRichPresence } from "./richPresence.ts";
 import { patchScreenshare } from "./screensharePatch.ts";
@@ -6,15 +7,15 @@ import { initSettingsButton } from "./settings.ts";
 
 Object.defineProperties(window, {
 	GoofCord: { get: () => window.goofcord },
-	Vencord: { get: () => window.Vencord },
+	VC: { get: () => window.Vencord },
 	Common: { get: () => window.Vencord?.Webpack?.Common },
 });
 
 async function init() {
-
+	void updateInvidiousInstance();
 	initRichPresence();
 
-	await Vencord.Webpack.onceReady;
+	await VC.Webpack.onceReady;
 
 	initDynamicIcon();
 	patchScreenshare();

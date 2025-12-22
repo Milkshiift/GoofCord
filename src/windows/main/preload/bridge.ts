@@ -36,6 +36,7 @@ const api = {
 	setBadgeCount: (count: number) => invoke("dynamicIcon:setBadgeCount", count),
 	stopVenmic: () => invoke("venmic:stopVenmic"),
 	isVencordPresent: () => isVencordPresent,
+	onInvidiousConfigChanged: (callback: () => void) => ipcRenderer.on("invidiousConfigChanged", callback),
 };
 
 contextBridge.exposeInMainWorld("goofcord", api);
