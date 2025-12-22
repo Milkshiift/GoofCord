@@ -204,8 +204,13 @@ window.initSwitcher = () => {
 	}
 
 	function handleKeyNavigation(event) {
+		// Check if the user is typing
+		const isInput = ["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName) || document.activeElement.isContentEditable;
+		if (isInput) return;
+
 		if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
 		event.preventDefault();
+
 		const activeIndex = elements.tabs.findIndex((tab) => tab.classList.contains("active"));
 		if (activeIndex === -1) {
 			activateTab(elements.tabs[0]);
