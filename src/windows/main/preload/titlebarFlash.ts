@@ -42,7 +42,7 @@ const styles = `
 	}
 `;
 
-export async function injectFlashbar(): Promise<void> {
+export function injectFlashbar() {
 	if (flashbar) return;
 
 	document.addEventListener(
@@ -53,10 +53,10 @@ export async function injectFlashbar(): Promise<void> {
 			document.head.appendChild(styleSheet);
 
 			flashbar = document.createElement("div");
-			flashbar.id = "dragbar";
+			flashbar.id = "flashbar";
 
 			flashbarText = document.createElement("div");
-			flashbarText.id = "titlebar-text";
+			flashbarText.id = "flashbar-text";
 
 			document.body.prepend(flashbarText);
 			document.body.prepend(flashbar);

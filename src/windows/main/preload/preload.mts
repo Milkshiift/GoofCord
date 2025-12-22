@@ -13,13 +13,10 @@ function init() {
 	measureDiscordStartup();
 
 	loadScripts();
+	loadStyles();
 
-	void injectFlashbar();
+	injectFlashbar();
 	startKeybindWatcher();
-
-	document.addEventListener("DOMContentLoaded", () => {
-		loadStyles();
-	});
 }
 
 function measureDiscordStartup() {

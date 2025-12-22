@@ -36,29 +36,35 @@ export function loadScripts() {
 
 const loadedStyles = new Map<string, HTMLStyleElement>();
 export function loadStyles() {
-	assets.styles.push(["discord.css", discordCss]);
+	document.addEventListener(
+		"DOMContentLoaded",
+		() => {
+			assets.styles.push(["discord.css", discordCss]);
 
-	if (sendSync("config:getConfig", "renderingOptimizations")) {
-		assets.styles.push([
-			"renderingOptimizations",
-			`
+			if (sendSync("config:getConfig", "renderingOptimizations")) {
+				assets.styles.push([
+					"renderingOptimizations",
+					`
 				[class*="messagesWrapper"], #channels, #emoji-picker-grid, [class*="members_"] {
 				     will-change: transform, scroll-position;
 				     contain: strict;
 				}
 			`,
-		]);
-	}
-	for (const style of assets.styles) {
-		updateStyle(style[1], style[0]);
-		log(`Loaded style: ${style[0]}`);
-	}
+				]);
+			}
+			for (const style of assets.styles) {
+				updateStyle(style[1], style[0]);
+				log(`Loaded style: ${style[0]}`);
+			}
 
-	ipcRenderer.on("assetLoader:styleUpdate", (_, data) => {
-		const { file, content } = data;
-		updateStyle(content, file);
-		log(`Hot reloaded style: ${file}`);
-	});
+			ipcRenderer.on("assetLoader:styleUpdate", (_, data) => {
+				const {file, content} = data;
+				updateStyle(content, file);
+				log(`Hot reloaded style: ${file}`);
+			});
+		},
+		{ once: true },
+	);
 }
 
 function updateStyle(style: string, id: string) {
