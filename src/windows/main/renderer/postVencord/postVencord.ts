@@ -4,11 +4,17 @@ import { initRichPresence } from "./richPresence.ts";
 import { patchScreenshare } from "./screensharePatch.ts";
 import { initSettingsButton } from "./settings.ts";
 
+Object.defineProperties(window, {
+	GoofCord: { get: () => window.goofcord },
+	Vencord: { get: () => window.Vencord },
+	Common: { get: () => window.Vencord?.Webpack?.Common },
+});
+
 async function init() {
 
 	initRichPresence();
 
-	await window.Vencord.Webpack.onceReady;
+	await Vencord.Webpack.onceReady;
 
 	initDynamicIcon();
 	patchScreenshare();

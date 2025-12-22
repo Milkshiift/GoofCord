@@ -4,8 +4,8 @@ let GuildReadStateStore: any;
 let RelationshipStore: any;
 
 export function initDynamicIcon() {
-	RelationshipStore = window.Vencord.Webpack.Common.RelationshipStore;
-	GuildReadStateStore = window.Vencord.Webpack.findStore("GuildReadStateStore");
+	RelationshipStore = Common.RelationshipStore;
+	GuildReadStateStore = Vencord.Webpack.findStore("GuildReadStateStore");
 	GuildReadStateStore.addChangeListener(setBadge);
 	RelationshipStore.addChangeListener(setBadge);
 	setBadge();
@@ -23,7 +23,7 @@ function setBadge() {
 			totalCount = -1;
 		}
 
-		void window.goofcord.setBadgeCount(totalCount);
+		void GoofCord.setBadgeCount(totalCount);
 	} catch (e) {
 		console.error(e);
 	}

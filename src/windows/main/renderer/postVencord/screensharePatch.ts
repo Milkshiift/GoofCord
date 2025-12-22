@@ -65,13 +65,13 @@ export function patchScreenshare() {
 		return stream;
 	};
 
-	window.Vencord.Webpack.Common.FluxDispatcher.subscribe("STREAM_CLOSE", ({ streamKey }: { streamKey: string }) => {
+	Common.FluxDispatcher.subscribe("STREAM_CLOSE", ({ streamKey }: { streamKey: string }) => {
 		const owner = streamKey.split(":").at(-1);
 
-		if (owner !== window.Vencord.Webpack.Common.UserStore.getCurrentUser().id) {
+		if (owner !== Common.UserStore.getCurrentUser().id) {
 			return;
 		}
 
-		void window.goofcord.stopVenmic();
+		void GoofCord.stopVenmic();
 	});
 }

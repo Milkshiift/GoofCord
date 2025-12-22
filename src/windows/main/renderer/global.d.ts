@@ -2,6 +2,10 @@ import type { Patch } from "@vencord/types/utils/types";
 import type { GoofCordApi } from "../preload/bridge.ts";
 
 declare global {
+	let GoofCord: GoofCordApi;
+	let Vencord: typeof import("@vencord/types/Vencord");
+	let Common: typeof import("@vencord/types/Vencord")["Webpack"]["Common"];
+
 	interface Window {
 		goofcord: GoofCordApi;
 		screenshareSettings: {

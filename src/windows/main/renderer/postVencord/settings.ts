@@ -1,7 +1,7 @@
 import type SettingsPlugin from "@vencord/types/plugins/_core/settings";
 
 export function initSettingsButton() {
-	const Plugin = window.Vencord.Plugins.plugins.Settings as unknown as typeof SettingsPlugin;
+	const Plugin = Vencord.Plugins.plugins.Settings as unknown as typeof SettingsPlugin;
 	if (!Plugin) return;
 
 	let LayoutTypes = {
@@ -10,7 +10,7 @@ export function initSettingsButton() {
 		PANEL: 3,
 		PANE: 4,
 	};
-	window.Vencord.Webpack.waitFor(["SECTION", "SIDEBAR_ITEM", "PANEL"], (v) => {
+	Vencord.Webpack.waitFor(["SECTION", "SIDEBAR_ITEM", "PANEL"], (v) => {
 		LayoutTypes = v;
 	});
 
@@ -32,9 +32,9 @@ export function initSettingsButton() {
 						useTitle: () => "Settings",
 						getLegacySearchKey: () => "GOOFCORD",
 						legacySearchKey: "GOOFCORD",
-						icon: window.Vencord.Components.MainSettingsIcon,
+						icon: Vencord.Components.MainSettingsIcon,
 						onClick: () => {
-							void window.goofcord.openSettingsWindow();
+							void GoofCord.openSettingsWindow();
 						},
 						layout: [],
 						// buildLayout: () => [{
@@ -54,8 +54,8 @@ export function initSettingsButton() {
 	};
 
 	// @ts-expect-error
-	window.VencordNative.native.getVersions = window.goofcord.getVersions;
+	window.VencordNative.native.getVersions = GoofCord.getVersions;
 
 	const _originalGetInfoRows = Plugin.getInfoRows.bind(Plugin);
-	Plugin.getInfoRows = () => [`GoofCord ${window.goofcord.version}`, ..._originalGetInfoRows()];
+	Plugin.getInfoRows = () => [`GoofCord ${GoofCord.version}`, ..._originalGetInfoRows()];
 }
