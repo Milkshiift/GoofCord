@@ -1,8 +1,10 @@
-import { contextBridge, ipcRenderer } from "electron";
+import { contextBridge, ipcRenderer, webFrame } from "electron";
 import type { ConfigKey, ConfigValue } from "../../configTypes";
 import { type SettingEntry, settingsSchema } from "../../settingsSchema.ts";
 import { findKeyAtDepth } from "../preloadUtils.ts";
 import { renderSettings } from "./settingsRenderer.ts";
+// @ts-expect-error
+import winterCss from "../../../assets/css/winterSettings.css" with { type: "text" };
 
 console.log("GoofCord Settings");
 
@@ -20,6 +22,10 @@ const elementsWithShowAfter: [string, HTMLElement][] = [];
 async function initSettings() {
 	while (document.body === null) await new Promise((resolve) => setTimeout(resolve, 10));
 	await renderSettings();
+
+	if (shouldShowWinterTheme()) {
+		webFrame.insertCSS(winterCss);
+	}
 
 	const elements = document.querySelectorAll<HTMLElement>("[setting-name]");
 	for (const element of elements) {
@@ -157,6 +163,19 @@ export function decryptSetting(settingValue: ConfigValue<ConfigKey>) {
 		return settingValue.map((value: unknown) => ipcRenderer.sendSync("utils:decryptSafeStorage", value));
 	}
 	return settingValue;
+}
+
+function shouldShowWinterTheme(): boolean {
+	if (!ipcRenderer.sendSync("config:getConfig", "seasonalSettingsTheme")) return false;
+
+	const now = new Date();
+	const month = now.getMonth(); // 0 is January, 11 is December
+	const day = now.getDate();
+
+	const isLateDecember = month === 11 && day >= 20;
+	const isEarlyJanuary = month === 0 && day <= 2;
+
+	return isLateDecember || isEarlyJanuary;
 }
 
 initSettings().catch(console.error);

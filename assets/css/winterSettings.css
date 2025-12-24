@@ -1,0 +1,125 @@
+html:root {
+    --color-primary: #ff4757;
+    --color-primary-hover: #ff6b81;
+    --color-primary-active: #e84118;
+    --color-primary-ultralight: #ffcccf;
+
+    --bg-body: #1e272e;
+    --bg-primary: #2f3640;
+    --bg-secondary: #252c35;
+    --bg-tertiary: #161b20;
+
+    --bg-input: #353b48;
+    --bg-input-hover: #3e4656;
+    --bg-input-focus: #2f3640;
+
+    --font-color-dim: #a4b0be;
+    --font-color-normal: #dfe4ea;
+    --font-color-strong: #ffffff;
+    --font-color-header: #ffffff;
+    --font-color-on-primary: #ffffff;
+
+    --border-color-divider: #444e59;
+    --border-color-interactive: #57606f;
+    --border-color-focus: var(--color-primary);
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.5);
+
+    --scrollbar-width: 8px;
+    --font-family: "InterVariable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --transition-duration-fast: 0.15s;
+    --transition-duration-normal: 0.2s;
+    --transition-duration-slow: 0.3s;
+    --easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+    --checkmark-icon: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M174 439 7 273a26 26 0 0 1 0-36l37-36c10-10 26-10 36 0l112 112L432 73c10-10 26-10 36 0l37 36c9 10 9 26 0 36L210 439a26 26 0 0 1-36 0z' fill='%23fff'/%3E%3C/svg%3E");
+    --revert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-2 0 24 24'%3E%3Cpath fill-rule='evenodd' d='m5.62 7 1.44 1.44a1.5 1.5 0 0 1-2.12 2.12l-4-4a1.5 1.5 0 0 1 0-2.12l4-4a1.5 1.5 0 1 1 2.12 2.12L5.62 4H10A10 10 0 1 1 0 14a1.5 1.5 0 0 1 3 0 7 7 0 1 0 7-7H5.62z' clip-rule='evenodd' fill='%23fff'/%3E%3C/svg%3E");
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: -10px; left: 0; right: 0; height: 100vh;
+    pointer-events: none;
+    z-index: 999;
+    background-image:
+            radial-gradient(3px 3px at 5% 5%, rgba(255,255,255,0.5), transparent),
+            radial-gradient(3px 3px at 15% 25%, rgba(255,255,255,0.5), transparent),
+            radial-gradient(2px 2px at 25% 55%, rgba(255,255,255,0.5), transparent),
+            radial-gradient(3px 3px at 35% 15%, rgba(255,255,255,0.7), transparent),
+            radial-gradient(2px 2px at 45% 85%, rgba(255,255,255,0.5), transparent),
+            radial-gradient(3px 3px at 55% 45%, rgba(255,255,255,0.5), transparent),
+            radial-gradient(2px 2px at 65% 15%, rgba(255,255,255,0.7), transparent),
+            radial-gradient(3px 3px at 75% 65%, rgba(255,255,255,0.5), transparent),
+            radial-gradient(2px 2px at 85% 35%, rgba(255,255,255,0.5), transparent),
+            radial-gradient(3px 3px at 95% 95%, rgba(255,255,255,0.5), transparent);
+    background-size: 500px 500px;
+    animation: snowfall-large 8s linear infinite;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    top: -10px; left: 0; right: 0; height: 100vh;
+    pointer-events: none;
+    z-index: 998;
+    background-image:
+            radial-gradient(2px 2px at 10% 10%, rgba(255,255,255,0.4), transparent),
+            radial-gradient(2px 2px at 20% 80%, rgba(255,255,255,0.4), transparent),
+            radial-gradient(1px 1px at 30% 40%, rgba(255,255,255,0.4), transparent),
+            radial-gradient(2px 2px at 40% 90%, rgba(255,255,255,0.4), transparent),
+            radial-gradient(1px 1px at 50% 30%, rgba(255,255,255,0.4), transparent),
+            radial-gradient(2px 2px at 60% 70%, rgba(255,255,255,0.4), transparent),
+            radial-gradient(1px 1px at 70% 20%, rgba(255,255,255,0.4), transparent),
+            radial-gradient(2px 2px at 80% 60%, rgba(255,255,255,0.4), transparent),
+            radial-gradient(1px 1px at 90% 10%, rgba(255,255,255,0.4), transparent);
+    background-size: 400px 400px;
+    animation: snowfall-small 20s linear infinite;
+}
+
+@keyframes snowfall-large {
+    0% { background-position: 0 -500px; }
+    100% { background-position: 0 0; }
+}
+
+@keyframes snowfall-small {
+    0% { background-position: 0 -400px; }
+    100% { background-position: 0 0; }
+}
+
+header {
+    background-color: rgba(37, 44, 53, 0.85);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.settings-tabs .tab-item {
+    position: relative;
+    overflow: hidden;
+}
+
+input[type="checkbox"]:checked {
+    background-image:
+            repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 5px,
+                    rgba(255, 255, 255, 0.2) 5px,
+                    rgba(255, 255, 255, 0.2) 10px
+            ),
+            var(--checkmark-icon) !important;
+    background-size: auto, 70% !important;
+    background-position: center, center !important;
+}
+
+input[type="text"]:focus-visible,
+input[type="password"]:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+    box-shadow: 0 0 8px var(--color-primary-active) !important;
+    border-color: var(--color-primary) !important;
+}

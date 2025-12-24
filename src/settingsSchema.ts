@@ -236,6 +236,26 @@ export const settingsSchema = {
 			description: "Makes the window transparent for use with translucent themes.",
 			inputType: "checkbox",
 		},
+		seasonalSettingsTheme: {
+			name: "Seasonal settings theme",
+			defaultValue: true,
+			description: "Whether to apply a seasonal theme to the settings.",
+			inputType: "checkbox",
+			onChange: "main:hotreloadLocale",
+			showAfter: {
+				key: "seasonalSettingsTheme",
+				condition: () => {
+					const now = new Date();
+					const month = now.getMonth(); // 0 is January, 11 is December
+					const day = now.getDate();
+
+					const isLateDecember = month === 11 && day >= 20;
+					const isEarlyJanuary = month === 0 && day <= 2;
+
+					return isLateDecember || isEarlyJanuary;
+				},
+			},
+		}
 	},
 	"Client Mods": {
 		modNames: {
@@ -384,7 +404,7 @@ export const settingsSchema = {
 			showAfter: {
 				key: "spoofChrome",
 				condition: (enabled: boolean) => {
-					return process.platform !== "win32" && enabled;
+					return process.platform !== "win32";
 				},
 			},
 		},

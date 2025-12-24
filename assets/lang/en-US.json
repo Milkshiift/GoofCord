@@ -82,6 +82,8 @@
   "opt-popoutWindowAlwaysOnTop-desc": "Makes voice chat pop out window always stay above other windows.",
   "opt-transparency": "Transparency",
   "opt-transparency-desc": "Makes the window transparent for use with translucent themes.",
+  "opt-seasonalSettingsTheme": "Seasonal settings theme",
+  "opt-seasonalSettingsTheme-desc": "Whether to apply a seasonal theme to the settings.",
   "opt-modNames": "Client mods",
   "opt-modNames-desc": "What client mods to use. <b>You shouldn't disable Shelter</b> as it is used by many GoofCord features. Do not mix forks of the same mod (e.g. Vencord and Equicord). <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/FAQ#how-do-i-add-a-custom-client-mod\">Client mod I want to use is not listed</a>.",
   "opt-customJsBundle": "Custom JS bundle",
