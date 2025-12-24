@@ -2,6 +2,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { parseArgs } from "node:util";
 import { globImportPlugin } from "bun-plugin-glob-import";
 import pc from "picocolors";
 import { genIpcHandlers } from "./genIpcHandlers.ts";
@@ -9,148 +10,183 @@ import { genSettingsLangFile } from "./genSettingsLangFile.ts";
 import { globImporterPlugin } from "./globbyGlob.ts";
 import { nativeModulePlugin } from "./nativeImport";
 
-// --- Argument Parsing ---
-const args = process.argv;
-const isDev = args.some((arg) => arg === "--dev" || arg === "-d");
+const { values } = parseArgs({
+	args: Bun.argv,
+	options: {
+		dev: { type: "boolean", short: "d" },
+		platform: { type: "string" },
+		arch: { type: "string" },
+	},
+	strict: false,
+	allowPositionals: true,
+});
 
-const getArg = (name: string) => {
-	const prefix = `--${name}=`;
-	const arg = args.find((a) => a.startsWith(prefix));
-	if (arg) return arg.slice(prefix.length);
+const isDev = !!values.dev;
 
-	const index = args.indexOf(`--${name}`);
-	if (index !== -1 && args[index + 1] && !args[index + 1].startsWith("-")) {
-		return args[index + 1];
-	}
-	return undefined;
-};
-
-const targetPlatform = getArg("platform") || process.platform;
-const targetArch = getArg("arch") || process.arch;
+const targetPlatform = typeof values.platform === "string" ? values.platform : process.platform;
+const targetArch = typeof values.arch === "string" ? values.arch : process.arch;
 
 console.log(pc.cyan(`Build Target: ${targetPlatform}-${targetArch} ${isDev ? "(Dev)" : "(Prod)"}`));
-// ------------------------
 
-await copyNativeModules();
+const ROOT_DIR = process.cwd();
+const OUT_DIR = path.join(ROOT_DIR, "ts-out");
+const SRC_DIR = path.join(ROOT_DIR, "src");
 
-await fs.promises.rm("ts-out", { recursive: true, force: true });
 
-console.log("Preprocessing...");
-console.time("lang");
-await genSettingsLangFile();
-console.timeEnd("lang");
-console.time("Ipc");
-await genIpcHandlers();
-console.timeEnd("Ipc");
+console.log("Preparing build...");
+await Promise.all([
+	fs.promises.rm(OUT_DIR, { recursive: true, force: true }),
+	copyNativeModules(),
+]);
+
+
+console.log("Running generators...");
+const timeLabel = "Generators";
+console.time(timeLabel);
+await Promise.all([
+	genSettingsLangFile(),
+	genIpcHandlers()
+]);
+console.timeEnd(timeLabel);
+
+
+await fs.promises.mkdir(OUT_DIR, { recursive: true });
 
 console.log("Building...");
-await fs.promises.mkdir("ts-out");
 
-const preloadFiles = await searchPreloadFiles("src", []);
-const mainEntrypoints = [path.join("src", "main.ts"), path.join("src", "modules", "arrpcWorker.ts")];
+const preloadFiles = await searchPreloadFiles();
+const mainEntrypoints = [
+	path.join(SRC_DIR, "main.ts"),
+	path.join(SRC_DIR, "modules", "arrpcWorker.ts")
+];
 
-const mainBundleResult = await Bun.build({
-	minify: true,
-	sourcemap: isDev ? "linked" : undefined,
-	format: "esm",
-	external: ["electron"],
-	target: "node",
-	splitting: true,
-	entrypoints: mainEntrypoints,
-	outdir: "ts-out",
-	packages: "bundle",
-	plugins: [globImporterPlugin, nativeModulePlugin({ targetPlatform, targetArch })],
-});
-if (mainBundleResult.logs.length) console.log(mainBundleResult.logs);
+const buildTasks: Promise<void>[] = [];
 
-const rendererPath = path.join("src", "windows", "main", "renderer");
+buildTasks.push(
+	runBuild({
+		entrypoints: mainEntrypoints,
+		outdir: OUT_DIR,
+		target: "node",
+		external: ["electron"],
+		plugins: [globImporterPlugin, nativeModulePlugin({ targetPlatform, targetArch })],
+		splitting: true,
+	})
+);
+
+const rendererPath = path.join(SRC_DIR, "windows", "main", "renderer");
 const preVencord = path.join(rendererPath, "preVencord", "preVencord.ts");
 const postVencord = path.join(rendererPath, "postVencord", "postVencord.ts");
-const preVencordOutDir = path.join("ts-out", path.dirname(path.relative("src", preVencord)));
-const postVencordOutDir = path.join("ts-out", path.dirname(path.relative("src", postVencord)));
-const preVencordBundleResult = await Bun.build({
-	minify: false,
-	sourcemap: false,
-	format: "esm",
-	target: "browser",
-	splitting: false,
-	entrypoints: [preVencord],
-	outdir: preVencordOutDir,
-	packages: "bundle",
-	plugins: [globImportPlugin()],
-});
-if (preVencordBundleResult.logs.length) console.log(preVencordBundleResult.logs);
-const postVencordBundleResult = await Bun.build({
-	minify: false,
-	sourcemap: false,
-	format: "esm",
-	target: "browser",
-	splitting: false,
-	entrypoints: [postVencord],
-	outdir: postVencordOutDir,
-	packages: "bundle",
-	plugins: [globImportPlugin()],
-});
-if (postVencordBundleResult.logs.length) console.log(postVencordBundleResult.logs);
+buildTasks.push(
+	runBuild({
+		entrypoints: [preVencord],
+		outdir: path.join(OUT_DIR, path.dirname(path.relative(SRC_DIR, preVencord))),
+		target: "browser",
+		plugins: [globImportPlugin()],
+		minify: false,
+	})
+);
+buildTasks.push(
+	runBuild({
+		entrypoints: [postVencord],
+		outdir: path.join(OUT_DIR, path.dirname(path.relative(SRC_DIR, postVencord))),
+		target: "browser",
+		plugins: [globImportPlugin()],
+		minify: false,
+	})
+);
 
-for (const preloadFile of preloadFiles) {
-	const relativePath = path.relative("src", preloadFile);
-	const outDir = path.join("ts-out", path.dirname(relativePath));
+const preloadBuilds = preloadFiles.map((preloadFile) => {
+	const relativePath = path.relative(SRC_DIR, preloadFile);
+	const outDir = path.join(OUT_DIR, path.dirname(relativePath));
 
-	const preloadBundleResult = await Bun.build({
-		minify: true,
-		sourcemap: isDev ? "linked" : undefined,
-		format: "cjs",
-		external: ["electron"],
-		target: "node",
-		splitting: false,
+	return runBuild({
 		entrypoints: [preloadFile],
 		outdir: outDir,
-		packages: "bundle",
+		target: "node",
+		format: "cjs",
+		external: ["electron"],
 		plugins: [globImporterPlugin],
 	});
+});
+buildTasks.push(...preloadBuilds);
 
-	if (preloadBundleResult.logs.length) console.log(preloadBundleResult.logs);
-}
+await Promise.all(buildTasks);
 
-async function searchPreloadFiles(directory: string, result: string[] = []) {
-	await traverseDirectory(directory, async (filePath: string) => {
-		if (filePath.endsWith("preload.mts")) {
-			result.push(filePath);
-		}
+console.log(pc.green("✅ Build completed! 🎉"));
+
+// Helpers
+
+async function runBuild(config: import("bun").BuildConfig) {
+	const result = await Bun.build({
+		minify: config.minify ?? true,
+		sourcemap: isDev ? "linked" : undefined,
+		format: config.format ?? "esm",
+		packages: "bundle",
+		...config,
 	});
-	return result;
+
+	if (result.logs.length) {
+		console.log(pc.yellow(`Logs for ${config.entrypoints}:`));
+		for (const log of result.logs) console.log(log);
+	}
+
+	if (!result.success) {
+		console.error(pc.red(`Build failed for ${config.entrypoints}`));
+	}
 }
 
-async function traverseDirectory(directory: string, fileHandler: (filePath: string) => void) {
-	const files = await fs.promises.readdir(directory);
+async function searchPreloadFiles() {
+	const glob = new Bun.Glob("**/preload.mts");
+	const results: string[] = [];
 
-	for (const file of files) {
-		const filePath = path.join(directory, file);
-		const stats = await fs.promises.stat(filePath);
-
-		if (stats.isDirectory()) {
-			// Recursively search subdirectories
-			await traverseDirectory(filePath, fileHandler);
-		} else {
-			fileHandler(filePath);
-		}
+	for await (const file of glob.scan({ cwd: SRC_DIR, absolute: true })) {
+		results.push(file);
 	}
+	return results;
 }
 
 async function copyNativeModules() {
-	try {
-		return await Promise.all([
-			copyFile("./node_modules/@vencord/venmic/prebuilds/venmic-addon-linux-x64/node-napi-v7.node", "./assets/native/venmic-linux-x64.node"),
-			copyFile("./node_modules/@vencord/venmic/prebuilds/venmic-addon-linux-arm64/node-napi-v7.node", "./assets/native/venmic-linux-arm64.node"),
+	const assetsDir = path.join(ROOT_DIR, "assets", "native");
+	await fs.promises.mkdir(assetsDir, { recursive: true });
 
-			copyFile("./node_modules/venbind/prebuilds/windows-x86_64/venbind-windows-x86_64.node", "./assets/native/venbind-win32-x64.node"),
-			copyFile("./node_modules/venbind/prebuilds/windows-aarch64/venbind-windows-aarch64.node", "./assets/native/venbind-win32-arm64.node"),
-			copyFile("./node_modules/venbind/prebuilds/linux-x86_64/venbind-linux-x86_64.node", "./assets/native/venbind-linux-x64.node"),
-			copyFile("./node_modules/venbind/prebuilds/linux-aarch64/venbind-linux-aarch64.node", "./assets/native/venbind-linux-arm64.node"),
-		]);
-	} catch {
-		return console.warn("Failed to copy native modules.");
+	const modulesToCopy = [
+		{
+			src: ["node_modules", "@vencord", "venmic", "prebuilds", "venmic-addon-linux-x64", "node-napi-v7.node"],
+			dest: ["venmic-linux-x64.node"]
+		},
+		{
+			src: ["node_modules", "@vencord", "venmic", "prebuilds", "venmic-addon-linux-arm64", "node-napi-v7.node"],
+			dest: ["venmic-linux-arm64.node"]
+		},
+		{
+			src: ["node_modules", "venbind", "prebuilds", "windows-x86_64", "venbind-windows-x86_64.node"],
+			dest: ["venbind-win32-x64.node"]
+		},
+		{
+			src: ["node_modules", "venbind", "prebuilds", "windows-aarch64", "venbind-windows-aarch64.node"],
+			dest: ["venbind-win32-arm64.node"]
+		},
+		{
+			src: ["node_modules", "venbind", "prebuilds", "linux-x86_64", "venbind-linux-x86_64.node"],
+			dest: ["venbind-linux-x64.node"]
+		},
+		{
+			src: ["node_modules", "venbind", "prebuilds", "linux-aarch64", "venbind-linux-aarch64.node"],
+			dest: ["venbind-linux-arm64.node"]
+		},
+	];
+
+	const results = await Promise.allSettled(
+		modulesToCopy.map(mod => {
+			const srcPath = path.join(ROOT_DIR, ...mod.src);
+			const destPath = path.join(assetsDir, ...mod.dest);
+			return copyFile(srcPath, destPath);
+		})
+	);
+
+	const failures = results.filter(r => r.status === 'rejected');
+	if (failures.length > 0) {
+		console.warn(pc.yellow(`Warning: ${failures.length} native modules failed to copy.`));
 	}
 }
 
@@ -160,5 +196,3 @@ async function copyFile(src: string, dest: string) {
 	}
 	await Bun.write(dest, Bun.file(src));
 }
-
-console.log(pc.green("✅ Build completed! 🎉"));
