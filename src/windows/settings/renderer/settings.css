@@ -214,8 +214,7 @@ a {
 @keyframes slideUpFade {
 	from {
 		opacity: 0;
-		transform: translateY(15px) scale(0.98);
-		filter: blur(2px);
+		transform: translateY(10px) scale(0.99);
 	}
 	to {
 		opacity: 1;
