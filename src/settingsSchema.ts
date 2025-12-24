@@ -440,8 +440,8 @@ export const settingsSchema = {
 			description: "Emulates the Windows platform. Enable this if Discord fails to load with a VPN.",
 			showAfter: {
 				key: "spoofChrome",
-				condition: (enabled: boolean) => {
-					return process.platform !== "win32" && enabled;
+				condition: () => {
+					return process.platform !== "win32";
 				},
 			},
 		},
