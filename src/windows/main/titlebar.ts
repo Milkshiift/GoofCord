@@ -59,7 +59,11 @@ function addCustomTitlebar(): void {
 
 		elements.controls = document.createElement("div");
 		elements.controls.id = "window-controls-container";
-		elements.controls.innerHTML = '<div id="minimize"></div><div id="maximize"></div><div id="quit"></div>';
+		elements.controls.innerHTML = `
+			<div id="minimize"></div>
+			<div id="maximize"></div>
+			<div id="quit"></div>
+		`;
 		document.body.prepend(elements.controls);
 		void attachControlsEvents(elements.controls);
 	}
@@ -70,7 +74,7 @@ function addCustomTitlebar(): void {
 function modifyDiscordBar(): void {
 	if (!customTitlebarEnabled) return;
 
-	const bar = document.querySelector('div[class^="bar_"]:has(>[class^="title_"])');
+	const bar = document.querySelector('div[class*="bar"]:has(>[class$="title"])');
 	if (!bar) {
 		console.error("Failed to find Discord title bar");
 		return;
@@ -103,7 +107,7 @@ function checkMainLayer(): void {
 	if (!elements.dragBar) return;
 
 	// mainLayer is a parent of the Discord top bar. If it's hidden, show the drag bar as a fallback
-	const mainLayer = document.querySelector('[aria-hidden][class^="layer_"]');
+	const mainLayer = document.querySelector('[aria-hidden][class*="layer"]');
 
 	if (!mainLayer) {
 		elements.dragBar.style.display = "block";
