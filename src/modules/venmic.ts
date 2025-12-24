@@ -12,7 +12,7 @@ let venmic: PatchBay;
 export let hasPipewirePulse = false;
 
 export async function initVenmic() {
-	if (process.argv.some((arg) => arg === "--no-venmic") || patchBay !== undefined) return;
+	if (process.argv.some((arg) => arg === "--no-venmic") || patchBay !== undefined || !venmicPath) return;
 	try {
 		const binding = require(venmicPath) as typeof import("@vencord/venmic");
 

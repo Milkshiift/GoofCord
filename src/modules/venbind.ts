@@ -11,7 +11,7 @@ let venbind: VenbindType | undefined;
 let venbindLoadAttempted = false;
 
 export async function obtainVenbind() {
-	if (venbind !== undefined || process.argv.some((arg) => arg === "--no-venbind") || venbindLoadAttempted) return venbind;
+	if (venbind !== undefined || process.argv.some((arg) => arg === "--no-venbind") || venbindLoadAttempted || !venbindPath) return venbind;
 	try {
 		venbind = require(venbindPath);
 		if (!venbind) throw new Error("Venbind is undefined");

@@ -32,33 +32,21 @@ const ROOT_DIR = process.cwd();
 const OUT_DIR = path.join(ROOT_DIR, "ts-out");
 const SRC_DIR = path.join(ROOT_DIR, "src");
 
-
 console.log("Preparing build...");
-await Promise.all([
-	fs.promises.rm(OUT_DIR, { recursive: true, force: true }),
-	copyNativeModules(),
-]);
-
+await Promise.all([fs.promises.rm(OUT_DIR, { recursive: true, force: true }), copyNativeModules()]);
 
 console.log("Running generators...");
 const timeLabel = "Generators";
 console.time(timeLabel);
-await Promise.all([
-	genSettingsLangFile(),
-	genIpcHandlers()
-]);
+await Promise.all([genSettingsLangFile(), genIpcHandlers()]);
 console.timeEnd(timeLabel);
-
 
 await fs.promises.mkdir(OUT_DIR, { recursive: true });
 
 console.log("Building...");
 
 const preloadFiles = await searchPreloadFiles();
-const mainEntrypoints = [
-	path.join(SRC_DIR, "main.ts"),
-	path.join(SRC_DIR, "modules", "arrpcWorker.ts")
-];
+const mainEntrypoints = [path.join(SRC_DIR, "main.ts"), path.join(SRC_DIR, "modules", "arrpcWorker.ts")];
 
 const buildTasks: Promise<void>[] = [];
 
@@ -70,7 +58,7 @@ buildTasks.push(
 		external: ["electron"],
 		plugins: [globImporterPlugin, nativeModulePlugin({ targetPlatform, targetArch })],
 		splitting: true,
-	})
+	}),
 );
 
 const rendererPath = path.join(SRC_DIR, "windows", "main", "renderer");
@@ -83,7 +71,7 @@ buildTasks.push(
 		target: "browser",
 		plugins: [globImportPlugin()],
 		minify: false,
-	})
+	}),
 );
 buildTasks.push(
 	runBuild({
@@ -92,7 +80,7 @@ buildTasks.push(
 		target: "browser",
 		plugins: [globImportPlugin()],
 		minify: false,
-	})
+	}),
 );
 
 const preloadBuilds = preloadFiles.map((preloadFile) => {
@@ -152,39 +140,39 @@ async function copyNativeModules() {
 	const modulesToCopy = [
 		{
 			src: ["node_modules", "@vencord", "venmic", "prebuilds", "venmic-addon-linux-x64", "node-napi-v7.node"],
-			dest: ["venmic-linux-x64.node"]
+			dest: ["venmic-linux-x64.node"],
 		},
 		{
 			src: ["node_modules", "@vencord", "venmic", "prebuilds", "venmic-addon-linux-arm64", "node-napi-v7.node"],
-			dest: ["venmic-linux-arm64.node"]
+			dest: ["venmic-linux-arm64.node"],
 		},
 		{
 			src: ["node_modules", "venbind", "prebuilds", "windows-x86_64", "venbind-windows-x86_64.node"],
-			dest: ["venbind-win32-x64.node"]
+			dest: ["venbind-win32-x64.node"],
 		},
 		{
 			src: ["node_modules", "venbind", "prebuilds", "windows-aarch64", "venbind-windows-aarch64.node"],
-			dest: ["venbind-win32-arm64.node"]
+			dest: ["venbind-win32-arm64.node"],
 		},
 		{
 			src: ["node_modules", "venbind", "prebuilds", "linux-x86_64", "venbind-linux-x86_64.node"],
-			dest: ["venbind-linux-x64.node"]
+			dest: ["venbind-linux-x64.node"],
 		},
 		{
 			src: ["node_modules", "venbind", "prebuilds", "linux-aarch64", "venbind-linux-aarch64.node"],
-			dest: ["venbind-linux-arm64.node"]
+			dest: ["venbind-linux-arm64.node"],
 		},
 	];
 
 	const results = await Promise.allSettled(
-		modulesToCopy.map(mod => {
+		modulesToCopy.map((mod) => {
 			const srcPath = path.join(ROOT_DIR, ...mod.src);
 			const destPath = path.join(assetsDir, ...mod.dest);
 			return copyFile(srcPath, destPath);
-		})
+		}),
 	);
 
-	const failures = results.filter(r => r.status === 'rejected');
+	const failures = results.filter((r) => r.status === "rejected");
 	if (failures.length > 0) {
 		console.warn(pc.yellow(`Warning: ${failures.length} native modules failed to copy.`));
 	}

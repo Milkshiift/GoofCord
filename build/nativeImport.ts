@@ -40,21 +40,15 @@ export const nativeModulePlugin = (options: NativePluginOptions = {}): BunPlugin
 
 			if (!matchedFile) {
 				return {
-					// @ts-expect-error
-					errors: [
-						{
-							text: `Could not find native module for ${targetPlatform}-${targetArch} matching pattern: ${globPattern} in ${importerDir}`,
-						},
-					],
+					contents: "export default null;",
+					loader: "js",
 				};
 			}
 
 			const absolutePath = path.resolve(importerDir, matchedFile);
 
-			const importPath = absolutePath.replace(/\\/g, "/");
-
 			const contents = `
-                import path from "${importPath}" with { type: "file" };
+                import path from ${JSON.stringify(absolutePath)} with { type: "file" };
                 export default path;
             `;
 
