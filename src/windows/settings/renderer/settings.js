@@ -53,7 +53,7 @@ window.initSwitcher = () => {
 	function saveTabState(targetId) {
 		const data = {
 			id: targetId,
-			timestamp: Date.now()
+			timestamp: Date.now(),
 		};
 		localStorage.setItem(CONFIG.storageKey, JSON.stringify(data));
 	}
@@ -243,7 +243,7 @@ window.initSwitcher = () => {
 				const elapsed = now - savedState.timestamp;
 
 				if (elapsed <= CONFIG.retentionTime) {
-					const savedTab = elements.tabs.find(tab => tab.dataset.target === savedState.id);
+					const savedTab = elements.tabs.find((tab) => tab.dataset.target === savedState.id);
 					if (savedTab) return savedTab;
 				}
 			} catch (e) {
@@ -251,7 +251,7 @@ window.initSwitcher = () => {
 			}
 		}
 
-		return elements.tabs.find(tab => tab.classList.contains("active")) || elements.tabs[0];
+		return elements.tabs.find((tab) => tab.classList.contains("active")) || elements.tabs[0];
 	}
 
 	function init() {

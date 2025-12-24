@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/complexity/noImportantStyles: Needed */
+
 /* ==================== Font & Vars ==================== */
 @font-face {
 	font-family: "InterVariable";
@@ -28,15 +30,18 @@
 	--border-color-focus: var(--color-primary);
 	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
 	--shadow-md: 0 4px 6px rgba(0, 0, 0, 0.15);
-	--shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.2);
+	--shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.25);
 	--scrollbar-width: 8px;
 	--font-family: "InterVariable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	--border-radius-sm: 4px;
 	--border-radius-md: 6px;
-	--transition-fast: 0.15s var(--easing-smooth);
-	--transition-normal: 0.2s var(--easing-smooth);
-	--transition-slow: 0.3s var(--easing-smooth);
-	--easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+	--transition-fast: 0.15s var(--easing-snappy);
+	--transition-normal: 0.25s var(--easing-snappy);
+	--transition-slow: 0.4s var(--easing-snappy);
+	--easing-snappy: cubic-bezier(0.2, 0, 0, 1);
+	--easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
 	--checkmark-icon: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M174 439 7 273a26 26 0 0 1 0-36l37-36c10-10 26-10 36 0l112 112L432 73c10-10 26-10 36 0l37 36c9 10 9 26 0 36L210 439a26 26 0 0 1-36 0z' fill='%23fff'/%3E%3C/svg%3E");
 	--revert-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-2 0 24 24'%3E%3Cpath fill-rule='evenodd' d='m5.62 7 1.44 1.44a1.5 1.5 0 0 1-2.12 2.12l-4-4a1.5 1.5 0 0 1 0-2.12l4-4a1.5 1.5 0 1 1 2.12 2.12L5.62 4H10A10 10 0 1 1 0 14a1.5 1.5 0 0 1 3 0 7 7 0 1 0 7-7H5.62z' clip-rule='evenodd' fill='%23fff'/%3E%3C/svg%3E");
 }
@@ -92,6 +97,7 @@ header {
 	top: 0;
 	z-index: 1000;
 	box-shadow: var(--shadow-md);
+	backdrop-filter: blur(10px);
 }
 
 /* ==================== Scrollbar ==================== */
@@ -130,8 +136,11 @@ a {
 	column-gap: 10px;
 	flex-wrap: wrap;
 
+	--tab-v-padding: 14px;
+	--tab-text-jump: 2px;
+
 	.tab-item {
-		padding: 14px 18px;
+		padding: var(--tab-v-padding) 18px;
 		cursor: pointer;
 		border: none;
 		background: transparent;
@@ -139,21 +148,35 @@ a {
 		font-weight: 500;
 		color: var(--font-color-dim);
 		border-bottom: 3px solid transparent;
+
 		transition:
-			color var(--transition-normal),
-			border-bottom-color var(--transition-normal),
-			background-color var(--transition-fast);
+				color var(--transition-normal),
+				border-bottom-color var(--transition-normal),
+				background-color var(--transition-fast),
+				padding var(--transition-fast);
+
 		white-space: nowrap;
 
 		&:hover {
 			color: var(--font-color-strong);
 			background-color: rgba(255, 255, 255, 0.03);
+
+			padding-top: calc(var(--tab-v-padding) - var(--tab-text-jump));
+			padding-bottom: calc(var(--tab-v-padding) + var(--tab-text-jump));
 		}
+
 		&.active {
 			color: var(--font-color-header);
 			border-bottom-color: var(--color-primary);
 			font-weight: 600;
 		}
+
+		&:active {
+			padding-top: calc(var(--tab-v-padding) + (var(--tab-text-jump) / 2));
+			padding-bottom: calc(var(--tab-v-padding) - (var(--tab-text-jump) / 2));
+			transition-duration: 0.05s;
+		}
+
 		&:focus-visible {
 			outline: 2px solid var(--color-primary);
 			outline-offset: -2px;
@@ -167,7 +190,7 @@ a {
 
 	.content-panel {
 		display: none;
-		animation: fadeIn 0.3s var(--easing-smooth);
+		animation: slideUpFade 0.4s var(--easing-snappy) forwards;
 		&.active {
 			display: block;
 		}
@@ -188,14 +211,16 @@ a {
 	}
 }
 
-@keyframes fadeIn {
+@keyframes slideUpFade {
 	from {
 		opacity: 0;
-		transform: translateY(10px);
+		transform: translateY(15px) scale(0.98);
+		filter: blur(2px);
 	}
 	to {
 		opacity: 1;
-		transform: translateY(0);
+		transform: translateY(0) scale(1);
+		filter: blur(0);
 	}
 }
 
@@ -215,6 +240,10 @@ form.settingsContainer fieldset {
 		width: fit-content;
 		cursor: pointer;
 		padding: 5px 0;
+		transition: opacity var(--transition-fast);
+		&:hover {
+			opacity: 1;
+		}
 	}
 
 	.description {
@@ -235,13 +264,12 @@ form.settingsContainer fieldset {
 		right: 0;
 		top: 0.15em;
 		cursor: pointer;
-		opacity: 0.7;
-		display: none;
+		opacity: 0;
+		transform: scale(0.5) rotate(45deg);
+		display: block;
+		pointer-events: none;
 		z-index: 1;
-		transition:
-			background-color var(--transition-fast),
-			transform var(--transition-normal),
-			opacity var(--transition-fast);
+		transition: all var(--transition-normal);
 
 		&:hover,
 		&:focus-visible {
@@ -252,7 +280,9 @@ form.settingsContainer fieldset {
 		}
 	}
 	&:hover .revert-button {
-		display: block;
+		opacity: 0.7;
+		transform: scale(1) rotate(0deg);
+		pointer-events: auto;
 	}
 }
 
@@ -274,10 +304,7 @@ label {
 	border-radius: var(--border-radius-md);
 	font-family: var(--font-family);
 	font-size: 1em;
-	transition:
-		border-color var(--transition-fast),
-		background-color var(--transition-fast),
-		box-shadow var(--transition-fast);
+	transition: all var(--transition-fast);
 	width: 100%;
 	max-width: 30em;
 
@@ -289,7 +316,10 @@ label {
 		outline: none;
 		border-color: var(--color-primary);
 		background-color: var(--bg-input-focus);
-		box-shadow: 0 0 0 2px var(--color-primary-ultralight);
+		box-shadow:
+			0 0 0 3px var(--color-primary-ultralight),
+			0 0 15px rgba(88, 101, 242, 0.3);
+		transform: scale(1.01);
 	}
 }
 
@@ -318,19 +348,26 @@ input[type="checkbox"] {
 	appearance: none;
 	background-color: var(--bg-input);
 	border: 1px solid var(--border-color-interactive);
-	transition: all var(--transition-normal);
+	transition:
+		background-color 0.2s,
+		border-color 0.2s,
+		transform 0.4s var(--easing-spring);
 	margin: 0;
 	position: relative;
-	will-change: transform, background-color;
+	cursor: pointer;
 
 	&:checked {
 		background: var(--color-primary) var(--checkmark-icon) no-repeat center / 70%;
 		border-color: var(--color-primary);
-		animation: checkmark-animation 0.3s var(--easing-smooth);
+		animation: jelly-pop 0.5s var(--easing-spring);
 	}
 	&:hover:not(:checked) {
 		background-color: var(--bg-input-hover);
 		border-color: var(--border-color-focus);
+		transform: scale(1.05);
+	}
+	&:active {
+		transform: scale(0.9);
 	}
 	&:hover:checked {
 		background-color: var(--color-primary-hover);
@@ -342,18 +379,15 @@ input[type="checkbox"] {
 	}
 }
 
-@keyframes checkmark-animation {
+@keyframes jelly-pop {
 	0% {
 		transform: scale(0.8);
-		opacity: 0.5;
 	}
-	50% {
-		transform: scale(1.15);
-		opacity: 1;
+	40% {
+		transform: scale(1.25);
 	}
 	100% {
 		transform: scale(1);
-		opacity: 1;
 	}
 }
 
@@ -367,7 +401,7 @@ input[type="file"] {
 		background-color: var(--color-primary);
 		color: var(--font-color-on-primary);
 		font-weight: 500;
-		transition: background-color var(--transition-normal);
+		transition: all var(--transition-fast);
 		cursor: pointer;
 		font-family: var(--font-family);
 		margin-right: 10px;
@@ -379,9 +413,11 @@ input[type="file"] {
 	}
 	&::file-selector-button:hover {
 		background-color: var(--color-primary-hover);
+		transform: translateY(-1px);
 	}
 	&::file-selector-button:active {
 		background-color: var(--color-primary-active);
+		transform: scale(0.96);
 	}
 }
 
@@ -404,20 +440,19 @@ input[type="file"] {
 		font-weight: 500;
 		font-size: 0.95em;
 		cursor: pointer;
-		transition:
-			background-color var(--transition-normal),
-			transform var(--transition-fast),
-			box-shadow var(--transition-normal);
+		transition: all var(--transition-fast);
 		text-transform: capitalize;
+		position: relative;
+		overflow: hidden;
 
 		&:hover {
 			background-color: var(--color-primary-hover);
-			box-shadow: var(--shadow-sm);
-			transform: translateY(-1px);
+			box-shadow: 0 4px 12px rgba(88, 101, 242, 0.4);
+			transform: translateY(-2px);
 		}
 		&:active {
 			background-color: var(--color-primary-active);
-			transform: translateY(0);
+			transform: scale(0.96) translateY(0);
 			box-shadow: none;
 		}
 		&:focus-visible {
@@ -431,6 +466,7 @@ input[type="file"] {
 			&:hover {
 				background-color: var(--bg-input-hover);
 				border-color: var(--border-color-focus);
+				box-shadow: var(--shadow-md);
 			}
 			&:active {
 				background-color: var(--bg-tertiary);
@@ -451,9 +487,7 @@ input[type="file"] {
 	background-color: var(--bg-input);
 	border: 1px solid var(--border-color-interactive);
 	border-radius: var(--border-radius-md);
-	transition:
-		border-color var(--transition-fast),
-		box-shadow var(--transition-fast);
+	transition: all var(--transition-fast);
 	min-height: 42px;
 	outline: none;
 
@@ -476,6 +510,7 @@ input[type="file"] {
 		display: flex;
 		align-items: center;
 		gap: 5px;
+		animation: scaleIn 0.2s var(--easing-spring);
 	}
 	.placeholder {
 		color: var(--font-color-dim);
@@ -483,10 +518,21 @@ input[type="file"] {
 	}
 }
 
+@keyframes scaleIn {
+	from {
+		transform: scale(0);
+		opacity: 0;
+	}
+	to {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
 .multiselect-dropdown-list-wrapper {
 	position: absolute;
 	min-width: max(100%, 7em);
-	top: calc(100% + 5px);
+	top: calc(100% + 8px);
 	left: 0;
 	z-index: 1001;
 	background: var(--bg-secondary);
@@ -497,16 +543,17 @@ input[type="file"] {
 	opacity: 0;
 	overflow: hidden;
 	transition:
-		max-height var(--transition-slow),
-		opacity var(--transition-slow),
-		transform var(--transition-slow);
-	transform: translateY(-10px);
+		max-height var(--transition-normal),
+		opacity var(--transition-fast),
+		transform var(--transition-normal);
+	transform: translateY(-10px) scale(0.95);
+	transform-origin: top center;
 	pointer-events: none;
 
 	&:not(.dropdown-hidden) {
 		max-height: 250px;
 		opacity: 1;
-		transform: translateY(0);
+		transform: translateY(0) scale(1);
 		pointer-events: auto;
 		overflow-y: auto;
 	}
@@ -522,20 +569,17 @@ input[type="file"] {
 			gap: 10px;
 			border-radius: var(--border-radius-sm);
 			color: var(--font-color-normal);
+			transition: background-color 0.1s;
 
 			&:hover,
 			&.highlighted {
 				background-color: var(--bg-primary);
 				color: var(--font-color-strong);
-				transition:
-					background-color var(--transition-fast),
-					color var(--transition-fast);
 			}
 			&.checked {
 				background-color: var(--color-primary);
 				color: var(--font-color-on-primary);
 				font-weight: 500;
-				transition: background-color var(--transition-fast);
 				&.highlighted,
 				&:hover {
 					background-color: var(--color-primary-hover);
@@ -589,4 +633,22 @@ input[type="file"] {
 		--msg-c: #f04747;
 		--msg-bg: rgba(240, 71, 71, 0.1);
 	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after {
+		animation-duration: 0s !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0s !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+.disable-animations *,
+.disable-animations *::before,
+.disable-animations *::after {
+	animation-duration: 0s !important;
+	animation-iteration-count: 1 !important;
+	transition-duration: 0s !important;
+	scroll-behavior: auto !important;
 }

@@ -1,6 +1,12 @@
 import { webFrame } from "electron";
 import { sendSync } from "../../../ipc/client.ts";
-import { type ButtonEntry, type ConfigKey, type ConfigValue, type SettingEntry, settingsSchema } from "../../../settingsSchema.ts";
+import {
+	type ButtonEntry,
+	type ConfigKey,
+	type ConfigValue,
+	type SettingEntry,
+	settingsSchema
+} from "../../../settingsSchema.ts";
 import { decryptSetting, evaluateShowAfter } from "./preload.mts";
 
 function sanitizeForId(name: string): string {
@@ -86,6 +92,10 @@ function generatePanelInnerContent(categoryName: string): { settingsHtml: string
 
 function createSetting(setting: ConfigKey, entry: SettingEntry): string | "" {
 	let value: ConfigValue<ConfigKey> = sendSync("config:getConfig", setting);
+
+	if (setting === "disableSettingsAnimations" && value === true) {
+		document.body.classList.add("disable-animations");
+	}
 
 	if (entry.encrypted && typeof value === "string") {
 		value = decryptSetting(value);

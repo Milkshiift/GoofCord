@@ -91,3 +91,7 @@ export async function hotreloadLocale<IPCHandle>() {
 	await initLocalization();
 	if (settingsWindow) settingsWindow.webContents.reload();
 }
+
+export async function reloadWindow<IPCHandle>() {
+	if (settingsWindow) settingsWindow.webContents.reload();
+}

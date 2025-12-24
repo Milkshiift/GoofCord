@@ -13,7 +13,7 @@ import type { isVenbindLoaded, setKeybinds } from "../modules/venbind";
 import type { stopVenmic } from "../modules/venmic";
 import type { decryptSafeStorage, encryptSafeStorage, getDisplayVersion, getVersion, isEncryptionAvailable, saveFileToGCFolder } from "../utils";
 import type { deleteCloud, loadCloud, saveCloud } from "../windows/settings/preload/cloud/cloud";
-import type { createSettingsWindow, hotreloadLocale } from "../windows/settings/settings";
+import type { createSettingsWindow, hotreloadLocale, reloadWindow } from "../windows/settings/settings";
 
 export interface IpcHandleChannels {
   "arrpc:initArrpc": typeof initArrpc;
@@ -30,6 +30,7 @@ export interface IpcHandleChannels {
   "mods:updateModsFull": typeof updateModsFull;
   "settings:createSettingsWindow": typeof createSettingsWindow;
   "settings:hotreloadLocale": typeof hotreloadLocale;
+  "settings:reloadWindow": typeof reloadWindow;
   "utils:saveFileToGCFolder": typeof saveFileToGCFolder;
   "venbind:isVenbindLoaded": typeof isVenbindLoaded;
   "venbind:setKeybinds": typeof setKeybinds;

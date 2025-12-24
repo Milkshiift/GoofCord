@@ -1,6 +1,7 @@
 // @ts-expect-error See /build/globbyGlob.ts
 import allLangs from "glob-filenames:../assets/lang/*.json";
 
+// https://github.com/biomejs/biome/discussions/3493
 const spellcheckLangs = [
 	"af",
 	"bg",
@@ -255,6 +256,13 @@ export const settingsSchema = {
 			description: "Makes the window transparent for use with translucent themes.",
 			inputType: "checkbox",
 		},
+		disableSettingsAnimations: {
+			name: "Disable settings animations",
+			defaultValue: false,
+			description: "Disables all animations in this window.",
+			inputType: "checkbox",
+			onChange: "settings:reloadWindow",
+		}
 	},
 	"Client Mods": {
 		modNames: {

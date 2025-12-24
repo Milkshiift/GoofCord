@@ -131,5 +131,7 @@
   "opt-invidiousInstance": "Instance",
   "opt-invidiousInstance-desc": "What Invidious instance to use. If videos fail to load, try changing it to a different one and disabling auto-updates.",
   "opt-autoUpdateInvidiousInstance": "Auto-update instance",
-  "opt-autoUpdateInvidiousInstance-desc": "Automatically finds an available instance with the lowest latency."
+  "opt-autoUpdateInvidiousInstance-desc": "Automatically finds an available instance with the lowest latency.",
+  "opt-disableSettingsAnimations": "Disable settings animations",
+  "opt-disableSettingsAnimations-desc": "Disables all animations in this window."
 }

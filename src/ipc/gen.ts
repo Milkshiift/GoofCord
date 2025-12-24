@@ -14,7 +14,7 @@ import { isVenbindLoaded, setKeybinds } from "../modules/venbind";
 import { stopVenmic } from "../modules/venmic";
 import { decryptSafeStorage, encryptSafeStorage, getDisplayVersion, getVersion, isEncryptionAvailable, saveFileToGCFolder } from "../utils";
 import { deleteCloud, loadCloud, saveCloud } from "../windows/settings/preload/cloud/cloud";
-import { createSettingsWindow, hotreloadLocale } from "../windows/settings/settings";
+import { createSettingsWindow, hotreloadLocale, reloadWindow } from "../windows/settings/settings";
 
 export function registerAllHandlers() {
   ipcMain.handle("arrpc:initArrpc", async (event) => { return await initArrpc(); });
@@ -38,6 +38,7 @@ export function registerAllHandlers() {
   ipcMain.handle("mods:updateModsFull", async (event) => { return await updateModsFull(); });
   ipcMain.handle("settings:createSettingsWindow", async (event) => { return await createSettingsWindow(); });
   ipcMain.handle("settings:hotreloadLocale", async (event) => { return await hotreloadLocale(); });
+  ipcMain.handle("settings:reloadWindow", async (event) => { return await reloadWindow(); });
   ipcMain.on("utils:decryptSafeStorage", (event, encryptedBase64) => { event.returnValue = decryptSafeStorage(encryptedBase64); });
   ipcMain.on("utils:encryptSafeStorage", (event, plaintextString) => { event.returnValue = encryptSafeStorage(plaintextString); });
   ipcMain.on("utils:getDisplayVersion", (event) => { event.returnValue = getDisplayVersion(); });
