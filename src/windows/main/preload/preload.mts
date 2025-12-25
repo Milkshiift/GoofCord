@@ -10,11 +10,13 @@ const preloadStart = performance.now();
 function init() {
 	if (!document.location.hostname.includes("discord")) return;
 
-	measureDiscordStartup();
-
 	loadScripts();
 	loadStyles();
 
+	// Make sure it's not a popout
+	if (!document.location.href.includes("/app")) return;
+
+	measureDiscordStartup();
 	injectFlashbar();
 	startKeybindWatcher();
 }

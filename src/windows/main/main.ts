@@ -124,7 +124,7 @@ function subscribeToAppEvents() {
 function setWindowOpenHandler() {
 	// Define a handler for opening new windows.
 	mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-		if (url === "about:blank") return { action: "allow" }; // For Vencord's quick css
+		if (url === "about:blank") return { action: "allow" };
 		if (url.includes("discord.com/popout")) {
 			// Allow Discord voice chat popout
 			return {

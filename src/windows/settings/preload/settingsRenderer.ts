@@ -1,12 +1,6 @@
 import { webFrame } from "electron";
 import { sendSync } from "../../../ipc/client.ts";
-import {
-	type ButtonEntry,
-	type ConfigKey,
-	type ConfigValue,
-	type SettingEntry,
-	settingsSchema
-} from "../../../settingsSchema.ts";
+import { type ButtonEntry, type ConfigKey, type ConfigValue, type SettingEntry, settingsSchema } from "../../../settingsSchema.ts";
 import { decryptSetting, evaluateShowAfter } from "./preload.mts";
 
 function sanitizeForId(name: string): string {

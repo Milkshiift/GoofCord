@@ -13,6 +13,7 @@ import { updateModsFull } from "../modules/mods";
 import { isVenbindLoaded, setKeybinds } from "../modules/venbind";
 import { stopVenmic } from "../modules/venmic";
 import { decryptSafeStorage, encryptSafeStorage, getDisplayVersion, getVersion, isEncryptionAvailable, saveFileToGCFolder } from "../utils";
+import { createQuickCssWindow } from "../windows/main/quickCssFix";
 import { deleteCloud, loadCloud, saveCloud } from "../windows/settings/preload/cloud/cloud";
 import { createSettingsWindow, hotreloadLocale, reloadWindow } from "../windows/settings/settings";
 
@@ -36,6 +37,7 @@ export function registerAllHandlers() {
   ipcMain.on("messageEncryption:decryptMessage", (event, message) => { event.returnValue = decryptMessage(message); });
   ipcMain.on("messageEncryption:encryptMessage", (event, message) => { event.returnValue = encryptMessage(message); });
   ipcMain.handle("mods:updateModsFull", async (event) => { return await updateModsFull(); });
+  ipcMain.handle("quickCssFix:createQuickCssWindow", async (event) => { return await createQuickCssWindow(); });
   ipcMain.handle("settings:createSettingsWindow", async (event) => { return await createSettingsWindow(); });
   ipcMain.handle("settings:hotreloadLocale", async (event) => { return await hotreloadLocale(); });
   ipcMain.handle("settings:reloadWindow", async (event) => { return await reloadWindow(); });

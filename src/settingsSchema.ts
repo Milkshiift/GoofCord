@@ -262,7 +262,7 @@ export const settingsSchema = {
 			description: "Disables all animations in this window.",
 			inputType: "checkbox",
 			onChange: "settings:reloadWindow",
-		}
+		},
 	},
 	"Client Mods": {
 		modNames: {

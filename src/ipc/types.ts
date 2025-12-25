@@ -12,6 +12,7 @@ import type { updateModsFull } from "../modules/mods";
 import type { isVenbindLoaded, setKeybinds } from "../modules/venbind";
 import type { stopVenmic } from "../modules/venmic";
 import type { decryptSafeStorage, encryptSafeStorage, getDisplayVersion, getVersion, isEncryptionAvailable, saveFileToGCFolder } from "../utils";
+import type { createQuickCssWindow } from "../windows/main/quickCssFix";
 import type { deleteCloud, loadCloud, saveCloud } from "../windows/settings/preload/cloud/cloud";
 import type { createSettingsWindow, hotreloadLocale, reloadWindow } from "../windows/settings/settings";
 
@@ -28,6 +29,7 @@ export interface IpcHandleChannels {
   "loader:setAutoLaunchState": typeof setAutoLaunchState;
   "messageEncryption:cycleThroughPasswords": typeof cycleThroughPasswords;
   "mods:updateModsFull": typeof updateModsFull;
+  "quickCssFix:createQuickCssWindow": typeof createQuickCssWindow;
   "settings:createSettingsWindow": typeof createSettingsWindow;
   "settings:hotreloadLocale": typeof hotreloadLocale;
   "settings:reloadWindow": typeof reloadWindow;

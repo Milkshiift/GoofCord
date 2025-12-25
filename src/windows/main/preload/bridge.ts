@@ -37,6 +37,7 @@ const api = {
 	stopVenmic: () => invoke("venmic:stopVenmic"),
 	isVencordPresent: () => isVencordPresent,
 	onInvidiousConfigChanged: (callback: () => void) => ipcRenderer.on("invidiousConfigChanged", callback),
+	openQuickCssWindow: () => invoke("quickCssFix:createQuickCssWindow"),
 };
 
 contextBridge.exposeInMainWorld("goofcord", api);

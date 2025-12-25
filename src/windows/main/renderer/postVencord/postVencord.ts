@@ -1,6 +1,7 @@
 import { initDynamicIcon } from "./dynamicIcon.ts";
 import { updateInvidiousInstance } from "./invidiousEmbeds.ts";
 import { initMessageEncryption } from "./messageEncryption.ts";
+import { initQuickCssFix } from "./quickCssFix.ts";
 import { initRichPresence } from "./richPresence.ts";
 import { patchScreenshare } from "./screensharePatch.ts";
 import { initSettingsButton } from "./settings.ts";
@@ -21,6 +22,7 @@ async function init() {
 	patchScreenshare();
 	initSettingsButton();
 	initMessageEncryption();
+	initQuickCssFix();
 }
 
 void init();

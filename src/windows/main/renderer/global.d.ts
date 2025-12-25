@@ -20,5 +20,7 @@ declare global {
 		// biome-ignore lint/suspicious/noExplicitAny: Shelter
 		shelter: any;
 		Vencord: typeof import("@vencord/types/Vencord");
+		// biome-ignore lint/suspicious/noExplicitAny: @vencord/types doesn't provide types for VencordNative
+		VencordNative: any;
 	}
 }

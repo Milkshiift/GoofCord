@@ -4,7 +4,7 @@
   "compilerOptions": {
     "rootDir": "./",
     "paths": {
-      "@renderer/*": ["./ts-out/windows/main/renderer/*"]
+      "@root/*": ["./*"]
     },
     "module": "esnext",
     "moduleResolution": "bundler",

@@ -150,10 +150,10 @@ a {
 		border-bottom: 3px solid transparent;
 
 		transition:
-				color var(--transition-normal),
-				border-bottom-color var(--transition-normal),
-				background-color var(--transition-fast),
-				padding var(--transition-fast);
+			color var(--transition-normal),
+			border-bottom-color var(--transition-normal),
+			background-color var(--transition-fast),
+			padding var(--transition-fast);
 
 		white-space: nowrap;
 
@@ -635,7 +635,9 @@ input[type="file"] {
 }
 
 @media (prefers-reduced-motion: reduce) {
-	*, *::before, *::after {
+	*,
+	*::before,
+	*::after {
 		animation-duration: 0s !important;
 		animation-iteration-count: 1 !important;
 		transition-duration: 0s !important;
