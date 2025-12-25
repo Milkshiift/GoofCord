@@ -12,17 +12,31 @@ Object.defineProperties(window, {
 	Common: { get: () => window.Vencord?.Webpack?.Common },
 });
 
+function runSafe(tasks: (() => void)[]) {
+	for (const fn of tasks) {
+		try {
+			fn();
+		} catch (e) {
+			console.error(e);
+		}
+	}
+}
+
 async function init() {
-	void updateInvidiousInstance();
-	initRichPresence();
+	runSafe([
+		updateInvidiousInstance,
+		initRichPresence
+	]);
 
 	await VC.Webpack.onceReady;
 
-	initDynamicIcon();
-	patchScreenshare();
-	initSettingsButton();
-	initMessageEncryption();
-	initQuickCssFix();
+	runSafe([
+		initDynamicIcon,
+		patchScreenshare,
+		initSettingsButton,
+		initMessageEncryption,
+		initQuickCssFix
+	])
 }
 
 void init();
