@@ -32,10 +32,10 @@ export async function createQuickCssWindow<IPCHandle>() {
         document.body.innerHTML = '<div id="monaco" style="position: absolute;left: 0;top: 0;width: 100%;height: 100%;margin: 0;padding: 0;overflow: hidden;"></div>';
 
         const loaderScript = document.createElement('script');
-        loaderScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.49.0/min/vs/loader.min.js';
+        loaderScript.src = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.55.1/min/vs/loader.js';
         
         loaderScript.onload = () => {
-            require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.49.0/min/vs' } });
+            require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.55.1/min/vs' } });
 
             require(['vs/editor/editor.main'], function() {
                 const container = document.getElementById('monaco');
