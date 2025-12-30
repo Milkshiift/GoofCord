@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { app, dialog, shell } from "electron";
+import { app, BrowserWindow, dialog, shell } from "electron";
 import { type Config, type ConfigKey, type ConfigValue, settingsSchema } from "./settingsSchema.ts";
 import { getErrorMessage, getGoofCordFolderPath, tryCreateFolder } from "./utils.ts";
 
@@ -65,7 +65,7 @@ export function getConfig<K extends ConfigKey, IPCOn>(key: K, bypassDefault = fa
 	return defaultValue;
 }
 
-export function getConfigBulk<IPCOn>() {
+export function sync<IPCOn>() {
 	return cachedConfig;
 }
 
@@ -74,6 +74,10 @@ export async function setConfig<K extends ConfigKey, IPCHandle>(entry: K, value:
 		cachedConfig.set(entry, value);
 		const toSave = JSON.stringify(Object.fromEntries(cachedConfig), undefined, 2);
 		await fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
+
+		for (const win of BrowserWindow.getAllWindows()) {
+			win.webContents.send("config:update", cachedConfig);
+		}
 	} catch (e: unknown) {
 		console.error("setConfig function errored:", e);
 		dialog.showErrorBox("GoofCord was unable to save the settings", getErrorMessage(e));
@@ -85,6 +89,10 @@ export async function setConfigBulk<IPCHandle>(toSet: Config) {
 		cachedConfig = toSet;
 		const toSave = JSON.stringify(Object.fromEntries(cachedConfig), undefined, 2);
 		await fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
+
+		for (const win of BrowserWindow.getAllWindows()) {
+			win.webContents.send("config:update", cachedConfig);
+		}
 	} catch (e: unknown) {
 		console.error("setConfigBulk function errored:", e);
 		dialog.showErrorBox("GoofCord was unable to save the settings", getErrorMessage(e));

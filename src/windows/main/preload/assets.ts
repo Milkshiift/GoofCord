@@ -1,10 +1,11 @@
+import { getConfig } from "@root/src/config.preload.ts";
 // @ts-expect-error
 import postVencordScript from "@root/ts-out/windows/main/renderer/postVencord/postVencord.js" with { type: "text" };
 // @ts-expect-error
 import preVencordScript from "@root/ts-out/windows/main/renderer/preVencord/preVencord.js" with { type: "text" };
 import { ipcRenderer, webFrame } from "electron";
-import { sendSync } from "../../../ipc/client.ts";
-import { error, log } from "../../../modules/logger.ts";
+import { sendSync } from "../../../ipc/client.preload.ts";
+import { error, log } from "../../../modules/logger.preload.ts";
 import { setVencordPresent } from "./bridge.ts";
 // @ts-expect-error
 import discordCss from "./discord.css" with { type: "text" };
@@ -41,7 +42,7 @@ export function loadStyles() {
 		() => {
 			assets.styles.push(["discord.css", discordCss]);
 
-			if (sendSync("config:getConfig", "renderingOptimizations")) {
+			if (getConfig("renderingOptimizations")) {
 				assets.styles.push([
 					"renderingOptimizations",
 					`

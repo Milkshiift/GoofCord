@@ -1,4 +1,4 @@
-import { error, log } from "../../../modules/logger.ts";
+import { error, log } from "../../../modules/logger.preload.ts";
 
 export function patchVencord(bundle: string) {
 	// We use an anchor to run regex only on a small snippet. Saves 4ms.

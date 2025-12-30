@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer, webFrame } from "electron";
-import { invoke } from "../../../ipc/client.ts";
-import { warn } from "../../../modules/logger.ts";
+import { invoke } from "../../../ipc/client.preload.ts";
+import { warn } from "../../../modules/logger.preload.ts";
 
 interface Keybind {
 	shortcut: string;

@@ -2,7 +2,7 @@ import module from "node:module";
 import { app } from "electron";
 import pc from "picocolors";
 import { getConfig, loadConfig } from "./config.ts";
-import { initLocalization } from "./modules/localization.ts";
+import { initLocalization } from "./modules/localization/localization.main.ts";
 import { getDisplayVersion, isDev } from "./utils.ts";
 
 console.time(pc.green("[Timer]") + " GoofCord fully loaded in");
@@ -33,23 +33,9 @@ async function main() {
 function setFlags() {
 	if (process.argv.includes("--no-flags")) return;
 
-	const enableFeatures = new Set([
-		"WebRTC",
-		"WebRtcHideLocalIpsWithMdns",
-		"PlatformHEVCEncoderSupport",
-		"TransportCallback",
-		"AudioServiceOutOfProcess"
-	]);
+	const enableFeatures = new Set(["WebRTC", "WebRtcHideLocalIpsWithMdns", "PlatformHEVCEncoderSupport", "TransportCallback", "AudioServiceOutOfProcess"]);
 
-	const disableFeatures = new Set([
-		"UseChromeOSDirectVideoDecoder",
-		"HardwareMediaKeyHandling",
-		"MediaSessionService",
-		"WebRtcAllowInputVolumeAdjustment",
-		"Vulkan",
-		"PaintHolding",
-		"DestroyProfileOnBrowserClose",
-	]);
+	const disableFeatures = new Set(["UseChromeOSDirectVideoDecoder", "HardwareMediaKeyHandling", "MediaSessionService", "WebRtcAllowInputVolumeAdjustment", "Vulkan", "PaintHolding", "DestroyProfileOnBrowserClose"]);
 
 	const switches = new Map<string, string | null>([
 		["autoplay-policy", "no-user-gesture-required"],
@@ -65,6 +51,7 @@ function setFlags() {
 
 	if (process.platform === "linux") {
 		enableFeatures.add("PulseaudioLoopbackForScreenShare");
+		enableFeatures.add("WaylandLinuxDrmSyncobj");
 
 		const noVaapi = process.argv.includes("--no-vaapi");
 		if (!noVaapi) {

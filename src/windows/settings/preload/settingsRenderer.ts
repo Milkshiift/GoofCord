@@ -1,5 +1,7 @@
+import { getConfig } from "@root/src/config.preload.ts";
+import { i } from "@root/src/modules/localization/client.preload.ts";
 import { webFrame } from "electron";
-import { sendSync } from "../../../ipc/client.ts";
+import { sendSync } from "../../../ipc/client.preload.ts";
 import { type ButtonEntry, type ConfigKey, type ConfigValue, type SettingEntry, settingsSchema } from "../../../settingsSchema.ts";
 import { decryptSetting, evaluateShowAfter } from "./preload.mts";
 
@@ -34,7 +36,7 @@ export async function renderSettings() {
 	categoryKeys.forEach((categoryName, index) => {
 		const panelId = `panel-${sanitizeForId(categoryName)}`;
 		const isActive = index === 0 ? "active" : "";
-		const categoryTitle = sendSync("localization:i", `category-${categoryName.toLowerCase().split(" ")[0]}`);
+		const categoryTitle = i(`category-${categoryName.toLowerCase().split(" ")[0]}`);
 
 		tabHtml += `
             <button class="tab-item ${isActive}" data-target="${panelId}">${categoryTitle}</button>
@@ -54,7 +56,7 @@ export async function renderSettings() {
 					? ""
 					: `
 				<div class="message warning">
-					<p>${sendSync("localization:i", "settings-encryption-unavailable")}</p>
+					<p>${i("settings-encryption-unavailable")}</p>
 				</div>
 			`
 			}
@@ -85,7 +87,7 @@ function generatePanelInnerContent(categoryName: string): { settingsHtml: string
 }
 
 function createSetting(setting: ConfigKey, entry: SettingEntry): string | "" {
-	let value: ConfigValue<ConfigKey> = sendSync("config:getConfig", setting);
+	let value: ConfigValue<ConfigKey> = getConfig(setting);
 
 	if (setting === "disableSettingsAnimations" && value === true) {
 		document.body.classList.add("disable-animations");
@@ -101,12 +103,12 @@ function createSetting(setting: ConfigKey, entry: SettingEntry): string | "" {
 		entry.inputType = "textfield";
 	}
 	if (entry.showAfter) {
-		const controllingValue = sendSync("config:getConfig", entry.showAfter.key as ConfigKey);
+		const controllingValue = getConfig(entry.showAfter.key as ConfigKey);
 		isHidden = !evaluateShowAfter(entry.showAfter.condition, controllingValue);
 	}
 
-	const name = sendSync("localization:i", `opt-${setting}`) ?? setting;
-	const description = sendSync("localization:i", `opt-${setting}-desc`) ?? "";
+	const name = i(`opt-${setting}`) ?? setting;
+	const description = i(`opt-${setting}-desc`) ?? "";
 
 	return `
         <fieldset class="${(isHidden ? "hidden" : "") + " " + (entry.showAfter && entry.showAfter.key !== setting ? "offset" : "")}">
@@ -121,7 +123,7 @@ function createSetting(setting: ConfigKey, entry: SettingEntry): string | "" {
 }
 
 function createButton(id: string, entry: ButtonEntry): string {
-	const buttonText = sendSync("localization:i", `opt-${id}`);
+	const buttonText = i(`opt-${id}`);
 	return `<button type="button" onclick="${entry.onClick}">${buttonText}</button>`;
 }
 

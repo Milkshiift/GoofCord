@@ -1,13 +1,14 @@
 import path from "node:path";
 import { isDeepStrictEqual } from "node:util";
+import { i } from "@root/src/modules/localization/localization.main.ts";
+import { saveCloud } from "@root/src/windows/settings/cloud/cloud.ts";
 import { app, BrowserWindow, dialog, shell } from "electron";
 import { cachedConfig, firstLaunch, getConfig } from "../../config.ts";
-import { registerHandle } from "../../ipc/registry.ts";
-import { i, initLocalization } from "../../modules/localization.ts";
+import { registerHandle } from "../../ipc/registry.main.ts";
+import { initLocalization } from "../../modules/localization/localization.main.ts";
 import type { Config } from "../../settingsSchema.ts";
 import { dirname, getCustomIcon, getDisplayVersion, relToAbs, userDataPath } from "../../utils.ts";
 import { mainWindow } from "../main/main.ts";
-import { saveCloud } from "./preload/cloud/cloud.ts";
 import html from "./renderer/settings.html";
 
 export let settingsWindow: BrowserWindow;

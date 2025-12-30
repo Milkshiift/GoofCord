@@ -53,7 +53,6 @@ export function initSettingsButton() {
 		return layout;
 	};
 
-	// @ts-expect-error
 	window.VencordNative.native.getVersions = GoofCord.getVersions;
 
 	const _originalGetInfoRows = Plugin.getInfoRows.bind(Plugin);

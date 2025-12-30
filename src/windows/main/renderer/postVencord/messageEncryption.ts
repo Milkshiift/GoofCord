@@ -1,4 +1,4 @@
-import { React } from "@vencord/types/webpack/common";
+import type { React } from "@vencord/types/webpack/common";
 
 let encryptionEnabled = false;
 let meEnabled: boolean = false;

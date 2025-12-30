@@ -1,7 +1,7 @@
 import { Notification, shell } from "electron";
 import { getConfig } from "../config.ts";
 import { getVersion } from "../utils.ts";
-import { i } from "./localization.ts";
+import { i } from "./localization/localization.main.ts";
 
 async function getLatestVersion(): Promise<string> {
 	try {

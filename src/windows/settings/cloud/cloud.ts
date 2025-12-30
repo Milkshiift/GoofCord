@@ -1,9 +1,9 @@
 import { dialog } from "electron";
 import pc from "picocolors";
-import { cachedConfig, getConfig, setConfigBulk } from "../../../../config.ts";
-import { encryptionPasswords } from "../../../../modules/messageEncryption.ts";
-import type { ConfigKey, ConfigValue } from "../../../../settingsSchema.ts";
-import { decryptSafeStorage } from "../../../../utils.ts";
+import { cachedConfig, getConfig, setConfigBulk } from "../../../config.ts";
+import { encryptionPasswords } from "../../../modules/messageEncryption.ts";
+import type { ConfigKey, ConfigValue } from "../../../settingsSchema.ts";
+import { decryptSafeStorage } from "../../../utils.ts";
 import { decryptString, encryptString } from "./encryption.ts";
 import { deleteToken, getCloudHost, getCloudToken } from "./token.ts";
 

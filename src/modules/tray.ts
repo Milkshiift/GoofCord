@@ -7,7 +7,7 @@ import { getConfig } from "../config.ts";
 import { getCustomIcon, getDisplayVersion, relToAbs } from "../utils.ts";
 import { mainWindow } from "../windows/main/main.ts";
 import { createSettingsWindow } from "../windows/settings/settings.ts";
-import { i } from "./localization.ts";
+import { i } from "./localization/localization.main.ts";
 import { saveState } from "./windowStateManager.ts";
 
 export let tray: Tray;

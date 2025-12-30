@@ -20,14 +20,14 @@ export async function load() {
 	void setAutoLaunchState();
 	void setMenu();
 	void createTray();
-	registerAllHandlers();
 	const modPromise = manageMods().then(() => categorizeAllAssets());
+	registerAllHandlers();
+	initEncryption();
 
 	console.time(pc.green("[Timer]") + " Electron loaded in");
 	await app.whenReady();
 	console.timeEnd(pc.green("[Timer]") + " Electron loaded in");
 
-	initEncryption();
 	setPermissions();
 	initFirewall();
 	unstrictCSP();

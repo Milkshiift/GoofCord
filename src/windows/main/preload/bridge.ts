@@ -1,5 +1,6 @@
+import { getConfig, setConfig } from "@root/src/config.preload.ts";
 import { contextBridge, ipcRenderer } from "electron";
-import { invoke, sendSync } from "../../../ipc/client.ts";
+import { invoke, sendSync } from "../../../ipc/client.preload.ts";
 import type { ConfigKey, ConfigValue } from "../../../settingsSchema.ts";
 import { flashTitlebar, flashTitlebarWithText } from "./titlebarFlash.ts";
 
@@ -27,8 +28,8 @@ const api = {
 	version: sendSync("utils:getVersion"),
 	displayVersion: sendSync("utils:getDisplayVersion"),
 	getVersions: () => process.versions,
-	getConfig: (toGet: ConfigKey, bypassDefault = false) => sendSync("config:getConfig", toGet, bypassDefault),
-	setConfig: (key: ConfigKey, value: ConfigValue<ConfigKey>) => invoke("config:setConfig", key, value),
+	getConfig: <K extends ConfigKey>(key: K, bypassDefault = false) => getConfig(key, bypassDefault),
+	setConfig: <K extends ConfigKey>(key: K, value: ConfigValue<K>) => setConfig(key, value),
 	encryptMessage: (message: string) => sendSync("messageEncryption:encryptMessage", message),
 	decryptMessage: (message: string) => sendSync("messageEncryption:decryptMessage", message),
 	cycleThroughPasswords: () => invoke("messageEncryption:cycleThroughPasswords"),

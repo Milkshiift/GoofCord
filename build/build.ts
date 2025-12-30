@@ -16,6 +16,8 @@ const { values } = parseArgs({
 		dev: { type: "boolean", short: "d" },
 		platform: { type: "string" },
 		arch: { type: "string" },
+		onlyGenerators: { type: "boolean" },
+		skipGenerators: { type: "boolean" },
 	},
 	strict: false,
 	allowPositionals: true,
@@ -26,6 +28,16 @@ const isDev = !!values.dev;
 const targetPlatform = typeof values.platform === "string" ? values.platform : process.platform;
 const targetArch = typeof values.arch === "string" ? values.arch : process.arch;
 
+if (!values.skipGenerators) {
+	console.log("Running generators...");
+	console.time("Generators");
+	await Promise.all([genSettingsLangFile(), genIpcHandlers()]);
+	console.timeEnd("Generators");
+	if (values.onlyGenerators) {
+		process.exit(0);
+	}
+}
+
 console.log(pc.cyan(`Build Target: ${targetPlatform}-${targetArch} ${isDev ? "(Dev)" : "(Prod)"}`));
 
 const ROOT_DIR = process.cwd();
@@ -33,14 +45,8 @@ const OUT_DIR = path.join(ROOT_DIR, "ts-out");
 const SRC_DIR = path.join(ROOT_DIR, "src");
 
 console.log("Preparing build...");
+
 await Promise.all([fs.promises.rm(OUT_DIR, { recursive: true, force: true }), copyNativeModules()]);
-
-console.log("Running generators...");
-const timeLabel = "Generators";
-console.time(timeLabel);
-await Promise.all([genSettingsLangFile(), genIpcHandlers()]);
-console.timeEnd(timeLabel);
-
 await fs.promises.mkdir(OUT_DIR, { recursive: true });
 
 console.log("Building...");

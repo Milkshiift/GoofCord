@@ -1,7 +1,8 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { invoke, sendSync } from "../../../ipc/client.ts";
+import { invoke, sendSync } from "../../../ipc/client.preload.ts";
 import { type ConfigKey, type ConfigValue, type SettingEntry, settingsSchema } from "../../../settingsSchema.ts";
 import { renderSettings } from "./settingsRenderer.ts";
+import { setConfig } from "@root/src/config.preload.ts";
 
 console.log("GoofCord Settings");
 
@@ -44,7 +45,7 @@ async function saveSettings(changedElement: HTMLElement) {
 	if (settingValue === undefined) return;
 	if (settingData.encrypted) settingValue = encryptSetting(settingValue);
 
-	void invoke("config:setConfig", settingName as ConfigKey, settingValue as ConfigValue<ConfigKey>);
+	await setConfig(settingName as ConfigKey, settingValue as ConfigValue<ConfigKey>);
 	updateVisibility(settingName, settingValue);
 	void invoke("flashTitlebar", "#5865F2");
 
@@ -118,8 +119,7 @@ export async function revertSetting(setting: HTMLElement) {
 		if (setting.type === "checkbox" && typeof defaultValue === "boolean") {
 			setting.checked = defaultValue;
 		} else if (setting.type === "file") {
-			// @ts-expect-error
-			void invoke("config:setConfig", elementName, defaultValue);
+			await setConfig(elementName as ConfigKey, defaultValue as ConfigValue<ConfigKey>);
 			void invoke("flashTitlebar", "#5865F2");
 			return;
 		} else if (typeof defaultValue === "string") {

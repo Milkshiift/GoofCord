@@ -4,7 +4,7 @@ import pc from "picocolors";
 // @ts-expect-error
 import adblocker from "../../../assets/adblocker.js" with { type: "text" };
 import { getConfig } from "../../config.ts";
-import { registerHandle } from "../../ipc/registry.ts";
+import { registerHandle } from "../../ipc/registry.main.ts";
 import { spoofChrome } from "../../modules/chromeSpoofer.ts";
 import { adjustWindow } from "../../modules/windowStateManager.ts";
 import { dirname, getCustomIcon } from "../../utils.ts";
