@@ -1,13 +1,13 @@
+import { i } from "@root/src/stores/localization/localization.main.ts";
 import { app, dialog, Menu, nativeImage, Tray } from "electron";
 // @ts-expect-error
 import symbolicIconBlack from "../../assets/gf_symbolic_black.png";
 // @ts-expect-error
 import symbolicIconWhite from "../../assets/gf_symbolic_white.png";
-import { getConfig } from "../config.ts";
+import { getConfig } from "../stores/config/config.main.ts";
 import { getCustomIcon, getDisplayVersion, relToAbs } from "../utils.ts";
 import { mainWindow } from "../windows/main/main.ts";
 import { createSettingsWindow } from "../windows/settings/settings.ts";
-import { i } from "./localization/localization.main.ts";
 import { saveState } from "./windowStateManager.ts";
 
 export let tray: Tray;

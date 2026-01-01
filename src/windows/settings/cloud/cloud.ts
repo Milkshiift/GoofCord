@@ -1,8 +1,9 @@
+import { sync } from "@root/src/stores/config/config.main.ts";
 import { dialog } from "electron";
 import pc from "picocolors";
-import { cachedConfig, getConfig, setConfigBulk } from "../../../config.ts";
 import { encryptionPasswords } from "../../../modules/messageEncryption.ts";
-import type { ConfigKey, ConfigValue } from "../../../settingsSchema.ts";
+import type { Config } from "../../../settingsSchema.ts"; // Removed unused imports
+import { getConfig, setConfigBulk } from "../../../stores/config/config.main.ts";
 import { decryptSafeStorage } from "../../../utils.ts";
 import { decryptString, encryptString } from "./encryption.ts";
 import { deleteToken, getCloudHost, getCloudToken } from "./token.ts";
@@ -52,12 +53,13 @@ export async function loadCloud<IPCHandle>(): Promise<void> {
 
 		console.log(LOG_PREFIX, "Loading settings from cloud");
 
-		const configToSet = new Map(cachedConfig);
+		const configToSet = { ...sync() } as any;
+
 		for (const [key, value] of Object.entries(cloudSettings)) {
-			configToSet.set(key as ConfigKey, value as ConfigValue<ConfigKey>);
+			configToSet[key] = value;
 		}
 
-		await setConfigBulk(configToSet);
+		await setConfigBulk(configToSet as Config);
 		await showDialog("info", "Settings loaded", "Settings loaded from cloud successfully. Please restart GoofCord to apply the changes.");
 	});
 }
@@ -65,18 +67,18 @@ export async function loadCloud<IPCHandle>(): Promise<void> {
 export async function saveCloud<IPCHandle>(silent = false): Promise<void> {
 	return withLock("save", async () => {
 		const excludedOptions = ["cloudEncryptionKey", "cloudHost", "cloudToken", "modEtagCache"];
-		const configToSave = new Map(cachedConfig);
+
+		const configToSave: Record<string, any> = { ...sync() };
 
 		if (getEncryptionKey()) {
-			configToSave.set("encryptionPasswords", encryptionPasswords);
+			configToSave.encryptionPasswords = encryptionPasswords;
 		} else {
 			excludedOptions.push("encryptionPasswords");
 		}
 
 		const settings = Object.fromEntries(
-			[...configToSave].filter(([key]) => !excludedOptions.includes(key)), // Removing excluded options
+			Object.entries(configToSave).filter(([key]) => !excludedOptions.includes(key)),
 		);
-
 		const encryptedSettings = await encryptString(JSON.stringify(settings), getEncryptionKey());
 		if (!encryptedSettings) return;
 

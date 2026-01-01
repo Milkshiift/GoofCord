@@ -1,4 +1,4 @@
-import { getConfig } from "@root/src/config.preload.ts";
+import { getConfig } from "@root/src/stores/config/config.preload.ts";
 // @ts-expect-error
 import postVencordScript from "@root/ts-out/windows/main/renderer/postVencord/postVencord.js" with { type: "text" };
 // @ts-expect-error

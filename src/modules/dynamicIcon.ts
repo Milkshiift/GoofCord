@@ -1,5 +1,5 @@
 import { app, type NativeImage, nativeImage } from "electron";
-import { getConfig } from "../config.ts";
+import { getConfig } from "../stores/config/config.main.ts";
 import { mainWindow } from "../windows/main/main.ts";
 import { getTrayIcon, tray } from "./tray.ts";
 

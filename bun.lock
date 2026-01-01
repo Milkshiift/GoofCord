@@ -8,11 +8,13 @@
         "arrpc": "github:Milkshiift/arrpc",
         "auto-launch": "github:Teamwork/node-auto-launch",
         "electron-context-menu": "github:Milkshiift/electron-context-menu",
+        "electron-sync-store": "github:Milkshiift/electron-sync-store",
         "picocolors": "1.1.1",
         "stegcloak": "github:Milkshiift/stegcloak-node",
       },
       "devDependencies": {
         "@biomejs/biome": "2.3.10",
+        "@types/auto-launch": "^5.0.5",
         "@types/bun": "1.3.5",
         "@types/node": "25.0.3",
         "@types/stegcloak": "1.0.2",
@@ -109,6 +111,8 @@
 
     "@tootallnate/once": ["@tootallnate/once@2.0.0", "", {}, "sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A=="],
 
+    "@types/auto-launch": ["@types/auto-launch@5.0.5", "", {}, "sha512-/nGvQZSzM/pvCMCh4Gt2kIeiUmOP/cKGJbjlInI+A+5MoV/7XmT56DJ6EU8bqc3+ItxEe4UC2GVspmPzcCc8cg=="],
+
     "@types/bun": ["@types/bun@1.3.5", "", { "dependencies": { "bun-types": "1.3.5" } }, "sha512-RnygCqNrd3srIPEWBd5LFeUYG7plCoH2Yw9WaZGyNmdTEei+gWaHqydbaIRkIkcbXwhBT94q78QljxN0Sk838w=="],
 
     "@types/cacheable-request": ["@types/cacheable-request@6.0.3", "", { "dependencies": { "@types/http-cache-semantics": "*", "@types/keyv": "^3.1.4", "@types/node": "*", "@types/responselike": "^1.0.0" } }, "sha512-IQ3EbTzGxIigb1I3qPZc1rWJnH0BmSKv5QYTalEwweFvyBDLSAe24zP0le/hyi7ecGfZVlIVAg4BZqb8WBwKqw=="],
@@ -197,7 +201,7 @@
 
     "argparse": ["argparse@2.0.1", "", {}, "sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q=="],
 
-    "arrpc": ["arrpc@github:Milkshiift/arrpc#b17135b", { "dependencies": { "picocolors": "^1.1.1", "ws": "^8.18.3" }, "optionalDependencies": { "bufferutil": "^4.0.9" }, "peerDependencies": { "typescript": "^5.9.3" }, "bin": { "arrpc": "src/index.ts" } }, "Milkshiift-arrpc-b17135b"],
+    "arrpc": ["arrpc@github:Milkshiift/arrpc#0a4c280", { "dependencies": { "picocolors": "^1.1.1", "ws": "^8.18.3" }, "optionalDependencies": { "bufferutil": "^4.0.9" }, "peerDependencies": { "typescript": "^5.9.3" }, "bin": { "arrpc": "src/index.ts" } }, "Milkshiift-arrpc-0a4c280"],
 
     "assert-plus": ["assert-plus@1.0.0", "", {}, "sha512-NfJ4UzBCcQGLDlQq7nHxH+tv3kyZ0hHQqF5BO6J7tNJeP5do1llPr8dZ8zHonfhAu0PHAdMkSo+8o0wxg9lZWw=="],
 
@@ -348,6 +352,8 @@
     "electron-context-menu": ["electron-context-menu@github:Milkshiift/electron-context-menu#bb72e08", {}, "Milkshiift-electron-context-menu-bb72e08"],
 
     "electron-publish": ["electron-publish@26.0.11", "", { "dependencies": { "@types/fs-extra": "^9.0.11", "builder-util": "26.0.11", "builder-util-runtime": "9.3.1", "chalk": "^4.1.2", "form-data": "^4.0.0", "fs-extra": "^10.1.0", "lazy-val": "^1.0.5", "mime": "^2.5.2" } }, "sha512-a8QRH0rAPIWH9WyyS5LbNvW9Ark6qe63/LqDB7vu2JXYpi0Gma5Q60Dh4tmTqhOBQt0xsrzD8qE7C+D7j+B24A=="],
+
+    "electron-sync-store": ["electron-sync-store@github:Milkshiift/electron-sync-store#c5dc5ac", { "peerDependencies": { "electron": "*", "typescript": "^5" } }, "Milkshiift-electron-sync-store-c5dc5ac"],
 
     "electron-winstaller": ["electron-winstaller@5.4.0", "", { "dependencies": { "@electron/asar": "^3.2.1", "debug": "^4.1.1", "fs-extra": "^7.0.1", "lodash": "^4.17.21", "temp": "^0.9.0" }, "optionalDependencies": { "@electron/windows-sign": "^1.1.2" } }, "sha512-bO3y10YikuUwUuDUQRM4KfwNkKhnpVO7IPdbsrejwN9/AABJzzTQ4GeHwyzNSrVO+tEH3/Np255a3sVZpZDjvg=="],
 

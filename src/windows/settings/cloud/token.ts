@@ -1,5 +1,5 @@
 import { BrowserWindow } from "electron";
-import { getConfig, setConfig } from "../../../config.ts";
+import { getConfig, setConfig } from "../../../stores/config/config.main.ts";
 import { mainWindow } from "../../main/main.ts";
 import { settingsWindow } from "../settings.ts";
 import { ENDPOINT_VERSION, LOG_PREFIX } from "./cloud.ts";

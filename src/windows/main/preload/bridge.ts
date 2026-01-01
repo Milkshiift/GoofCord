@@ -1,4 +1,4 @@
-import { getConfig, setConfig } from "@root/src/config.preload.ts";
+import { getConfig, setConfig } from "@root/src/stores/config/config.preload.ts";
 import { contextBridge, ipcRenderer } from "electron";
 import { invoke, sendSync } from "../../../ipc/client.preload.ts";
 import type { ConfigKey, ConfigValue } from "../../../settingsSchema.ts";

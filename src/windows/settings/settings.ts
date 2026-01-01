@@ -1,12 +1,12 @@
 import path from "node:path";
 import { isDeepStrictEqual } from "node:util";
-import { i } from "@root/src/modules/localization/localization.main.ts";
+import { sync } from "@root/src/stores/config/config.main.ts";
+import { i, initLocalization } from "@root/src/stores/localization/localization.main.ts";
 import { saveCloud } from "@root/src/windows/settings/cloud/cloud.ts";
 import { app, BrowserWindow, dialog, shell } from "electron";
-import { cachedConfig, firstLaunch, getConfig } from "../../config.ts";
 import { registerHandle } from "../../ipc/registry.main.ts";
-import { initLocalization } from "../../modules/localization/localization.main.ts";
 import type { Config } from "../../settingsSchema.ts";
+import { firstLaunch, getConfig } from "../../stores/config/config.main.ts";
 import { dirname, getCustomIcon, getDisplayVersion, relToAbs, userDataPath } from "../../utils.ts";
 import { mainWindow } from "../main/main.ts";
 import html from "./renderer/settings.html";
@@ -19,12 +19,7 @@ registerHandle("openFolder", async (_event, folder: string) => await shell.openP
 registerHandle("invidiousConfigChanged", () => mainWindow.webContents.send("invidiousConfigChanged"));
 
 function hasConfigChanged(original: Config, current: Config): boolean {
-	if (original.size !== current.size) return true;
-	for (const [key, val] of original) {
-		if (!current.has(key)) return true;
-		if (!isDeepStrictEqual(val, current.get(key))) return true;
-	}
-	return false;
+	return !isDeepStrictEqual(original, current);
 }
 
 export async function createSettingsWindow<IPCHandle>() {
@@ -34,7 +29,7 @@ export async function createSettingsWindow<IPCHandle>() {
 		return;
 	}
 
-	originalConfig = new Map(cachedConfig);
+	originalConfig = sync();
 
 	console.log("Creating a settings window.");
 	settingsWindow = new BrowserWindow({
@@ -74,7 +69,7 @@ export async function createSettingsWindow<IPCHandle>() {
 	settingsWindow.on("close", async (event) => {
 		isOpen = false;
 
-		if (getConfig("autoSaveCloud") && hasConfigChanged(originalConfig, cachedConfig)) {
+		if (getConfig("autoSaveCloud") && hasConfigChanged(originalConfig, sync())) {
 			event.preventDefault();
 			try {
 				console.log("Settings changed, auto-saving to cloud...");

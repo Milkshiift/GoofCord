@@ -1,4 +1,4 @@
-import { getConfig } from "@root/src/config.ts";
+import { getConfig } from "@root/src/stores/config/config.main.ts";
 import { BrowserWindow } from "electron";
 
 /*

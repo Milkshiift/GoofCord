@@ -3,7 +3,7 @@
 import { release } from "node:os";
 import type { BrowserWindow } from "electron";
 import pc from "picocolors";
-import { getConfig } from "../config.ts";
+import { getConfig } from "../stores/config/config.main.ts";
 
 // Fun
 const logPrefix = pc.red("[Chr") + pc.yellow("ome ") + pc.green("Spoo") + pc.blue("fer]");

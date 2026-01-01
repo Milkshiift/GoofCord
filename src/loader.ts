@@ -1,6 +1,5 @@
 import { app, net, session, systemPreferences } from "electron";
 import pc from "picocolors";
-import { firstLaunch, getConfig } from "./config.ts";
 import { registerAllHandlers } from "./ipc/gen.ts";
 import { initArrpc } from "./modules/arrpc.ts";
 import { categorizeAllAssets, startStyleWatcher } from "./modules/assetLoader.ts";
@@ -10,11 +9,10 @@ import { initEncryption } from "./modules/messageEncryption.ts";
 import { manageMods, updateMods } from "./modules/mods.ts";
 import { createTray } from "./modules/tray.ts";
 import { checkForUpdate } from "./modules/updateCheck.ts";
+import { firstLaunch, getConfig } from "./stores/config/config.main.ts";
 import { isDev } from "./utils.ts";
 import { createMainWindow } from "./windows/main/main.ts";
 import { createSettingsWindow } from "./windows/settings/settings.ts";
-
-declare module "auto-launch";
 
 export async function load() {
 	void setAutoLaunchState();

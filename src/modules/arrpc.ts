@@ -1,7 +1,7 @@
 import path from "node:path";
 import { Worker } from "node:worker_threads";
 import { dialog } from "electron";
-import { getConfig } from "../config.ts";
+import { getConfig } from "../stores/config/config.main.ts";
 import { dirname, getGoofCordFolderPath } from "../utils.ts";
 import { mainWindow } from "../windows/main/main.ts";
 

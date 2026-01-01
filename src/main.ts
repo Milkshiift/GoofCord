@@ -1,8 +1,8 @@
 import module from "node:module";
+import { initLocalization } from "@root/src/stores/localization/localization.main.ts";
 import { app } from "electron";
 import pc from "picocolors";
-import { getConfig, loadConfig } from "./config.ts";
-import { initLocalization } from "./modules/localization/localization.main.ts";
+import { getConfig, loadConfig } from "./stores/config/config.main.ts";
 import { getDisplayVersion, isDev } from "./utils.ts";
 
 console.time(pc.green("[Timer]") + " GoofCord fully loaded in");

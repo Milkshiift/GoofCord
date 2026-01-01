@@ -1,7 +1,7 @@
 import { dialog } from "electron";
 import pc from "picocolors";
 import StegCloak from "stegcloak";
-import { getConfig } from "../config.ts";
+import { getConfig } from "../stores/config/config.main.ts";
 import { decryptSafeStorage, getErrorMessage } from "../utils.ts";
 import { mainWindow } from "../windows/main/main.ts";
 

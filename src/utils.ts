@@ -7,7 +7,7 @@ import gfIconIco from "../assets/gf_icon.ico";
 // @ts-expect-error
 import gfIconPng from "../assets/gf_icon.png";
 import packageInfo from "../package.json" with { type: "json" };
-import { getConfig } from "./config.ts";
+import { getConfig } from "./stores/config/config.main.ts";
 
 try {
 	const portablePath = path.join(path.dirname(app.getPath("exe")), "goofcord-data");

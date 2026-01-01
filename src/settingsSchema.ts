@@ -76,7 +76,7 @@ export interface SettingEntry<TDefault = unknown> extends BaseEntry {
 	defaultValue: TDefault;
 	accept?: string;
 	encrypted?: boolean;
-	options?: readonly string[] | Record<string, string>;
+	options?: readonly string[] | [string, string][];
 	showAfter?: {
 		key: string;
 		condition: (value: DynamicConfigValue) => boolean;
@@ -505,7 +505,7 @@ export const settingsSchema = {
 			},
 		},
 		screensharePreviousSettings: {
-			defaultValue: ["720", "30", false, "motion"] as const,
+			defaultValue: [720, 30, false, "motion"] as [number, number, boolean, string],
 			outputType: "[number, number, boolean, string]",
 		},
 		"windowState:main": {
@@ -573,4 +573,26 @@ type InferValueType<T> = T extends { inputType: "checkbox" } ? boolean : T exten
 
 export type ConfigValue<K extends ConfigKey> = { [S in SectionKeys]: K extends keyof RawSchema[S] ? InferValueType<RawSchema[S][K]> : never }[SectionKeys];
 
-export type Config = Map<ConfigKey, ConfigValue<ConfigKey>>;
+export type Config = {
+	[K in ConfigKey]: ConfigValue<K>;
+};
+
+let cachedDefaults: Config | null = null;
+export function getDefaults(): Config {
+	if (cachedDefaults) return cachedDefaults;
+
+	const defaults: Partial<Config> = {};
+
+	for (const category in settingsSchema) {
+		const categorySettings = settingsSchema[category as keyof typeof settingsSchema];
+		for (const setting in categorySettings) {
+			if (setting.startsWith("button-")) continue;
+			const settingKey = setting as keyof typeof categorySettings;
+			// @ts-expect-error
+			defaults[setting as ConfigKey] = categorySettings[settingKey].defaultValue;
+		}
+	}
+
+	cachedDefaults = defaults as Config;
+	return cachedDefaults;
+}
