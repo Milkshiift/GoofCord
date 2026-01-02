@@ -1,7 +1,7 @@
+import { getConfig, setConfig } from "@root/src/stores/config/config.preload.ts";
+import { i } from "@root/src/stores/localization/localization.preload.ts";
 import { ipcRenderer } from "electron";
 import { invoke } from "../../../ipc/client.preload.ts";
-import { i } from "@root/src/stores/localization/localization.preload.ts";
-import { getConfig, setConfig } from "@root/src/stores/config/config.preload.ts";
 
 interface IPCSource {
 	id: string;

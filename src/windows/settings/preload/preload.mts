@@ -1,8 +1,8 @@
+import { setConfig } from "@root/src/stores/config/config.preload.ts";
 import { contextBridge, ipcRenderer } from "electron";
 import { invoke, sendSync } from "../../../ipc/client.preload.ts";
 import { type ConfigKey, type ConfigValue, type SettingEntry, settingsSchema } from "../../../settingsSchema.ts";
 import { renderSettings } from "./settingsRenderer.ts";
-import { setConfig } from "@root/src/stores/config/config.preload.ts";
 
 console.log("GoofCord Settings");
 

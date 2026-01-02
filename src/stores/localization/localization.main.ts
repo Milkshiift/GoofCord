@@ -16,7 +16,7 @@ const TranslationLogic = {
 			await setConfig("locale", lang);
 		}
 		return bakeLocalization(lang);
-	}
+	},
 };
 
 let locHost: StoreHost<Record<string, string>> | undefined;

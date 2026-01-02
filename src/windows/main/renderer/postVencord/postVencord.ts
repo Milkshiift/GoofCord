@@ -23,20 +23,11 @@ function runSafe(tasks: (() => void)[]) {
 }
 
 async function init() {
-	runSafe([
-		updateInvidiousInstance,
-		initRichPresence
-	]);
+	runSafe([updateInvidiousInstance, initRichPresence]);
 
 	await VC.Webpack.onceReady;
 
-	runSafe([
-		initDynamicIcon,
-		patchScreenshare,
-		initSettingsButton,
-		initMessageEncryption,
-		initQuickCssFix
-	])
+	runSafe([initDynamicIcon, patchScreenshare, initSettingsButton, initMessageEncryption, initQuickCssFix]);
 }
 
 void init();

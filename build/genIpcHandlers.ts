@@ -424,9 +424,9 @@ export async function genIpcHandlers(config: Partial<GeneratorConfig> = {}) {
 						if (!collectedImports.has(func.importPath)) {
 							collectedImports.set(func.importPath, new Map());
 						}
-						const fileImports = collectedImports.get(func.importPath)!;
+						const fileImports = collectedImports.get(func.importPath);
 						const alias = imports.get(func.funcName);
-						if (alias) {
+						if (alias && fileImports) {
 							fileImports.set(func.funcName, alias);
 						}
 					}

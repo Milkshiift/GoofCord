@@ -1,9 +1,9 @@
 import "./bridge.ts";
+import { getConfig } from "@root/src/stores/config/config.preload.ts";
+import { log } from "../../../modules/logger.preload.ts";
+import { loadScripts, loadStyles } from "./assets.ts";
 import { startKeybindWatcher } from "./keybinds.ts";
 import { injectFlashbar } from "./titlebarFlash.ts";
-import { loadScripts, loadStyles } from "./assets.ts";
-import { log } from "../../../modules/logger.preload.ts";
-import { getConfig } from "@root/src/stores/config/config.preload.ts";
 
 const preloadStart = performance.now();
 

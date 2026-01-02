@@ -53,7 +53,8 @@ async function handleConfigError(e: unknown): Promise<{ retry: boolean; data?: C
 		case 1: // Open folder
 			void shell.openPath(getGoofCordFolderPath());
 			return { retry: true };
-		case 2: { // Reset
+		case 2: {
+			// Reset
 			const defaults = await setup();
 			return { retry: false, data: defaults };
 		}
@@ -90,7 +91,7 @@ const DiskPersistence = {
 
 	onPersist: async (state: Config) => {
 		await saveToDisk(state);
-	}
+	},
 };
 
 let configHost: StoreHost<Config>;

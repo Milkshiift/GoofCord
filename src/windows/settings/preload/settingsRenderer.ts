@@ -2,13 +2,7 @@ import { getConfig } from "@root/src/stores/config/config.preload.ts";
 import { i } from "@root/src/stores/localization/localization.preload.ts";
 import { webFrame } from "electron";
 import { sendSync } from "../../../ipc/client.preload.ts";
-import {
-	type ButtonEntry,
-	type ConfigKey,
-	type ConfigValue,
-	type SettingEntry,
-	settingsSchema
-} from "../../../settingsSchema.ts";
+import { type ButtonEntry, type ConfigKey, type ConfigValue, type SettingEntry, settingsSchema } from "../../../settingsSchema.ts";
 import { decryptSetting, evaluateShowAfter } from "./preload.mts";
 
 function sanitizeForId(name: string): string {

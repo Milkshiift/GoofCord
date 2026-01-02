@@ -53,13 +53,15 @@ export async function loadCloud<IPCHandle>(): Promise<void> {
 
 		console.log(LOG_PREFIX, "Loading settings from cloud");
 
-		const configToSet = { ...sync() } as any;
+		const configToSet = { ...sync() } as Config;
 
 		for (const [key, value] of Object.entries(cloudSettings)) {
-			configToSet[key] = value;
+			if (key in configToSet) {
+				(configToSet as unknown as Record<string, unknown>)[key] = value;
+			}
 		}
 
-		await setConfigBulk(configToSet as Config);
+		await setConfigBulk(configToSet);
 		await showDialog("info", "Settings loaded", "Settings loaded from cloud successfully. Please restart GoofCord to apply the changes.");
 	});
 }
@@ -68,7 +70,7 @@ export async function saveCloud<IPCHandle>(silent = false): Promise<void> {
 	return withLock("save", async () => {
 		const excludedOptions = ["cloudEncryptionKey", "cloudHost", "cloudToken", "modEtagCache"];
 
-		const configToSave: Record<string, any> = { ...sync() };
+		const configToSave: Config = { ...sync() };
 
 		if (getEncryptionKey()) {
 			configToSave.encryptionPasswords = encryptionPasswords;
@@ -76,9 +78,7 @@ export async function saveCloud<IPCHandle>(silent = false): Promise<void> {
 			excludedOptions.push("encryptionPasswords");
 		}
 
-		const settings = Object.fromEntries(
-			Object.entries(configToSave).filter(([key]) => !excludedOptions.includes(key)),
-		);
+		const settings = Object.fromEntries(Object.entries(configToSave).filter(([key]) => !excludedOptions.includes(key)));
 		const encryptedSettings = await encryptString(JSON.stringify(settings), getEncryptionKey());
 		if (!encryptedSettings) return;
 
