@@ -2,7 +2,13 @@ import { getConfig } from "@root/src/stores/config/config.preload.ts";
 import { i } from "@root/src/stores/localization/localization.preload.ts";
 import { webFrame } from "electron";
 import { sendSync } from "../../../ipc/client.preload.ts";
-import { type ButtonEntry, type ConfigKey, type ConfigValue, type SettingEntry, settingsSchema } from "../../../settingsSchema.ts";
+import {
+	type ButtonEntry,
+	Config,
+	type ConfigKey,
+	type SettingEntry,
+	settingsSchema
+} from "../../../settingsSchema.ts";
 import { decryptSetting, evaluateShowAfter } from "./preload.mts";
 
 function sanitizeForId(name: string): string {
@@ -87,7 +93,7 @@ function generatePanelInnerContent(categoryName: string): { settingsHtml: string
 }
 
 function createSetting(setting: ConfigKey, entry: SettingEntry): string | "" {
-	let value: ConfigValue<ConfigKey> = getConfig(setting);
+	let value = getConfig(setting);
 
 	if (setting === "disableSettingsAnimations" && value === true) {
 		document.body.classList.add("disable-animations");
@@ -127,7 +133,7 @@ function createButton(id: string, entry: ButtonEntry): string {
 	return `<button type="button" onclick="${entry.onClick}">${buttonText}</button>`;
 }
 
-function getInputElement(entry: SettingEntry, setting: ConfigKey, value: ConfigValue<ConfigKey>): string {
+function getInputElement<K extends ConfigKey>(entry: SettingEntry, setting: K, value: Config[K]): string {
 	if (!entry.name) {
 		return `<input data-hidden="true" setting-name="${setting}" class="text" id="${setting}" type="text" value="${escapeHtmlValue(JSON.stringify(value))}"/>`;
 	}

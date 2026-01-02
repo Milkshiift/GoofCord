@@ -1,463 +1,355 @@
 // @ts-expect-error See /build/globbyGlob.ts
 import allLangs from "glob-filenames:../assets/lang/*.json";
 
-// https://github.com/biomejs/biome/discussions/3493
 const spellcheckLangs = [
-	"af",
-	"bg",
-	"ca",
-	"cs",
-	"cy",
-	"da",
-	"de",
-	"de-DE",
-	"el",
-	"en",
-	"en-AU",
-	"en-CA",
-	"en-GB",
-	"en-GB-oxendict",
-	"en-US",
-	"es",
-	"es-419",
-	"es-AR",
-	"es-ES",
-	"es-MX",
-	"es-US",
-	"et",
-	"fa",
-	"fo",
-	"fr",
-	"fr-FR",
-	"he",
-	"hi",
-	"hr",
-	"hu",
-	"hy",
-	"id",
-	"it",
-	"it-IT",
-	"ko",
-	"lt",
-	"lv",
-	"nb",
-	"nl",
-	"pl",
-	"pt",
-	"pt-BR",
-	"pt-PT",
-	"ro",
-	"ru",
-	"sh",
-	"sk",
-	"sl",
-	"sq",
-	"sr",
-	"sv",
-	"ta",
-	"tg",
-	"tr",
-	"uk",
-	"vi",
-];
+	"af", "bg", "ca", "cs", "cy", "da", "de", "de-DE", "el", "en",
+	"en-AU", "en-CA", "en-GB", "en-GB-oxendict", "en-US", "es", "es-419",
+	"es-AR", "es-ES", "es-MX", "es-US", "et", "fa", "fo", "fr", "fr-FR",
+	"he", "hi", "hr", "hu", "hy", "id", "it", "it-IT", "ko", "lt", "lv",
+	"nb", "nl", "pl", "pt", "pt-BR", "pt-PT", "ro", "ru", "sh", "sk", "sl",
+	"sq", "sr", "sv", "ta", "tg", "tr", "uk", "vi",
+] as const;
 
-// biome-ignore lint/suspicious/noExplicitAny: No way around it
-type DynamicConfigValue = any;
-type InputType = "checkbox" | "textfield" | "dropdown" | "dropdown-multiselect" | "file" | "textarea";
 
-interface BaseEntry {
+export type InputTypeMap = {
+	checkbox: boolean;
+	textfield: string;
+	dropdown: string;
+	"dropdown-multiselect": string[];
+	file: string;
+	textarea: string[];
+	dictionary: Record<string, string>;
+};
+
+export type OutputTypeMap = {
+	string: string;
+	number: number;
+	boolean: boolean;
+	object: Record<string, unknown>;
+	"string[]": string[];
+	"[number, number, boolean, string]": [number, number, boolean, string];
+	"[boolean, [number, number]]": [boolean, [number, number]];
+};
+
+export interface BaseEntry {
 	description?: string;
-	defaultValue?: unknown;
 }
 
-export interface SettingEntry<TDefault = unknown> extends BaseEntry {
+// biome-ignore lint/suspicious/noExplicitAny: Wawa
+export type SettingEntry<K extends keyof InputTypeMap = keyof InputTypeMap> = K extends any ? {
 	name: string;
-	inputType: InputType;
-	defaultValue: TDefault;
+	inputType: K;
+	defaultValue: InputTypeMap[K];
 	accept?: string;
 	encrypted?: boolean;
-	options?: readonly string[] | [string, string][];
+	options?: readonly string[] | readonly [string, string][] | Record<string, unknown>;
 	showAfter?: {
 		key: string;
-		condition: (value: DynamicConfigValue) => boolean;
+		condition: (value: unknown) => boolean;
 	};
 	onChange?: string;
-}
+} & BaseEntry : never;
 
-export interface HiddenEntry<TDefault = unknown> extends BaseEntry {
-	outputType?: string;
-	defaultValue: TDefault;
-	inputType?: undefined;
-}
+// biome-ignore lint/suspicious/noExplicitAny: Wawa
+export type HiddenEntry<K extends keyof OutputTypeMap = keyof OutputTypeMap> = K extends any ? {
+	name?: never;
+	inputType?: never;
+	outputType: K;
+	defaultValue: OutputTypeMap[K];
+} & BaseEntry : never;
 
 export interface ButtonEntry {
 	name: string;
 	onClick: string;
-	inputType?: undefined;
-	defaultValue?: undefined;
 }
 
-type SchemaEntry = SettingEntry | HiddenEntry | ButtonEntry;
+export type SchemaEntry = SettingEntry | HiddenEntry | ButtonEntry;
+export type SchemaStructure = Record<string, Record<string, SchemaEntry>>;
 
-type SchemaStructure = Record<string, Record<string, SchemaEntry>>;
+function setting<K extends keyof InputTypeMap>(
+	inputType: K,
+	config: Omit<SettingEntry<K>, "inputType">
+): SettingEntry<K> {
+	// @ts-expect-error
+	return { inputType, ...config };
+}
 
-// https://github.com/Milkshiift/GoofCord/wiki/How-to-develop-GoofCord#entries
+function hidden<K extends keyof OutputTypeMap>(
+	outputType: K,
+	defaultValue: OutputTypeMap[K],
+	config?: Omit<HiddenEntry<K>, "outputType" | "defaultValue">
+): HiddenEntry<K> {
+	// @ts-expect-error
+	return { outputType, defaultValue, ...config };
+}
+
+function button(name: string, onClick: string): ButtonEntry {
+	return { name, onClick };
+}
+
+
 export const settingsSchema = {
 	General: {
-		locale: {
+		locale: setting("dropdown", {
 			name: "Language 🌍",
 			defaultValue: "en-US",
 			description: 'This is different from Discord\'s language. You can translate GoofCord <a target="_blank" href="https://hosted.weblate.org/projects/goofcord/goofcord/">here</a>.',
-			inputType: "dropdown",
 			options: allLangs,
 			onChange: "settings:hotreloadLocale",
-		},
-		discordUrl: {
+		}),
+		discordUrl: setting("textfield", {
 			name: "Discord URL",
 			defaultValue: "https://discord.com/app",
 			description: 'URL that GoofCord will load on launch. Add "canary." or "ptb." before "discord.com" for respective instances.',
-			inputType: "textfield",
-		},
-		arrpc: {
+		}),
+		arrpc: setting("checkbox", {
 			name: "Activity display",
 			defaultValue: false,
-			description:
-				'Enables an open source reimplementation of Discord\'s\nrich presence called <a target="_blank" href="https://github.com/OpenAsar/arrpc">arRPC</a>.\nA <a target="_blank" href="https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence">workaround</a> is needed for arRPC to work on Flatpak',
-			inputType: "checkbox",
+			description: 'Enables an open source reimplementation of Discord\'s\nrich presence called <a target="_blank" href="https://github.com/OpenAsar/arrpc">arRPC</a>.\nA <a target="_blank" href="https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence">workaround</a> is needed for arRPC to work on Flatpak',
 			onChange: "arrpc:initArrpc",
-		},
-		minimizeToTray: {
+		}),
+		minimizeToTray: setting("checkbox", {
 			name: "Minimize to tray",
 			defaultValue: true,
 			description: "GoofCord stays open even after closing all windows.",
-			inputType: "checkbox",
-		},
-		startMinimized: {
+		}),
+		startMinimized: setting("checkbox", {
 			name: "Start minimized",
 			defaultValue: false,
 			description: "GoofCord starts in the background.",
-			inputType: "checkbox",
-		},
-		launchWithOsBoot: {
+		}),
+		launchWithOsBoot: setting("checkbox", {
 			name: "Launch GoofCord on startup",
 			defaultValue: false,
 			description: "Start GoofCord automatically on system boot. May not work in some Linux environments.",
-			inputType: "checkbox",
 			onChange: "loader:setAutoLaunchState",
-		},
-		updateNotification: {
+		}),
+		updateNotification: setting("checkbox", {
 			name: "Update notification",
 			defaultValue: true,
 			description: "Get notified about new version releases.",
-			inputType: "checkbox",
-		},
-		spellcheck: {
+		}),
+		spellcheck: setting("checkbox", {
 			name: "Spellcheck",
 			defaultValue: true,
 			description: "Enables spellcheck for input fields.",
-			inputType: "checkbox",
-		},
-		spellcheckLanguages: {
+		}),
+		spellcheckLanguages: setting("dropdown-multiselect", {
 			name: "Spellcheck languages",
-			defaultValue: [] as string[],
+			defaultValue: [], // Inferred as string[] automatically
 			description: "A list of languages to check spelling for. When none are selected, the system default is used.",
-			inputType: "dropdown-multiselect",
 			options: spellcheckLangs,
 			showAfter: {
 				key: "spellcheck",
-				condition: (value: unknown) => !!value,
+				condition: (value) => !!value,
 			},
-		},
+		}),
 	},
 	Appearance: {
-		customTitlebar: {
+		customTitlebar: setting("checkbox", {
 			name: "Custom titlebar",
 			defaultValue: true,
 			description: "Enables a Discord-like titlebar.",
-			inputType: "checkbox",
-		},
-		disableAltMenu: {
+		}),
+		disableAltMenu: setting("checkbox", {
 			name: "Disable application menu",
 			defaultValue: false,
 			description: "Stops Alt key from opening the app menu.",
-			inputType: "checkbox",
 			showAfter: {
 				key: "customTitlebar",
-				condition: (value: unknown) => {
-					return value === false;
-				},
+				condition: (value) => value === false,
 			},
-		},
-		staticTitle: {
+		}),
+		staticTitle: setting("checkbox", {
 			name: "Static title",
 			defaultValue: false,
 			description: "Prevent Discord from changing the window title.",
-			inputType: "checkbox",
-		},
-		dynamicIcon: {
+		}),
+		dynamicIcon: setting("checkbox", {
 			name: "Dynamic icon",
 			defaultValue: true,
 			description: "Shows pings/mentions count on GoofCord's icon and its tray. On Linux, pings on the taskbar only work when unitylib is installed.",
-			inputType: "checkbox",
-		},
-		unreadBadge: {
+		}),
+		unreadBadge: setting("checkbox", {
 			name: "Unread badge",
 			defaultValue: false,
 			description: "Shows if you have any unread messages on GoofCord's icon as a dot.",
-			inputType: "checkbox",
 			showAfter: {
 				key: "dynamicIcon",
-				condition: (value: unknown) => {
-					return value === true;
-				},
+				condition: (value) => value === true,
 			},
-		},
-		customIconPath: {
+		}),
+		customIconPath: setting("file", {
 			name: "Custom Icon",
 			defaultValue: "",
 			description: "Select an alternative icon for GoofCord to use. Images with transparency are recommended.",
-			inputType: "file",
 			accept: "image/*",
-		},
-		trayIcon: {
+		}),
+		trayIcon: setting("dropdown", {
 			name: "Tray icon",
 			defaultValue: "default",
 			description: "What tray icon to use. Symbolic attempts to mimic Gnome's monochromatic icons.",
-			inputType: "dropdown",
 			options: ["default", "symbolic_black", "symbolic_white"],
 			showAfter: {
 				key: "trayIcon",
-				condition: (_value: unknown) => {
-					return process.platform === "linux";
-				},
+				condition: () => process.platform === "linux",
 			},
-		},
-		autoscroll: {
+		}),
+		autoscroll: setting("checkbox", {
 			name: "Auto-scroll",
 			defaultValue: false,
 			description: "Enables auto-scrolling with middle mouse button.",
-			inputType: "checkbox",
 			showAfter: {
 				key: "autoscroll",
-				condition: (_value: unknown) => {
-					return process.platform === "linux";
-				},
+				condition: () => process.platform === "linux",
 			},
-		},
-		popoutWindowAlwaysOnTop: {
+		}),
+		popoutWindowAlwaysOnTop: setting("checkbox", {
 			name: "Pop out window always on top",
 			defaultValue: true,
 			description: "Makes voice chat pop out window always stay above other windows.",
-			inputType: "checkbox",
-		},
-		transparency: {
+		}),
+		transparency: setting("checkbox", {
 			name: "Transparency",
 			defaultValue: false,
 			description: "Makes the window transparent for use with translucent themes.",
-			inputType: "checkbox",
-		},
-		disableSettingsAnimations: {
+		}),
+		disableSettingsAnimations: setting("checkbox", {
 			name: "Disable settings animations",
 			defaultValue: false,
 			description: "Disables all animations in this window.",
-			inputType: "checkbox",
 			onChange: "settings:reloadWindow",
-		},
+		}),
 	},
-	"Client Mods": {
-		modNames: {
-			name: "Client mods",
-			defaultValue: ["shelter", "vencord"],
-			description:
-				'What client mods to use. <b>You shouldn\'t disable Shelter</b> as it is used by many GoofCord features. Do not mix forks of the same mod (e.g. Vencord and Equicord). <a target="_blank" href="https://github.com/Milkshiift/GoofCord/wiki/FAQ#how-do-i-add-a-custom-client-mod">Client mod I want to use is not listed</a>.',
-			inputType: "dropdown-multiselect",
-			options: ["vencord", "equicord", "shelter", "custom"],
-			onChange: "mods:updateModsFull",
-		},
-		modEtagCache: {
-			defaultValue: {},
-			outputType: "object",
-		},
-		customJsBundle: {
-			name: "Custom JS bundle",
-			defaultValue: "",
-			description: "",
-			inputType: "textfield",
-			showAfter: {
-				key: "modNames",
-				condition: (value: string[]) => {
-					return value.includes("custom");
-				},
+	Assets: {
+		assets: setting("dictionary", {
+			name: "External Assets",
+			description: "Manage external scripts and styles. Key is the filename, Value is the URL.",
+			defaultValue: {
+				Vencord: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",
+				VencordStyles: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
 			},
+			options: [
+				["Vencord", "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js"],
+				["VencordStyles", "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js"],
+				["Shelter", "https://raw.githubusercontent.com/uwu/shelter-builds/main/shelter.js"],
+			],
 			onChange: "mods:updateModsFull",
-		},
-		customCssBundle: {
-			name: "Custom CSS bundle",
-			defaultValue: "",
-			description: "A raw link to the JS bundle and CSS bundle of a client mod you want to use.",
-			inputType: "textfield",
-			showAfter: {
-				key: "modNames",
-				condition: (value: string[]) => {
-					return value.includes("custom");
-				},
-			},
-			onChange: "mods:updateModsFull",
-		},
-		noBundleUpdates: {
-			defaultValue: false,
-			outputType: "boolean",
-		},
-		installDefaultShelterPlugins: {
-			defaultValue: true,
-			outputType: "boolean",
-		},
-		invidiousEmbeds: {
+		}),
+		assetEtags: hidden("object", {}),
+		managedFiles: hidden("string[]", []),
+		invidiousEmbeds: setting("checkbox", {
 			name: "Invidious embeds",
 			defaultValue: false,
 			description: "Replaces YouTube embeds with Invidious embeds.",
-			inputType: "checkbox",
 			onChange: "invidiousConfigChanged",
-		},
-		invidiousInstance: {
+		}),
+		invidiousInstance: setting("textfield", {
 			name: "Instance",
 			defaultValue: "https://invidious.nerdvpn.de",
 			description: "What Invidious instance to use. If videos fail to load, try changing it to a different one and disabling auto-updates.",
-			inputType: "textfield",
 			onChange: "invidiousConfigChanged",
 			showAfter: {
 				key: "invidiousEmbeds",
-				condition: (value: boolean) => {
-					return value === true;
-				},
+				condition: (value) => value === true,
 			},
-		},
-		autoUpdateInvidiousInstance: {
+		}),
+		autoUpdateInvidiousInstance: setting("checkbox", {
 			name: "Auto-update instance",
 			defaultValue: true,
 			description: "Automatically finds an available instance with the lowest latency.",
-			inputType: "checkbox",
 			showAfter: {
 				key: "invidiousEmbeds",
-				condition: (value: boolean) => {
-					return value === true;
-				},
+				condition: (value) => value === true,
 			},
-		},
-		lastInvidiousUpdate: {
-			defaultValue: 0,
-			outputType: "number",
-		},
-		messageEncryption: {
+		}),
+		lastInvidiousUpdate: hidden("number", 0),
+		messageEncryption: setting("checkbox", {
 			name: "Message encryption",
 			defaultValue: false,
 			description: 'See <a target="_blank" href="https://github.com/Milkshiift/GoofCord/wiki/Message-Encryption">message encryption</a>.',
-			inputType: "checkbox",
-		},
-		encryptionPasswords: {
+		}),
+		encryptionPasswords: setting("textarea", {
 			name: "Encryption passwords",
-			defaultValue: [] as string[],
+			defaultValue: [],
 			description: "Securely stored, encrypted list of passwords that will be used for encryption. A backup in a warm, safe place is recommended. Separate entries with commas.",
-			inputType: "textarea",
 			encrypted: true,
 			showAfter: {
 				key: "messageEncryption",
-				condition: (value: boolean) => {
-					return value === true;
-				},
+				condition: (value) => value === true,
 			},
-		},
-		encryptionCover: {
+		}),
+		encryptionCover: setting("textfield", {
 			name: "Encryption cover",
 			defaultValue: "",
 			description: "A message that a user without the password will see. At least two words or empty.",
-			inputType: "textfield",
 			showAfter: {
 				key: "messageEncryption",
-				condition: (value: boolean) => {
-					return value === true;
-				},
+				condition: (value) => value === true,
 			},
-		},
-		encryptionMark: {
+		}),
+		encryptionMark: setting("textfield", {
 			name: "Encryption Mark",
 			defaultValue: "| ",
 			description: "A string that will be prepended to each decrypted message so it's easier to know what messages are encrypted.",
-			inputType: "textfield",
 			showAfter: {
 				key: "messageEncryption",
-				condition: (value: boolean) => {
-					return value === true;
-				},
+				condition: (value) => value === true,
 			},
-		},
+		}),
 	},
 	Other: {
-		domOptimizer: {
+		domOptimizer: setting("checkbox", {
 			name: "DOM optimizer",
 			defaultValue: true,
 			description: "Defers DOM updates to possibly improve performance. May cause visual artifacts.",
-			inputType: "checkbox",
-		},
-		renderingOptimizations: {
+		}),
+		renderingOptimizations: setting("checkbox", {
 			name: "Rendering optimizations",
 			defaultValue: true,
 			description: "Applies CSS optimizations to improve scrolling smoothness. May cause text to become blurry if used with some themes.",
-			inputType: "checkbox",
-		},
-		forceDedicatedGPU: {
+		}),
+		forceDedicatedGPU: setting("checkbox", {
 			name: "Force dedicated GPU",
 			defaultValue: false,
 			description: "Forces GoofCord to use a dedicated GPU if available.",
-			inputType: "checkbox",
-		},
-		performanceFlags: {
+		}),
+		performanceFlags: setting("checkbox", {
 			name: "Performance flags",
 			defaultValue: false,
 			description: "Enables additional Chromium flags for performance. Recommended ON unless causes issues.",
-			inputType: "checkbox",
-		},
-		hardwareAcceleration: {
+		}),
+		hardwareAcceleration: setting("checkbox", {
 			name: "Hardware acceleration",
 			defaultValue: true,
 			description: "Disabling can help fix some rendering issues.",
-			inputType: "checkbox",
-		},
-		disableGpuCompositing: {
-			defaultValue: false,
-			outputType: "boolean",
-		},
-		spoofChrome: {
+		}),
+		disableGpuCompositing: hidden("boolean", false),
+		spoofChrome: setting("checkbox", {
 			name: "Spoof Chrome",
 			defaultValue: true,
-			inputType: "checkbox",
 			description: "Emulates the Chrome web browser to better blend in with normal traffic.",
-		},
-		spoofWindows: {
+		}),
+		spoofWindows: setting("checkbox", {
 			name: "Spoof Windows (VPN block bypass)",
 			defaultValue: false,
-			inputType: "checkbox",
 			description: "Emulates the Windows platform. Enable this if Discord fails to load with a VPN.",
 			showAfter: {
 				key: "spoofChrome",
-				condition: () => {
-					return process.platform !== "win32";
-				},
+				condition: () => process.platform !== "win32",
 			},
-		},
-		firewall: {
+		}),
+		firewall: setting("checkbox", {
 			name: "Firewall",
 			defaultValue: true,
 			description: "Never disable unless for debugging.",
-			inputType: "checkbox",
-		},
-		customFirewallRules: {
+		}),
+		customFirewallRules: setting("checkbox", {
 			name: "Custom firewall rules",
 			defaultValue: false,
 			description: "Override the default rules.",
-			inputType: "checkbox",
-		},
-		blocklist: {
+		}),
+		blocklist: setting("textarea", {
 			name: "Blocklist",
 			defaultValue: [
 				"https://*/api/v*/science",
@@ -472,127 +364,88 @@ export const settingsSchema = {
 				"https://www.youtube.com/youtubei/v*/log_event?*",
 			],
 			description: "A list of URLs to block. Each entry must be separated by a comma.",
-			inputType: "textarea",
 			showAfter: {
 				key: "customFirewallRules",
-				condition: (value: boolean) => {
-					return value === true;
-				},
+				condition: (value) => value === true,
 			},
-		},
-		blockedStrings: {
+		}),
+		blockedStrings: setting("textarea", {
 			name: "Blocked strings",
 			defaultValue: ["sentry", "google", "tracking", "stats", "\\.spotify", "pagead", "analytics", "doubleclick"],
 			description: "If any of specified strings are in the URL, it will be blocked.",
-			inputType: "textarea",
 			showAfter: {
 				key: "customFirewallRules",
-				condition: (value: boolean) => {
-					return value === true;
-				},
+				condition: (value) => value === true,
 			},
-		},
-		allowedStrings: {
+		}),
+		allowedStrings: setting("textarea", {
 			name: "Allowed strings",
 			defaultValue: ["videoplayback", "discord-attachments", "googleapis", "search", "api.spotify", "discord.com/assets/sentry."],
 			description: "If any of specified strings are in the URL, it will *not* be blocked.",
-			inputType: "textarea",
 			showAfter: {
 				key: "customFirewallRules",
-				condition: (value: boolean) => {
-					return value === true;
-				},
+				condition: (value) => value === true,
 			},
-		},
-		screensharePreviousSettings: {
-			defaultValue: [720, 30, false, "motion"] as [number, number, boolean, string],
-			outputType: "[number, number, boolean, string]",
-		},
-		"windowState:main": {
-			defaultValue: [true, [835, 600]] as [boolean, [number, number]],
-			outputType: "[boolean, [number, number]]",
-		},
-		"button-openGoofCordFolder": {
-			name: "Open GoofCord folder",
-			onClick: "settings.openFolder('GoofCord')",
-		},
-		"button-clearCache": {
-			name: "Clear cache",
-			onClick: "settings.clearCache()",
-		},
+		}),
+		screensharePreviousSettings: hidden("[number, number, boolean, string]", [720, 30, false, "motion"]),
+		"windowState:main": hidden("[boolean, [number, number]]", [true, [835, 600]]),
+		"button-openGoofCordFolder": button("Open GoofCord folder", "settings.openFolder('GoofCord')"),
+		"button-clearCache": button("Clear cache", "settings.clearCache()"),
 	},
 	Cloud: {
-		autoSaveCloud: {
+		autoSaveCloud: setting("checkbox", {
 			name: "Auto save",
 			defaultValue: false,
 			description: "Automatically save settings to cloud when they change.",
-			inputType: "checkbox",
-		},
-		cloudHost: {
+		}),
+		cloudHost: setting("textfield", {
 			name: "Cloud Host",
 			description: 'GoofCord Cloud Server URL. You can self-host it yourself, see the <a target="_blank" href="https://github.com/Wuemeli/goofcord-cloudserver">repository</a>.',
 			defaultValue: "https://goofcordcloud.wuemeli.com",
-			inputType: "textfield",
-		},
-		cloudToken: {
-			defaultValue: "",
-			outputType: "string",
-		},
-		cloudEncryptionKey: {
+		}),
+		cloudToken: hidden("string", ""),
+		cloudEncryptionKey: setting("textfield", {
 			name: "Cloud Encryption Key",
 			defaultValue: "",
 			description: "Leave empty to not use encryption and not save message encryption passwords on cloud. You can't recover your password if you lose it.",
-			inputType: "textfield",
 			encrypted: true,
-		},
-		"button-loadFromCloud": {
-			name: "Load from cloud",
-			onClick: "settings.loadCloud()",
-		},
-		"button-saveToCloud": {
-			name: "Save to cloud",
-			onClick: "settings.saveCloud()",
-		},
-		"button-deleteCloud": {
-			name: "Delete cloud data",
-			onClick: "settings.deleteCloud()",
-		},
+		}),
+		"button-loadFromCloud": button("Load from cloud", "settings.loadCloud()"),
+		"button-saveToCloud": button("Save to cloud", "settings.saveCloud()"),
+		"button-deleteCloud": button("Delete cloud data", "settings.deleteCloud()"),
 	},
-} satisfies SchemaStructure;
+} as const satisfies SchemaStructure;
+
 
 type RawSchema = typeof settingsSchema;
 type SectionKeys = keyof RawSchema;
+type IsButtonKey<K extends PropertyKey> = K extends `button-${string}` ? true : false;
 
-type AllKeys = {
-	[S in SectionKeys]: keyof RawSchema[S];
+export type ConfigKey = {
+	[S in SectionKeys]: {
+		[K in keyof RawSchema[S]]: IsButtonKey<K> extends true ? never : K
+	}[keyof RawSchema[S]]
 }[SectionKeys];
 
-export type ConfigKey = Exclude<AllKeys, `button-${string}`>;
-
-type InferValueType<T> = T extends { inputType: "checkbox" } ? boolean : T extends { inputType: "textfield" | "dropdown" | "file" } ? string : T extends { inputType: "textarea" | "dropdown-multiselect" } ? string[] : T extends { defaultValue: infer D } ? D : unknown;
-
-export type ConfigValue<K extends ConfigKey> = { [S in SectionKeys]: K extends keyof RawSchema[S] ? InferValueType<RawSchema[S][K]> : never }[SectionKeys];
+type EntryForKey<K extends ConfigKey> = {
+	[S in SectionKeys]: K extends keyof RawSchema[S] ? RawSchema[S][K] : never
+}[SectionKeys];
 
 export type Config = {
-	[K in ConfigKey]: ConfigValue<K>;
+	[K in ConfigKey]: EntryForKey<K> extends { defaultValue: infer D } ? D : never
 };
 
 let cachedDefaults: Config | null = null;
+
 export function getDefaults(): Config {
 	if (cachedDefaults) return cachedDefaults;
 
-	const defaults: Partial<Config> = {};
+	const entries = (Object.values(settingsSchema) as Record<string, SchemaEntry>[]).flatMap(section =>
+		Object.entries(section)
+			.filter(([key, entry]) => !key.startsWith("button-") && "defaultValue" in entry)
+			.map(([key, entry]) => [key, (entry as SettingEntry | HiddenEntry).defaultValue])
+	);
 
-	for (const category in settingsSchema) {
-		const categorySettings = settingsSchema[category as keyof typeof settingsSchema];
-		for (const setting in categorySettings) {
-			if (setting.startsWith("button-")) continue;
-			const settingKey = setting as keyof typeof categorySettings;
-			// @ts-expect-error
-			defaults[setting as ConfigKey] = categorySettings[settingKey].defaultValue;
-		}
-	}
-
-	cachedDefaults = defaults as Config;
+	cachedDefaults = Object.fromEntries(entries) as Config;
 	return cachedDefaults;
 }

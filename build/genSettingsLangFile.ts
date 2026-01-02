@@ -94,10 +94,33 @@ function processSettings(objLiteral: ts.ObjectLiteralExpression, _parentCategory
 		const settingKey = getPropertyName(prop.name);
 		if (!settingKey) continue;
 
-		const settingEntry = unwrapExpression(prop.initializer);
+		const node = unwrapExpression(prop.initializer);
 
-		if (ts.isObjectLiteralExpression(settingEntry)) {
-			extractSettingStrings(settingEntry, settingKey, results);
+		if (ts.isCallExpression(node)) {
+			let funcName = "";
+			if (ts.isIdentifier(node.expression)) {
+				funcName = node.expression.text;
+			}
+
+			if (funcName === "setting") {
+				if (node.arguments.length >= 2) {
+					const configArg = unwrapExpression(node.arguments[1]);
+					if (ts.isObjectLiteralExpression(configArg)) {
+						extractSettingStrings(configArg, settingKey, results);
+					}
+				}
+			} else if (funcName === "button") {
+				if (node.arguments.length >= 1) {
+					const nameArg = node.arguments[0];
+					const text = getLiteralText(nameArg);
+					if (text) {
+						results[`opt-${settingKey}`] = text;
+					}
+				}
+			}
+		}
+		else if (ts.isObjectLiteralExpression(node)) {
+			extractSettingStrings(node, settingKey, results);
 		}
 	}
 }

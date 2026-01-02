@@ -1,7 +1,7 @@
 import { setConfig } from "@root/src/stores/config/config.preload.ts";
 import { contextBridge, ipcRenderer } from "electron";
 import { invoke, sendSync } from "../../../ipc/client.preload.ts";
-import { type ConfigKey, type ConfigValue, type SettingEntry, settingsSchema } from "../../../settingsSchema.ts";
+import { type Config, type ConfigKey, type SettingEntry, settingsSchema } from "../../../settingsSchema.ts";
 import { renderSettings } from "./settingsRenderer.ts";
 
 console.log("GoofCord Settings");
@@ -45,7 +45,7 @@ async function saveSettings(changedElement: HTMLElement) {
 	if (settingValue === undefined) return;
 	if (settingData.encrypted) settingValue = encryptSetting(settingValue);
 
-	await setConfig(settingName as ConfigKey, settingValue as ConfigValue<ConfigKey>);
+	await setConfig(settingName as ConfigKey, settingValue);
 	updateVisibility(settingName, settingValue);
 	void invoke("flashTitlebar", "#5865F2");
 
@@ -66,13 +66,13 @@ export function evaluateShowAfter(condition: (value: unknown) => boolean, value:
 	return condition(value);
 }
 
-async function getSettingValue<K extends ConfigKey>(element: HTMLElement, settingName: K): Promise<ConfigValue<K> | undefined> {
+async function getSettingValue<K extends ConfigKey>(element: HTMLElement, settingName: K): Promise<Config[K] | undefined> {
 	try {
 		if (element instanceof HTMLInputElement) {
-			if (element.type === "checkbox") return element.checked as ConfigValue<K>;
+			if (element.type === "checkbox") return element.checked as Config[K];
 			if (element.type === "text") {
-				if (element.dataset.hidden) return JSON.parse(element.value) as ConfigValue<K>;
-				return element.value as ConfigValue<K>;
+				if (element.dataset.hidden) return JSON.parse(element.value) as Config[K];
+				return element.value as Config[K];
 			}
 			// Horror
 			if (element.type === "file") {
@@ -88,7 +88,7 @@ async function getSettingValue<K extends ConfigKey>(element: HTMLElement, settin
 
 						try {
 							const result = await invoke("utils:saveFileToGCFolder", settingName, Buffer.from(new Uint8Array(fileContent)) as unknown as string);
-							resolve(result as ConfigValue<K>);
+							resolve(result as Config[K]);
 						} catch (ipcError) {
 							reject(ipcError);
 						}
@@ -98,9 +98,9 @@ async function getSettingValue<K extends ConfigKey>(element: HTMLElement, settin
 				});
 			}
 		} else if (element instanceof HTMLSelectElement) {
-			return (element.multiple ? Array.from(element.selectedOptions).map((option) => option.value) : element.value) as ConfigValue<K>;
+			return (element.multiple ? Array.from(element.selectedOptions).map((option) => option.value) : element.value) as Config[K];
 		} else if (element instanceof HTMLTextAreaElement) {
-			return createArrayFromTextarea(element.value) as ConfigValue<K>;
+			return createArrayFromTextarea(element.value) as Config[K];
 		}
 		throw new Error(`Unsupported element type for: ${settingName}`);
 	} catch (error) {
@@ -119,7 +119,7 @@ export async function revertSetting(setting: HTMLElement) {
 		if (setting.type === "checkbox" && typeof defaultValue === "boolean") {
 			setting.checked = defaultValue;
 		} else if (setting.type === "file") {
-			await setConfig(elementName as ConfigKey, defaultValue as ConfigValue<ConfigKey>);
+			await setConfig(elementName as ConfigKey, defaultValue);
 			void invoke("flashTitlebar", "#5865F2");
 			return;
 		} else if (typeof defaultValue === "string") {
@@ -139,7 +139,7 @@ function createArrayFromTextarea(input: string): string[] {
 		.filter(Boolean);
 }
 
-export function encryptSetting(settingValue: ConfigValue<ConfigKey>) {
+export function encryptSetting<K extends ConfigKey>(settingValue: Config[K]) {
 	if (typeof settingValue === "string") {
 		return sendSync("utils:encryptSafeStorage", settingValue);
 	}
@@ -149,7 +149,7 @@ export function encryptSetting(settingValue: ConfigValue<ConfigKey>) {
 	return settingValue;
 }
 
-export function decryptSetting(settingValue: ConfigValue<ConfigKey>) {
+export function decryptSetting<K extends ConfigKey>(settingValue: Config[K]) {
 	if (typeof settingValue === "string") {
 		return sendSync("utils:decryptSafeStorage", settingValue);
 	}

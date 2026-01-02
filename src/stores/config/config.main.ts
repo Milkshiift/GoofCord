@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { app, dialog, shell } from "electron";
 import { createHost, type StoreHost } from "electron-sync-store/main";
-import { type Config, type ConfigKey, type ConfigValue, getDefaults } from "../../settingsSchema.ts";
+import { type Config, type ConfigKey, getDefaults } from "../../settingsSchema.ts";
 import { getErrorMessage, getGoofCordFolderPath, tryCreateFolder } from "../../utils.ts";
 import { AppConfigStore } from "./config.shared.ts";
 
@@ -101,12 +101,12 @@ export async function loadConfig(): Promise<void> {
 	await configHost.ready();
 }
 
-export function getConfig<K extends ConfigKey>(key: K, bypassDefault = false): ConfigValue<K> {
+export function getConfig<K extends ConfigKey>(key: K, bypassDefault = false): Config[K] {
 	const current = configHost.get();
 	const value = current[key];
 
 	if (value !== undefined || bypassDefault) {
-		return value as ConfigValue<K>;
+		return value;
 	}
 
 	console.log("Missing config parameter:", key);
@@ -121,7 +121,7 @@ export function sync(): Config {
 	return configHost.get();
 }
 
-export async function setConfig<K extends ConfigKey>(entry: K, value: ConfigValue<K>) {
+export async function setConfig<K extends ConfigKey>(entry: K, value: Config[K]) {
 	return configHost.set({ [entry]: value });
 }
 
@@ -129,8 +129,6 @@ export async function setConfigBulk(toSet: Config) {
 	return configHost.set(toSet);
 }
 
-export function getDefaultValue<K extends ConfigKey>(entry: K): ConfigValue<K>;
-export function getDefaultValue(entry: string): unknown;
-export function getDefaultValue(entry: string): unknown {
-	return getDefaults()[entry as ConfigKey];
+export function getDefaultValue<K extends ConfigKey>(entry: K): Config[K] {
+	return getDefaults()[entry] as Config[K];
 }

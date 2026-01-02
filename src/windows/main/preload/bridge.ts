@@ -1,7 +1,7 @@
 import { getConfig, setConfig } from "@root/src/stores/config/config.preload.ts";
 import { contextBridge, ipcRenderer } from "electron";
 import { invoke, sendSync } from "../../../ipc/client.preload.ts";
-import type { ConfigKey, ConfigValue } from "../../../settingsSchema.ts";
+import type { Config, ConfigKey } from "../../../settingsSchema.ts";
 import { flashTitlebar, flashTitlebarWithText } from "./titlebarFlash.ts";
 
 export let isVencordPresent = false;
@@ -29,7 +29,7 @@ const api = {
 	displayVersion: sendSync("utils:getDisplayVersion"),
 	getVersions: () => process.versions,
 	getConfig: <K extends ConfigKey>(key: K, bypassDefault = false) => getConfig(key, bypassDefault),
-	setConfig: <K extends ConfigKey>(key: K, value: ConfigValue<K>) => setConfig(key, value),
+	setConfig: <K extends ConfigKey>(key: K, value: Config[K]) => setConfig(key, value),
 	encryptMessage: (message: string) => sendSync("messageEncryption:encryptMessage", message),
 	decryptMessage: (message: string) => sendSync("messageEncryption:decryptMessage", message),
 	cycleThroughPasswords: () => invoke("messageEncryption:cycleThroughPasswords"),
