@@ -98,12 +98,14 @@ function updateKeybinds() {
 	void invoke("venbind:setKeybinds", toSend);
 }
 
+export const KeybindApi = {
+	updateKeybinds: debounce(updateKeybinds, 1000),
+};
+
 export function startKeybindWatcher() {
 	updateKeybinds();
 
-	contextBridge.exposeInMainWorld("keybinds", {
-		updateKeybinds: debounce(updateKeybinds, 1000),
-	});
+	contextBridge.exposeInMainWorld("keybinds", KeybindApi);
 
 	void webFrame.executeJavaScript(`
         setTimeout(() => {
