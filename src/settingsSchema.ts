@@ -270,7 +270,7 @@ export const settingsSchema = {
 	Assets: {
 		assets: setting("dictionary", {
 			name: "External Assets",
-			description: "See <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/Asset-Loader\">wiki</a>. Scripts and styles specified here will be downloaded on launch. Make sure to also include the styles of a client mod, if it uses them. Don't mix forks of the same mod, like Vencord and Equicord.",
+			description: 'See <a target="_blank" href="https://github.com/Milkshiift/GoofCord/wiki/Asset-Loader">wiki</a>. Scripts and styles specified here will be downloaded on launch. Make sure to also include the styles of a client mod, if it uses them. Don\'t mix forks of the same mod, like Vencord and Equicord.',
 			defaultValue: {
 				Vencord: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",
 				VencordStyles: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
@@ -384,7 +384,7 @@ export const settingsSchema = {
 			description: "Emulates the Windows platform. Enable this if Discord fails to load with a VPN.",
 			showAfter: {
 				key: "spoofChrome",
-				condition: () => process.platform !== "win32",
+				condition: (value) => process.platform !== "win32" && value === true,
 			},
 		}),
 		firewall: setting("checkbox", {
@@ -496,14 +496,10 @@ export function getDefaults(): Config {
 	return cachedDefaults;
 }
 
-
 let cachedDefinitions: Record<string, SchemaEntry> | null = null;
 export function getDefinition<K extends ConfigKey>(key: K): EntryForKey<K> {
 	if (!cachedDefinitions) {
-		const entries = (Object.values(settingsSchema) as Record<string, SchemaEntry>[]).flatMap((section) =>
-			Object.entries(section)
-				.filter(([k]) => !k.startsWith("button-"))
-		);
+		const entries = (Object.values(settingsSchema) as Record<string, SchemaEntry>[]).flatMap((section) => Object.entries(section).filter(([k]) => !k.startsWith("button-")));
 		cachedDefinitions = Object.fromEntries(entries);
 	}
 

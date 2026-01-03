@@ -1,18 +1,10 @@
 import { getConfig } from "@root/src/stores/config/config.preload.ts";
 import { i } from "@root/src/stores/localization/localization.preload.ts";
 import { sendSync } from "../../../ipc/client.preload.ts";
-import {
-	type ButtonEntry,
-	type Config,
-	type ConfigKey,
-	type SettingEntry,
-	settingsSchema
-} from "../../../settingsSchema.ts";
-import { decryptSetting, evaluateShowAfter } from "./preload.mts";
+import { type ButtonEntry, type Config, type ConfigKey, type InputTypeMap, isEditableSetting, type SettingEntry, settingsSchema } from "../../../settingsSchema.ts";
 import { MultiselectDropdown } from "./uiMultiselectDropdown.ts";
+import { Strategies, type Strategy } from "./uiStrategies.ts";
 import { TabSwitcher } from "./uiSwitcher.ts";
-
-const escapeHTML = (s: string) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 const toId = (name: string) =>
 	name
@@ -20,8 +12,36 @@ const toId = (name: string) =>
 		.replace(/\s+/g, "-")
 		.replace(/[^a-z0-9-]/g, "");
 
+export const fieldsetCache = new Map<ConfigKey, HTMLElement>();
+
+export function evaluateShowAfter(condition: (value: unknown) => boolean, value: unknown): boolean {
+	return condition(value);
+}
+
+export function decryptSetting<K extends ConfigKey>(value: Config[K]): Config[K] {
+	if (typeof value === "string") return sendSync("utils:decryptSafeStorage", value) as Config[K];
+	if (Array.isArray(value)) return value.map((v) => sendSync("utils:decryptSafeStorage", v as string)) as Config[K];
+	return value;
+}
+
+export function getVisibilityMap(): Map<ConfigKey, ConfigKey[]> {
+	const map = new Map<ConfigKey, ConfigKey[]>();
+	for (const category of Object.values(settingsSchema)) {
+		for (const [key, entry] of Object.entries(category)) {
+			const settingEntry = entry as SettingEntry;
+			if (!isEditableSetting(settingEntry) || !settingEntry.showAfter) continue;
+
+			const controllerKey = settingEntry.showAfter.key as ConfigKey;
+			const dependents = map.get(controllerKey) ?? [];
+			dependents.push(key as ConfigKey);
+			map.set(controllerKey, dependents);
+		}
+	}
+	return map;
+}
+
 export async function renderSettings(): Promise<void> {
-	const categories = Object.keys(settingsSchema);
+	const categories = Object.keys(settingsSchema) as Array<keyof typeof settingsSchema>;
 
 	if (getConfig("disableSettingsAnimations")) {
 		document.body.classList.add("disable-animations");
@@ -30,12 +50,18 @@ export async function renderSettings(): Promise<void> {
 	document.body.innerHTML = buildPageHTML(categories);
 
 	new TabSwitcher().init();
-	for (const select of document.querySelectorAll<HTMLSelectElement>("select[multiple]")) {
-		new MultiselectDropdown(select);
+	for (const s of document.querySelectorAll<HTMLSelectElement>("select[multiple]")) {
+		new MultiselectDropdown(s);
+	}
+
+	fieldsetCache.clear();
+	for (const el of document.querySelectorAll<HTMLElement>("fieldset[data-setting-key]")) {
+		const key = el.getAttribute("data-setting-key") as ConfigKey;
+		if (key) fieldsetCache.set(key, el);
 	}
 }
 
-function buildPageHTML(categories: string[]): string {
+function buildPageHTML(categories: Array<keyof typeof settingsSchema>): string {
 	const tabs = categories
 		.map((name, index) => {
 			const id = `panel-${toId(name)}`;
@@ -47,146 +73,73 @@ function buildPageHTML(categories: string[]): string {
 	const panels = categories
 		.map((name, idx) => {
 			const id = `panel-${toId(name)}`;
-			const category = settingsSchema[name as keyof typeof settingsSchema];
-
+			const category = settingsSchema[name]; // Now strictly typed
 			let settingsHTML = "";
 			let buttonsHTML = "";
 
 			for (const [key, entry] of Object.entries(category)) {
+				// Type guard logic for keys
 				if (key.startsWith("button-")) {
-					buttonsHTML += buildButtonHTML(key, entry as ButtonEntry);
+					buttonsHTML += `<button type="button" onclick="${(entry as ButtonEntry).onClick}">${i(`opt-${key}`)}</button>`;
 				} else {
 					settingsHTML += buildSettingHTML(key as ConfigKey, entry as SettingEntry);
 				}
 			}
 
 			return `
-        <div id="${id}" class="content-panel${idx === 0 ? " active" : ""}">
-          <form class="settingsContainer">
-            ${settingsHTML}
-            ${buttonsHTML ? `<div class="buttonContainer">${buttonsHTML}</div>` : ""}
-          </form>
-        </div>
-      `;
+			<div id="${id}" class="content-panel${idx === 0 ? " active" : ""}">
+				<form class="settingsContainer">
+					${settingsHTML}
+					${buttonsHTML ? `<div class="buttonContainer">${buttonsHTML}</div>` : ""}
+				</form>
+			</div>`;
 		})
 		.join("");
 
 	const encryptionWarning = sendSync("utils:isEncryptionAvailable") ? "" : `<div class="message warning"><p>${i("settings-encryption-unavailable")}</p></div>`;
 
 	return `
-    <div class="settings-page-container">
-      <header class="settings-header">
-        <nav class="settings-tabs" aria-label="Settings Categories">${tabs}</nav>
-      </header>
-      ${encryptionWarning}
-      <div class="settings-content">${panels}</div>
-    </div>
-  `;
+		<div class="settings-page-container">
+			<header class="settings-header">
+				<nav class="settings-tabs" aria-label="Settings Categories">${tabs}</nav>
+			</header>
+			${encryptionWarning}
+			<div class="settings-content">${panels}</div>
+		</div>`;
 }
 
 function buildSettingHTML(key: ConfigKey, entry: SettingEntry): string {
 	let value = getConfig(key);
+	if (entry.encrypted && typeof value === "string") value = decryptSetting(value);
 
-	if (entry.encrypted && typeof value === "string") {
-		value = decryptSetting(value);
+	const showAfterKey = entry.showAfter?.key as ConfigKey;
+	let isHidden = false;
+
+	if (!entry.name) isHidden = true;
+	else if (entry.showAfter) {
+		const controllerValue = getConfig(showAfterKey);
+		isHidden = !evaluateShowAfter(entry.showAfter.condition, controllerValue);
 	}
 
-	const isHidden = !entry.name || (entry.showAfter && !evaluateShowAfter(entry.showAfter.condition, getConfig(entry.showAfter.key as ConfigKey)));
-
-	const isOffset = entry.showAfter && entry.showAfter.key !== key;
+	const isOffset = entry.showAfter && showAfterKey !== key;
 	const name = i(`opt-${key}`) ?? key;
 	const description = i(`opt-${key}-desc`) ?? "";
 
 	const classes = [isHidden && "hidden", isOffset && "offset"].filter(Boolean).join(" ");
 
+	const strategy = Strategies[entry.inputType] as Strategy<typeof entry.inputType>;
+
+	const typedValue = value as InputTypeMap[typeof entry.inputType];
+
+	const inputHTML = !entry.name ? `<input data-hidden="true" setting-name="${key}" id="${key}" class="text" type="text" value="${JSON.stringify(value)}"/>` : strategy.render(entry, key, typedValue);
+
 	return `
-    <fieldset class="${classes}">
-      <div class="checkbox-container">
-        <div class="revert-button" title="Revert to default value"></div>
-        ${buildInputHTML(entry, key, value)}
-        <label for="${key}">${name}</label>
-      </div>
-      <p class="description">${description}</p>
-    </fieldset>
-  `;
-}
-
-function buildInputHTML<K extends ConfigKey>(entry: SettingEntry, key: K, value: Config[K]): string {
-	const attr = `setting-name="${key}" id="${key}"`;
-
-	if (!entry.name) {
-		return `<input data-hidden="true" ${attr} class="text" type="text" value="${escapeHTML(JSON.stringify(value))}"/>`;
-	}
-
-	switch (entry.inputType) {
-		case "checkbox":
-			return `<input ${attr} type="checkbox" ${value ? "checked" : ""}/>`;
-
-		case "textfield":
-			return `<input ${attr} class="text" type="text" value="${escapeHTML(String(value))}"/>`;
-
-		case "textarea": {
-			const text = Array.isArray(value) ? value.join(",\n") : String(value);
-			return `<textarea ${attr}>${escapeHTML(text)}</textarea>`;
-		}
-
-		case "file":
-			return `<input ${attr} accept="${entry.accept || "*"}" type="file"/>`;
-
-		case "dropdown":
-		case "dropdown-multiselect": {
-			const isMulti = entry.inputType === "dropdown-multiselect";
-			const selected = new Set(Array.isArray(value) ? value.map(String) : [String(value)]);
-			const options = Array.isArray(entry.options) ? entry.options : Object.keys(entry.options ?? {});
-
-			const optionsHTML = options.map((opt) => `<option value="${opt}"${selected.has(String(opt)) ? " selected" : ""}>${opt}</option>`).join("");
-
-			return `<select ${attr} class="left dropdown" name="${key}"${isMulti ? " multiple" : ""}>${optionsHTML}</select>`;
-		}
-
-		case "dictionary": {
-			const dictValue = (value ?? {}) as Record<string, string>;
-			const rows = Object.entries(dictValue)
-				.map(([k, v]) => buildDictionaryRowHTML(k, v))
-				.join("");
-
-			const presets = (Array.isArray(entry.options) ? entry.options : []) as Array<string | [string, string]>;
-			const presetsHTML = presets
-				.map((opt) => {
-					const [k, v] = Array.isArray(opt) ? opt : [opt, ""];
-					return `<option value="${escapeHTML(k)}" data-val="${escapeHTML(v)}">${escapeHTML(k)}</option>`;
-				})
-				.join("");
-
-			return `
-        <div class="dictionary-container" ${attr}>
-          <div class="dictionary-rows">${rows}</div>
-          <div class="dictionary-controls">
-            <select class="dictionary-preset-select">
-              <option value="" disabled selected>${i("settings-dictionary-add")}</option>
-              <option value="$$empty$$">${i("settings-dictionary-custom")}</option>
-              ${presetsHTML}
-            </select>
-          </div>
-        </div>
-      `;
-		}
-
-		default:
-			return "";
-	}
-}
-
-export function buildDictionaryRowHTML(key = "", value = ""): string {
-	return `
-    <div class="dictionary-row">
-      <input type="text" class="dict-key" placeholder="${i("settings-dictionary-key")}" value="${escapeHTML(key)}" />
-      <input type="text" class="dict-value" placeholder="${i("settings-dictionary-value")}" value="${escapeHTML(value)}" />
-      <button type="button" class="dictionary-remove-btn" title="Remove">✕</button>
-    </div>
-  `;
-}
-
-function buildButtonHTML(id: string, entry: ButtonEntry): string {
-	return `<button type="button" onclick="${entry.onClick}">${i(`opt-${id}`)}</button>`;
+		<fieldset class="${classes}" data-setting-key="${key}">
+			<div class="checkbox-container">
+				<div class="revert-button" title="Revert to default value"></div>
+				${inputHTML}
+				<label for="${key}">${name}</label>
+			</div>
+			<p class="description">${description}</p>
+		</fieldset>`;
 }
