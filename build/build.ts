@@ -52,7 +52,7 @@ await fs.promises.mkdir(OUT_DIR, { recursive: true });
 console.log("Building...");
 
 const preloadFiles = await searchPreloadFiles();
-const mainEntrypoints = [path.join(SRC_DIR, "main.ts"), path.join(SRC_DIR, "modules", "arrpcWorker.ts")];
+const mainEntrypoints = [path.join(SRC_DIR, "main.ts"), path.join(SRC_DIR, "modules", "arrpc", "arrpcWorker.ts")];
 
 const buildTasks: Promise<void>[] = [];
 

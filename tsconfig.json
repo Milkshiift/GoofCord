@@ -1,6 +1,8 @@
 {
   "include": ["src/**/*", "build/**/*"],
-  "exclude": ["node_modules", "src/modules/arrpcWorker.ts"],
+  "exclude": ["node_modules",
+    "src/modules/arrpc/arrpcWorker.ts"
+  ],
   "compilerOptions": {
     "rootDir": "./",
     "paths": {

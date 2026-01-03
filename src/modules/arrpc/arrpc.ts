@@ -1,9 +1,9 @@
 import path from "node:path";
 import { Worker } from "node:worker_threads";
 import { dialog } from "electron";
-import { getConfig } from "../stores/config/config.main.ts";
-import { dirname, getGoofCordFolderPath } from "../utils.ts";
-import { mainWindow } from "../windows/main/main.ts";
+import { getConfig } from "../../stores/config/config.main.ts";
+import { dirname, getGoofCordFolderPath } from "../../utils.ts";
+import { mainWindow } from "../../windows/main/main.ts";
 
 let worker: Worker | undefined;
 
@@ -15,7 +15,7 @@ export async function initArrpc<IPCHandle>() {
 	if (!getConfig("arrpc")) return;
 
 	try {
-		worker = new Worker(path.join(dirname(), "./modules/arrpcWorker.js"), {
+		worker = new Worker(path.join(dirname(), "./modules/arrpc/arrpcWorker.js"), {
 			workerData: {
 				detectablePath: getGoofCordFolderPath() + "/detectable.json",
 			},

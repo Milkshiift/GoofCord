@@ -2,21 +2,21 @@
 
 import { ipcMain } from "electron";
 import { setAutoLaunchState as ___loader_setAutoLaunchState } from "../loader";
-import { initArrpc as ___modules_arrpc_initArrpc } from "../modules/arrpc";
+import { initArrpc as ___modules_arrpc_arrpc_initArrpc } from "../modules/arrpc/arrpc";
 import { updateAssetsFull as ___modules_assets_assetDownloader_updateAssetsFull } from "../modules/assets/assetDownloader";
 import { getAssets as ___modules_assets_assetLoader_getAssets } from "../modules/assets/assetLoader";
 import { clearCache as ___modules_cacheManager_clearCache } from "../modules/cacheManager";
 import { setBadgeCount as ___modules_dynamicIcon_setBadgeCount } from "../modules/dynamicIcon";
 import { cycleThroughPasswords as ___modules_messageEncryption_cycleThroughPasswords, decryptMessage as ___modules_messageEncryption_decryptMessage, encryptMessage as ___modules_messageEncryption_encryptMessage } from "../modules/messageEncryption";
-import { isVenbindLoaded as ___modules_venbind_isVenbindLoaded, setKeybinds as ___modules_venbind_setKeybinds } from "../modules/venbind";
-import { stopVenmic as ___modules_venmic_stopVenmic } from "../modules/venmic";
+import { isVenbindLoaded as ___modules_native_venbind_isVenbindLoaded, setKeybinds as ___modules_native_venbind_setKeybinds } from "../modules/native/venbind";
+import { stopVenmic as ___modules_native_venmic_stopVenmic } from "../modules/native/venmic";
 import { decryptSafeStorage as ___utils_decryptSafeStorage, encryptSafeStorage as ___utils_encryptSafeStorage, getDisplayVersion as ___utils_getDisplayVersion, getVersion as ___utils_getVersion, isEncryptionAvailable as ___utils_isEncryptionAvailable, saveFileToGCFolder as ___utils_saveFileToGCFolder } from "../utils";
 import { createQuickCssWindow as ___windows_main_quickCssFix_createQuickCssWindow } from "../windows/main/quickCssFix";
 import { deleteCloud as ___windows_settings_cloud_cloud_deleteCloud, loadCloud as ___windows_settings_cloud_cloud_loadCloud, saveCloud as ___windows_settings_cloud_cloud_saveCloud } from "../windows/settings/cloud/cloud";
 import { createSettingsWindow as ___windows_settings_settings_createSettingsWindow, hotreloadLocale as ___windows_settings_settings_hotreloadLocale, invidiousConfigChanged as ___windows_settings_settings_invidiousConfigChanged, openFolder as ___windows_settings_settings_openFolder, reloadWindow as ___windows_settings_settings_reloadWindow } from "../windows/settings/settings";
 
 export function registerAllHandlers() {
-  ipcMain.handle("arrpc:initArrpc", async (event) => { return await ___modules_arrpc_initArrpc(); });
+  ipcMain.handle("arrpc:initArrpc", async (event) => { return await ___modules_arrpc_arrpc_initArrpc(); });
   ipcMain.handle("assetDownloader:updateAssetsFull", async (event) => { return await ___modules_assets_assetDownloader_updateAssetsFull(); });
   ipcMain.on("assetLoader:getAssets", (event) => { event.returnValue = ___modules_assets_assetLoader_getAssets(); });
   ipcMain.handle("cacheManager:clearCache", async (event) => { return await ___modules_cacheManager_clearCache(); });
@@ -40,7 +40,7 @@ export function registerAllHandlers() {
   ipcMain.on("utils:getVersion", (event) => { event.returnValue = ___utils_getVersion(); });
   ipcMain.on("utils:isEncryptionAvailable", (event) => { event.returnValue = ___utils_isEncryptionAvailable(); });
   ipcMain.handle("utils:saveFileToGCFolder", async (event, filePath, content) => { return await ___utils_saveFileToGCFolder(filePath, content); });
-  ipcMain.handle("venbind:isVenbindLoaded", async (event) => { return await ___modules_venbind_isVenbindLoaded(); });
-  ipcMain.handle("venbind:setKeybinds", async (event, keybinds) => { return await ___modules_venbind_setKeybinds(keybinds); });
-  ipcMain.handle("venmic:stopVenmic", (event) => { return ___modules_venmic_stopVenmic(); });
+  ipcMain.handle("venbind:isVenbindLoaded", async (event) => { return await ___modules_native_venbind_isVenbindLoaded(); });
+  ipcMain.handle("venbind:setKeybinds", async (event, keybinds) => { return await ___modules_native_venbind_setKeybinds(keybinds); });
+  ipcMain.handle("venmic:stopVenmic", (event) => { return ___modules_native_venmic_stopVenmic(); });
 }

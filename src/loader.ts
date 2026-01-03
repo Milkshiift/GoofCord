@@ -1,7 +1,7 @@
 import { app, net, session, systemPreferences } from "electron";
 import pc from "picocolors";
 import { registerAllHandlers } from "./ipc/gen.ts";
-import { initArrpc } from "./modules/arrpc.ts";
+import { initArrpc } from "./modules/arrpc/arrpc.ts";
 import { manageAssets, updateAssets } from "./modules/assets/assetDownloader.ts";
 import { categorizeAllAssets, startStyleWatcher } from "./modules/assets/assetLoader.ts";
 import { initFirewall, unstrictCSP } from "./modules/firewall.ts";

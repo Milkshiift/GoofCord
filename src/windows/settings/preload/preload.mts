@@ -5,7 +5,7 @@ import { type ConfigKey, getDefinition, type InputTypeMap, isEditableSetting } f
 import { evaluateShowAfter, fieldsetCache, getVisibilityMap, renderSettings } from "./settingsRenderer.ts";
 import { createDictionaryRow, Strategies, type Strategy } from "./uiStrategies.ts";
 
-console.log("GoofCord Settings: Online");
+console.log("GoofCord Settings");
 
 contextBridge.exposeInMainWorld("settings", {
 	loadCloud: () => invoke("cloud:loadCloud"),

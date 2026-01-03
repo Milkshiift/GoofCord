@@ -1,7 +1,7 @@
 import path from "node:path";
 import { BrowserWindow, desktopCapturer, ipcMain, screen, session } from "electron";
 import pc from "picocolors";
-import { hasPipewirePulse, initVenmic, venmicList, venmicStartSystem } from "../../modules/venmic.ts";
+import { hasPipewirePulse, initVenmic, venmicList, venmicStartSystem } from "../../modules/native/venmic.ts";
 import { dirname, relToAbs } from "../../utils.ts";
 import html from "./renderer/screenshare.html";
 
