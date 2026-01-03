@@ -1,4 +1,7 @@
 import fs from "node:fs/promises";
+import { createWriteStream } from "node:fs";
+import { pipeline } from "node:stream/promises";
+import { Readable } from "node:stream";
 import path from "node:path";
 import { Notification } from "electron";
 import pc from "picocolors";
@@ -117,11 +120,15 @@ export async function updateAssets() {
 					throw new Error(`HTTP ${response.status} ${response.statusText}`);
 				}
 
-				const content = await response.text();
+				if (!response.body) throw new Error("Empty response body");
 
-				// Write to .tmp, then rename.
-				// This prevents partial files if there is a crash mid-write.
-				await fs.writeFile(tempPath, content, "utf-8");
+				const fileStream = createWriteStream(tempPath);
+
+				// biome-ignore lint/suspicious/noExplicitAny: fromWeb expects ReadableStream<any>
+				const readableNodeStream = Readable.fromWeb(response.body as any);
+
+				await pipeline(readableNodeStream, fileStream);
+
 				await fs.rename(tempPath, filepath);
 
 				const newEtag = response.headers.get("ETag");
@@ -155,7 +162,6 @@ export async function updateAssets() {
 
 	if (cacheDirty) await setConfig("assetEtags", etagCache);
 
-	// Batch Notification
 	if (errors.length > 0) {
 		new Notification({
 			title: "Asset Download Issues",
