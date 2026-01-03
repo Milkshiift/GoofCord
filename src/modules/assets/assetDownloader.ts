@@ -15,13 +15,22 @@ export const LOG_PREFIX = pc.yellow("[Asset Manager]");
 const MAX_CONCURRENCY = 5;
 const TIMEOUT_MS = 15000;
 
-function getSafeExtension(urlStr: string): ".js" | ".css" {
+function resolveAssetFilename(name: string, urlStr: string): string {
+	const safeName = name.replace(/[^a-zA-Z0-9_-]/g, "_");
+
+	let extension = ".js";
 	try {
-		const pathname = new URL(urlStr).pathname;
-		return path.extname(pathname).toLowerCase() === ".css" ? ".css" : ".js";
-	} catch {
-		return ".js";
+		const url = new URL(urlStr);
+		const pathExt = path.extname(url.pathname).toLowerCase();
+
+		if (pathExt === ".css") {
+			extension = ".css";
+		}
+	} catch (e) {
+		console.warn(LOG_PREFIX, `Could not parse URL '${urlStr}', defaulting to .js`);
 	}
+
+	return `${safeName}${extension}`;
 }
 
 // Synchronize Filesystem with Config.
@@ -32,9 +41,12 @@ export async function manageAssets() {
 	const managedFiles = new Set(getConfig("managedFiles") as string[]);
 
 	const expectedFiles = new Set<string>();
-	for (const [name, url] of Object.entries(assetsConfig)) {
-		if (!url) continue;
-		expectedFiles.add(`${name}${getSafeExtension(url)}`);
+
+	if (assetsConfig && typeof assetsConfig === 'object') {
+		for (const [name, url] of Object.entries(assetsConfig)) {
+			if (!url) continue;
+			expectedFiles.add(resolveAssetFilename(name, url));
+		}
 	}
 
 	const newManagedList: string[] = [];
@@ -94,7 +106,7 @@ export async function updateAssets() {
 	console.log(LOG_PREFIX, `Checking ${total} assets for updates...`);
 
 	const processAsset = async (name: string, url: string) => {
-		const filename = `${name}${getSafeExtension(url)}`;
+		const filename = resolveAssetFilename(name, url);
 		const filepath = path.join(ASSETS_FOLDER, filename);
 		const tempPath = `${filepath}.tmp`;
 
