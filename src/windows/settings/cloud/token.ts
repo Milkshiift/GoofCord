@@ -85,7 +85,7 @@ async function fetchTokenInternal(): Promise<string> {
 	}
 
 	console.log(LOG_PREFIX, "Got callback URL");
-	settingsWindow.show();
+	settingsWindow?.show();
 
 	// 3. Fetch Token using Callback URL
 	const tokenResponse = await fetch(callbackUrl);

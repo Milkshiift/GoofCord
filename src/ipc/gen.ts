@@ -3,21 +3,22 @@
 import { ipcMain } from "electron";
 import { setAutoLaunchState as ___loader_setAutoLaunchState } from "../loader";
 import { initArrpc as ___modules_arrpc_initArrpc } from "../modules/arrpc";
-import { getAssets as ___modules_assetLoader_getAssets } from "../modules/assetLoader";
+import { updateAssetsFull as ___modules_assets_assetDownloader_updateAssetsFull } from "../modules/assets/assetDownloader";
+import { getAssets as ___modules_assets_assetLoader_getAssets } from "../modules/assets/assetLoader";
 import { clearCache as ___modules_cacheManager_clearCache } from "../modules/cacheManager";
 import { setBadgeCount as ___modules_dynamicIcon_setBadgeCount } from "../modules/dynamicIcon";
 import { cycleThroughPasswords as ___modules_messageEncryption_cycleThroughPasswords, decryptMessage as ___modules_messageEncryption_decryptMessage, encryptMessage as ___modules_messageEncryption_encryptMessage } from "../modules/messageEncryption";
-import { updateModsFull as ___modules_mods_updateModsFull } from "../modules/mods";
 import { isVenbindLoaded as ___modules_venbind_isVenbindLoaded, setKeybinds as ___modules_venbind_setKeybinds } from "../modules/venbind";
 import { stopVenmic as ___modules_venmic_stopVenmic } from "../modules/venmic";
 import { decryptSafeStorage as ___utils_decryptSafeStorage, encryptSafeStorage as ___utils_encryptSafeStorage, getDisplayVersion as ___utils_getDisplayVersion, getVersion as ___utils_getVersion, isEncryptionAvailable as ___utils_isEncryptionAvailable, saveFileToGCFolder as ___utils_saveFileToGCFolder } from "../utils";
 import { createQuickCssWindow as ___windows_main_quickCssFix_createQuickCssWindow } from "../windows/main/quickCssFix";
 import { deleteCloud as ___windows_settings_cloud_cloud_deleteCloud, loadCloud as ___windows_settings_cloud_cloud_loadCloud, saveCloud as ___windows_settings_cloud_cloud_saveCloud } from "../windows/settings/cloud/cloud";
-import { createSettingsWindow as ___windows_settings_settings_createSettingsWindow, hotreloadLocale as ___windows_settings_settings_hotreloadLocale, reloadWindow as ___windows_settings_settings_reloadWindow } from "../windows/settings/settings";
+import { createSettingsWindow as ___windows_settings_settings_createSettingsWindow, hotreloadLocale as ___windows_settings_settings_hotreloadLocale, invidiousConfigChanged as ___windows_settings_settings_invidiousConfigChanged, openFolder as ___windows_settings_settings_openFolder, reloadWindow as ___windows_settings_settings_reloadWindow } from "../windows/settings/settings";
 
 export function registerAllHandlers() {
   ipcMain.handle("arrpc:initArrpc", async (event) => { return await ___modules_arrpc_initArrpc(); });
-  ipcMain.on("assetLoader:getAssets", (event) => { event.returnValue = ___modules_assetLoader_getAssets(); });
+  ipcMain.handle("assetDownloader:updateAssetsFull", async (event) => { return await ___modules_assets_assetDownloader_updateAssetsFull(); });
+  ipcMain.on("assetLoader:getAssets", (event) => { event.returnValue = ___modules_assets_assetLoader_getAssets(); });
   ipcMain.handle("cacheManager:clearCache", async (event) => { return await ___modules_cacheManager_clearCache(); });
   ipcMain.handle("cloud:deleteCloud", async (event) => { return await ___windows_settings_cloud_cloud_deleteCloud(); });
   ipcMain.handle("cloud:loadCloud", async (event) => { return await ___windows_settings_cloud_cloud_loadCloud(); });
@@ -27,10 +28,11 @@ export function registerAllHandlers() {
   ipcMain.handle("messageEncryption:cycleThroughPasswords", (event) => { return ___modules_messageEncryption_cycleThroughPasswords(); });
   ipcMain.on("messageEncryption:decryptMessage", (event, message) => { event.returnValue = ___modules_messageEncryption_decryptMessage(message); });
   ipcMain.on("messageEncryption:encryptMessage", (event, message) => { event.returnValue = ___modules_messageEncryption_encryptMessage(message); });
-  ipcMain.handle("mods:updateModsFull", async (event) => { return await ___modules_mods_updateModsFull(); });
   ipcMain.handle("quickCssFix:createQuickCssWindow", async (event) => { return await ___windows_main_quickCssFix_createQuickCssWindow(); });
   ipcMain.handle("settings:createSettingsWindow", async (event) => { return await ___windows_settings_settings_createSettingsWindow(); });
   ipcMain.handle("settings:hotreloadLocale", async (event) => { return await ___windows_settings_settings_hotreloadLocale(); });
+  ipcMain.handle("settings:invidiousConfigChanged", async (event) => { return await ___windows_settings_settings_invidiousConfigChanged(); });
+  ipcMain.handle("settings:openFolder", async (event, folder) => { return await ___windows_settings_settings_openFolder(folder); });
   ipcMain.handle("settings:reloadWindow", async (event) => { return await ___windows_settings_settings_reloadWindow(); });
   ipcMain.on("utils:decryptSafeStorage", (event, encryptedBase64) => { event.returnValue = ___utils_decryptSafeStorage(encryptedBase64); });
   ipcMain.on("utils:encryptSafeStorage", (event, plaintextString) => { event.returnValue = ___utils_encryptSafeStorage(plaintextString); });

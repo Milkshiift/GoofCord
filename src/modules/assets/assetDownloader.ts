@@ -1,0 +1,170 @@
+import fs from "node:fs/promises";
+import path from "node:path";
+import { Notification } from "electron";
+import pc from "picocolors";
+import { getConfig, setConfig } from "../../stores/config/config.main.ts";
+import { getErrorMessage, isPathAccessible } from "../../utils.ts";
+import { profile } from "../chromeSpoofer.ts";
+import { ASSETS_FOLDER } from "./assetLoader.ts";
+
+export const LOG_PREFIX = pc.yellow("[Asset Manager]");
+
+const MAX_CONCURRENCY = 5;
+const TIMEOUT_MS = 15000;
+
+function getSafeExtension(urlStr: string): ".js" | ".css" {
+	try {
+		const pathname = new URL(urlStr).pathname;
+		return path.extname(pathname).toLowerCase() === ".css" ? ".css" : ".js";
+	} catch {
+		return ".js";
+	}
+}
+
+// Synchronize Filesystem with Config.
+export async function manageAssets() {
+	await fs.mkdir(ASSETS_FOLDER, { recursive: true });
+
+	const assetsConfig = getConfig("assets") as Record<string, string>;
+	const managedFiles = new Set(getConfig("managedFiles") as string[]);
+
+	const expectedFiles = new Set<string>();
+	for (const [name, url] of Object.entries(assetsConfig)) {
+		if (!url) continue;
+		expectedFiles.add(`${name}${getSafeExtension(url)}`);
+	}
+
+	const newManagedList: string[] = [];
+	let configDirty = false;
+	let missingAssetsDetected = false;
+
+	// Clean up
+	for (const filename of managedFiles) {
+		if (!expectedFiles.has(filename)) {
+			const filePath = path.join(ASSETS_FOLDER, filename);
+			try {
+				await fs.rm(filePath, { force: true });
+				console.log(LOG_PREFIX, `Garbage collected: ${filename}`);
+				configDirty = true;
+			} catch (e) {
+				console.error(LOG_PREFIX, `Failed to delete orphan ${filename}:`, e);
+				// Retry next boot
+				newManagedList.push(filename);
+			}
+		} else {
+			newManagedList.push(filename);
+		}
+	}
+
+	// Add new expected files to the list immediately
+	for (const filename of expectedFiles) {
+		if (!managedFiles.has(filename)) {
+			newManagedList.push(filename);
+			configDirty = true;
+		}
+
+		const filePath = path.join(ASSETS_FOLDER, filename);
+		if (!(await isPathAccessible(filePath))) {
+			missingAssetsDetected = true;
+		}
+	}
+
+	if (configDirty) {
+		await setConfig("managedFiles", newManagedList);
+	}
+
+	return missingAssetsDetected;
+}
+
+// Network update
+export async function updateAssets() {
+	const assetsConfig = getConfig("assets") as Record<string, string>;
+	const etagCache = getConfig("assetEtags") as Record<string, string>;
+
+	const errors: string[] = [];
+	let cacheDirty = false;
+
+	const queue = Object.entries(assetsConfig).filter(([, url]) => !!url);
+	const total = queue.length;
+	if (total === 0) return;
+
+	console.log(LOG_PREFIX, `Checking ${total} assets for updates...`);
+
+	const processAsset = async (name: string, url: string) => {
+		const filename = `${name}${getSafeExtension(url)}`;
+		const filepath = path.join(ASSETS_FOLDER, filename);
+		const tempPath = `${filepath}.tmp`;
+
+		try {
+			const exists = await isPathAccessible(filepath);
+			const previousEtag = exists ? (etagCache[url] ?? "") : "";
+
+			const controller = new AbortController();
+			const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
+			try {
+				const response = await fetch(url, {
+					headers: {
+						"User-Agent": profile.userAgent,
+						"If-None-Match": previousEtag,
+					},
+					signal: controller.signal,
+				});
+
+				if (response.status === 304) return; // Not Modified
+
+				if (!response.ok) {
+					throw new Error(`HTTP ${response.status} ${response.statusText}`);
+				}
+
+				const content = await response.text();
+
+				// Write to .tmp, then rename.
+				// This prevents partial files if there is a crash mid-write.
+				await fs.writeFile(tempPath, content, "utf-8");
+				await fs.rename(tempPath, filepath);
+
+				const newEtag = response.headers.get("ETag");
+				if (newEtag) {
+					etagCache[url] = newEtag;
+					cacheDirty = true;
+				}
+
+				console.log(LOG_PREFIX, `Updated: ${name}`);
+			} finally {
+				clearTimeout(timeout);
+				// Cleanup temp file if it still exists
+				await fs.rm(tempPath, { force: true });
+			}
+		} catch (e) {
+			const msg = `${name}: ${getErrorMessage(e)}`;
+			console.error(LOG_PREFIX, msg);
+			errors.push(msg);
+		}
+	};
+
+	// Worker pool
+	const workers = Array.from({ length: Math.min(MAX_CONCURRENCY, total) }, async () => {
+		while (queue.length > 0) {
+			const entry = queue.shift();
+			if (entry) await processAsset(entry[0], entry[1]);
+		}
+	});
+
+	await Promise.allSettled(workers);
+
+	if (cacheDirty) await setConfig("assetEtags", etagCache);
+
+	// Batch Notification
+	if (errors.length > 0) {
+		new Notification({
+			title: "Asset Download Issues",
+			body: errors.length === 1 ? errors[0] : `Failed to update ${errors.length} assets. Check logs for details.`,
+		}).show();
+	}
+}
+
+export async function updateAssetsFull<IPCHandle>() {
+	const missingAssets = await manageAssets();
+	if (missingAssets) await updateAssets();
+}

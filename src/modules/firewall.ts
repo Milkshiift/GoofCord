@@ -1,10 +1,10 @@
 // This file contains everything that uses session.defaultSession.webRequest
 import { session } from "electron";
 import pc from "picocolors";
-import type { ConfigKey, ConfigValue } from "../settingsSchema.ts";
+import type { Config, ConfigKey } from "../settingsSchema.ts";
 import { getConfig, getDefaultValue } from "../stores/config/config.main.ts";
 
-function getConfigOrDefault<K extends ConfigKey>(toGet: K): ConfigValue<K> {
+function getConfigOrDefault<K extends ConfigKey>(toGet: K): Config[K] {
 	return getConfig("customFirewallRules") ? getConfig(toGet) : getDefaultValue(toGet);
 }
 
@@ -13,12 +13,6 @@ export function initFirewall() {
 	const blocklist = getConfigOrDefault("blocklist");
 	const blockedStrings = getConfigOrDefault("blockedStrings");
 	const allowedStrings = getConfigOrDefault("allowedStrings");
-
-	if (!getConfig("modNames").includes("vencord")) {
-		// The allowlist includes sentry.js for Vencord's NoTrack plugin to properly block it.
-		// But if Vencord is not used, blocking it is more useful.
-		allowedStrings.splice(allowedStrings.indexOf("discord.com/assets/sentry."), 1);
-	}
 
 	// If blocklist is not empty
 	if (blocklist[0] !== "") {

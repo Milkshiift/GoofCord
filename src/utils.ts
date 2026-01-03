@@ -125,7 +125,7 @@ export function decryptSafeStorage<IPCOn>(encryptedBase64: string) {
 	}
 }
 
-export async function saveFileToGCFolder<IPCHandle>(filePath: string, content: string) {
+export async function saveFileToGCFolder<IPCHandle>(filePath: string, content: string | Buffer<ArrayBuffer>) {
 	const fullPath = path.join(getGoofCordFolderPath(), filePath);
 	await fs.promises.writeFile(fullPath, content);
 	return fullPath;

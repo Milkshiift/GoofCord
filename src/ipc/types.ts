@@ -2,20 +2,21 @@
 
 import type { setAutoLaunchState as ___loader_setAutoLaunchState } from "../loader";
 import type { initArrpc as ___modules_arrpc_initArrpc } from "../modules/arrpc";
-import type { getAssets as ___modules_assetLoader_getAssets } from "../modules/assetLoader";
+import type { updateAssetsFull as ___modules_assets_assetDownloader_updateAssetsFull } from "../modules/assets/assetDownloader";
+import type { getAssets as ___modules_assets_assetLoader_getAssets } from "../modules/assets/assetLoader";
 import type { clearCache as ___modules_cacheManager_clearCache } from "../modules/cacheManager";
 import type { setBadgeCount as ___modules_dynamicIcon_setBadgeCount } from "../modules/dynamicIcon";
 import type { cycleThroughPasswords as ___modules_messageEncryption_cycleThroughPasswords, decryptMessage as ___modules_messageEncryption_decryptMessage, encryptMessage as ___modules_messageEncryption_encryptMessage } from "../modules/messageEncryption";
-import type { updateModsFull as ___modules_mods_updateModsFull } from "../modules/mods";
 import type { isVenbindLoaded as ___modules_venbind_isVenbindLoaded, setKeybinds as ___modules_venbind_setKeybinds } from "../modules/venbind";
 import type { stopVenmic as ___modules_venmic_stopVenmic } from "../modules/venmic";
 import type { decryptSafeStorage as ___utils_decryptSafeStorage, encryptSafeStorage as ___utils_encryptSafeStorage, getDisplayVersion as ___utils_getDisplayVersion, getVersion as ___utils_getVersion, isEncryptionAvailable as ___utils_isEncryptionAvailable, saveFileToGCFolder as ___utils_saveFileToGCFolder } from "../utils";
 import type { createQuickCssWindow as ___windows_main_quickCssFix_createQuickCssWindow } from "../windows/main/quickCssFix";
 import type { deleteCloud as ___windows_settings_cloud_cloud_deleteCloud, loadCloud as ___windows_settings_cloud_cloud_loadCloud, saveCloud as ___windows_settings_cloud_cloud_saveCloud } from "../windows/settings/cloud/cloud";
-import type { createSettingsWindow as ___windows_settings_settings_createSettingsWindow, hotreloadLocale as ___windows_settings_settings_hotreloadLocale, reloadWindow as ___windows_settings_settings_reloadWindow } from "../windows/settings/settings";
+import type { createSettingsWindow as ___windows_settings_settings_createSettingsWindow, hotreloadLocale as ___windows_settings_settings_hotreloadLocale, invidiousConfigChanged as ___windows_settings_settings_invidiousConfigChanged, openFolder as ___windows_settings_settings_openFolder, reloadWindow as ___windows_settings_settings_reloadWindow } from "../windows/settings/settings";
 
 export interface IpcHandleChannels {
   "arrpc:initArrpc": typeof ___modules_arrpc_initArrpc;
+  "assetDownloader:updateAssetsFull": typeof ___modules_assets_assetDownloader_updateAssetsFull;
   "cacheManager:clearCache": typeof ___modules_cacheManager_clearCache;
   "cloud:deleteCloud": typeof ___windows_settings_cloud_cloud_deleteCloud;
   "cloud:loadCloud": typeof ___windows_settings_cloud_cloud_loadCloud;
@@ -23,10 +24,11 @@ export interface IpcHandleChannels {
   "dynamicIcon:setBadgeCount": typeof ___modules_dynamicIcon_setBadgeCount;
   "loader:setAutoLaunchState": typeof ___loader_setAutoLaunchState;
   "messageEncryption:cycleThroughPasswords": typeof ___modules_messageEncryption_cycleThroughPasswords;
-  "mods:updateModsFull": typeof ___modules_mods_updateModsFull;
   "quickCssFix:createQuickCssWindow": typeof ___windows_main_quickCssFix_createQuickCssWindow;
   "settings:createSettingsWindow": typeof ___windows_settings_settings_createSettingsWindow;
   "settings:hotreloadLocale": typeof ___windows_settings_settings_hotreloadLocale;
+  "settings:invidiousConfigChanged": typeof ___windows_settings_settings_invidiousConfigChanged;
+  "settings:openFolder": typeof ___windows_settings_settings_openFolder;
   "settings:reloadWindow": typeof ___windows_settings_settings_reloadWindow;
   "utils:saveFileToGCFolder": typeof ___utils_saveFileToGCFolder;
   "venbind:isVenbindLoaded": typeof ___modules_venbind_isVenbindLoaded;
@@ -35,7 +37,7 @@ export interface IpcHandleChannels {
 }
 
 export interface IpcOnChannels {
-  "assetLoader:getAssets": typeof ___modules_assetLoader_getAssets;
+  "assetLoader:getAssets": typeof ___modules_assets_assetLoader_getAssets;
   "messageEncryption:decryptMessage": typeof ___modules_messageEncryption_decryptMessage;
   "messageEncryption:encryptMessage": typeof ___modules_messageEncryption_encryptMessage;
   "utils:decryptSafeStorage": typeof ___utils_decryptSafeStorage;
@@ -48,8 +50,6 @@ export interface IpcOnChannels {
 export interface RegisteredIpcHandleChannels {
   "flashTitlebar": (color: string) => void;
   "flashTitlebarWithText": (color: string, text: string) => void;
-  "invidiousConfigChanged": () => void;
-  "openFolder": (folder: string) => void;
   "window:Close": () => void;
   "window:Hide": () => void;
   "window:IsMaximized": () => void;

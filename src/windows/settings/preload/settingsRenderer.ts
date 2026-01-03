@@ -1,183 +1,192 @@
 import { getConfig } from "@root/src/stores/config/config.preload.ts";
 import { i } from "@root/src/stores/localization/localization.preload.ts";
-import { webFrame } from "electron";
 import { sendSync } from "../../../ipc/client.preload.ts";
 import {
 	type ButtonEntry,
-	Config,
+	type Config,
 	type ConfigKey,
 	type SettingEntry,
 	settingsSchema
 } from "../../../settingsSchema.ts";
 import { decryptSetting, evaluateShowAfter } from "./preload.mts";
+import { MultiselectDropdown } from "./uiMultiselectDropdown.ts";
+import { TabSwitcher } from "./uiSwitcher.ts";
 
-function sanitizeForId(name: string): string {
-	return name
+const escapeHTML = (s: string) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+const toId = (name: string) =>
+	name
 		.toLowerCase()
 		.replace(/\s+/g, "-")
 		.replace(/[^a-z0-9-]/g, "");
-}
 
-export async function renderSettings() {
-	const categoryKeys = Object.keys(settingsSchema);
+export async function renderSettings(): Promise<void> {
+	const categories = Object.keys(settingsSchema);
 
-	let panelHtml = "";
-	categoryKeys.forEach((categoryName, index) => {
-		const panelId = `panel-${sanitizeForId(categoryName)}`;
-		const isActive = index === 0 ? "active" : "";
-		const { settingsHtml, buttonsHtml } = generatePanelInnerContent(categoryName);
-
-		panelHtml += `
-            <div id="${panelId}" class="content-panel ${isActive}">
-
-                <form class="settingsContainer">
-                    ${settingsHtml}
-                    ${buttonsHtml ? `<div class="buttonContainer">${buttonsHtml}</div>` : ""}
-                </form>
-            </div>
-        `;
-	});
-
-	let tabHtml = "";
-	categoryKeys.forEach((categoryName, index) => {
-		const panelId = `panel-${sanitizeForId(categoryName)}`;
-		const isActive = index === 0 ? "active" : "";
-		const categoryTitle = i(`category-${categoryName.toLowerCase().split(" ")[0]}`);
-
-		tabHtml += `
-            <button class="tab-item ${isActive}" data-target="${panelId}">${categoryTitle}</button>
-        `;
-	});
-
-	document.body.innerHTML = `
-        <div class="settings-page-container">
-			<header class="settings-header">
-				<nav class="settings-tabs" aria-label="Settings Categories">
-					${tabHtml}
-				</nav>
-			</header>
-
-			${
-				sendSync("utils:isEncryptionAvailable")
-					? ""
-					: `
-				<div class="message warning">
-					<p>${i("settings-encryption-unavailable")}</p>
-				</div>
-			`
-			}
-
-            <div class="settings-content">
-                ${panelHtml}
-            </div>
-        </div>
-    `;
-
-	void webFrame.executeJavaScript("window.initSwitcher(); window.initMultiselect();");
-}
-
-function generatePanelInnerContent(categoryName: string): { settingsHtml: string; buttonsHtml: string } {
-	let buttonsHtml = "";
-	let settingsHtml = "";
-
-	// @ts-expect-error
-	for (const [setting, entry] of Object.entries(settingsSchema[categoryName])) {
-		if (setting.startsWith("button-")) {
-			buttonsHtml += createButton(setting, entry as ButtonEntry);
-		} else {
-			settingsHtml += createSetting(setting as ConfigKey, entry as SettingEntry);
-		}
-	}
-
-	return { settingsHtml, buttonsHtml };
-}
-
-function createSetting(setting: ConfigKey, entry: SettingEntry): string | "" {
-	let value = getConfig(setting);
-
-	if (setting === "disableSettingsAnimations" && value === true) {
+	if (getConfig("disableSettingsAnimations")) {
 		document.body.classList.add("disable-animations");
 	}
+
+	document.body.innerHTML = buildPageHTML(categories);
+
+	new TabSwitcher().init();
+	for (const select of document.querySelectorAll<HTMLSelectElement>("select[multiple]")) {
+		new MultiselectDropdown(select);
+	}
+}
+
+function buildPageHTML(categories: string[]): string {
+	const tabs = categories
+		.map((name, index) => {
+			const id = `panel-${toId(name)}`;
+			const title = i(`category-${name.toLowerCase().split(" ")[0]}`);
+			return `<button class="tab-item${index === 0 ? " active" : ""}" data-target="${id}">${title}</button>`;
+		})
+		.join("");
+
+	const panels = categories
+		.map((name, idx) => {
+			const id = `panel-${toId(name)}`;
+			const category = settingsSchema[name as keyof typeof settingsSchema];
+
+			let settingsHTML = "";
+			let buttonsHTML = "";
+
+			for (const [key, entry] of Object.entries(category)) {
+				if (key.startsWith("button-")) {
+					buttonsHTML += buildButtonHTML(key, entry as ButtonEntry);
+				} else {
+					settingsHTML += buildSettingHTML(key as ConfigKey, entry as SettingEntry);
+				}
+			}
+
+			return `
+        <div id="${id}" class="content-panel${idx === 0 ? " active" : ""}">
+          <form class="settingsContainer">
+            ${settingsHTML}
+            ${buttonsHTML ? `<div class="buttonContainer">${buttonsHTML}</div>` : ""}
+          </form>
+        </div>
+      `;
+		})
+		.join("");
+
+	const encryptionWarning = sendSync("utils:isEncryptionAvailable") ? "" : `<div class="message warning"><p>${i("settings-encryption-unavailable")}</p></div>`;
+
+	return `
+    <div class="settings-page-container">
+      <header class="settings-header">
+        <nav class="settings-tabs" aria-label="Settings Categories">${tabs}</nav>
+      </header>
+      ${encryptionWarning}
+      <div class="settings-content">${panels}</div>
+    </div>
+  `;
+}
+
+function buildSettingHTML(key: ConfigKey, entry: SettingEntry): string {
+	let value = getConfig(key);
 
 	if (entry.encrypted && typeof value === "string") {
 		value = decryptSetting(value);
 	}
 
-	let isHidden = false;
-	if (!entry.name) {
-		isHidden = true;
-		entry.inputType = "textfield";
-	}
-	if (entry.showAfter) {
-		const controllingValue = getConfig(entry.showAfter.key as ConfigKey);
-		isHidden = !evaluateShowAfter(entry.showAfter.condition, controllingValue);
-	}
+	const isHidden = !entry.name || (entry.showAfter && !evaluateShowAfter(entry.showAfter.condition, getConfig(entry.showAfter.key as ConfigKey)));
 
-	const name = i(`opt-${setting}`) ?? setting;
-	const description = i(`opt-${setting}-desc`) ?? "";
+	const isOffset = entry.showAfter && entry.showAfter.key !== key;
+	const name = i(`opt-${key}`) ?? key;
+	const description = i(`opt-${key}-desc`) ?? "";
+
+	const classes = [isHidden && "hidden", isOffset && "offset"].filter(Boolean).join(" ");
 
 	return `
-        <fieldset class="${(isHidden ? "hidden" : "") + " " + (entry.showAfter && entry.showAfter.key !== setting ? "offset" : "")}">
-            <div class='checkbox-container'>
-                <div class="revert-button" title="Revert to default value"></div>
-                ${getInputElement(entry, setting, value)}
-                <label for="${setting}">${name}</label>
-            </div>
-            <p class="description">${description}</p>
-        </fieldset>
-    `;
+    <fieldset class="${classes}">
+      <div class="checkbox-container">
+        <div class="revert-button" title="Revert to default value"></div>
+        ${buildInputHTML(entry, key, value)}
+        <label for="${key}">${name}</label>
+      </div>
+      <p class="description">${description}</p>
+    </fieldset>
+  `;
 }
 
-function createButton(id: string, entry: ButtonEntry): string {
-	const buttonText = i(`opt-${id}`);
-	return `<button type="button" onclick="${entry.onClick}">${buttonText}</button>`;
-}
+function buildInputHTML<K extends ConfigKey>(entry: SettingEntry, key: K, value: Config[K]): string {
+	const attr = `setting-name="${key}" id="${key}"`;
 
-function getInputElement<K extends ConfigKey>(entry: SettingEntry, setting: K, value: Config[K]): string {
 	if (!entry.name) {
-		return `<input data-hidden="true" setting-name="${setting}" class="text" id="${setting}" type="text" value="${escapeHtmlValue(JSON.stringify(value))}"/>`;
+		return `<input data-hidden="true" ${attr} class="text" type="text" value="${escapeHTML(JSON.stringify(value))}"/>`;
 	}
 
 	switch (entry.inputType) {
 		case "checkbox":
-			return `<input setting-name="${setting}" id="${setting}" type="checkbox" ${value ? "checked" : ""}/>`;
+			return `<input ${attr} type="checkbox" ${value ? "checked" : ""}/>`;
+
 		case "textfield":
-			return `<input setting-name="${setting}" class="text" id="${setting}" type="text" value="${escapeHtmlValue(String(value))}"/>`;
+			return `<input ${attr} class="text" type="text" value="${escapeHTML(String(value))}"/>`;
+
 		case "textarea": {
-			const textValue = Array.isArray(value) ? value.join(",\n") : String(value);
-			return `<textarea setting-name="${setting}" id="${setting}">${escapeHtmlValue(textValue)}</textarea>`;
+			const text = Array.isArray(value) ? value.join(",\n") : String(value);
+			return `<textarea ${attr}>${escapeHTML(text)}</textarea>`;
 		}
+
 		case "file":
-			return `<input setting-name="${setting}" id="${setting}" accept="${entry.accept || "*"}" type="file"/>`;
+			return `<input ${attr} accept="${entry.accept || "*"}" type="file"/>`;
+
 		case "dropdown":
 		case "dropdown-multiselect": {
-			const isMultiselect = entry.inputType === "dropdown-multiselect";
-			const selectValue = Array.isArray(value) ? value : [String(value)];
+			const isMulti = entry.inputType === "dropdown-multiselect";
+			const selected = new Set(Array.isArray(value) ? value.map(String) : [String(value)]);
+			const options = Array.isArray(entry.options) ? entry.options : Object.keys(entry.options ?? {});
 
-			const optionsList = Array.isArray(entry.options) ? entry.options : entry.options ? Object.keys(entry.options) : [];
+			const optionsHTML = options.map((opt) => `<option value="${opt}"${selected.has(String(opt)) ? " selected" : ""}>${opt}</option>`).join("");
+
+			return `<select ${attr} class="left dropdown" name="${key}"${isMulti ? " multiple" : ""}>${optionsHTML}</select>`;
+		}
+
+		case "dictionary": {
+			const dictValue = (value ?? {}) as Record<string, string>;
+			const rows = Object.entries(dictValue)
+				.map(([k, v]) => buildDictionaryRowHTML(k, v))
+				.join("");
+
+			const presets = (Array.isArray(entry.options) ? entry.options : []) as Array<string | [string, string]>;
+			const presetsHTML = presets
+				.map((opt) => {
+					const [k, v] = Array.isArray(opt) ? opt : [opt, ""];
+					return `<option value="${escapeHTML(k)}" data-val="${escapeHTML(v)}">${escapeHTML(k)}</option>`;
+				})
+				.join("");
 
 			return `
-                <select setting-name="${setting}" class="left dropdown" id="${setting}" name="${setting}" ${isMultiselect ? "multiple" : ""}>
-                    ${optionsList
-											.map((option) => {
-												const optionStr = String(option);
-												const isSelected = selectValue.includes(optionStr);
-												return `
-                                <option value="${optionStr}" ${isSelected ? "selected" : ""}>
-                                    ${optionStr}
-                                </option>
-                             `;
-											})
-											.join("")}
-                </select>
-            `;
+        <div class="dictionary-container" ${attr}>
+          <div class="dictionary-rows">${rows}</div>
+          <div class="dictionary-controls">
+            <select class="dictionary-preset-select">
+              <option value="" disabled selected>${i("settings-dictionary-add")}</option>
+              <option value="$$empty$$">${i("settings-dictionary-custom")}</option>
+              ${presetsHTML}
+            </select>
+          </div>
+        </div>
+      `;
 		}
+
 		default:
-			console.warn(`Unsupported input type: ${entry.inputType} for setting ${setting}`);
-			return `<span>Unsupported input type: ${entry.inputType}</span>`;
+			return "";
 	}
 }
 
-function escapeHtmlValue(unsafeString: string) {
-	return unsafeString.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+export function buildDictionaryRowHTML(key = "", value = ""): string {
+	return `
+    <div class="dictionary-row">
+      <input type="text" class="dict-key" placeholder="${i("settings-dictionary-key")}" value="${escapeHTML(key)}" />
+      <input type="text" class="dict-value" placeholder="${i("settings-dictionary-value")}" value="${escapeHTML(value)}" />
+      <button type="button" class="dictionary-remove-btn" title="Remove">✕</button>
+    </div>
+  `;
+}
+
+function buildButtonHTML(id: string, entry: ButtonEntry): string {
+	return `<button type="button" onclick="${entry.onClick}">${i(`opt-${id}`)}</button>`;
 }

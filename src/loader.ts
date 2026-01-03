@@ -2,11 +2,11 @@ import { app, net, session, systemPreferences } from "electron";
 import pc from "picocolors";
 import { registerAllHandlers } from "./ipc/gen.ts";
 import { initArrpc } from "./modules/arrpc.ts";
-import { categorizeAllAssets, startStyleWatcher } from "./modules/assetLoader.ts";
+import { manageAssets, updateAssets } from "./modules/assets/assetDownloader.ts";
+import { categorizeAllAssets, startStyleWatcher } from "./modules/assets/assetLoader.ts";
 import { initFirewall, unstrictCSP } from "./modules/firewall.ts";
 import { setMenu } from "./modules/menu.ts";
 import { initEncryption } from "./modules/messageEncryption.ts";
-import { manageMods, updateMods } from "./modules/mods.ts";
 import { createTray } from "./modules/tray.ts";
 import { checkForUpdate } from "./modules/updateCheck.ts";
 import { firstLaunch, getConfig } from "./stores/config/config.main.ts";
@@ -18,7 +18,13 @@ export async function load() {
 	void setAutoLaunchState();
 	void setMenu();
 	void createTray();
-	const modPromise = manageMods().then(() => categorizeAllAssets());
+
+	await waitForInternetConnection();
+
+	const modPromise = manageAssets().then(async (assetsMissing) => {
+		if (assetsMissing) await updateAssets();
+		await categorizeAllAssets();
+	});
 	registerAllHandlers();
 	initEncryption();
 
@@ -29,13 +35,12 @@ export async function load() {
 	setPermissions();
 	initFirewall();
 	unstrictCSP();
-	await waitForInternetConnection();
 	await modPromise;
 	firstLaunch ? await createSettingsWindow() : await createMainWindow();
 
 	console.timeEnd(pc.green("[Timer]") + " GoofCord fully loaded in");
 
-	void updateMods();
+	void updateAssets();
 	void checkForUpdate();
 	void initArrpc();
 	void startStyleWatcher();

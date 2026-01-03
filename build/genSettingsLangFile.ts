@@ -118,8 +118,7 @@ function processSettings(objLiteral: ts.ObjectLiteralExpression, _parentCategory
 					}
 				}
 			}
-		}
-		else if (ts.isObjectLiteralExpression(node)) {
+		} else if (ts.isObjectLiteralExpression(node)) {
 			extractSettingStrings(node, settingKey, results);
 		}
 	}

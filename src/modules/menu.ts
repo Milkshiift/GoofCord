@@ -36,7 +36,7 @@ export async function setApplicationMenu() {
 					label: i("goofcord-reload"),
 					accelerator: "CmdOrCtrl+R",
 					click: async () => {
-						mainWindow.reload();
+						BrowserWindow.getFocusedWindow()?.reload();
 					},
 				},
 				{

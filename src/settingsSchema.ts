@@ -2,14 +2,63 @@
 import allLangs from "glob-filenames:../assets/lang/*.json";
 
 const spellcheckLangs = [
-	"af", "bg", "ca", "cs", "cy", "da", "de", "de-DE", "el", "en",
-	"en-AU", "en-CA", "en-GB", "en-GB-oxendict", "en-US", "es", "es-419",
-	"es-AR", "es-ES", "es-MX", "es-US", "et", "fa", "fo", "fr", "fr-FR",
-	"he", "hi", "hr", "hu", "hy", "id", "it", "it-IT", "ko", "lt", "lv",
-	"nb", "nl", "pl", "pt", "pt-BR", "pt-PT", "ro", "ru", "sh", "sk", "sl",
-	"sq", "sr", "sv", "ta", "tg", "tr", "uk", "vi",
+	"af",
+	"bg",
+	"ca",
+	"cs",
+	"cy",
+	"da",
+	"de",
+	"de-DE",
+	"el",
+	"en",
+	"en-AU",
+	"en-CA",
+	"en-GB",
+	"en-GB-oxendict",
+	"en-US",
+	"es",
+	"es-419",
+	"es-AR",
+	"es-ES",
+	"es-MX",
+	"es-US",
+	"et",
+	"fa",
+	"fo",
+	"fr",
+	"fr-FR",
+	"he",
+	"hi",
+	"hr",
+	"hu",
+	"hy",
+	"id",
+	"it",
+	"it-IT",
+	"ko",
+	"lt",
+	"lv",
+	"nb",
+	"nl",
+	"pl",
+	"pt",
+	"pt-BR",
+	"pt-PT",
+	"ro",
+	"ru",
+	"sh",
+	"sk",
+	"sl",
+	"sq",
+	"sr",
+	"sv",
+	"ta",
+	"tg",
+	"tr",
+	"uk",
+	"vi",
 ] as const;
-
 
 export type InputTypeMap = {
 	checkbox: boolean;
@@ -36,27 +85,31 @@ export interface BaseEntry {
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: Wawa
-export type SettingEntry<K extends keyof InputTypeMap = keyof InputTypeMap> = K extends any ? {
-	name: string;
-	inputType: K;
-	defaultValue: InputTypeMap[K];
-	accept?: string;
-	encrypted?: boolean;
-	options?: readonly string[] | readonly [string, string][] | Record<string, unknown>;
-	showAfter?: {
-		key: string;
-		condition: (value: unknown) => boolean;
-	};
-	onChange?: string;
-} & BaseEntry : never;
+export type SettingEntry<K extends keyof InputTypeMap = keyof InputTypeMap> = K extends any
+	? {
+			name: string;
+			inputType: K;
+			defaultValue: InputTypeMap[K];
+			accept?: string;
+			encrypted?: boolean;
+			options?: readonly string[] | readonly [string, string][] | Record<string, unknown>;
+			showAfter?: {
+				key: string;
+				condition: (value: unknown) => boolean;
+			};
+			onChange?: string;
+		} & BaseEntry
+	: never;
 
 // biome-ignore lint/suspicious/noExplicitAny: Wawa
-export type HiddenEntry<K extends keyof OutputTypeMap = keyof OutputTypeMap> = K extends any ? {
-	name?: never;
-	inputType?: never;
-	outputType: K;
-	defaultValue: OutputTypeMap[K];
-} & BaseEntry : never;
+export type HiddenEntry<K extends keyof OutputTypeMap = keyof OutputTypeMap> = K extends any
+	? {
+			name?: never;
+			inputType?: never;
+			outputType: K;
+			defaultValue: OutputTypeMap[K];
+		} & BaseEntry
+	: never;
 
 export interface ButtonEntry {
 	name: string;
@@ -66,19 +119,12 @@ export interface ButtonEntry {
 export type SchemaEntry = SettingEntry | HiddenEntry | ButtonEntry;
 export type SchemaStructure = Record<string, Record<string, SchemaEntry>>;
 
-function setting<K extends keyof InputTypeMap>(
-	inputType: K,
-	config: Omit<SettingEntry<K>, "inputType">
-): SettingEntry<K> {
+function setting<K extends keyof InputTypeMap>(inputType: K, config: Omit<SettingEntry<K>, "inputType">): SettingEntry<K> {
 	// @ts-expect-error
 	return { inputType, ...config };
 }
 
-function hidden<K extends keyof OutputTypeMap>(
-	outputType: K,
-	defaultValue: OutputTypeMap[K],
-	config?: Omit<HiddenEntry<K>, "outputType" | "defaultValue">
-): HiddenEntry<K> {
+function hidden<K extends keyof OutputTypeMap>(outputType: K, defaultValue: OutputTypeMap[K], config?: Omit<HiddenEntry<K>, "outputType" | "defaultValue">): HiddenEntry<K> {
 	// @ts-expect-error
 	return { outputType, defaultValue, ...config };
 }
@@ -86,7 +132,6 @@ function hidden<K extends keyof OutputTypeMap>(
 function button(name: string, onClick: string): ButtonEntry {
 	return { name, onClick };
 }
-
 
 export const settingsSchema = {
 	General: {
@@ -105,7 +150,8 @@ export const settingsSchema = {
 		arrpc: setting("checkbox", {
 			name: "Activity display",
 			defaultValue: false,
-			description: 'Enables an open source reimplementation of Discord\'s\nrich presence called <a target="_blank" href="https://github.com/OpenAsar/arrpc">arRPC</a>.\nA <a target="_blank" href="https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence">workaround</a> is needed for arRPC to work on Flatpak',
+			description:
+				'Enables an open source reimplementation of Discord\'s\nrich presence called <a target="_blank" href="https://github.com/OpenAsar/arrpc">arRPC</a>.\nA <a target="_blank" href="https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence">workaround</a> is needed for arRPC to work on Flatpak',
 			onChange: "arrpc:initArrpc",
 		}),
 		minimizeToTray: setting("checkbox", {
@@ -224,7 +270,7 @@ export const settingsSchema = {
 	Assets: {
 		assets: setting("dictionary", {
 			name: "External Assets",
-			description: "Manage external scripts and styles. Key is the filename, Value is the URL.",
+			description: "See <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/Asset-Loader\">wiki</a>. Scripts and styles specified here will be downloaded on launch. Make sure to also include the styles of a client mod, if it uses them. Don't mix forks of the same mod, like Vencord and Equicord.",
 			defaultValue: {
 				Vencord: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",
 				VencordStyles: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
@@ -232,9 +278,11 @@ export const settingsSchema = {
 			options: [
 				["Vencord", "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js"],
 				["VencordStyles", "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js"],
+				["Equicord", "https://github.com/Equicord/Equicord/releases/download/latest/browser.js"],
+				["EquicordStyles", "https://github.com/Equicord/Equicord/releases/download/latest/browser.css"],
 				["Shelter", "https://raw.githubusercontent.com/uwu/shelter-builds/main/shelter.js"],
 			],
-			onChange: "mods:updateModsFull",
+			onChange: "assetDownloader:updateAssetsFull",
 		}),
 		assetEtags: hidden("object", {}),
 		managedFiles: hidden("string[]", []),
@@ -242,13 +290,13 @@ export const settingsSchema = {
 			name: "Invidious embeds",
 			defaultValue: false,
 			description: "Replaces YouTube embeds with Invidious embeds.",
-			onChange: "invidiousConfigChanged",
+			onChange: "settings:invidiousConfigChanged",
 		}),
 		invidiousInstance: setting("textfield", {
 			name: "Instance",
 			defaultValue: "https://invidious.nerdvpn.de",
 			description: "What Invidious instance to use. If videos fail to load, try changing it to a different one and disabling auto-updates.",
-			onChange: "invidiousConfigChanged",
+			onChange: "settings:invidiousConfigChanged",
 			showAfter: {
 				key: "invidiousEmbeds",
 				condition: (value) => value === true,
@@ -416,36 +464,59 @@ export const settingsSchema = {
 	},
 } as const satisfies SchemaStructure;
 
-
 type RawSchema = typeof settingsSchema;
 type SectionKeys = keyof RawSchema;
 type IsButtonKey<K extends PropertyKey> = K extends `button-${string}` ? true : false;
 
 export type ConfigKey = {
 	[S in SectionKeys]: {
-		[K in keyof RawSchema[S]]: IsButtonKey<K> extends true ? never : K
-	}[keyof RawSchema[S]]
+		[K in keyof RawSchema[S]]: IsButtonKey<K> extends true ? never : K;
+	}[keyof RawSchema[S]];
 }[SectionKeys];
 
 type EntryForKey<K extends ConfigKey> = {
-	[S in SectionKeys]: K extends keyof RawSchema[S] ? RawSchema[S][K] : never
+	[S in SectionKeys]: K extends keyof RawSchema[S] ? RawSchema[S][K] : never;
 }[SectionKeys];
 
 export type Config = {
-	[K in ConfigKey]: EntryForKey<K> extends { defaultValue: infer D } ? D : never
+	[K in ConfigKey]: EntryForKey<K> extends { defaultValue: infer D } ? D : never;
 };
 
 let cachedDefaults: Config | null = null;
-
 export function getDefaults(): Config {
 	if (cachedDefaults) return cachedDefaults;
 
-	const entries = (Object.values(settingsSchema) as Record<string, SchemaEntry>[]).flatMap(section =>
+	const entries = (Object.values(settingsSchema) as Record<string, SchemaEntry>[]).flatMap((section) =>
 		Object.entries(section)
 			.filter(([key, entry]) => !key.startsWith("button-") && "defaultValue" in entry)
-			.map(([key, entry]) => [key, (entry as SettingEntry | HiddenEntry).defaultValue])
+			.map(([key, entry]) => [key, (entry as SettingEntry | HiddenEntry).defaultValue]),
 	);
 
 	cachedDefaults = Object.fromEntries(entries) as Config;
 	return cachedDefaults;
+}
+
+
+let cachedDefinitions: Record<string, SchemaEntry> | null = null;
+export function getDefinition<K extends ConfigKey>(key: K): EntryForKey<K> {
+	if (!cachedDefinitions) {
+		const entries = (Object.values(settingsSchema) as Record<string, SchemaEntry>[]).flatMap((section) =>
+			Object.entries(section)
+				.filter(([k]) => !k.startsWith("button-"))
+		);
+		cachedDefinitions = Object.fromEntries(entries);
+	}
+
+	const definition = cachedDefinitions[key];
+
+	if (!definition) {
+		throw new Error(`Setting definition for "${key}" not found.`);
+	}
+
+	// biome-ignore lint/suspicious/noExplicitAny: Type inference matches K to the specific entry type via EntryForKey
+	return definition as any;
+}
+
+export function isEditableSetting(entry: SchemaEntry): entry is SettingEntry {
+	return "inputType" in entry;
 }

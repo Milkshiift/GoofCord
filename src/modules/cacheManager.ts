@@ -5,7 +5,6 @@ import { mainWindow } from "../windows/main/main.ts";
 
 export async function clearCache<IPCHandle>() {
 	console.log("Clearing cache");
-	void mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebar("#5865F2")`);
 
 	const userDataPath = app.getPath("userData");
 	// Get all folders
@@ -18,4 +17,6 @@ export async function clearCache<IPCHandle>() {
 			} catch (e) {}
 		}
 	}
+
+	void mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebar("#5865F2")`);
 }
