@@ -4,11 +4,10 @@ import { app, dialog, shell } from "electron";
 import { createHost, type StoreHost } from "electron-sync-store/main";
 import { type Config, type ConfigKey, getDefaults } from "../../settingsSchema.ts";
 import { getErrorMessage, getGoofCordFolderPath, tryCreateFolder } from "../../utils.ts";
-import { AppConfigStore } from "./config.shared.ts";
 
 export let firstLaunch = false;
 
-export function getConfigLocation(): string {
+function getConfigLocation(): string {
 	return path.join(getGoofCordFolderPath(), "settings.json");
 }
 
@@ -22,8 +21,7 @@ async function setup(): Promise<Config> {
 
 async function saveToDisk(state: Config) {
 	try {
-		const toSave = JSON.stringify(state, undefined, 2);
-		await fs.promises.writeFile(getConfigLocation(), toSave, "utf-8");
+		await fs.promises.writeFile(getConfigLocation(), JSON.stringify(state, null, 2), "utf-8");
 	} catch (e: unknown) {
 		console.error("Failed to save settings:", e);
 		dialog.showErrorBox("GoofCord was unable to save the settings", getErrorMessage(e));
@@ -32,10 +30,8 @@ async function saveToDisk(state: Config) {
 
 async function handleConfigError(e: unknown): Promise<{ retry: boolean; data?: Config }> {
 	if (e instanceof Error && "code" in e && e.code === "ENOENT") {
-		// Config file does not exist
 		tryCreateFolder(getGoofCordFolderPath());
-		const defaults = await setup();
-		return { retry: false, data: defaults };
+		return { retry: false, data: await setup() };
 	}
 
 	console.error("Failed to load the config:", e);
@@ -53,80 +49,55 @@ async function handleConfigError(e: unknown): Promise<{ retry: boolean; data?: C
 		case 1: // Open folder
 			void shell.openPath(getGoofCordFolderPath());
 			return { retry: true };
-		case 2: {
-			// Reset
-			const defaults = await setup();
-			return { retry: false, data: defaults };
-		}
+		case 2: // Reset
+			return { retry: false, data: await setup() };
 		case 3: // Exit
 			app.exit();
 			throw new Error("Application exiting");
+		default:
+			return { retry: true };
 	}
-
-	// Try again
-	return { retry: true };
 }
 
 const DiskPersistence = {
 	onHydrate: async (): Promise<Config> => {
-		let loadedConfig: Config | null = null;
-
-		do {
+		while (true) {
 			try {
 				// fs.promises.readFile is much slower than fs.readFileSync
 				const rawData = fs.readFileSync(getConfigLocation(), "utf-8");
-				loadedConfig = JSON.parse(rawData) as Config;
+				return JSON.parse(rawData) as Config;
 			} catch (e: unknown) {
 				const result = await handleConfigError(e);
-				if (result.data) {
-					loadedConfig = result.data;
-				} else if (!result.retry) {
-					loadedConfig = getDefaults();
-				}
+				if (result.data) return result.data;
+				if (!result.retry) return getDefaults();
 			}
-		} while (!loadedConfig);
-
-		return loadedConfig;
+		}
 	},
-
-	onPersist: async (state: Config) => {
-		await saveToDisk(state);
-	},
+	onPersist: saveToDisk,
 };
 
 let configHost: StoreHost<Config>;
 
 export async function loadConfig(): Promise<void> {
-	configHost = createHost(AppConfigStore, DiskPersistence);
+	configHost = createHost<Config>("config", DiskPersistence);
 	await configHost.ready();
 }
 
-export function getConfig<K extends ConfigKey>(key: K, bypassDefault = false): Config[K] {
-	const current = configHost.get();
-	const value = current[key];
-
-	if (value !== undefined || bypassDefault) {
-		return value;
-	}
-
-	console.log("Missing config parameter:", key);
-	const defaultValue = getDefaultValue(key);
-
-	void setConfig(key, defaultValue);
-
-	return defaultValue;
+export function getConfig<K extends ConfigKey>(key: K): Config[K] {
+	return configHost.get()[key] ?? getDefaults()[key];
 }
 
-export function sync(): Config {
+export function getConfigBulk(): Config {
 	return configHost.get();
 }
 
-export async function setConfig<K extends ConfigKey>(entry: K, value: Config[K]) {
-	return configHost.set({ [entry]: value });
+export async function setConfig<K extends ConfigKey>(key: K, value: Config[K]): Promise<void> {
+	const current = configHost.get();
+	await configHost.set({ ...current, [key]: value });
 }
 
-export async function setConfigBulk(toSet: Config) {
-	return configHost.set(toSet);
+export async function setConfigBulk(config: Config): Promise<void> {
+	await configHost.set(config);
 }
 
 export function getDefaultValue<K extends ConfigKey>(entry: K): Config[K] {

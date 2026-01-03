@@ -1,6 +1,6 @@
 import path from "node:path";
 import { isDeepStrictEqual } from "node:util";
-import { sync } from "@root/src/stores/config/config.main.ts";
+import { getConfigBulk } from "@root/src/stores/config/config.main.ts";
 import { i, initLocalization } from "@root/src/stores/localization/localization.main.ts";
 import { saveCloud } from "@root/src/windows/settings/cloud/cloud.ts";
 import { app, BrowserWindow, dialog, shell } from "electron";
@@ -32,7 +32,7 @@ export async function createSettingsWindow<IPCHandle>() {
 		return;
 	}
 
-	originalConfig = sync();
+	originalConfig = getConfigBulk();
 
 	console.log("Creating a settings window.");
 	settingsWindow = new BrowserWindow({
@@ -69,7 +69,7 @@ export async function createSettingsWindow<IPCHandle>() {
 	}
 
 	settingsWindow.on("close", async (event) => {
-		if (getConfig("autoSaveCloud") && hasConfigChanged(originalConfig, sync())) {
+		if (getConfig("autoSaveCloud") && hasConfigChanged(originalConfig, getConfigBulk())) {
 			event.preventDefault();
 			try {
 				console.log("Settings changed, auto-saving to cloud...");

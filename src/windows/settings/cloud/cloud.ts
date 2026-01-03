@@ -1,4 +1,4 @@
-import { sync } from "@root/src/stores/config/config.main.ts";
+import { getConfigBulk } from "@root/src/stores/config/config.main.ts";
 import { dialog } from "electron";
 import pc from "picocolors";
 import { encryptionPasswords } from "../../../modules/messageEncryption.ts";
@@ -53,7 +53,7 @@ export async function loadCloud<IPCHandle>(): Promise<void> {
 
 		console.log(LOG_PREFIX, "Loading settings from cloud");
 
-		const configToSet = { ...sync() } as Config;
+		const configToSet = { ...getConfigBulk() } as Config;
 
 		for (const [key, value] of Object.entries(cloudSettings)) {
 			if (key in configToSet) {
@@ -70,7 +70,7 @@ export async function saveCloud<IPCHandle>(silent = false): Promise<void> {
 	return withLock("save", async () => {
 		const excludedOptions = ["cloudEncryptionKey", "cloudHost", "cloudToken", "modEtagCache"];
 
-		const configToSave: Config = { ...sync() };
+		const configToSave: Config = { ...getConfigBulk() };
 
 		if (getEncryptionKey()) {
 			configToSave.encryptionPasswords = encryptionPasswords;

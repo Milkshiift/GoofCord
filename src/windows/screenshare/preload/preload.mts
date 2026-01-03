@@ -1,5 +1,5 @@
-import { getConfig, setConfig } from "@root/src/stores/config/config.preload.ts";
-import { i } from "@root/src/stores/localization/localization.preload.ts";
+import { getConfig, setConfig, whenConfigReady } from "@root/src/stores/config/config.preload.ts";
+import { i, whenLocalizationReady } from "@root/src/stores/localization/localization.preload.ts";
 import { ipcRenderer } from "electron";
 import { invoke } from "../../../ipc/client.preload.ts";
 
@@ -114,7 +114,9 @@ async function selectSource(id: string | null, title: string | null): Promise<vo
 }
 
 function addDisplays(): void {
-	ipcRenderer.once("getSources", (_event, sources: IPCSource[]) => {
+	ipcRenderer.once("getSources", async (_event, sources: IPCSource[]) => {
+		await whenLocalizationReady();
+		await whenConfigReady();
 		try {
 			const previousSettingsRaw = getConfig("screensharePreviousSettings");
 			const previousSettings = parseStoredSettings(previousSettingsRaw);

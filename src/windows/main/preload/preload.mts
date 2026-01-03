@@ -1,5 +1,5 @@
 import "./bridge.ts";
-import { getConfig } from "@root/src/stores/config/config.preload.ts";
+import { getConfig, whenConfigReady } from "@root/src/stores/config/config.preload.ts";
 import { log } from "../../../modules/logger.preload.ts";
 import { loadScripts, loadStyles } from "./assets.ts";
 import { startKeybindWatcher } from "./keybinds.ts";
@@ -8,17 +8,15 @@ import { injectFlashbar } from "./titlebarFlash.ts";
 const preloadStart = performance.now();
 
 function init() {
-	if (!document.location.hostname.includes("discord")) return;
+	if (!document.location.href.includes("discord.com/app")) return;
 
 	loadScripts();
 	loadStyles();
 
-	// Make sure it's not a popout
-	if (!document.location.href.includes("/app")) return;
-
 	measureDiscordStartup();
 	injectFlashbar();
 	startKeybindWatcher();
+	disableAltMenu();
 }
 
 function measureDiscordStartup() {
@@ -38,11 +36,13 @@ function measureDiscordStartup() {
 	});
 }
 
-init();
-
-if (getConfig("disableAltMenu")) {
-	// https://github.com/electron/electron/issues/34211
-	window.addEventListener("keydown", (e) => {
-		if (e.code === "AltLeft") e.preventDefault();
-	});
+function disableAltMenu() {
+	if (getConfig("disableAltMenu")) {
+		// https://github.com/electron/electron/issues/34211
+		window.addEventListener("keydown", (e) => {
+			if (e.code === "AltLeft") e.preventDefault();
+		});
+	}
 }
+
+whenConfigReady().then(init);

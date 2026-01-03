@@ -42,7 +42,7 @@ export async function manageAssets() {
 
 	const expectedFiles = new Set<string>();
 
-	if (assetsConfig && typeof assetsConfig === 'object') {
+	if (assetsConfig && typeof assetsConfig === "object") {
 		for (const [name, url] of Object.entries(assetsConfig)) {
 			if (!url) continue;
 			expectedFiles.add(resolveAssetFilename(name, url));

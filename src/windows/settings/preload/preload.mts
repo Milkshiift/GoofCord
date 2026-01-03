@@ -1,9 +1,10 @@
-import { setConfig } from "@root/src/stores/config/config.preload.ts";
+import { setConfig, whenConfigReady } from "@root/src/stores/config/config.preload.ts";
 import { contextBridge, ipcRenderer } from "electron";
 import { invoke, sendSync } from "../../../ipc/client.preload.ts";
 import { type ConfigKey, getDefinition, type InputTypeMap, isEditableSetting } from "../../../settingsSchema.ts";
 import { evaluateShowAfter, fieldsetCache, getVisibilityMap, renderSettings } from "./settingsRenderer.ts";
 import { createDictionaryRow, Strategies, type Strategy } from "./uiStrategies.ts";
+import { whenLocalizationReady } from "@root/src/stores/localization/localization.preload.ts";
 
 console.log("GoofCord Settings");
 
@@ -22,6 +23,8 @@ const init = async () => {
 		await new Promise<void>((r) => document.addEventListener("DOMContentLoaded", () => r()));
 	}
 
+	await whenConfigReady();
+	await whenLocalizationReady();
 	await renderSettings();
 	dependencyMap = getVisibilityMap();
 	bindGlobalEvents();
