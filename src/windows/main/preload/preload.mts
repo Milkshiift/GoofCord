@@ -8,7 +8,7 @@ import { injectFlashbar } from "./titlebarFlash.ts";
 const preloadStart = performance.now();
 
 function init() {
-	if (!document.location.href.includes("discord.com/app")) return;
+	if (!document.location.hostname.includes("discord") || document.location.href.includes("/popout")) return;
 
 	loadScripts();
 	loadStyles();

@@ -277,7 +277,7 @@ export const settingsSchema = {
 			},
 			options: [
 				["Vencord", "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js"],
-				["VencordStyles", "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js"],
+				["VencordStyles", "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css"],
 				["Equicord", "https://github.com/Equicord/Equicord/releases/download/latest/browser.js"],
 				["EquicordStyles", "https://github.com/Equicord/Equicord/releases/download/latest/browser.css"],
 				["Shelter", "https://raw.githubusercontent.com/uwu/shelter-builds/main/shelter.js"],

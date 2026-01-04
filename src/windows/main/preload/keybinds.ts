@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer, webFrame } from "electron";
+import { contextBridge, ipcRenderer } from "electron";
 import { invoke } from "../../../ipc/client.preload.ts";
 import { warn } from "../../../modules/logger.preload.ts";
 
@@ -105,15 +105,8 @@ export const KeybindApi = {
 export function startKeybindWatcher() {
 	updateKeybinds();
 
+	// See postVencord/keybinds.ts
 	contextBridge.exposeInMainWorld("keybinds", KeybindApi);
-
-	void webFrame.executeJavaScript(`
-        setTimeout(() => {
-            window.shelter.flux.dispatcher.subscribe("KEYBINDS_SET_KEYBIND", ({keybind}) => {
-                window.keybinds.updateKeybinds();
-            })
-        }, 5000); // Time for shelter flux to initialize
-    `);
 }
 
 ipcRenderer.on("keybinds:getAll", () => {
