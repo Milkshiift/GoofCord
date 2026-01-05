@@ -28,7 +28,12 @@ function resolveAssetFilename(name: string, urlStr: string): string {
 			extension = ".css";
 		}
 	} catch (e) {
-		console.warn(LOG_PREFIX, `Could not parse URL '${urlStr}', defaulting to .js`);
+		const ext = path.extname(urlStr).toLowerCase();
+		if (ext === ".css") {
+			extension = ".css";
+		} else {
+			console.warn(LOG_PREFIX, `Could not parse URL '${urlStr}', defaulting to .js`);
+		}
 	}
 
 	return `${safeName}${extension}`;

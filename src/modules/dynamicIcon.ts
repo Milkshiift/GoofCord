@@ -143,20 +143,20 @@ const TRAY_COMPOSITOR_CODE = `
 
 const trayCache = new Map<number, NativeImage>();
 export async function loadTrayImage(index: number) {
-	const clampedIndex = Math.min(index, 100);
+	const clampedIndex = index === -1 ? -1 : Math.min(index, 100);
 
 	const cached = trayCache.get(clampedIndex);
 	if (cached) return cached;
 
 	if (clampedIndex === 0) {
-		const trayImage = nativeImage.createFromPath(await getTrayIcon());
+		const trayImage = nativeImage.createFromPath(getTrayIcon());
 		if (process.platform === "darwin") trayImage.setTemplateImage(true);
-		trayCache.set(clampedIndex, trayImage);
+		trayCache.set(0, trayImage);
 		return trayImage;
 	}
 
 	const baseTrayIconDataURL = nativeImage
-		.createFromPath(await getTrayIcon())
+		.createFromPath(getTrayIcon())
 		.resize({ width: 128, height: 128 })
 		.toDataURL();
 
@@ -164,7 +164,7 @@ export async function loadTrayImage(index: number) {
 
 	if (!finalImageDataURL) {
 		console.error("Failed to generate badged tray icon in renderer.");
-		return nativeImage.createFromPath(await getTrayIcon());
+		return nativeImage.createFromPath(getTrayIcon());
 	}
 
 	const nativeTrayImage = nativeImage.createFromDataURL(finalImageDataURL);

@@ -130,13 +130,11 @@ export async function categorizeAllAssets() {
 
 export async function startStyleWatcher() {
 	try {
-		// Ensure folder exists before watching
 		await fs.mkdir(ASSETS_FOLDER, { recursive: true });
 
 		const watcher = watch(ASSETS_FOLDER, { recursive: false });
 		let debounceTimer: NodeJS.Timeout | null = null;
 
-		// Batch updates if multiple files change rapidly
 		const changedFiles = new Set<string>();
 
 		watcher.on("change", (_eventType, filename) => {
@@ -148,10 +146,12 @@ export async function startStyleWatcher() {
 			if (debounceTimer) clearTimeout(debounceTimer);
 
 			debounceTimer = setTimeout(async () => {
-				for (const file of changedFiles) {
+				const batch = new Set(changedFiles);
+				changedFiles.clear();
+
+				for (const file of batch) {
 					await processStyleUpdate(file);
 				}
-				changedFiles.clear();
 			}, 200);
 		});
 
