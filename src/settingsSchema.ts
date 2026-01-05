@@ -70,16 +70,6 @@ export type InputTypeMap = {
 	dictionary: Record<string, string>;
 };
 
-export type OutputTypeMap = {
-	string: string;
-	number: number;
-	boolean: boolean;
-	object: Record<string, unknown>;
-	"string[]": string[];
-	"[number, number, boolean, string]": [number, number, boolean, string];
-	"[boolean, [number, number]]": [boolean, [number, number]];
-};
-
 export interface BaseEntry {
 	description?: string;
 }
@@ -101,15 +91,11 @@ export type SettingEntry<K extends keyof InputTypeMap = keyof InputTypeMap> = K 
 		} & BaseEntry
 	: never;
 
-// biome-ignore lint/suspicious/noExplicitAny: Wawa
-export type HiddenEntry<K extends keyof OutputTypeMap = keyof OutputTypeMap> = K extends any
-	? {
-			name?: never;
-			inputType?: never;
-			outputType: K;
-			defaultValue: OutputTypeMap[K];
-		} & BaseEntry
-	: never;
+export type HiddenEntry<T = unknown> = {
+	name?: never;
+	inputType?: never;
+	defaultValue: T;
+} & BaseEntry;
 
 export interface ButtonEntry {
 	name: string;
@@ -124,9 +110,8 @@ function setting<K extends keyof InputTypeMap>(inputType: K, config: Omit<Settin
 	return { inputType, ...config };
 }
 
-function hidden<K extends keyof OutputTypeMap>(outputType: K, defaultValue: OutputTypeMap[K], config?: Omit<HiddenEntry<K>, "outputType" | "defaultValue">): HiddenEntry<K> {
-	// @ts-expect-error
-	return { outputType, defaultValue, ...config };
+function hidden<T>(defaultValue: T, config?: Omit<HiddenEntry<T>, "defaultValue">): HiddenEntry<T> {
+	return { defaultValue, ...config };
 }
 
 function button(name: string, onClick: string): ButtonEntry {
@@ -290,9 +275,9 @@ export const settingsSchema = {
 			],
 			onChange: "assetDownloader:updateAssetsFull",
 		}),
-		dontShowMissingAssetsWarning: hidden("boolean", false),
-		assetEtags: hidden("object", {}),
-		managedFiles: hidden("string[]", []),
+		dontShowMissingAssetsWarning: hidden(false),
+		assetEtags: hidden<Record<string, unknown>>({}),
+		managedFiles: hidden<string[]>([]),
 		invidiousEmbeds: setting("checkbox", {
 			name: "Invidious embeds",
 			defaultValue: false,
@@ -318,7 +303,7 @@ export const settingsSchema = {
 				condition: (value) => value === true,
 			},
 		}),
-		lastInvidiousUpdate: hidden("number", 0),
+		lastInvidiousUpdate: hidden(0),
 		messageEncryption: setting("checkbox", {
 			name: "Message encryption",
 			defaultValue: false,
@@ -379,7 +364,7 @@ export const settingsSchema = {
 			defaultValue: true,
 			description: "Uses GPU for rendering. Disable this if you experience graphical glitches.",
 		}),
-		disableGpuCompositing: hidden("boolean", false),
+		disableGpuCompositing: hidden(false),
 		spoofChrome: setting("checkbox", {
 			name: "Spoof Chrome",
 			defaultValue: true,
@@ -442,8 +427,8 @@ export const settingsSchema = {
 				condition: (value) => value === true,
 			},
 		}),
-		screensharePreviousSettings: hidden("[number, number, boolean, string]", [720, 30, false, "motion"]),
-		"windowState:main": hidden("[boolean, [number, number]]", [true, [835, 600]]),
+		screensharePreviousSettings: hidden<[number, number, boolean, string]>([720, 30, false, "motion"]),
+		"windowState:main": hidden<[boolean, [number, number]]>([true, [835, 600]]),
 		"button-openGoofCordFolder": button("Open GoofCord folder", "settings.openFolder('GoofCord')"),
 		"button-clearCache": button("Clear cache", "settings.clearCache()"),
 	},
@@ -458,7 +443,7 @@ export const settingsSchema = {
 			description: 'The URL for the Cloud Server. For self-hosting, see the <a target="_blank" href="https://github.com/Wuemeli/goofcord-cloudserver">repository</a>.',
 			defaultValue: "https://goofcordcloud.wuemeli.com",
 		}),
-		cloudToken: hidden("string", ""),
+		cloudToken: hidden(""),
 		cloudEncryptionKey: setting("textfield", {
 			name: "Cloud Encryption Key",
 			defaultValue: "",
