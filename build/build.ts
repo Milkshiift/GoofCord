@@ -77,7 +77,8 @@ buildTasks.push(
 		target: "browser",
 		plugins: [globImportPlugin()],
 		minify: false,
-		sourcemap: false
+		sourcemap: false,
+		banner: "// prevencordmarker"
 	}),
 );
 buildTasks.push(
@@ -87,7 +88,8 @@ buildTasks.push(
 		target: "browser",
 		plugins: [globImportPlugin()],
 		minify: false,
-		sourcemap: false
+		sourcemap: false,
+		banner: "// postvencordmarker"
 	}),
 );
 
