@@ -9,6 +9,7 @@ import { getConfig, setConfig } from "../../stores/config/config.main.ts";
 import { getErrorMessage, isPathAccessible } from "../../utils.ts";
 import { profile } from "../chromeSpoofer.ts";
 import { ASSETS_FOLDER } from "./assetLoader.ts";
+import { fileURLToPath } from "node:url";
 
 export const LOG_PREFIX = pc.yellow("[Asset Manager]");
 
@@ -105,20 +106,67 @@ export async function updateAssets() {
 
 	console.log(LOG_PREFIX, `Checking ${total} assets for updates...`);
 
-	const processAsset = async (name: string, url: string) => {
-		const filename = resolveAssetFilename(name, url);
+	const processAsset = async (name: string, urlStr: string) => {
+		const filename = resolveAssetFilename(name, urlStr);
 		const filepath = path.join(ASSETS_FOLDER, filename);
 		const tempPath = `${filepath}.tmp`;
 
 		try {
+			let isLocalFile = false;
+			let sourcePath = "";
+
+			// Determine if this is a local file or a network request
+			try {
+				const urlObj = new URL(urlStr);
+				if (urlObj.protocol === "file:") {
+					isLocalFile = true;
+					sourcePath = fileURLToPath(urlStr);
+				}
+			} catch (e) {
+				// If URL parsing fails, check if it looks like an absolute path
+				if (path.isAbsolute(urlStr)) {
+					isLocalFile = true;
+					sourcePath = urlStr;
+				}
+			}
+
+			// Strategy 1: Local File System Copy
+			if (isLocalFile) {
+				const sourceStats = await fs.stat(sourcePath);
+
+				// Check if destination exists to compare timestamps
+				if (await isPathAccessible(filepath)) {
+					const destStats = await fs.stat(filepath);
+
+					// If source hasn't been modified since we last copied it, skip
+					// (Allowing a small 100ms buffer for filesystem precision differences)
+					if (sourceStats.mtimeMs <= destStats.mtimeMs + 100) {
+						return;
+					}
+				}
+
+				// Perform atomic copy via temp file
+				await fs.copyFile(sourcePath, tempPath);
+				await fs.rename(tempPath, filepath);
+				console.log(LOG_PREFIX, `Local Copy Updated: ${name}`);
+
+				// Clear ETag for this asset if it existed previously, as it is now managed locally
+				if (etagCache[urlStr]) {
+					delete etagCache[urlStr];
+					cacheDirty = true;
+				}
+				return;
+			}
+
+			// Strategy 2: HTTP/Network Download
 			const exists = await isPathAccessible(filepath);
-			const previousEtag = exists ? (etagCache[url] ?? "") : "";
+			const previousEtag = exists ? (etagCache[urlStr] ?? "") : "";
 
 			const controller = new AbortController();
 			const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
 			try {
-				const response = await fetch(url, {
+				const response = await fetch(urlStr, {
 					headers: {
 						"User-Agent": profile.userAgent,
 						"If-None-Match": previousEtag,
@@ -135,21 +183,19 @@ export async function updateAssets() {
 				if (!response.body) throw new Error("Empty response body");
 
 				const fileStream = createWriteStream(tempPath);
-
 				// biome-ignore lint/suspicious/noExplicitAny: fromWeb expects ReadableStream<any>
 				const readableNodeStream = Readable.fromWeb(response.body as any);
 
 				await pipeline(readableNodeStream, fileStream);
-
 				await fs.rename(tempPath, filepath);
 
 				const newEtag = response.headers.get("ETag");
 				if (newEtag) {
-					etagCache[url] = newEtag;
+					etagCache[urlStr] = newEtag;
 					cacheDirty = true;
 				}
 
-				console.log(LOG_PREFIX, `Updated: ${name}`);
+				console.log(LOG_PREFIX, `Downloaded: ${name}`);
 			} finally {
 				clearTimeout(timeout);
 				// Cleanup temp file if it still exists
