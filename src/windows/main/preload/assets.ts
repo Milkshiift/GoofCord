@@ -61,7 +61,7 @@ export function loadStyles() {
 				assets.styles.push([
 					"renderingOptimizations",
 					`
-				[class*="messagesWrapper"], #channels, #emoji-picker-grid, [class*="members_"] {
+				[class*="messagesWrapper"], #channels, #emoji-picker-grid, [class*="membersWrap"] {
 				     will-change: transform, scroll-position;
 				     contain: strict;
 				}
