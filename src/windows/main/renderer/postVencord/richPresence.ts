@@ -2,7 +2,7 @@ import type arRpcPlugin from "@vencord/types/plugins/arRPC.web";
 
 export function initRichPresence() {
 	const plugins = VC.Plugins.plugins;
-	const matchingKey = Object.keys(plugins).find(key => key.includes("WebRichPresence"));
+	const matchingKey = Object.keys(plugins).find((key) => key.includes("WebRichPresence"));
 	const arRPC = (matchingKey ? plugins[matchingKey] : undefined) as typeof arRpcPlugin;
 
 	if (!arRPC) {

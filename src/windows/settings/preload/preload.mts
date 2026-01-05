@@ -1,15 +1,9 @@
 import { setConfig, whenConfigReady } from "@root/src/stores/config/config.preload.ts";
 import { contextBridge, ipcRenderer } from "electron";
 import { invoke, sendSync } from "../../../ipc/client.preload.ts";
-import {
-	Config,
-	type ConfigKey,
-	getDefinition,
-	type InputTypeMap,
-	isEditableSetting
-} from "../../../settingsSchema.ts";
+import { type Config, type ConfigKey, getDefinition, type InputTypeMap, isEditableSetting } from "../../../settingsSchema.ts";
 import { evaluateShowAfter, fieldsetCache, getVisibilityMap, renderSettings } from "./settingsRenderer.ts";
-import { createDictionaryRow, Strategies, type Strategy } from "./uiStrategies.ts";
+import { createDictionaryRow, createListRow, Strategies, type Strategy } from "./uiStrategies.ts";
 import { whenLocalizationReady } from "@root/src/stores/localization/localization.preload.ts";
 
 console.log("GoofCord Settings");
@@ -52,6 +46,14 @@ function bindGlobalEvents(): void {
 
 	delegate("change", ".dictionary-preset-select", (select) => {
 		if (select instanceof HTMLSelectElement) handleDictionaryPreset(select);
+	});
+
+	delegate("click", ".list-add-btn", (btn) => {
+		const container = btn.closest<HTMLElement>(".dictionary-container");
+		const rowsContainer = container?.querySelector(".dictionary-rows");
+		if (rowsContainer) {
+			rowsContainer.insertAdjacentHTML("beforeend", createListRow(""));
+		}
 	});
 
 	delegate("click", ".revert-button", (btn) => {

@@ -16,9 +16,10 @@ export function loadScripts() {
 
 	if (pre) {
 		const [name, content] = pre;
-		webFrame.executeJavaScript(content)
+		webFrame
+			.executeJavaScript(content)
 			.then(() => log(`Loaded Pre-Vencord: ${name}`))
-			.catch(err => error(`Failed Pre-Vencord: ${err}`));
+			.catch((err) => error(`Failed Pre-Vencord: ${err}`));
 	}
 
 	if (vencord) {
@@ -27,9 +28,10 @@ export function loadScripts() {
 		try {
 			const patchedContent = patchVencord(content);
 
-			webFrame.executeJavaScript(patchedContent)
+			webFrame
+				.executeJavaScript(patchedContent)
 				.then(() => log(`Loaded Vencord: ${name}`))
-				.catch(err => error(`Fatal: Vencord failed to load: ${err}`));
+				.catch((err) => error(`Fatal: Vencord failed to load: ${err}`));
 		} catch (patchErr) {
 			error(`Failed to patch Vencord: ${patchErr}`);
 		}
@@ -37,16 +39,18 @@ export function loadScripts() {
 		// Everything in post relies on Vencord, so only load if Vencord is present
 		if (post) {
 			const [name, content] = post;
-			webFrame.executeJavaScript(content)
+			webFrame
+				.executeJavaScript(content)
 				.then(() => log(`Loaded Post-Vencord: ${name}`))
-				.catch(err => error(`Failed Post-Vencord: ${err}`));
+				.catch((err) => error(`Failed Post-Vencord: ${err}`));
 		}
 	}
 
 	for (const [name, content] of others) {
-		webFrame.executeJavaScript(content)
+		webFrame
+			.executeJavaScript(content)
 			.then(() => log(`Loaded Script: ${name}`))
-			.catch(err => error(`Failed Script ${name}: ${err}`));
+			.catch((err) => error(`Failed Script ${name}: ${err}`));
 	}
 }
 

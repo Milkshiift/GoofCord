@@ -1,15 +1,7 @@
 import { getConfig } from "@root/src/stores/config/config.preload.ts";
 import { i } from "@root/src/stores/localization/localization.preload.ts";
 import { sendSync } from "../../../ipc/client.preload.ts";
-import {
-	type ButtonEntry,
-	type Config,
-	type ConfigKey,
-	type InputTypeMap,
-	isEditableSetting,
-	type SettingEntry,
-	settingsSchema
-} from "../../../settingsSchema.ts";
+import { type ButtonEntry, type Config, type ConfigKey, type InputTypeMap, isEditableSetting, type SettingEntry, settingsSchema } from "../../../settingsSchema.ts";
 import { MultiselectDropdown } from "./uiMultiselectDropdown.ts";
 import { Strategies, type Strategy } from "./uiStrategies.ts";
 import { TabSwitcher } from "./uiSwitcher.ts";

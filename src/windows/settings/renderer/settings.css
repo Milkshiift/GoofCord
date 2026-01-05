@@ -420,7 +420,7 @@ input[type="file"] {
 	}
 }
 
-/* Dictionary */
+/* Dictionary & List */
 
 .checkbox-container:has(.dictionary-container) {
 	flex-wrap: wrap;
@@ -468,6 +468,10 @@ input[type="file"] {
 	flex: 0.7;
 }
 
+.dictionary-row input:only-of-type {
+	flex: 1;
+}
+
 .dictionary-remove-btn {
 	background: transparent;
 	border: 1px solid transparent;
@@ -494,22 +498,34 @@ input[type="file"] {
 	padding-top: 5px;
 }
 
-.dictionary-preset-select {
+.dictionary-preset-select,
+.list-add-btn {
 	width: 5em !important;
-	background: var(--color-primary) !important; /* Remove arrow */
+	background: var(--color-primary) !important;
 	color: var(--font-color-on-primary) !important;
 	border: none !important;
 	font-weight: bold;
 	transition: all var(--transition-fast);
+	cursor: pointer;
 }
 
-.dictionary-preset-select:hover {
-	background-color: var(--color-primary-hover);
+.list-add-btn {
+	padding: 10px 12px;
+	border-radius: var(--border-radius-md);
+	width: fit-content !important;
+	font-size: 1em;
+	font-family: inherit;
+}
+
+.dictionary-preset-select:hover,
+.list-add-btn:hover {
+	background-color: var(--color-primary-hover) !important;
 	box-shadow: 0 4px 12px rgba(88, 101, 242, 0.4);
 	transform: translateY(-2px);
 }
 
-.dictionary-preset-select:focus-visible {
+.dictionary-preset-select:focus-visible,
+.list-add-btn:focus-visible {
 	border: none !important;
 	box-shadow: none !important;
 }

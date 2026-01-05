@@ -66,7 +66,7 @@ export type InputTypeMap = {
 	dropdown: string;
 	"dropdown-multiselect": string[];
 	file: string;
-	textarea: string[];
+	list: string[];
 	dictionary: Record<string, string>;
 };
 
@@ -150,8 +150,7 @@ export const settingsSchema = {
 		arrpc: setting("checkbox", {
 			name: "Rich Presence (arRPC)",
 			defaultValue: false,
-			description:
-				'Enables Rich Presence (game activity) via <a target="_blank" href="https://github.com/OpenAsar/arrpc">arRPC</a>. Flatpak users need a <a target="_blank" href="https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence">workaround</a>.',
+			description: 'Enables Rich Presence (game activity) via <a target="_blank" href="https://github.com/OpenAsar/arrpc">arRPC</a>. Flatpak users need a <a target="_blank" href="https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence">workaround</a>.',
 			onChange: "arrpc:initArrpc",
 		}),
 		minimizeToTray: setting("checkbox", {
@@ -270,8 +269,7 @@ export const settingsSchema = {
 	Assets: {
 		assets: setting("dictionary", {
 			name: "External Assets",
-			description:
-`Online scripts and styles loaded on launch. See the <a target="_blank" href="https://github.com/Milkshiift/GoofCord/wiki/Asset-Loader">wiki</a>.<br>
+			description: `Online scripts and styles loaded on launch. See the <a target="_blank" href="https://github.com/Milkshiift/GoofCord/wiki/Asset-Loader">wiki</a>.<br>
 - Ensure you include mod styles if they have them.<br>
 - Do not mix forks of the same mod (e.g., Vencord and Equicord).<br>
 - GoofCord requires a Vencord-based mod, PreVencord and PostVencord for full functionality.`,
@@ -326,7 +324,7 @@ export const settingsSchema = {
 			defaultValue: false,
 			description: 'Enables <a target="_blank" href="https://github.com/Milkshiift/GoofCord/wiki/Message-Encryption">message encryption</a> support. You may need to reload twice after enabling.',
 		}),
-		encryptionPasswords: setting("textarea", {
+		encryptionPasswords: setting("list", {
 			name: "Encryption passwords",
 			defaultValue: [],
 			description: "A comma-separated list of passwords used for encryption. They are stored securely. Keep a backup in a safe location.",
@@ -406,7 +404,7 @@ export const settingsSchema = {
 			defaultValue: false,
 			description: "Override the default rules.",
 		}),
-		blocklist: setting("textarea", {
+		blocklist: setting("list", {
 			name: "Blocklist",
 			defaultValue: [
 				"https://*/api/v*/science",
@@ -426,7 +424,7 @@ export const settingsSchema = {
 				condition: (value) => value === true,
 			},
 		}),
-		blockedStrings: setting("textarea", {
+		blockedStrings: setting("list", {
 			name: "Blocked strings",
 			defaultValue: ["sentry", "google", "tracking", "stats", "\\.spotify", "pagead", "analytics", "doubleclick"],
 			description: "Any URL containing these strings will be blocked.",
@@ -435,7 +433,7 @@ export const settingsSchema = {
 				condition: (value) => value === true,
 			},
 		}),
-		allowedStrings: setting("textarea", {
+		allowedStrings: setting("list", {
 			name: "Allowed strings",
 			defaultValue: ["videoplayback", "discord-attachments", "googleapis", "search", "api.spotify", "discord.com/assets/sentry."],
 			description: "Any URL containing these strings will never be blocked (Whitelist).",

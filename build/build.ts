@@ -78,7 +78,7 @@ buildTasks.push(
 		plugins: [globImportPlugin()],
 		minify: false,
 		sourcemap: false,
-		banner: "// prevencordmarker"
+		banner: "// prevencordmarker",
 	}),
 );
 buildTasks.push(
@@ -89,7 +89,7 @@ buildTasks.push(
 		plugins: [globImportPlugin()],
 		minify: false,
 		sourcemap: false,
-		banner: "// postvencordmarker"
+		banner: "// postvencordmarker",
 	}),
 );
 
@@ -117,7 +117,7 @@ console.log(pc.green("✅ Build completed! 🎉"));
 async function runBuild(config: import("bun").BuildConfig) {
 	const result = await Bun.build({
 		minify: config.minify ?? true,
-		sourcemap: (config.sourcemap !== false) && isDev ? "linked" : undefined,
+		sourcemap: config.sourcemap !== false && isDev ? "linked" : undefined,
 		format: config.format ?? "esm",
 		packages: "bundle",
 		...config,

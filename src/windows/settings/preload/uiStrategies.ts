@@ -21,9 +21,18 @@ const buildDictionaryRow = (key = "", value = "") => `
 		<button type="button" class="dictionary-remove-btn" title="Remove">✕</button>
 	</div>`;
 
+export const createDictionaryRow = buildDictionaryRow;
+
+const buildListRow = (value = "") => `
+	<div class="dictionary-row">
+		<input type="text" class="list-value" value="${escapeHTML(value)}" />
+		<button type="button" class="dictionary-remove-btn" title="Remove">✕</button>
+	</div>`;
+
+export const createListRow = buildListRow;
+
 const jsonStrategy: Strategy<unknown> = {
 	render: (_, k, v) => {
-		// Pretty print JSON for better readability in the textarea
 		const text = typeof v === "string" ? v : JSON.stringify(v, null, "\t");
 		return `<textarea setting-name="${k}" id="${k}" class="code-font" spellcheck="false" style="font-family: monospace; white-space: pre;">${escapeHTML(text)}</textarea>`;
 	},
@@ -32,7 +41,6 @@ const jsonStrategy: Strategy<unknown> = {
 		try {
 			return JSON.parse(val);
 		} catch (e) {
-			// Throwing here prevents the save operation in preload.mts
 			throw new Error(`Invalid JSON for ${el.id}: ${(e as Error).message}`);
 		}
 	},
@@ -58,18 +66,30 @@ export const Strategies: StrategyMap & { json: Strategy<unknown> } = {
 		},
 	},
 
-	textarea: {
+	list: {
 		render: (_, k, v) => {
-			const text = v.join(",\n");
-			return `<textarea setting-name="${k}" id="${k}">${escapeHTML(text)}</textarea>`;
+			const rows = v.map((val) => buildListRow(val)).join("");
+			return `
+				<div class="dictionary-container" setting-name="${k}" id="${k}">
+					<div class="dictionary-rows">${rows}</div>
+					<div class="dictionary-controls">
+						<button type="button" class="list-add-btn">${i("settings-dictionary-add")}</button>
+					</div>
+				</div>`;
 		},
-		extract: async (el) =>
-			(el as HTMLTextAreaElement).value
-				.split(/[\r\n,]+/)
-				.map((s) => s.trim())
-				.filter(Boolean),
+		extract: async (el) => {
+			const result: string[] = [];
+			for (const row of el.querySelectorAll(".dictionary-row")) {
+				const val = row.querySelector<HTMLInputElement>(".list-value")?.value.trim();
+				if (val) result.push(val);
+			}
+			return result;
+		},
 		setValue: (el, v) => {
-			(el as HTMLTextAreaElement).value = v.join(",\n");
+			const container = el.querySelector(".dictionary-rows");
+			if (container) {
+				container.innerHTML = v.map((val) => buildListRow(val)).join("");
+			}
 		},
 	},
 
@@ -158,5 +178,3 @@ export const Strategies: StrategyMap & { json: Strategy<unknown> } = {
 
 	json: jsonStrategy,
 };
-
-export const createDictionaryRow = buildDictionaryRow;

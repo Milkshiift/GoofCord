@@ -63,10 +63,10 @@ function categorizeScript(filename: string, content: string, container: ScriptCo
 		if (container.vencord) {
 			console.warn(LOG_PREFIX, `Duplicate Vencord-based client mod detected: ${filename}`);
 			void dialog.showMessageBox({
-				type: 'warning',
-				title: 'Duplicate Vencord Detected',
+				type: "warning",
+				title: "Duplicate Vencord Detected",
 				message: `Multiple Vencord-based client mods were found.\n\nEnsure you only have a single Vencord-based client mod to avoid conflicts.`,
-				buttons: ['OK']
+				buttons: ["OK"],
 			});
 		}
 
@@ -84,15 +84,9 @@ export async function categorizeAllAssets() {
 
 		const [rawScripts, rawStyles] = await Promise.all([
 			// Scripts
-			Promise.all(
-				allFiles.filter(f => f.endsWith(".js"))
-					.map(readAssetFile)
-			),
+			Promise.all(allFiles.filter((f) => f.endsWith(".js")).map(readAssetFile)),
 			// Styles
-			Promise.all(
-				allFiles.filter(f => f.endsWith(".css"))
-					.map(readAssetFile)
-			)
+			Promise.all(allFiles.filter((f) => f.endsWith(".css")).map(readAssetFile)),
 		]);
 
 		for (const asset of rawScripts) {
@@ -107,19 +101,21 @@ export async function categorizeAllAssets() {
 		if (missingItems.length > 0) {
 			console.error(LOG_PREFIX, "Critical assets missing:", missingItems.join(", "));
 
-			const missingList = missingItems.map(item => `• ${item}`).join("\n");
+			const missingList = missingItems.map((item) => `• ${item}`).join("\n");
 
 			if (!getConfig("dontShowMissingAssetsWarning")) {
-				dialog.showMessageBox(mainWindow || undefined, {
-					type: 'error',
-					title: 'Critical Assets Missing',
-					message: `GoofCord failed to find the following required assets:\n${missingList}\n\nEnsure you have them in the "External Assets" setting, or manually add them to your assets folder.\n\nMany GoofCord features will be broken or unavailable.`,
-					buttons: ['OK', 'Don\'t show again']
-				}).then((returnValue) => {
-					if (returnValue.response === 1) {
-						void setConfig("dontShowMissingAssetsWarning", true);
-					}
-				});
+				dialog
+					.showMessageBox(mainWindow || undefined, {
+						type: "error",
+						title: "Critical Assets Missing",
+						message: `GoofCord failed to find the following required assets:\n${missingList}\n\nEnsure you have them in the "External Assets" setting, or manually add them to your assets folder.\n\nMany GoofCord features will be broken or unavailable.`,
+						buttons: ["OK", "Don't show again"],
+					})
+					.then((returnValue) => {
+						if (returnValue.response === 1) {
+							void setConfig("dontShowMissingAssetsWarning", true);
+						}
+					});
 			}
 		}
 
