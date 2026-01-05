@@ -138,52 +138,52 @@ export const settingsSchema = {
 		locale: setting("dropdown", {
 			name: "Language 🌍",
 			defaultValue: "en-US",
-			description: 'This is different from Discord\'s language. You can translate GoofCord <a target="_blank" href="https://hosted.weblate.org/projects/goofcord/goofcord/">here</a>.',
+			description: 'Controls the UI language of GoofCord, separate from Discord\'s internal language setting. Contribute translations <a target="_blank" href="https://hosted.weblate.org/projects/goofcord/goofcord/">here</a>.',
 			options: allLangs,
 			onChange: "settings:hotreloadLocale",
 		}),
 		discordUrl: setting("textfield", {
 			name: "Discord URL",
 			defaultValue: "https://discord.com/app",
-			description: 'URL that GoofCord will load on launch. Add "canary." or "ptb." before "discord.com" for respective instances.',
+			description: 'The URL loaded on launch. Prepend "canary." or "ptb." to "discord.com" to use those specific instances.',
 		}),
 		arrpc: setting("checkbox", {
-			name: "Activity display",
+			name: "Rich Presence (arRPC)",
 			defaultValue: false,
 			description:
-				'Enables an open source reimplementation of Discord\'s\nrich presence called <a target="_blank" href="https://github.com/OpenAsar/arrpc">arRPC</a>.\nA <a target="_blank" href="https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence">workaround</a> is needed for arRPC to work on Flatpak',
+				'Enables Rich Presence (game activity) via <a target="_blank" href="https://github.com/OpenAsar/arrpc">arRPC</a>. Flatpak users need a <a target="_blank" href="https://github.com/flathub/io.github.milkshiift.GoofCord?tab=readme-ov-file#discord-rich-presence">workaround</a>.',
 			onChange: "arrpc:initArrpc",
 		}),
 		minimizeToTray: setting("checkbox", {
 			name: "Minimize to tray",
 			defaultValue: true,
-			description: "GoofCord stays open even after closing all windows.",
+			description: "Keeps GoofCord running in the system tray when the window is closed.",
 		}),
 		startMinimized: setting("checkbox", {
 			name: "Start minimized",
 			defaultValue: false,
-			description: "GoofCord starts in the background.",
+			description: "Launches GoofCord in the background without opening a window.",
 		}),
 		launchWithOsBoot: setting("checkbox", {
-			name: "Launch GoofCord on startup",
+			name: "Launch on startup",
 			defaultValue: false,
-			description: "Start GoofCord automatically on system boot. May not work in some Linux environments.",
+			description: "Automatically starts GoofCord when you log in. Compatibility varies by Linux environment.",
 			onChange: "loader:setAutoLaunchState",
 		}),
 		updateNotification: setting("checkbox", {
-			name: "Update notification",
+			name: "Update notifications",
 			defaultValue: true,
-			description: "Get notified about new version releases.",
+			description: "Show a notification when a new version of GoofCord is released.",
 		}),
 		spellcheck: setting("checkbox", {
 			name: "Spellcheck",
 			defaultValue: true,
-			description: "Enables spellcheck for input fields.",
+			description: "Highlights spelling errors in text input fields.",
 		}),
 		spellcheckLanguages: setting("dropdown-multiselect", {
 			name: "Spellcheck languages",
-			defaultValue: [], // Inferred as string[] automatically
-			description: "A list of languages to check spelling for. When none are selected, the system default is used.",
+			defaultValue: [],
+			description: "Select languages for spellchecking. If no languages are selected, the system default is used.",
 			options: spellcheckLangs,
 			showAfter: {
 				key: "spellcheck",
@@ -195,12 +195,12 @@ export const settingsSchema = {
 		customTitlebar: setting("checkbox", {
 			name: "Custom titlebar",
 			defaultValue: true,
-			description: "Enables a Discord-like titlebar.",
+			description: "Enables an in-Discord titlebar instead of the system default.",
 		}),
 		disableAltMenu: setting("checkbox", {
 			name: "Disable application menu",
 			defaultValue: false,
-			description: "Stops Alt key from opening the app menu.",
+			description: "Prevents the 'Alt' key from triggering the application menu bar.",
 			showAfter: {
 				key: "customTitlebar",
 				condition: (value) => value === false,
@@ -209,32 +209,32 @@ export const settingsSchema = {
 		staticTitle: setting("checkbox", {
 			name: "Static title",
 			defaultValue: false,
-			description: "Prevent Discord from changing the window title.",
+			description: "Prevents Discord from changing the window title (e.g., when switching channels).",
 		}),
 		dynamicIcon: setting("checkbox", {
 			name: "Dynamic icon",
 			defaultValue: true,
-			description: "Shows pings/mentions count on GoofCord's icon and its tray. On Linux, pings on the taskbar only work when unitylib is installed.",
+			description: "Displays a badge for pings/mentions on the taskbar and tray icon. Linux requires unitylib.",
 		}),
 		unreadBadge: setting("checkbox", {
 			name: "Unread badge",
 			defaultValue: false,
-			description: "Shows if you have any unread messages on GoofCord's icon as a dot.",
+			description: "Displays a dot on the icon when unread messages are present.",
 			showAfter: {
 				key: "dynamicIcon",
 				condition: (value) => value === true,
 			},
 		}),
 		customIconPath: setting("file", {
-			name: "Custom Icon",
+			name: "Custom icon",
 			defaultValue: "",
-			description: "Select an alternative icon for GoofCord to use. Images with transparency are recommended.",
+			description: "Load a custom image file for the application icon. Transparency recommended.",
 			accept: "image/*",
 		}),
 		trayIcon: setting("dropdown", {
-			name: "Tray icon",
+			name: "Tray icon style",
 			defaultValue: "default",
-			description: "What tray icon to use. Symbolic attempts to mimic Gnome's monochromatic icons.",
+			description: "Select the tray icon style. Symbolic icons attempt to match GNOME's monochrome style.",
 			options: ["default", "symbolic_black", "symbolic_white"],
 			showAfter: {
 				key: "trayIcon",
@@ -251,26 +251,26 @@ export const settingsSchema = {
 			},
 		}),
 		popoutWindowAlwaysOnTop: setting("checkbox", {
-			name: "Pop out window always on top",
+			name: "Popout window always on top",
 			defaultValue: true,
-			description: "Makes voice chat pop out window always stay above other windows.",
+			description: "Forces pop-out windows to stay above other windows.",
 		}),
 		transparency: setting("checkbox", {
-			name: "Transparency",
+			name: "Window transparency",
 			defaultValue: false,
-			description: "Makes the window transparent for use with translucent themes.",
+			description: "Allows the window to be transparent. Required for translucent themes.",
 		}),
 		disableSettingsAnimations: setting("checkbox", {
 			name: "Disable settings animations",
 			defaultValue: false,
-			description: "Disables all animations in this window.",
+			description: "Removes transition animations within this settings menu.",
 			onChange: "settings:reloadWindow",
 		}),
 	},
 	Assets: {
 		assets: setting("dictionary", {
 			name: "External Assets",
-			description: 'See <a target="_blank" href="https://github.com/Milkshiift/GoofCord/wiki/Asset-Loader">wiki</a>. Scripts and styles specified here will be downloaded on launch. Make sure to also include the styles of a client mod, if it uses them. Don\'t mix forks of the same mod, like Vencord and Equicord.',
+			description: 'Online scripts and styles loaded on launch. See the <a target="_blank" href="https://github.com/Milkshiift/GoofCord/wiki/Asset-Loader">wiki</a>. Ensure you include mod styles if required. Do not mix forks of the same mod (e.g., Vencord and Equicord).',
 			defaultValue: {
 				Vencord: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",
 				VencordStyles: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
@@ -295,7 +295,7 @@ export const settingsSchema = {
 		invidiousInstance: setting("textfield", {
 			name: "Instance",
 			defaultValue: "https://invidious.nerdvpn.de",
-			description: "What Invidious instance to use. If videos fail to load, try changing it to a different one and disabling auto-updates.",
+			description: "The Invidious URL to use. If videos fail to load, try setting a different instance and disabling auto-switch.",
 			onChange: "settings:invidiousConfigChanged",
 			showAfter: {
 				key: "invidiousEmbeds",
@@ -303,9 +303,9 @@ export const settingsSchema = {
 			},
 		}),
 		autoUpdateInvidiousInstance: setting("checkbox", {
-			name: "Auto-update instance",
+			name: "Auto-switch instance",
 			defaultValue: true,
-			description: "Automatically finds an available instance with the lowest latency.",
+			description: "Automatically finds and switches to the Invidious instance with the lowest latency.",
 			showAfter: {
 				key: "invidiousEmbeds",
 				condition: (value) => value === true,
@@ -315,12 +315,12 @@ export const settingsSchema = {
 		messageEncryption: setting("checkbox", {
 			name: "Message encryption",
 			defaultValue: false,
-			description: 'See <a target="_blank" href="https://github.com/Milkshiift/GoofCord/wiki/Message-Encryption">message encryption</a>.',
+			description: 'Enables <a target="_blank" href="https://github.com/Milkshiift/GoofCord/wiki/Message-Encryption">message encryption</a> support. You may need to reload twice after enabling.',
 		}),
 		encryptionPasswords: setting("textarea", {
 			name: "Encryption passwords",
 			defaultValue: [],
-			description: "Securely stored, encrypted list of passwords that will be used for encryption. A backup in a warm, safe place is recommended. Separate entries with commas.",
+			description: "A comma-separated list of passwords used for encryption. They are stored securely. Keep a backup in a safe location.",
 			encrypted: true,
 			showAfter: {
 				key: "messageEncryption",
@@ -337,9 +337,9 @@ export const settingsSchema = {
 			},
 		}),
 		encryptionMark: setting("textfield", {
-			name: "Encryption Mark",
+			name: "Decryption marker",
 			defaultValue: "| ",
-			description: "A string that will be prepended to each decrypted message so it's easier to know what messages are encrypted.",
+			description: "A string prepended to decrypted messages to distinguish them from normal text.",
 			showAfter: {
 				key: "messageEncryption",
 				condition: (value) => value === true,
@@ -350,12 +350,12 @@ export const settingsSchema = {
 		domOptimizer: setting("checkbox", {
 			name: "DOM optimizer",
 			defaultValue: true,
-			description: "Defers DOM updates to possibly improve performance. May cause visual artifacts.",
+			description: "Defers DOM updates to potentially improve performance. May cause visual artifacts.",
 		}),
 		renderingOptimizations: setting("checkbox", {
 			name: "Rendering optimizations",
 			defaultValue: true,
-			description: "Applies CSS optimizations to improve scrolling smoothness. May cause text to become blurry if used with some themes.",
+			description: "Applies CSS tweaks for smoother scrolling. Text may appear blurry with certain themes.",
 		}),
 		forceDedicatedGPU: setting("checkbox", {
 			name: "Force dedicated GPU",
@@ -365,12 +365,12 @@ export const settingsSchema = {
 		performanceFlags: setting("checkbox", {
 			name: "Performance flags",
 			defaultValue: false,
-			description: "Enables additional Chromium flags for performance. Recommended ON unless causes issues.",
+			description: "Enables experimental Chromium flags to boost performance. Disable if facing issues.",
 		}),
 		hardwareAcceleration: setting("checkbox", {
 			name: "Hardware acceleration",
 			defaultValue: true,
-			description: "Disabling can help fix some rendering issues.",
+			description: "Uses GPU for rendering. Disable this if you experience graphical glitches.",
 		}),
 		disableGpuCompositing: hidden("boolean", false),
 		spoofChrome: setting("checkbox", {
@@ -379,9 +379,9 @@ export const settingsSchema = {
 			description: "Emulates the Chrome web browser to better blend in with normal traffic.",
 		}),
 		spoofWindows: setting("checkbox", {
-			name: "Spoof Windows (VPN block bypass)",
+			name: "Spoof Windows (VPN Bypass)",
 			defaultValue: false,
-			description: "Emulates the Windows platform. Enable this if Discord fails to load with a VPN.",
+			description: "Reports the OS as Windows. Enable this if Discord blocks your connection while using a VPN on Linux.",
 			showAfter: {
 				key: "spoofChrome",
 				condition: (value) => process.platform !== "win32" && value === true,
@@ -390,7 +390,7 @@ export const settingsSchema = {
 		firewall: setting("checkbox", {
 			name: "Firewall",
 			defaultValue: true,
-			description: "Never disable unless for debugging.",
+			description: "Blocks known tracking and telemetry. Disable only for debugging.",
 		}),
 		customFirewallRules: setting("checkbox", {
 			name: "Custom firewall rules",
@@ -411,7 +411,7 @@ export const settingsSchema = {
 				"https://www.youtube.com/s/desktop/*",
 				"https://www.youtube.com/youtubei/v*/log_event?*",
 			],
-			description: "A list of URLs to block. Each entry must be separated by a comma.",
+			description: "A comma-separated list of URL patterns to block.",
 			showAfter: {
 				key: "customFirewallRules",
 				condition: (value) => value === true,
@@ -420,7 +420,7 @@ export const settingsSchema = {
 		blockedStrings: setting("textarea", {
 			name: "Blocked strings",
 			defaultValue: ["sentry", "google", "tracking", "stats", "\\.spotify", "pagead", "analytics", "doubleclick"],
-			description: "If any of specified strings are in the URL, it will be blocked.",
+			description: "Any URL containing these strings will be blocked.",
 			showAfter: {
 				key: "customFirewallRules",
 				condition: (value) => value === true,
@@ -429,7 +429,7 @@ export const settingsSchema = {
 		allowedStrings: setting("textarea", {
 			name: "Allowed strings",
 			defaultValue: ["videoplayback", "discord-attachments", "googleapis", "search", "api.spotify", "discord.com/assets/sentry."],
-			description: "If any of specified strings are in the URL, it will *not* be blocked.",
+			description: "Any URL containing these strings will never be blocked (Whitelist).",
 			showAfter: {
 				key: "customFirewallRules",
 				condition: (value) => value === true,
@@ -442,20 +442,20 @@ export const settingsSchema = {
 	},
 	Cloud: {
 		autoSaveCloud: setting("checkbox", {
-			name: "Auto save",
+			name: "Auto-save",
 			defaultValue: false,
-			description: "Automatically save settings to cloud when they change.",
+			description: "Automatically saves settings to the cloud when changed.",
 		}),
 		cloudHost: setting("textfield", {
-			name: "Cloud Host",
-			description: 'GoofCord Cloud Server URL. You can self-host it yourself, see the <a target="_blank" href="https://github.com/Wuemeli/goofcord-cloudserver">repository</a>.',
+			name: "Cloud Host URL",
+			description: 'The URL for the Cloud Server. For self-hosting, see the <a target="_blank" href="https://github.com/Wuemeli/goofcord-cloudserver">repository</a>.',
 			defaultValue: "https://goofcordcloud.wuemeli.com",
 		}),
 		cloudToken: hidden("string", ""),
 		cloudEncryptionKey: setting("textfield", {
 			name: "Cloud Encryption Key",
 			defaultValue: "",
-			description: "Leave empty to not use encryption and not save message encryption passwords on cloud. You can't recover your password if you lose it.",
+			description: "Used to encrypt data sent to the cloud. If lost, your data cannot be recovered. Leave empty to disable encryption and not save message encryption passwords.",
 			encrypted: true,
 		}),
 		"button-loadFromCloud": button("Load from cloud", "settings.loadCloud()"),
