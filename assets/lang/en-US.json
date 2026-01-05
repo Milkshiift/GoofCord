@@ -85,7 +85,7 @@
   "opt-disableSettingsAnimations": "Disable settings animations",
   "opt-disableSettingsAnimations-desc": "Removes transition animations within this settings menu.",
   "opt-assets": "External Assets",
-  "opt-assets-desc": "Online scripts and styles loaded on launch. See the <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/Asset-Loader\">wiki</a>. Ensure you include mod styles if required. Do not mix forks of the same mod (e.g., Vencord and Equicord).",
+  "opt-assets-desc": "Online scripts and styles loaded on launch. See the <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/Asset-Loader\">wiki</a>.<br>\n- Ensure you include mod styles if they have them.<br>\n- Do not mix forks of the same mod (e.g., Vencord and Equicord).<br>\n- GoofCord requires a Vencord-based mod, PreVencord and PostVencord for full functionality.",
   "opt-invidiousEmbeds": "Invidious embeds",
   "opt-invidiousEmbeds-desc": "Replaces YouTube embeds with Invidious embeds.",
   "opt-invidiousInstance": "Instance",

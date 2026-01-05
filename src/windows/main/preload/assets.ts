@@ -1,7 +1,3 @@
-// @ts-expect-error
-import postVencordScript from "@root/assets/postVencord.js" with { type: "text" };
-// @ts-expect-error
-import preVencordScript from "@root/assets/preVencord.js" with { type: "text" };
 import { getConfig } from "@root/src/stores/config/config.preload.ts";
 import { ipcRenderer, webFrame } from "electron";
 import { sendSync } from "../../../ipc/client.preload.ts";
@@ -12,26 +8,45 @@ import discordCss from "./discord.css" with { type: "text" };
 import { patchVencord } from "./vencordPatcher.ts";
 
 const assets = sendSync("assetLoader:getAssets");
-const isVencordLoader = (scriptContent: string) => scriptContent.substring(0, 500).toLowerCase().includes("vencord");
 
 export function loadScripts() {
-	const vencordIndex = assets.scripts.findIndex(([, content]) => isVencordLoader(content));
-	const hasVencord = vencordIndex !== -1;
-	if (hasVencord) setVencordPresent(true);
+	const { pre, vencord, post, others } = assets.scripts;
 
-	webFrame.executeJavaScript(preVencordScript).then(() => log(`Loaded pre-Vencord renderer`));
+	if (vencord) setVencordPresent(true);
 
-	for (let i = 0; i < assets.scripts.length; i++) {
-		const [name, content] = assets.scripts[i];
+	if (pre) {
+		const [name, content] = pre;
+		webFrame.executeJavaScript(content)
+			.then(() => log(`Loaded Pre-Vencord: ${name}`))
+			.catch(err => error(`Failed Pre-Vencord: ${err}`));
+	}
 
-		if (i === vencordIndex) {
+	if (vencord) {
+		const [name, content] = vencord;
+
+		try {
 			const patchedContent = patchVencord(content);
-			webFrame.executeJavaScript(patchedContent).then(() => log(`Loaded script: ${name}`));
 
-			webFrame.executeJavaScript(postVencordScript).then(() => log(`Loaded post-Vencord renderer`));
-		} else {
-			webFrame.executeJavaScript(content).then(() => log(`Loaded script: ${name}`));
+			webFrame.executeJavaScript(patchedContent)
+				.then(() => log(`Loaded Vencord: ${name}`))
+				.catch(err => error(`Fatal: Vencord failed to load: ${err}`));
+		} catch (patchErr) {
+			error(`Failed to patch Vencord: ${patchErr}`);
 		}
+
+		// Everything in post relies on Vencord, so only load if Vencord is present
+		if (post) {
+			const [name, content] = post;
+			webFrame.executeJavaScript(content)
+				.then(() => log(`Loaded Post-Vencord: ${name}`))
+				.catch(err => error(`Failed Post-Vencord: ${err}`));
+		}
+	}
+
+	for (const [name, content] of others) {
+		webFrame.executeJavaScript(content)
+			.then(() => log(`Loaded Script: ${name}`))
+			.catch(err => error(`Failed Script ${name}: ${err}`));
 	}
 }
 

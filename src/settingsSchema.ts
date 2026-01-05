@@ -270,12 +270,20 @@ export const settingsSchema = {
 	Assets: {
 		assets: setting("dictionary", {
 			name: "External Assets",
-			description: 'Online scripts and styles loaded on launch. See the <a target="_blank" href="https://github.com/Milkshiift/GoofCord/wiki/Asset-Loader">wiki</a>. Ensure you include mod styles if required. Do not mix forks of the same mod (e.g., Vencord and Equicord).',
+			description:
+`Online scripts and styles loaded on launch. See the <a target="_blank" href="https://github.com/Milkshiift/GoofCord/wiki/Asset-Loader">wiki</a>.<br>
+- Ensure you include mod styles if they have them.<br>
+- Do not mix forks of the same mod (e.g., Vencord and Equicord).<br>
+- GoofCord requires a Vencord-based mod, PreVencord and PostVencord for full functionality.`,
 			defaultValue: {
+				PreVencord: "https://raw.githubusercontent.com/Milkshiift/GoofCord/refs/heads/main/assets/preVencord.js",
+				PostVencord: "https://raw.githubusercontent.com/Milkshiift/GoofCord/refs/heads/main/assets/postVencord.js",
 				Vencord: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js",
 				VencordStyles: "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css",
 			},
 			options: [
+				["PreVencord", "https://raw.githubusercontent.com/Milkshiift/GoofCord/refs/heads/main/assets/preVencord.js"],
+				["PostVencord", "https://raw.githubusercontent.com/Milkshiift/GoofCord/refs/heads/main/assets/postVencord.js"],
 				["Vencord", "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.js"],
 				["VencordStyles", "https://github.com/Vendicated/Vencord/releases/download/devbuild/browser.css"],
 				["Equicord", "https://github.com/Equicord/Equicord/releases/download/latest/browser.js"],
@@ -284,6 +292,7 @@ export const settingsSchema = {
 			],
 			onChange: "assetDownloader:updateAssetsFull",
 		}),
+		dontShowMissingAssetsWarning: hidden("boolean", false),
 		assetEtags: hidden("object", {}),
 		managedFiles: hidden("string[]", []),
 		invidiousEmbeds: setting("checkbox", {
