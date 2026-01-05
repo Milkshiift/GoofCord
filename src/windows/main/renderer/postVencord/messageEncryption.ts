@@ -85,6 +85,11 @@ export function initMessageEncryption() {
 
 	if (!meEnabled) return;
 
+	// The APIs are disabled by default.
+	// TODO: Figure out how to set this in a way that doesn't require reloading twice.
+	VC.Settings.plugins.ChatInputButtonAPI.enabled = true;
+	VC.Settings.plugins.MessageEventsAPI.enabled = true;
+
 	// @ts-expect-error
 	VC.Api.ChatButtons.addChatBarButton("messageEncryption", EncryptionToggle, UnlockIcon);
 
