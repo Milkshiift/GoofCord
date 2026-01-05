@@ -1,7 +1,13 @@
 import { setConfig, whenConfigReady } from "@root/src/stores/config/config.preload.ts";
 import { contextBridge, ipcRenderer } from "electron";
 import { invoke, sendSync } from "../../../ipc/client.preload.ts";
-import { type ConfigKey, getDefinition, type InputTypeMap, isEditableSetting } from "../../../settingsSchema.ts";
+import {
+	Config,
+	type ConfigKey,
+	getDefinition,
+	type InputTypeMap,
+	isEditableSetting
+} from "../../../settingsSchema.ts";
 import { evaluateShowAfter, fieldsetCache, getVisibilityMap, renderSettings } from "./settingsRenderer.ts";
 import { createDictionaryRow, Strategies, type Strategy } from "./uiStrategies.ts";
 import { whenLocalizationReady } from "@root/src/stores/localization/localization.preload.ts";
@@ -83,23 +89,25 @@ async function handleSave(element: HTMLElement): Promise<void> {
 	if (!key) return;
 
 	const def = getDefinition(key);
-	if (!isEditableSetting(def)) return;
+	if (!def) return;
+
+	const isEditable = isEditableSetting(def);
 
 	try {
-		const strategy = Strategies[def.inputType] as Strategy<typeof def.inputType>;
+		const strategy = isEditable ? (Strategies[def.inputType] as Strategy<typeof def.inputType>) : Strategies.json;
 
 		let value = await strategy.extract(element, key);
 
-		if (def.encrypted) {
+		if (isEditable && def.encrypted) {
 			value = encryptSetting(value);
 		}
 
-		await setConfig(key, value);
+		await setConfig(key, value as Config[ConfigKey]);
 
 		if (dependencyMap.has(key)) updateDependentVisibility(key, value);
 		void invoke("flashTitlebar", "#5865F2");
 
-		if (def.onChange) void ipcRenderer.invoke(def.onChange);
+		if (isEditable && def.onChange) void ipcRenderer.invoke(def.onChange);
 	} catch (err) {
 		console.error(`Failed to save ${key}:`, err);
 	}
@@ -110,19 +118,20 @@ async function handleRevert(element: HTMLElement): Promise<void> {
 	if (!key) return;
 
 	const def = getDefinition(key);
-	if (def?.defaultValue === undefined) return;
-	if (!isEditableSetting(def)) return;
+	if (!def || def.defaultValue === undefined) return;
 
-	if (def.inputType === "file") {
+	const isEditable = isEditableSetting(def);
+
+	if (isEditable && def.inputType === "file") {
 		await setConfig(key, def.defaultValue);
 		(element as HTMLInputElement).value = "";
 		void invoke("flashTitlebar", "#5865F2");
 		return;
 	}
 
-	const strategy = Strategies[def.inputType] as Strategy<typeof def.inputType>;
+	const strategy = isEditable ? (Strategies[def.inputType] as Strategy<typeof def.inputType>) : Strategies.json;
 
-	strategy.setValue(element, def.defaultValue as InputTypeMap[typeof def.inputType]);
+	strategy.setValue(element, def.defaultValue as InputTypeMap[keyof InputTypeMap]);
 
 	await handleSave(element);
 }

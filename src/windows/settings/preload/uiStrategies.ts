@@ -4,14 +4,14 @@ import type { ConfigKey, InputTypeMap, SettingEntry } from "../../../settingsSch
 
 const escapeHTML = (s: string) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-export interface Strategy<K extends keyof InputTypeMap> {
-	render(entry: SettingEntry<K>, key: ConfigKey, value: InputTypeMap[K]): string;
-	extract(element: HTMLElement, key: ConfigKey): Promise<InputTypeMap[K]>;
-	setValue(element: HTMLElement, value: InputTypeMap[K]): void;
+export interface Strategy<T> {
+	render(entry: SettingEntry | null, key: ConfigKey, value: T): string;
+	extract(element: HTMLElement, key: ConfigKey): Promise<T>;
+	setValue(element: HTMLElement, value: T): void;
 }
 
 type StrategyMap = {
-	[K in keyof InputTypeMap]: Strategy<K>;
+	[K in keyof InputTypeMap]: Strategy<InputTypeMap[K]>;
 };
 
 const buildDictionaryRow = (key = "", value = "") => `
@@ -21,7 +21,27 @@ const buildDictionaryRow = (key = "", value = "") => `
 		<button type="button" class="dictionary-remove-btn" title="Remove">✕</button>
 	</div>`;
 
-export const Strategies: StrategyMap = {
+const jsonStrategy: Strategy<unknown> = {
+	render: (_, k, v) => {
+		// Pretty print JSON for better readability in the textarea
+		const text = typeof v === "string" ? v : JSON.stringify(v, null, "\t");
+		return `<textarea setting-name="${k}" id="${k}" class="code-font" spellcheck="false" style="font-family: monospace; white-space: pre;">${escapeHTML(text)}</textarea>`;
+	},
+	extract: async (el) => {
+		const val = (el as HTMLTextAreaElement).value;
+		try {
+			return JSON.parse(val);
+		} catch (e) {
+			// Throwing here prevents the save operation in preload.mts
+			throw new Error(`Invalid JSON for ${el.id}: ${(e as Error).message}`);
+		}
+	},
+	setValue: (el, v) => {
+		(el as HTMLTextAreaElement).value = JSON.stringify(v, null, "\t");
+	},
+};
+
+export const Strategies: StrategyMap & { json: Strategy<unknown> } = {
 	checkbox: {
 		render: (_, k, v) => `<input setting-name="${k}" id="${k}" type="checkbox" ${v ? "checked" : ""}/>`,
 		extract: async (el) => (el as HTMLInputElement).checked,
@@ -54,7 +74,7 @@ export const Strategies: StrategyMap = {
 	},
 
 	file: {
-		render: (e, k) => `<input setting-name="${k}" id="${k}" accept="${e.accept || "*"}" type="file"/>`,
+		render: (e, k) => `<input setting-name="${k}" id="${k}" accept="${e?.accept || "*"}" type="file"/>`,
 		extract: async (el, key) => {
 			const file = (el as HTMLInputElement).files?.[0];
 			if (!file) throw new Error("No file selected");
@@ -68,7 +88,7 @@ export const Strategies: StrategyMap = {
 
 	dropdown: {
 		render: (e, k, v) => {
-			const options = Array.isArray(e.options) ? e.options : Object.keys(e.options ?? {});
+			const options = Array.isArray(e?.options) ? e.options : Object.keys(e?.options ?? {});
 			const html = options.map((opt) => `<option value="${opt}"${v === String(opt) ? " selected" : ""}>${opt}</option>`).join("");
 			return `<select setting-name="${k}" id="${k}" class="left dropdown" name="${k}">${html}</select>`;
 		},
@@ -81,7 +101,7 @@ export const Strategies: StrategyMap = {
 	"dropdown-multiselect": {
 		render: (e, k, v) => {
 			const selected = new Set(v);
-			const options = Array.isArray(e.options) ? e.options : Object.keys(e.options ?? {});
+			const options = Array.isArray(e?.options) ? e.options : Object.keys(e?.options ?? {});
 			const html = options.map((opt) => `<option value="${opt}"${selected.has(String(opt)) ? " selected" : ""}>${opt}</option>`).join("");
 			return `<select setting-name="${k}" id="${k}" class="left dropdown" name="${k}" multiple>${html}</select>`;
 		},
@@ -98,7 +118,7 @@ export const Strategies: StrategyMap = {
 				.map(([dk, dv]) => buildDictionaryRow(dk, dv))
 				.join("");
 
-			const presets = (Array.isArray(e.options) ? e.options : []) as Array<string | [string, string]>;
+			const presets = (Array.isArray(e?.options) ? e.options : []) as Array<string | [string, string]>;
 			const presetsHTML = presets
 				.map((opt) => {
 					const [key, val] = Array.isArray(opt) ? opt : [opt, ""];
@@ -135,6 +155,8 @@ export const Strategies: StrategyMap = {
 			}
 		},
 	},
+
+	json: jsonStrategy,
 };
 
 export const createDictionaryRow = buildDictionaryRow;

@@ -1,7 +1,15 @@
 import { getConfig } from "@root/src/stores/config/config.preload.ts";
 import { i } from "@root/src/stores/localization/localization.preload.ts";
 import { sendSync } from "../../../ipc/client.preload.ts";
-import { type ButtonEntry, type Config, type ConfigKey, type InputTypeMap, isEditableSetting, type SettingEntry, settingsSchema } from "../../../settingsSchema.ts";
+import {
+	type ButtonEntry,
+	type Config,
+	type ConfigKey,
+	type InputTypeMap,
+	isEditableSetting,
+	type SettingEntry,
+	settingsSchema
+} from "../../../settingsSchema.ts";
 import { MultiselectDropdown } from "./uiMultiselectDropdown.ts";
 import { Strategies, type Strategy } from "./uiStrategies.ts";
 import { TabSwitcher } from "./uiSwitcher.ts";
@@ -73,12 +81,11 @@ function buildPageHTML(categories: Array<keyof typeof settingsSchema>): string {
 	const panels = categories
 		.map((name, idx) => {
 			const id = `panel-${toId(name)}`;
-			const category = settingsSchema[name]; // Now strictly typed
+			const category = settingsSchema[name];
 			let settingsHTML = "";
 			let buttonsHTML = "";
 
 			for (const [key, entry] of Object.entries(category)) {
-				// Type guard logic for keys
 				if (key.startsWith("button-")) {
 					buttonsHTML += `<button type="button" onclick="${(entry as ButtonEntry).onClick}">${i(`opt-${key}`)}</button>`;
 				} else {
@@ -112,26 +119,27 @@ function buildSettingHTML(key: ConfigKey, entry: SettingEntry): string {
 	let value = getConfig(key);
 	if (entry.encrypted && typeof value === "string") value = decryptSetting(value);
 
+	const isEditable = isEditableSetting(entry);
 	const showAfterKey = entry.showAfter?.key as ConfigKey;
 	let isHidden = false;
 
-	if (!entry.name) isHidden = true;
-	else if (entry.showAfter) {
+	if (!isEditable) {
+		isHidden = true;
+	} else if (entry.showAfter) {
 		const controllerValue = getConfig(showAfterKey);
 		isHidden = !evaluateShowAfter(entry.showAfter.condition, controllerValue);
 	}
 
 	const isOffset = entry.showAfter && showAfterKey !== key;
-	const name = i(`opt-${key}`) ?? key;
-	const description = i(`opt-${key}-desc`) ?? "";
+	const name = entry.name ? (i(`opt-${key}`) ?? key) : key;
+	const description = i(`opt-${key}-desc`) ?? entry.description ?? "";
 
 	const classes = [isHidden && "hidden", isOffset && "offset"].filter(Boolean).join(" ");
 
-	const strategy = Strategies[entry.inputType] as Strategy<typeof entry.inputType>;
+	const strategy = isEditable ? (Strategies[entry.inputType] as Strategy<typeof entry.inputType>) : Strategies.json;
+	const typedValue = value as InputTypeMap[keyof InputTypeMap];
 
-	const typedValue = value as InputTypeMap[typeof entry.inputType];
-
-	const inputHTML = !entry.name ? `<input data-hidden="true" setting-name="${key}" id="${key}" class="text" type="text" value="${JSON.stringify(value)}"/>` : strategy.render(entry, key, typedValue);
+	const inputHTML = strategy.render(entry, key, typedValue);
 
 	return `
 		<fieldset class="${classes}" data-setting-key="${key}">

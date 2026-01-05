@@ -324,6 +324,7 @@ label {
 textarea {
 	min-height: 8em;
 	width: 20em;
+	transition: none !important;
 }
 .text {
 	min-width: 5em;
