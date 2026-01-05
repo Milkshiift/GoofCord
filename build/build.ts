@@ -73,19 +73,21 @@ const postVencord = path.join(rendererPath, "postVencord", "postVencord.ts");
 buildTasks.push(
 	runBuild({
 		entrypoints: [preVencord],
-		outdir: path.join(OUT_DIR, path.dirname(path.relative(SRC_DIR, preVencord))),
+		outdir: path.join(ROOT_DIR, "assets"),
 		target: "browser",
 		plugins: [globImportPlugin()],
 		minify: false,
+		sourcemap: false
 	}),
 );
 buildTasks.push(
 	runBuild({
 		entrypoints: [postVencord],
-		outdir: path.join(OUT_DIR, path.dirname(path.relative(SRC_DIR, postVencord))),
+		outdir: path.join(ROOT_DIR, "assets"),
 		target: "browser",
 		plugins: [globImportPlugin()],
 		minify: false,
+		sourcemap: false
 	}),
 );
 
@@ -113,7 +115,7 @@ console.log(pc.green("✅ Build completed! 🎉"));
 async function runBuild(config: import("bun").BuildConfig) {
 	const result = await Bun.build({
 		minify: config.minify ?? true,
-		sourcemap: isDev ? "linked" : undefined,
+		sourcemap: (config.sourcemap !== false) && isDev ? "linked" : undefined,
 		format: config.format ?? "esm",
 		packages: "bundle",
 		...config,

@@ -1,8 +1,8 @@
+// @ts-expect-error
+import postVencordScript from "@root/assets/postVencord.js" with { type: "text" };
+// @ts-expect-error
+import preVencordScript from "@root/assets/preVencord.js" with { type: "text" };
 import { getConfig } from "@root/src/stores/config/config.preload.ts";
-// @ts-expect-error
-import postVencordScript from "@root/ts-out/windows/main/renderer/postVencord/postVencord.js" with { type: "text" };
-// @ts-expect-error
-import preVencordScript from "@root/ts-out/windows/main/renderer/preVencord/preVencord.js" with { type: "text" };
 import { ipcRenderer, webFrame } from "electron";
 import { sendSync } from "../../../ipc/client.preload.ts";
 import { error, log } from "../../../modules/logger.preload.ts";
