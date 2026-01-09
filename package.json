@@ -46,7 +46,7 @@
   },
   "optionalDependencies": {
     "@vencord/venmic": "github:Milkshiift/venmic",
-    "venbind": "0.1.7"
+    "venbind": "github:Milkshiift/venbind"
   },
   "peerDependencies": {
     "@typescript/native-preview": "^7.0.0-dev.20260109.1"
