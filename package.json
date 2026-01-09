@@ -32,7 +32,7 @@
     "@vencord/types": "1.13.7",
     "bun-plugin-glob-import": "^1.1.0",
     "electron": "39.2.7",
-    "electron-builder": "26.0.12",
+    "electron-builder": "26.4.0",
     "source-map-support": "github:onigoetz/node-source-map-support",
     "typescript": "5.9.3"
   },
@@ -49,7 +49,7 @@
     "venbind": "0.1.7"
   },
   "peerDependencies": {
-    "@typescript/native-preview": "^7.0.0-dev.20260103.1"
+    "@typescript/native-preview": "^7.0.0-dev.20260109.1"
   },
   "trustedDependencies": [
     "@biomejs/biome",

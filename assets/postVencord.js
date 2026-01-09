@@ -343,6 +343,30 @@ function initSettingsButton() {
     }
     return layout;
   };
+  const _originalMakeSettingsCategories = Plugin.makeSettingsCategories;
+  Plugin.makeSettingsCategories = function(SectionTypes, ...args) {
+    const categories = _originalMakeSettingsCategories.call(this, SectionTypes, ...args);
+    const goofcordEntries = [
+      {
+        section: SectionTypes.HEADER,
+        label: "✨GoofCord✨",
+        className: "goofcord-settings-header"
+      },
+      {
+        section: "goofcord_settings",
+        label: "Settings",
+        className: "goofcord-settings-item",
+        onClick: () => {
+          window.goofcord.openSettingsWindow();
+        }
+      },
+      {
+        section: SectionTypes.DIVIDER
+      }
+    ];
+    categories.unshift(...goofcordEntries);
+    return categories;
+  };
   window.VencordNative.native.getVersions = GoofCord.getVersions;
   const _originalGetInfoRows = Plugin.getInfoRows.bind(Plugin);
   Plugin.getInfoRows = () => [`GoofCord ${GoofCord.version}`, ..._originalGetInfoRows()];
