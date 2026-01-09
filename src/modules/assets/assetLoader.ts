@@ -187,3 +187,28 @@ async function processStyleUpdate(filename: string) {
 		console.error(LOG_PREFIX, `Error processing update for ${filename}:`, err);
 	}
 }
+
+export async function deleteAssets(filenames: string[]): Promise<void> {
+	if (!filenames.length) return;
+
+	const deletionPromises = filenames.map(async (filename) => {
+		const safeFilename = path.basename(filename);
+		if (safeFilename !== filename) {
+			return;
+		}
+
+		const filePath = path.join(ASSETS_FOLDER, safeFilename);
+
+		try {
+			await fs.unlink(filePath);
+			console.log(LOG_PREFIX, `Deleted asset: ${safeFilename}`);
+		} catch (err: unknown) {
+			const nodeErr = err as NodeJS.ErrnoException;
+			if (nodeErr.code !== "ENOENT") {
+				console.error(LOG_PREFIX, `Failed to delete ${safeFilename}:`, err);
+			}
+		}
+	});
+
+	await Promise.all(deletionPromises);
+}

@@ -1,3 +1,4 @@
+import { runMigrations } from "@root/src/migration.ts";
 import { app, net, session, systemPreferences } from "electron";
 import pc from "picocolors";
 import { registerAllHandlers } from "./ipc/gen.ts";
@@ -18,6 +19,7 @@ export async function load() {
 	void setAutoLaunchState();
 	void setMenu();
 	void createTray();
+	await runMigrations();
 
 	await waitForInternetConnection();
 

@@ -87,6 +87,10 @@ export function getConfig<K extends ConfigKey>(key: K): Config[K] {
 	return configHost.get()[key] ?? getDefaults()[key];
 }
 
+export function getConfigRaw<K extends ConfigKey>(key: K): Config[K] | undefined {
+	return configHost.get()[key];
+}
+
 export function getConfigBulk(): Config {
 	return configHost.get();
 }
@@ -102,4 +106,30 @@ export async function setConfigBulk(config: Config): Promise<void> {
 
 export function getDefaultValue<K extends ConfigKey>(entry: K): Config[K] {
 	return getDefaults()[entry] as Config[K];
+}
+
+export async function cleanUpConfig(): Promise<void> {
+	const currentConfig = configHost.get();
+	const defaults = getDefaults();
+
+	const validKeys = new Set(Object.keys(defaults));
+
+	const cleanedConfig = { ...currentConfig };
+	let hasChanges = false;
+	let removedCount = 0;
+
+	for (const key of Object.keys(cleanedConfig)) {
+		if (!validKeys.has(key)) {
+			// @ts-expect-error: Deleting a key that isn't in the type definition
+			delete cleanedConfig[key];
+			hasChanges = true;
+			removedCount++;
+			console.log(`[Config] Removed obsolete property: "${key}"`);
+		}
+	}
+
+	if (hasChanges) {
+		console.log(`[Config] Cleanup complete. Removed ${removedCount} obsolete keys.`);
+		await configHost.set(cleanedConfig);
+	}
 }

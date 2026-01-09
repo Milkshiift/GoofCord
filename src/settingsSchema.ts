@@ -1,5 +1,6 @@
 // @ts-expect-error See /build/globbyGlob.ts
 import allLangs from "glob-filenames:../assets/lang/*.json";
+import packageJson from "../package.json";
 
 const spellcheckLangs = [
 	"af",
@@ -120,6 +121,7 @@ function button(name: string, onClick: string): ButtonEntry {
 
 export const settingsSchema = {
 	General: {
+		version: hidden(packageJson.version),
 		locale: setting("dropdown", {
 			name: "Language 🌍",
 			defaultValue: "en-US",
