@@ -1,0 +1,14 @@
+diff --git a/package.json b/package.json
+index 0bcef59b6ee0da636c8fc2226aba20d64beeaaf0..2d7fcb2384863e59c3a38991e097226f916fae6d 100644
+--- a/package.json
++++ b/package.json
+@@ -14,9 +14,6 @@
+   "version": "6.1.0",
+   "main": "./lib/index.js",
+   "types": "./lib/module.d.ts",
+-  "os": [
+-    "linux"
+-  ],
+   "binary": {
+     "napi_versions": [
+       7

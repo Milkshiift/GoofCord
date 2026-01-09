@@ -60,5 +60,8 @@
   "engines": {
     "node": ">=21.0.0"
   },
-  "type": "module"
+  "type": "module",
+  "patchedDependencies": {
+    "@vencord/venmic@6.1.0": "patches/@vencord%2Fvenmic@6.1.0.patch"
+  }
 }
