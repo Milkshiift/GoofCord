@@ -45,7 +45,7 @@
     "stegcloak": "github:Milkshiift/stegcloak-node"
   },
   "optionalDependencies": {
-    "@vencord/venmic": "6.1.0",
+    "@vencord/venmic": "github:Milkshiift/venmic",
     "venbind": "0.1.7"
   },
   "peerDependencies": {
