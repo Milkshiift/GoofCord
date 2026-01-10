@@ -314,7 +314,7 @@ export const settingsSchema = {
 		encryptionPasswords: setting("list", {
 			name: "Encryption passwords",
 			defaultValue: [],
-			description: "A comma-separated list of passwords used for encryption. They are stored securely. Keep a backup in a safe location.",
+			description: "A list of passwords used for encryption. They are stored securely. Keep a backup in a safe location.",
 			encrypted: true,
 			showAfter: {
 				key: "messageEncryption",
@@ -405,7 +405,7 @@ export const settingsSchema = {
 				"https://www.youtube.com/s/desktop/*",
 				"https://www.youtube.com/youtubei/v*/log_event?*",
 			],
-			description: "A comma-separated list of URL patterns to block.",
+			description: "A list of URL patterns to block.",
 			showAfter: {
 				key: "customFirewallRules",
 				condition: (value) => value === true,
