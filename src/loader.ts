@@ -1,4 +1,5 @@
 import { runMigrations } from "@root/src/migration.ts";
+import { setContextMenu } from "@root/src/modules/menus/contextMenu.ts";
 import { app, net, session, systemPreferences } from "electron";
 import pc from "picocolors";
 import { registerAllHandlers } from "./ipc/gen.ts";
@@ -6,7 +7,7 @@ import { initArrpc } from "./modules/arrpc/arrpc.ts";
 import { manageAssets, updateAssets } from "./modules/assets/assetDownloader.ts";
 import { categorizeAllAssets, startStyleWatcher } from "./modules/assets/assetLoader.ts";
 import { initFirewall, unstrictCSP } from "./modules/firewall.ts";
-import { setMenu } from "./modules/menu.ts";
+import { setApplicationMenu } from "./modules/menus/applicationMenu.ts";
 import { initEncryption } from "./modules/messageEncryption.ts";
 import { createTray } from "./modules/tray.ts";
 import { checkForUpdate } from "./modules/updateCheck.ts";
@@ -17,7 +18,7 @@ import { createSettingsWindow } from "./windows/settings/settings.ts";
 
 export async function load() {
 	void setAutoLaunchState();
-	void setMenu();
+	void setApplicationMenu();
 	void createTray();
 	await runMigrations();
 
@@ -42,6 +43,7 @@ export async function load() {
 
 	console.timeEnd(pc.green("[Timer]") + " GoofCord fully loaded in");
 
+	void setContextMenu();
 	void updateAssets();
 	void checkForUpdate();
 	void initArrpc();

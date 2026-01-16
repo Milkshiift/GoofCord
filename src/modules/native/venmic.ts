@@ -63,8 +63,8 @@ export async function venmicStartSystem() {
 	// only_speakers is disabled because with it enabled Venmic only captured the output of EasyEffects.
 	// Couldn't get Bitwig Studio captured no matter what I tried :(
 	const data: LinkData = {
-		include: [{"media.class": "Stream/Output/Audio"}],
-		exclude: [{"application.process.id": pid}, {"media.class": "Stream/Input/Audio"}],
+		include: [{ "media.class": "Stream/Output/Audio" }],
+		exclude: [{ "application.process.id": pid }, { "media.class": "Stream/Input/Audio" }],
 		only_speakers: false,
 		ignore_devices: true,
 		only_default_speakers: false,
