@@ -1,15 +1,9 @@
 import { i } from "@root/src/stores/localization/localization.main.ts";
 import { app, BrowserWindow, Menu } from "electron";
-import contextMenu from "electron-context-menu";
-import { mainWindow } from "../windows/main/main.ts";
-import { createSettingsWindow } from "../windows/settings/settings.ts";
-import { cycleThroughPasswords } from "./messageEncryption.ts";
-import { saveState } from "./windowStateManager.ts";
-
-export async function setMenu() {
-	void setApplicationMenu();
-	setContextMenu();
-}
+import { mainWindow } from "../../windows/main/main.ts";
+import { createSettingsWindow } from "../../windows/settings/settings.ts";
+import { cycleThroughPasswords } from "../messageEncryption.ts";
+import { saveState } from "../windowStateManager.ts";
 
 export async function setApplicationMenu() {
 	const template: Electron.MenuItemConstructorOptions[] = [
@@ -113,17 +107,4 @@ export async function setApplicationMenu() {
 	];
 
 	Menu.setApplicationMenu(Menu.buildFromTemplate(template));
-}
-
-export function setContextMenu() {
-	contextMenu({
-		showSelectAll: true,
-		showSaveImageAs: true,
-		showCopyImage: true,
-		showCopyImageAddress: true,
-		showCopyLink: true,
-		showSaveLinkAs: true,
-		showInspectElement: true,
-		showSearchWithGoogle: true,
-	});
 }
