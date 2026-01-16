@@ -15,7 +15,10 @@ if (isDev()) {
 
 console.log("GoofCord", getDisplayVersion());
 
-if (!app.requestSingleInstanceLock()) app.exit();
+if (!app.requestSingleInstanceLock()) {
+	console.log("You have attempted to launch a second instance, this one will be closed.");
+	app.exit();
+}
 
 async function main() {
 	await loadConfig();
