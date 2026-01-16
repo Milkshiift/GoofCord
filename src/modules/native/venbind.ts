@@ -1,3 +1,5 @@
+// @ts-nocheck Bun will not install venbind on macOS, so typescript won't compile with checks
+
 // @ts-expect-error
 import venbindPath from "native-module:../../../assets/native/venbind-*.node";
 import { createRequire } from "node:module";
