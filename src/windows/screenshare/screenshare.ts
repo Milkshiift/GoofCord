@@ -1,9 +1,8 @@
 import path from "node:path";
 import { BrowserWindow, desktopCapturer, ipcMain, screen, session } from "electron";
-import pc from "picocolors";
-import { hasPipewirePulse, initVenmic, venmicList, venmicStartSystem } from "../../modules/native/venmic.ts";
 import { dirname, isWayland, relToAbs } from "../../utils.ts";
 import html from "./renderer/screenshare.html";
+import { venmicStartSystem } from "@root/src/modules/native/venmic.ts";
 
 let capturerWindow: BrowserWindow;
 
@@ -52,21 +51,8 @@ export function registerScreenshareHandler() {
 			const result = isWayland || id === "0" ? sources[0] : { id, name, width: 9999, height: 9999 };
 			if (audio) {
 				if (process.platform === "linux") {
-					await initVenmic();
-					if (hasPipewirePulse) {
-						console.log(pc.cyan("[Screenshare]"), "Starting Venmic...");
-						console.log(
-							pc.cyan("[Screenshare]"),
-							"Available sources:",
-							// Comment out "map" if you need more details for Venmic poking
-							venmicList()
-								.map((s) => (s["media.class"] === "Stream/Output/Audio" ? s["application.name"] : undefined))
-								.filter(Boolean),
-						);
-						venmicStartSystem();
-						callback({ video: result });
-						return;
-					}
+					await venmicStartSystem();
+					callback({ video: result });
 				}
 				callback({ video: result, audio: "loopback" });
 				return;

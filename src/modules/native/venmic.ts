@@ -1,3 +1,5 @@
+// @ts-nocheck Bun will not install venmic on Windows/macOS, so typescript won't compile with checks
+
 // @ts-expect-error
 import venmicPath from "native-module:../../../assets/native/venmic-*.node";
 import { createRequire } from "node:module";
@@ -41,16 +43,28 @@ export function venmicList() {
 	return venmic.list(["node.name"]).filter((s) => s["application.process.id"] !== audioPid);
 }
 
-export function venmicStartSystem() {
-	if (!venmic) return;
+export async function venmicStartSystem() {
+	await initVenmic();
+	if (!venmic || !hasPipewirePulse) return;
+
+	console.log(pc.cyan("[Screenshare]"), "Starting Venmic...");
+	console.log(
+		pc.cyan("[Screenshare]"),
+		"Available sources:",
+		// Comment out "map" if you need more details for Venmic poking
+		venmicList()
+			.map((s) => (s["media.class"] === "Stream/Output/Audio" ? s["application.name"] : undefined))
+			.filter(Boolean),
+	);
+
 	const pid = getRendererAudioServicePid();
 
 	// A totally awesome config made by trial and error that hopefully works for most cases.
 	// only_speakers is disabled because with it enabled Venmic only captured the output of EasyEffects.
 	// Couldn't get Bitwig Studio captured no matter what I tried :(
 	const data: LinkData = {
-		include: [{ "media.class": "Stream/Output/Audio" }],
-		exclude: [{ "application.process.id": pid }, { "media.class": "Stream/Input/Audio" }],
+		include: [{"media.class": "Stream/Output/Audio"}],
+		exclude: [{"application.process.id": pid}, {"media.class": "Stream/Input/Audio"}],
 		only_speakers: false,
 		ignore_devices: true,
 		only_default_speakers: false,
