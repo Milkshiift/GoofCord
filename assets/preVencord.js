@@ -1,20 +1,4 @@
 // prevencordmarker
-var __defProp = Object.defineProperty;
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, {
-      get: all[name],
-      enumerable: true,
-      configurable: true,
-      set: (newValue) => all[name] = () => newValue
-    });
-};
-
-// src/windows/main/renderer/preVencord/patches/devtoolsFix.ts
-var exports_devtoolsFix = {};
-__export(exports_devtoolsFix, {
-  default: () => devtoolsFix_default
-});
 
 // src/windows/main/renderer/preVencord/patchManager.ts
 var IDENTIFIER_PATTERN = "(?:[A-Za-z_$][\\w$]*)";
@@ -78,10 +62,6 @@ var devtoolsFix_default = definePatch({
 });
 
 // src/windows/main/renderer/preVencord/patches/invidiousEmbeds.ts
-var exports_invidiousEmbeds = {};
-__export(exports_invidiousEmbeds, {
-  default: () => invidiousEmbeds_default
-});
 var invidiousEmbeds_default = definePatch({
   patches: [
     {
@@ -95,10 +75,6 @@ var invidiousEmbeds_default = definePatch({
 });
 
 // src/windows/main/renderer/preVencord/patches/keybinds.ts
-var exports_keybinds = {};
-__export(exports_keybinds, {
-  default: () => keybinds_default
-});
 var keybinds_default = definePatch({
   patches: [
     {
@@ -112,10 +88,6 @@ var keybinds_default = definePatch({
 });
 
 // src/windows/main/renderer/preVencord/patches/screenshare.ts
-var exports_screenshare = {};
-__export(exports_screenshare, {
-  default: () => screenshare_default
-});
 var screenshare_default = definePatch({
   patches: [
     {
@@ -159,10 +131,6 @@ var screenshare_default = definePatch({
 });
 
 // src/windows/main/renderer/preVencord/patches/titlebar.ts
-var exports_titlebar = {};
-__export(exports_titlebar, {
-  default: () => titlebar_default
-});
 var titlebar_default = definePatch({
   condition: () => window.goofcord.getConfig("customTitlebar"),
   patches: [
@@ -187,11 +155,11 @@ var titlebar_default = definePatch({
 
 // glob-plugin:eyJjb21tYW5kIjoiaW1wb3J0IiwiZ2xvYlBhdHRlcm4iOiIuL3BhdGNoZXMvKiovKi50cyIsImltcG9ydGVyIjoiL2hvbWUvdGNwLXByb3RvY29sL1Byb2dyYW1taW5nL0dvb2ZDb3JkL3NyYy93aW5kb3dzL21haW4vcmVuZGVyZXIvcHJlVmVuY29yZC9wcmVWZW5jb3JkLnRzIn0
 var eyJjb21tYW5kIjoiaW1wb3J0IiwiZ2xvYlBhdHRlcm4iOiIuL3BhdGNoZXMvKiovKi50cyIsImltcG9ydGVyIjoiL2hvbWUvdGNwLXByb3RvY29sL1Byb2dyYW1taW5nL0dvb2ZDb3JkL3NyYy93aW5kb3dzL21haW4vcmVuZGVyZXIvcHJlVmVuY29yZC9wcmVWZW5jb3JkLnRzIn0_default = {
-  "devtoolsFix.ts": exports_devtoolsFix,
-  "invidiousEmbeds.ts": exports_invidiousEmbeds,
-  "keybinds.ts": exports_keybinds,
-  "screenshare.ts": exports_screenshare,
-  "titlebar.ts": exports_titlebar
+  "devtoolsFix.ts": devtoolsFix_default,
+  "invidiousEmbeds.ts": invidiousEmbeds_default,
+  "keybinds.ts": keybinds_default,
+  "screenshare.ts": screenshare_default,
+  "titlebar.ts": titlebar_default
 };
 
 // src/windows/main/renderer/preVencord/domOptimizer.ts
@@ -230,7 +198,7 @@ function fixNotifications() {
 
 // src/windows/main/renderer/preVencord/preVencord.ts
 if (window.goofcord.isVencordPresent()) {
-  const patches = Object.values(eyJjb21tYW5kIjoiaW1wb3J0IiwiZ2xvYlBhdHRlcm4iOiIuL3BhdGNoZXMvKiovKi50cyIsImltcG9ydGVyIjoiL2hvbWUvdGNwLXByb3RvY29sL1Byb2dyYW1taW5nL0dvb2ZDb3JkL3NyYy93aW5kb3dzL21haW4vcmVuZGVyZXIvcHJlVmVuY29yZC9wcmVWZW5jb3JkLnRzIn0_default).map((mod) => mod.default);
+  const patches = Object.values(eyJjb21tYW5kIjoiaW1wb3J0IiwiZ2xvYlBhdHRlcm4iOiIuL3BhdGNoZXMvKiovKi50cyIsImltcG9ydGVyIjoiL2hvbWUvdGNwLXByb3RvY29sL1Byb2dyYW1taW5nL0dvb2ZDb3JkL3NyYy93aW5kb3dzL21haW4vcmVuZGVyZXIvcHJlVmVuY29yZC9wcmVWZW5jb3JkLnRzIn0_default);
   loadPatches(patches);
 }
 fixNotifications();

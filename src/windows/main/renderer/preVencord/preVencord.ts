@@ -6,7 +6,7 @@ import { loadPatches } from "./patchManager.ts";
 
 if (window.goofcord.isVencordPresent()) {
 	// biome-ignore lint/suspicious/noExplicitAny: Dynamic module import structure is not typed
-	const patches = Object.values(patchModules).map((mod: any) => mod.default);
+	const patches: any[] = Object.values(patchModules);
 	loadPatches(patches);
 }
 
