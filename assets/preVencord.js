@@ -10,40 +10,6 @@ var __export = (target, all) => {
     });
 };
 
-// src/windows/main/renderer/preVencord/domOptimizer.ts
-function startDomOptimizer() {
-  if (!window.goofcord.getConfig("domOptimizer"))
-    return;
-  function optimize(orig) {
-    const delayedClasses = ["activity", "gif", "avatar", "imagePlaceholder", "hoverBar"];
-    return function(...args) {
-      const element = args[0];
-      if (typeof element?.className === "string") {
-        if (delayedClasses.some((partial) => element.className.includes(partial))) {
-          setTimeout(() => orig.apply(this, args), 100 - Math.random() * 50);
-          return;
-        }
-      }
-      return orig.apply(this, args);
-    };
-  }
-  Element.prototype.removeChild = optimize(Element.prototype.removeChild);
-}
-
-// src/windows/main/renderer/preVencord/notificationFix.ts
-function fixNotifications() {
-  const originalSetter = Object.getOwnPropertyDescriptor(Notification.prototype, "onclick")?.set;
-  Object.defineProperty(Notification.prototype, "onclick", {
-    set(onClick) {
-      originalSetter?.call(this, (...args) => {
-        onClick.apply(this, args);
-        window.goofcord.window.show();
-      });
-    },
-    configurable: true
-  });
-}
-
 // src/windows/main/renderer/preVencord/patches/devtoolsFix.ts
 var exports_devtoolsFix = {};
 __export(exports_devtoolsFix, {
@@ -219,12 +185,52 @@ var titlebar_default = definePatch({
   ]
 });
 
-// glob-import-plugin:glob:456e6cba5a6d432.ts
-var glob_456e6cba5a6d432_default = [exports_devtoolsFix, exports_invidiousEmbeds, exports_keybinds, exports_screenshare, exports_titlebar];
+// glob-plugin:eyJjb21tYW5kIjoiaW1wb3J0IiwiZ2xvYlBhdHRlcm4iOiIuL3BhdGNoZXMvKiovKi50cyIsImltcG9ydGVyIjoiL2hvbWUvdGNwLXByb3RvY29sL1Byb2dyYW1taW5nL0dvb2ZDb3JkL3NyYy93aW5kb3dzL21haW4vcmVuZGVyZXIvcHJlVmVuY29yZC9wcmVWZW5jb3JkLnRzIn0
+var eyJjb21tYW5kIjoiaW1wb3J0IiwiZ2xvYlBhdHRlcm4iOiIuL3BhdGNoZXMvKiovKi50cyIsImltcG9ydGVyIjoiL2hvbWUvdGNwLXByb3RvY29sL1Byb2dyYW1taW5nL0dvb2ZDb3JkL3NyYy93aW5kb3dzL21haW4vcmVuZGVyZXIvcHJlVmVuY29yZC9wcmVWZW5jb3JkLnRzIn0_default = {
+  "devtoolsFix.ts": exports_devtoolsFix,
+  "invidiousEmbeds.ts": exports_invidiousEmbeds,
+  "keybinds.ts": exports_keybinds,
+  "screenshare.ts": exports_screenshare,
+  "titlebar.ts": exports_titlebar
+};
+
+// src/windows/main/renderer/preVencord/domOptimizer.ts
+function startDomOptimizer() {
+  if (!window.goofcord.getConfig("domOptimizer"))
+    return;
+  function optimize(orig) {
+    const delayedClasses = ["activity", "gif", "avatar", "imagePlaceholder", "hoverBar"];
+    return function(...args) {
+      const element = args[0];
+      if (typeof element?.className === "string") {
+        if (delayedClasses.some((partial) => element.className.includes(partial))) {
+          setTimeout(() => orig.apply(this, args), 100 - Math.random() * 50);
+          return;
+        }
+      }
+      return orig.apply(this, args);
+    };
+  }
+  Element.prototype.removeChild = optimize(Element.prototype.removeChild);
+}
+
+// src/windows/main/renderer/preVencord/notificationFix.ts
+function fixNotifications() {
+  const originalSetter = Object.getOwnPropertyDescriptor(Notification.prototype, "onclick")?.set;
+  Object.defineProperty(Notification.prototype, "onclick", {
+    set(onClick) {
+      originalSetter?.call(this, (...args) => {
+        onClick.apply(this, args);
+        window.goofcord.window.show();
+      });
+    },
+    configurable: true
+  });
+}
 
 // src/windows/main/renderer/preVencord/preVencord.ts
 if (window.goofcord.isVencordPresent()) {
-  const patches = Object.values(glob_456e6cba5a6d432_default).map((mod) => mod.default);
+  const patches = Object.values(eyJjb21tYW5kIjoiaW1wb3J0IiwiZ2xvYlBhdHRlcm4iOiIuL3BhdGNoZXMvKiovKi50cyIsImltcG9ydGVyIjoiL2hvbWUvdGNwLXByb3RvY29sL1Byb2dyYW1taW5nL0dvb2ZDb3JkL3NyYy93aW5kb3dzL21haW4vcmVuZGVyZXIvcHJlVmVuY29yZC9wcmVWZW5jb3JkLnRzIn0_default).map((mod) => mod.default);
   loadPatches(patches);
 }
 fixNotifications();

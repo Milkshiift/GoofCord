@@ -1,7 +1,7 @@
+// @ts-expect-error See /build/globbyGlob.ts
+import patchModules from "glob-import:./patches/**/*.ts";
 import { startDomOptimizer } from "./domOptimizer.ts";
 import { fixNotifications } from "./notificationFix.ts";
-// @ts-expect-error
-import patchModules from "./patches/**/*.ts";
 import { loadPatches } from "./patchManager.ts";
 
 if (window.goofcord.isVencordPresent()) {

@@ -30,7 +30,6 @@
     "@types/node": "25.0.9",
     "@types/stegcloak": "1.0.2",
     "@vencord/types": "1.13.7",
-    "bun-plugin-glob-import": "^1.1.0",
     "electron": "40.0.0",
     "electron-builder": "26.4.0",
     "source-map-support": "github:onigoetz/node-source-map-support",

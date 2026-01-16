@@ -1,7 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
-import { globImportPlugin } from "bun-plugin-glob-import";
 import pc from "picocolors";
 import { genIpcHandlers } from "./genIpcHandlers.ts";
 import { genSettingsLangFile } from "./genSettingsLangFile.ts";
@@ -40,23 +39,14 @@ if (!values.skipGenerators) {
 
 console.log(pc.cyan(`Build Target: ${targetPlatform}-${targetArch} ${isDev ? "(Dev)" : "(Prod)"}`));
 
-
 console.log("Preparing build...");
-await Promise.all([
-	fs.promises.rm(OUT_DIR, { recursive: true, force: true }),
-	copyNativeModules(),
-]);
+await Promise.all([fs.promises.rm(OUT_DIR, { recursive: true, force: true }), copyNativeModules()]);
 await fs.promises.mkdir(OUT_DIR, { recursive: true });
-
 
 console.log("Building...");
 console.time("Build");
 
-const results = await Promise.all([
-	buildMain(),
-	...buildRendererScripts(),
-	...await buildPreloads(),
-]);
+const results = await Promise.all([buildMain(), ...buildRendererScripts(), ...(await buildPreloads())]);
 
 console.timeEnd("Build");
 
@@ -67,13 +57,9 @@ if (results.every(Boolean)) {
 	process.exit(1);
 }
 
-
 function buildMain() {
 	return runBuild({
-		entrypoints: [
-			path.join(SRC_DIR, "main.ts"),
-			path.join(SRC_DIR, "modules", "arrpc", "arrpcWorker.ts"),
-		],
+		entrypoints: [path.join(SRC_DIR, "main.ts"), path.join(SRC_DIR, "modules", "arrpc", "arrpcWorker.ts")],
 		outdir: OUT_DIR,
 		target: "node",
 		external: ["electron"],
@@ -90,11 +76,11 @@ function buildRendererScripts() {
 			entrypoints: [path.join(rendererPath, name, `${name}.ts`)],
 			outdir: ASSETS_DIR,
 			target: "browser",
-			plugins: [globImportPlugin()],
+			plugins: [globImporterPlugin],
 			minify: false,
 			sourcemap: false,
 			banner: `// ${name.toLowerCase()}marker`,
-		})
+		}),
 	);
 }
 
@@ -112,12 +98,11 @@ async function buildPreloads() {
 				format: "cjs",
 				external: ["electron"],
 				plugins: [globImporterPlugin],
-			})
+			}),
 		);
 	}
 	return builds;
 }
-
 
 async function runBuild(config: import("bun").BuildConfig): Promise<boolean> {
 	const result = await Bun.build({
@@ -130,7 +115,9 @@ async function runBuild(config: import("bun").BuildConfig): Promise<boolean> {
 
 	if (result.logs.length) {
 		console.log(pc.yellow(`Logs for ${config.entrypoints}:`));
-		result.logs.forEach((log) => console.log(log));
+		for (const log of result.logs) {
+			console.log(log);
+		}
 	}
 
 	if (!result.success) {
@@ -158,7 +145,7 @@ async function copyNativeModules() {
 			const src = path.join(ROOT_DIR, "node_modules", ...srcParts);
 			await fs.promises.access(src);
 			await Bun.write(path.join(nativeDir, dest), Bun.file(src));
-		})
+		}),
 	);
 
 	const failures = results.filter((r) => r.status === "rejected").length;

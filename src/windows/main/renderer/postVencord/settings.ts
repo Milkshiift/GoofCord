@@ -62,18 +62,18 @@ export function initSettingsButton() {
 			{
 				section: SectionTypes.HEADER,
 				label: "✨GoofCord✨",
-				className: "goofcord-settings-header"
+				className: "goofcord-settings-header",
 			},
 			{
 				section: "goofcord_settings",
 				label: "Settings",
 				className: "goofcord-settings-item",
-				onClick: ()=>{
+				onClick: () => {
 					void window.goofcord.openSettingsWindow();
 				},
 			},
 			{
-				section: SectionTypes.DIVIDER
+				section: SectionTypes.DIVIDER,
 			},
 		];
 

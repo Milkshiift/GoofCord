@@ -155,10 +155,7 @@ export async function loadTrayImage(index: number) {
 		return trayImage;
 	}
 
-	const baseTrayIconDataURL = nativeImage
-		.createFromPath(getTrayIcon())
-		.resize({ width: 128, height: 128 })
-		.toDataURL();
+	const baseTrayIconDataURL = nativeImage.createFromPath(getTrayIcon()).resize({ width: 128, height: 128 }).toDataURL();
 
 	const finalImageDataURL = await mainWindow.webContents.executeJavaScript(`(${TRAY_COMPOSITOR_CODE})("${baseTrayIconDataURL}", ${clampedIndex})`);
 
