@@ -77,7 +77,7 @@ export const globImporterPlugin: BunPlugin = {
 						// Fix for Windows: Convert backslashes to forward slashes for import paths
 						const importPath = absolutePath.replace(/\\/g, "/");
 
-						imports.push(`import * as ${varName} from "${importPath}";`);
+						imports.push(`import ${varName} from "${importPath}";`);
 						objectEntries.push(`"${keyName}": ${varName}`);
 					}
 
