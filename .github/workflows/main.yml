@@ -56,4 +56,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: false
-        run: electron-builder ${{ matrix.arch }} --${{ matrix.name }} ${{ matrix.targets }} --publish=always
+        run: NODE_OPTIONS="--max_old_space_size=4096" electron-builder ${{ matrix.arch }} --${{ matrix.name }} ${{ matrix.targets }} --publish=always
