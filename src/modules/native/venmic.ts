@@ -1,6 +1,8 @@
 // @ts-expect-error
-import venmicPath from "native-module:../../assets/native/venmic-*.node";
+import venmicPath from "native-module:../../../assets/native/venmic-*.node";
 import { createRequire } from "node:module";
+// biome-ignore lint/suspicious/noTsIgnore: Venmic may not be installed on all platforms
+// @ts-ignore
 import type { LinkData, PatchBay } from "@vencord/venmic";
 import { app } from "electron";
 import pc from "picocolors";

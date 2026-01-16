@@ -1,7 +1,9 @@
 // @ts-expect-error
-import venbindPath from "native-module:../../assets/native/venbind-*.node";
+import venbindPath from "native-module:../../../assets/native/venbind-*.node";
 import { createRequire } from "node:module";
 import pc from "picocolors";
+// biome-ignore lint/suspicious/noTsIgnore: Venbind may not be installed on all platforms
+// @ts-ignore
 import type { Venbind as VenbindType } from "venbind";
 import { mainWindow } from "../../windows/main/main.ts";
 

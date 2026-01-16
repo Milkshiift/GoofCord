@@ -25,8 +25,8 @@
         "typescript": "5.9.3",
       },
       "optionalDependencies": {
-        "@vencord/venmic": "github:Milkshiift/venmic",
-        "venbind": "github:Milkshiift/venbind",
+        "@vencord/venmic": "6.1.0",
+        "venbind": "0.1.7",
       },
       "peerDependencies": {
         "@typescript/native-preview": "^7.0.0-dev.20260116.1",
@@ -170,7 +170,7 @@
 
     "@vencord/types": ["@vencord/types@1.13.7", "", { "dependencies": { "@types/lodash": "4.17.15", "@types/node": "^22.13.4", "@vencord/discord-types": "^1.0.0", "highlight.js": "11.11.1", "moment": "^2.22.2", "ts-pattern": "^5.6.0", "type-fest": "^4.35.0" }, "peerDependencies": { "@types/react": "18.3.1", "@types/react-dom": "18.3.1" } }, "sha512-MThrBwMEJ0CvKMrVgJC4cvJuDwwFXEhgSOJnmDZxmJeKOByVWLo7xxjn1suHkE1/euw9J5lGTfz1QTiYVXbLqA=="],
 
-    "@vencord/venmic": ["@vencord/venmic@github:Milkshiift/venmic#ebda96e", { "dependencies": { "cmake-js": "^7.3.0", "node-addon-api": "^8.0.0", "pkg-prebuilds": "^0.2.1" } }, "Milkshiift-venmic-ebda96e"],
+    "@vencord/venmic": ["@vencord/venmic@6.1.0", "", { "dependencies": { "cmake-js": "^7.3.0", "node-addon-api": "^8.0.0", "pkg-prebuilds": "^0.2.1" }, "os": "linux" }, "sha512-YiCtzml/W8tYbGhu3jm5jfbbEnl2slKKARNK0jO+8qV979k9eFnfIRTxvhMN/SWq1h8ZNJdXVwvXpffQwq0RuA=="],
 
     "@xmldom/xmldom": ["@xmldom/xmldom@0.8.11", "", {}, "sha512-cQzWCtO6C8TQiYl1ruKNn2U6Ao4o4WBBcbL61yJl84x+j5sOWWFU9X7DpND8XZG3daDppSsigMdfAIl2upQBRw=="],
 
@@ -770,7 +770,7 @@
 
     "util-deprecate": ["util-deprecate@1.0.2", "", {}, "sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw=="],
 
-    "venbind": ["venbind@github:Milkshiift/venbind#9a56d72", {}, "Milkshiift-venbind-9a56d72"],
+    "venbind": ["venbind@0.1.7", "", { "os": [ "linux", "win32", ], "cpu": [ "x64", "arm64", ] }, "sha512-NuKrPYYd7NfMjcmY0xF6ltB/Lka2dV3ZhgFykTgPRlP3qSWmGbaOAmXyp1qPtDoVNAzu7BZkyNXaUqnveuB0tA=="],
 
     "verror": ["verror@1.10.1", "", { "dependencies": { "assert-plus": "^1.0.0", "core-util-is": "1.0.2", "extsprintf": "^1.2.0" } }, "sha512-veufcmxri4e3XSrT0xwfUR7kguIkaxBeosDg00yDWhk49wdwkSUrvvsm7nc75e1PUyvIeZj6nS8VQRYz2/S4Xg=="],
 
