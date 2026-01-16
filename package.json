@@ -1,6 +1,6 @@
 {
   "name": "goofcord",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Take control of your Discord experience with GoofCord – the highly configurable and privacy-minded discord client.",
   "main": "ts-out/main.js",
   "scripts": {
