@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { app, safeStorage } from "electron";
+import pc from "picocolors";
 // @ts-expect-error
 import gfIconIco from "../assets/gf_icon.ico";
 // @ts-expect-error
@@ -18,6 +19,9 @@ try {
 } catch (e) {
 	console.error("Portable mode error:", e);
 }
+
+export const isWayland = process.platform === "linux" && (process.env.XDG_SESSION_TYPE?.toLowerCase() === "wayland" || !!process.env.WAYLAND_DISPLAY);
+if (isWayland) console.log(pc.red("[!]") + ` You are using ${pc.greenBright("Wayland")}! >ᴗ<`);
 
 export const dirname = () => path.dirname(fileURLToPath(import.meta.url));
 

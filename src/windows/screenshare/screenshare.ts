@@ -2,12 +2,10 @@ import path from "node:path";
 import { BrowserWindow, desktopCapturer, ipcMain, screen, session } from "electron";
 import pc from "picocolors";
 import { hasPipewirePulse, initVenmic, venmicList, venmicStartSystem } from "../../modules/native/venmic.ts";
-import { dirname, relToAbs } from "../../utils.ts";
+import { dirname, isWayland, relToAbs } from "../../utils.ts";
 import html from "./renderer/screenshare.html";
 
 let capturerWindow: BrowserWindow;
-const isWayland = process.platform === "linux" && (process.env.XDG_SESSION_TYPE?.toLowerCase() === "wayland" || !!process.env.WAYLAND_DISPLAY);
-if (isWayland) console.log(pc.red("[!]") + ` You are using ${pc.greenBright("Wayland")}! >ᴗ<`);
 
 export function registerScreenshareHandler() {
 	const primaryDisplay = screen.getPrimaryDisplay();
