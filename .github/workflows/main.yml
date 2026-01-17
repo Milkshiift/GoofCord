@@ -46,15 +46,15 @@ jobs:
       - name: Install Node dependencies
         run: bun install --frozen-lockfile
 
-      - name: Install electron-builder globally
-        run: bun add electron-builder -g
+#      - name: Install electron-builder globally
+#        run: bun add electron-builder -g
 
-      - name: Build GoofCord
-        run: bun run build
+#      - name: Build GoofCord
+#        run: bun run build
 
       - name: Package GoofCord
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: false
           NODE_OPTIONS: "--max-old-space-size=16384"
-        run: electron-builder ${{ matrix.arch }} --${{ matrix.name }} ${{ matrix.targets }} --publish=always
+        run: bunx electron-builder ${{ matrix.arch }} --${{ matrix.name }} ${{ matrix.targets }} --publish=always
