@@ -95,7 +95,7 @@ export const config: Configuration = {
         runAsNode: false,
         onlyLoadAppFromAsar: true
     },
-    //electronLanguages: ["en-US"],
+    electronLanguages: ["en-US"],
     beforePack: async (context) => {
         const currentArch = getArchString(context.arch);
         const currentPlatform = context.packager.platform.name;
