@@ -22,6 +22,5 @@
     "menu-development-devtools": "Open DevTools",
     "menu-development-gpuDebug": "Open chrome://gpu",
     "settingsWindow-title": "GoofCord Instellingen | Versie: ",
-    "category-general": "Algemene instellingen",
-    "category-client": "Instellingen client mods"
+    "category-general": "Algemene instellingen"
 }

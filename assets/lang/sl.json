@@ -34,7 +34,6 @@
     "opt-customTitlebar-desc": "Omogoči naslovno vrstico, podobno Discordovi.",
     "opt-minimizeToTray": "Minimiziraj v sistemski pladenj",
     "opt-minimizeToTray-desc": "Discord ostane odprt tudi po zaprtju vseh oken.",
-    "category-client": "Nastavitve odjemalske modifikacije",
     "menu-edit-copy": "Kopiraj",
     "menu-edit-paste": "Prilepi",
     "goofcord-settings": "Odpri nastavitve",
@@ -44,7 +43,6 @@
     "menu-development-devtools": "Odpri DevTools",
     "category-other": "Druge nastavitve",
     "opt-locale-desc": "To se razlikuje od Discordovega jezika. GoofCord lahko prevedete <a target=\"_blank\" href=\"https://hosted.weblate.org/projects/goofcord/goofcord/\">tukaj</a>.",
-    "opt-modNames-desc": "Katere modifikacije odjemalca uporabiti. <b>Ne onemogočite Shelter</b>, saj ga uporablja veliko Discordovih funkcij. Ne mešajte različnih različic iste modifikacije (npr. Vencord in Equicord). <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/FAQ#how-do-i-add-a-custom-client-mod\">Modifikacija odjemalca, ki jo želim uporabiti, ni navedena</a>.",
     "opt-customIconPath-desc": "Izberite alternativno ikono, ki jo bo GoofCord uporabil. Priporočljive so slike s prosojnostjo.",
     "opt-dynamicIcon-desc": "Prikazuje število omemb/pingov na ikoni GoofCordu in v opravilni vrstici. Prepiše prilagojeno ikono.\nNa Linuxu se pingi na ikoni opravilne vrstice prikažejo samo, če je uporabljen zaganjalnik Unity ali unitylib",
     "welcomeMessage": "Dobrodošli v GoofCordu!\nNastavite nastavitve po svoji želji in ponovno zaženite GoofCord za dostop do Discorda.\nTo lahko storite s Ctrl+Shift+R ali prek menija v pladnju/dokih.\nVeselo klepetanje!"

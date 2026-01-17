@@ -35,7 +35,6 @@
     "settings-encryption-unavailable": "GoofCord non ha potuto individuare alcun password manager. Le impostazioni crittografate verranno conservate su un file di testo semplice. Se sei su Linux installa gnome-libsecret o kwallet",
     "category-general": "Generale",
     "category-appearance": "Aspetto",
-    "category-client": "Mod",
     "category-other": "Altro",
     "category-cloud": "Cloud",
     "opt-locale": "Lingua 🌍",
@@ -70,11 +69,6 @@
     "opt-popoutWindowAlwaysOnTop-desc": "Fa sì che la finestra staccabile della chat vocale rimanga sempre sopra le altre finestre.",
     "opt-transparency": "Transparenza",
     "opt-transparency-desc": "Abilita la trasparenza per i temi che supportano effetti traslucidi.",
-    "opt-modNames": "Mod",
-    "opt-modNames-desc": "Quali mod client usare. <b>Non dovresti disabilitare Shelter</b> poiché viene utilizzato da molte funzionalità di GoofCord. Non mescolare fork della stessa mod (es. Vencord ed Equicord). <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/FAQ#how-do-i-add-a-custom-client-mod\">La mod client che voglio usare non è elencata</a>.",
-    "opt-customJsBundle": "Pacchetto JS personalizzato",
-    "opt-customCssBundle": "Pacchetto CSS personalizzato",
-    "opt-customCssBundle-desc": "Un link diretto al pacchetto JS e al pacchetto CSS di una mod client che vuoi usare.",
     "opt-invidiousEmbeds": "Embed di Invidious",
     "opt-invidiousEmbeds-desc": "Sostituisce gli embed di YouTube con quelli di Invidious. Puoi personalizzare l’istanza dalle impostazioni di Shelter.",
     "opt-messageEncryption": "Crittografia Messaggi",
@@ -115,6 +109,5 @@
     "opt-button-saveToCloud": "Salva sul cloud",
     "opt-button-deleteCloud": "Elimina dati sul cloud",
     "opt-spellcheckLanguages": "Correttore Ortografico Lingue",
-    "opt-spellcheckLanguages-desc": "Un elenco di lingue di cui controllare l'ortografia. Se non se ne seleziona nessuna verrà utilizzata quella di default del sistema.",
-    "opt-customJsBundle-desc": "Lascia vuoto o inserisci uno spazio"
+    "opt-spellcheckLanguages-desc": "Un elenco di lingue di cui controllare l'ortografia. Se non se ne seleziona nessuna verrà utilizzata quella di default del sistema."
 }
