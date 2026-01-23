@@ -93,7 +93,7 @@
     "opt-autoUpdateInvidiousInstance": "En hızlı sunucuyu otomatik seç",
     "opt-autoUpdateInvidiousInstance-desc": "En düşük gecikme süresine sahip Invidious sunucusunu otomatik olarak bulur ve ona geçer.",
     "opt-messageEncryption": "Mesaj şifreleme",
-    "opt-messageEncryption-desc": "<a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/Message-Encryption\">Mesajları şifreleme</a> desteğini etkinleştirir. Etkinleştirdikten sonra uygulamayı iki kez yeniden yeniden yüklemeniz gerekebilir.",
+    "opt-messageEncryption-desc": "<a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/Message-Encryption\">Mesajları şifreleme</a> desteğini etkinleştirir. Etkinleştirdikten sonra uygulamayı iki kez yeniden yüklemeniz gerekebilir.",
     "opt-encryptionPasswords": "Şifreleme parolaları",
     "opt-encryptionPasswords-desc": "Şifreleme için kullanılan parolaların listesi. Güvenli bir şekilde saklanırlar. Güvenli bir yerde yedek bulundurun.",
     "opt-encryptionCover": "Şifreleme kılıfı",
