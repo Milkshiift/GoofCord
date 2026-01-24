@@ -4,7 +4,7 @@ export default definePatch({
 	condition: () => window.goofcord.getConfig("customTitlebar"),
 	patches: [
 		{
-			find: ".systemBar,",
+			find: '"refresh-title-bar-small"',
 			replacement: [
 				{ match: /\i===\i\.PlatformTypes\.WINDOWS/g, replace: "true" },
 				{ match: /\i===\i\.PlatformTypes\.WEB/g, replace: "false" },
