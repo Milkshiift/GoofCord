@@ -366,7 +366,11 @@ export const settingsSchema = {
 			defaultValue: true,
 			description: "Uses GPU for rendering. Disable this if you experience graphical glitches.",
 		}),
-		disableGpuCompositing: hidden(false),
+		disableGpuCompositing:	setting("checkbox", {
+			name: "Disable GPU compositing",
+			defaultValue: false,
+			description: "May fix infinitely loading screenshare for viewers, but can also reduce performance in other areas of GoofCord.",
+		}),
 		spoofChrome: setting("checkbox", {
 			name: "Spoof Chrome",
 			defaultValue: true,
