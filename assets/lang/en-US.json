@@ -134,5 +134,7 @@
   "opt-cloudEncryptionKey-desc": "Used to encrypt data sent to the cloud. If lost, your data cannot be recovered. Leave empty to disable encryption and not save message encryption passwords.",
   "opt-button-loadFromCloud": "Load from cloud",
   "opt-button-saveToCloud": "Save to cloud",
-  "opt-button-deleteCloud": "Delete cloud data"
+  "opt-button-deleteCloud": "Delete cloud data",
+  "opt-disableGpuCompositing": "Disable GPU compositing",
+  "opt-disableGpuCompositing-desc": "May fix infinitely loading screenshare for viewers, but can also reduce performance in other areas of GoofCord."
 }
