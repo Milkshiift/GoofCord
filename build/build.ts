@@ -85,7 +85,7 @@ function buildRendererScripts() {
 }
 
 async function buildPreloads() {
-	const glob = new Bun.Glob("**/preload.mts");
+	const glob = new Bun.Glob("**/preload.{mts,tsx}");
 	const builds: Promise<boolean>[] = [];
 
 	for await (const file of glob.scan({ cwd: SRC_DIR, absolute: true })) {

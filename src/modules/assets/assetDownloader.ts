@@ -1,15 +1,15 @@
-import fs from "node:fs/promises";
 import { createWriteStream } from "node:fs";
-import { pipeline } from "node:stream/promises";
-import { Readable } from "node:stream";
+import fs from "node:fs/promises";
 import path from "node:path";
+import { Readable } from "node:stream";
+import { pipeline } from "node:stream/promises";
+import { fileURLToPath } from "node:url";
 import { Notification } from "electron";
 import pc from "picocolors";
 import { getConfig, setConfig } from "../../stores/config/config.main.ts";
 import { getErrorMessage, isPathAccessible } from "../../utils.ts";
 import { profile } from "../chromeSpoofer.ts";
 import { ASSETS_FOLDER } from "./assetLoader.ts";
-import { fileURLToPath } from "node:url";
 
 export const LOG_PREFIX = pc.yellow("[Asset Manager]");
 
