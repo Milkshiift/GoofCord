@@ -15,7 +15,7 @@ if (isDev()) {
 
 console.log("GoofCord", getDisplayVersion());
 
-if (!app.requestSingleInstanceLock()) {
+if (!app.requestSingleInstanceLock() || process.argv.includes("--kill")) {
 	console.log("You have attempted to launch a second instance, this one will be closed.");
 	app.exit();
 }
