@@ -1,4 +1,4 @@
-import { app, BrowserWindow, clipboard, type ContextMenuParams, Menu, type MenuItemConstructorOptions, shell, type WebContents } from "electron";
+import { app, BrowserWindow, type ContextMenuParams, clipboard, Menu, type MenuItemConstructorOptions, shell, type WebContents } from "electron";
 
 const attachedWebContents = new WeakSet<WebContents>();
 

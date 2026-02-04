@@ -41,52 +41,6 @@ function linkHelpers(input) {
   return input.replaceAll("$self", GLOBAL_REF);
 }
 
-// src/windows/main/renderer/preVencord/patches/devtoolsFix.ts
-var devtoolsFix_default = definePatch({
-  patches: [
-    {
-      find: '"mod+alt+i"',
-      replacement: {
-        match: /"discord\.com"===location\.host/,
-        replace: "false"
-      }
-    },
-    {
-      find: "setDevtoolsCallbacks",
-      replacement: {
-        match: /if\(null!=\i&&"0.0.0"===\i\.remoteApp\.getVersion\(\)\)/,
-        replace: "if(true)"
-      }
-    }
-  ]
-});
-
-// src/windows/main/renderer/preVencord/patches/invidiousEmbeds.ts
-var invidiousEmbeds_default = definePatch({
-  patches: [
-    {
-      find: ',"%"),maxWidth',
-      replacement: {
-        match: /(:[^,]+,src:[^\.]+.url)/,
-        replace: "$1?.replace('https://www.youtube.com/embed/', (window.invidiousInstance ?? 'https://www.youtube.com')+'/embed/')+'?autoplay=1&player_style=youtube&local=true'"
-      }
-    }
-  ]
-});
-
-// src/windows/main/renderer/preVencord/patches/keybinds.ts
-var keybinds_default = definePatch({
-  patches: [
-    {
-      find: "keybindActionTypes",
-      replacement: [
-        { match: /\i\.isPlatformEmbedded/g, replace: "true" },
-        { match: /\(0,\i\.isDesktop\)\(\)/g, replace: "true" }
-      ]
-    }
-  ]
-});
-
 // src/windows/main/renderer/preVencord/patches/screenshare.ts
 var screenshare_default = definePatch({
   patches: [
@@ -153,13 +107,59 @@ var titlebar_default = definePatch({
   ]
 });
 
+// src/windows/main/renderer/preVencord/patches/keybinds.ts
+var keybinds_default = definePatch({
+  patches: [
+    {
+      find: "keybindActionTypes",
+      replacement: [
+        { match: /\i\.isPlatformEmbedded/g, replace: "true" },
+        { match: /\(0,\i\.isDesktop\)\(\)/g, replace: "true" }
+      ]
+    }
+  ]
+});
+
+// src/windows/main/renderer/preVencord/patches/devtoolsFix.ts
+var devtoolsFix_default = definePatch({
+  patches: [
+    {
+      find: '"mod+alt+i"',
+      replacement: {
+        match: /"discord\.com"===location\.host/,
+        replace: "false"
+      }
+    },
+    {
+      find: "setDevtoolsCallbacks",
+      replacement: {
+        match: /if\(null!=\i&&"0.0.0"===\i\.remoteApp\.getVersion\(\)\)/,
+        replace: "if(true)"
+      }
+    }
+  ]
+});
+
+// src/windows/main/renderer/preVencord/patches/invidiousEmbeds.ts
+var invidiousEmbeds_default = definePatch({
+  patches: [
+    {
+      find: ',"%"),maxWidth',
+      replacement: {
+        match: /(:[^,]+,src:[^\.]+.url)/,
+        replace: "$1?.replace('https://www.youtube.com/embed/', (window.invidiousInstance ?? 'https://www.youtube.com')+'/embed/')+'?autoplay=1&player_style=youtube&local=true'"
+      }
+    }
+  ]
+});
+
 // glob-plugin:eyJjb21tYW5kIjoiaW1wb3J0IiwiZ2xvYlBhdHRlcm4iOiIuL3BhdGNoZXMvKiovKi50cyIsImltcG9ydGVyIjoiL2hvbWUvdGNwLXByb3RvY29sL1Byb2dyYW1taW5nL0dvb2ZDb3JkL3NyYy93aW5kb3dzL21haW4vcmVuZGVyZXIvcHJlVmVuY29yZC9wcmVWZW5jb3JkLnRzIn0
 var eyJjb21tYW5kIjoiaW1wb3J0IiwiZ2xvYlBhdHRlcm4iOiIuL3BhdGNoZXMvKiovKi50cyIsImltcG9ydGVyIjoiL2hvbWUvdGNwLXByb3RvY29sL1Byb2dyYW1taW5nL0dvb2ZDb3JkL3NyYy93aW5kb3dzL21haW4vcmVuZGVyZXIvcHJlVmVuY29yZC9wcmVWZW5jb3JkLnRzIn0_default = {
-  "devtoolsFix.ts": devtoolsFix_default,
-  "invidiousEmbeds.ts": invidiousEmbeds_default,
-  "keybinds.ts": keybinds_default,
   "screenshare.ts": screenshare_default,
-  "titlebar.ts": titlebar_default
+  "titlebar.ts": titlebar_default,
+  "keybinds.ts": keybinds_default,
+  "devtoolsFix.ts": devtoolsFix_default,
+  "invidiousEmbeds.ts": invidiousEmbeds_default
 };
 
 // src/windows/main/renderer/preVencord/domOptimizer.ts

@@ -11,7 +11,8 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "target": "esnext",
-    "jsx": "react",
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
     "lib": ["ESNext", "dom", "dom.Iterable"],
 
     "strict": true,

@@ -1,11 +1,11 @@
 import { watch } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { getConfig, setConfig } from "@root/src/stores/config/config.main.ts";
+import { dialog } from "electron";
 import pc from "picocolors";
 import { getGoofCordFolderPath, readOrCreateFolder } from "../../utils.ts";
 import { mainWindow } from "../../windows/main/main.ts";
-import { dialog } from "electron";
-import { getConfig, setConfig } from "@root/src/stores/config/config.main.ts";
 
 const LOG_PREFIX = pc.yellowBright("[Asset Loader]");
 export const ASSETS_FOLDER = path.join(getGoofCordFolderPath(), "assets/");

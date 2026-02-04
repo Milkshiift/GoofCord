@@ -1,5 +1,6 @@
 // @ts-expect-error See /build/globbyGlob.ts
 import allLangs from "glob-filenames:../assets/lang/*.json";
+import type { ActionKey, ButtonActionMap } from "@root/src/windows/settings/preload/App.tsx";
 import packageJson from "../package.json";
 
 const spellcheckLangs = [
@@ -100,8 +101,12 @@ export type HiddenEntry<T = unknown> = {
 
 export interface ButtonEntry {
 	name: string;
-	onClick: string;
+	action: ButtonActionTuple;
 }
+
+export type ButtonActionTuple = {
+	[K in ActionKey]: [K, ...Parameters<ButtonActionMap[K]>];
+}[ActionKey];
 
 export type SchemaEntry = SettingEntry | HiddenEntry | ButtonEntry;
 export type SchemaStructure = Record<string, Record<string, SchemaEntry>>;
@@ -115,8 +120,11 @@ function hidden<T>(defaultValue: T, config?: Omit<HiddenEntry<T>, "defaultValue"
 	return { defaultValue, ...config };
 }
 
-function button(name: string, onClick: string): ButtonEntry {
-	return { name, onClick };
+function button<K extends ActionKey>(name: string, key: K, ...args: Parameters<ButtonActionMap[K]>): ButtonEntry {
+	return {
+		name,
+		action: [key, ...args] as unknown as ButtonActionTuple,
+	};
 }
 
 export const settingsSchema = {
@@ -366,7 +374,7 @@ export const settingsSchema = {
 			defaultValue: true,
 			description: "Uses GPU for rendering. Disable this if you experience graphical glitches.",
 		}),
-		disableGpuCompositing:	setting("checkbox", {
+		disableGpuCompositing: setting("checkbox", {
 			name: "Disable GPU compositing",
 			defaultValue: false,
 			description: "May fix infinitely loading screenshare for viewers, but can also reduce performance in other areas of GoofCord.",
@@ -435,8 +443,8 @@ export const settingsSchema = {
 		}),
 		screensharePreviousSettings: hidden<[number, number, boolean, string]>([720, 30, false, "motion"]),
 		"windowState:main": hidden<[boolean, [number, number]]>([true, [835, 600]]),
-		"button-openGoofCordFolder": button("Open GoofCord folder", "settings.openFolder('GoofCord')"),
-		"button-clearCache": button("Clear cache", "settings.clearCache()"),
+		"button-openGoofCordFolder": button("Open GoofCord folder", "openFolder", "GoofCord"),
+		"button-clearCache": button("Clear cache", "clearCache"),
 	},
 	Cloud: {
 		autoSaveCloud: setting("checkbox", {
@@ -456,9 +464,9 @@ export const settingsSchema = {
 			description: "Used to encrypt data sent to the cloud. If lost, your data cannot be recovered. Leave empty to disable encryption and not save message encryption passwords.",
 			encrypted: true,
 		}),
-		"button-loadFromCloud": button("Load from cloud", "settings.loadCloud()"),
-		"button-saveToCloud": button("Save to cloud", "settings.saveCloud()"),
-		"button-deleteCloud": button("Delete cloud data", "settings.deleteCloud()"),
+		"button-loadFromCloud": button("Load from cloud", "loadCloud"),
+		"button-saveToCloud": button("Save to cloud", "saveCloud"),
+		"button-deleteCloud": button("Delete cloud data", "deleteCloud"),
 	},
 } as const satisfies SchemaStructure;
 

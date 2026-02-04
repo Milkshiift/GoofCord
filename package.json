@@ -40,6 +40,7 @@
     "auto-launch": "github:Teamwork/node-auto-launch",
     "electron-sync-store": "github:Milkshiift/electron-sync-store",
     "picocolors": "1.1.1",
+    "preact": "^10.28.2",
     "stegcloak": "github:Milkshiift/stegcloak-node"
   },
   "optionalDependencies": {

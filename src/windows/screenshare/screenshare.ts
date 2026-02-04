@@ -1,8 +1,8 @@
 import path from "node:path";
+import { venmicStartSystem } from "@root/src/modules/native/venmic.ts";
 import { BrowserWindow, desktopCapturer, ipcMain, screen, session } from "electron";
 import { dirname, isWayland, relToAbs } from "../../utils.ts";
 import html from "./renderer/screenshare.html";
-import { venmicStartSystem } from "@root/src/modules/native/venmic.ts";
 
 let capturerWindow: BrowserWindow;
 
