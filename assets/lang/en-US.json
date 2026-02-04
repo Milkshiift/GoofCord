@@ -136,5 +136,7 @@
   "opt-button-saveToCloud": "Save to cloud",
   "opt-button-deleteCloud": "Delete cloud data",
   "opt-disableGpuCompositing": "Disable GPU compositing",
-  "opt-disableGpuCompositing-desc": "May fix infinitely loading screenshare for viewers, but can also reduce performance in other areas of GoofCord."
+  "opt-disableGpuCompositing-desc": "May fix infinitely loading screenshare for viewers, but can also reduce performance in other areas of GoofCord.",
+  "opt-vaapi": "VA-API",
+  "opt-vaapi-desc": "Enables the Video Acceleration API (VA-API). Not supported on Nvidia GPUs."
 }
