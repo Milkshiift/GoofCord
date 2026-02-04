@@ -57,7 +57,8 @@ function setFlags() {
 		enableFeatures.add("WaylandLinuxDrmSyncobj");
 
 		const noVaapi = process.argv.includes("--no-vaapi");
-		if (!noVaapi) {
+		if (noVaapi || !getConfig("vaapi")) {
+			console.log(pc.red("[!]") + " Disabling VA-API");
 			enableFeatures.add("AcceleratedVideoDecodeLinuxGL");
 			enableFeatures.add("AcceleratedVideoEncoder");
 			enableFeatures.add("AcceleratedVideoDecoder");

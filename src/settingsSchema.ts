@@ -374,6 +374,15 @@ export const settingsSchema = {
 			defaultValue: true,
 			description: "Uses GPU for rendering. Disable this if you experience graphical glitches.",
 		}),
+		vaapi: setting("checkbox", {
+			name: "VA-API",
+			defaultValue: true,
+			description: "Enables the Video Acceleration API (VA-API). Not supported on Nvidia GPUs.",
+			showAfter: {
+				key: "hardwareAcceleration",
+				condition: (value) => process.platform === "linux" && value === true,
+			},
+		}),
 		disableGpuCompositing: setting("checkbox", {
 			name: "Disable GPU compositing",
 			defaultValue: false,
