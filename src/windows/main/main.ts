@@ -85,6 +85,11 @@ function subscribeToAppEvents() {
 	if (subscribed) return;
 	subscribed = true;
 	app.on("second-instance", (_event, cmdLine, _cwd, _data) => {
+		if (cmdLine.includes("--kill")) {
+			app.exit();
+			return;
+		}
+
 		const keybind = cmdLine.find((x) => x.startsWith("--keybind"));
 		if (keybind !== undefined) {
 			const action = keybind.split("=")[1];
