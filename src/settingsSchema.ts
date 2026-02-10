@@ -410,21 +410,21 @@ export const settingsSchema = {
 		proxy: setting("checkbox", {
 			name: "Proxy",
 			defaultValue: false,
-			description: "Allows usage of an http proxy",
+			description: "Routes Discord traffic through a specified proxy. Internal GoofCord requests (e.g., fetching external assets) will bypass this proxy.",
 		}),
 		proxyRules: setting("textfield", {
-			name: "Proxy Rules",
+			name: "Proxy rules",
 			defaultValue: "127.0.0.1:8080",
-			description: 'Sets electron proxy rules. See <a target="_blank" href="https://www.electronjs.org/docs/latest/api/structures/proxy-config">electron docs</a> for rules schema.',
+			description: 'Sets Electron proxy rules. See the <a target="_blank" href="https://www.electronjs.org/docs/latest/api/structures/proxy-config">Electron documentation</a> for the schema.',
 			showAfter: {
 				key: "proxy",
 				condition: (value) => value === true,
 			},
 		}),
 		proxyBypassRules: setting("textfield", {
-			name: "Proxy Bypass Rules",
+			name: "Proxy bypass rules",
 			defaultValue: "<local>",
-			description: "Sets electron proxy bypass rules",
+			description: "Sets the Electron proxy bypass rules.",
 			showAfter: {
 				key: "proxy",
 				condition: (value) => value === true,
