@@ -407,6 +407,29 @@ export const settingsSchema = {
 			defaultValue: true,
 			description: "Blocks known tracking and telemetry. Disable only for debugging.",
 		}),
+		proxy: setting("checkbox", {
+			name: "Proxy",
+			defaultValue: false,
+			description: "Allows usage of an http proxy",
+		}),
+		proxyRules: setting("textfield", {
+			name: "Proxy Rules",
+			defaultValue: "127.0.0.1:8080",
+			description: 'Sets electron proxy rules. See <a target="_blank" href="https://www.electronjs.org/docs/latest/api/structures/proxy-config">electron docs</a> for rules schema.',
+			showAfter: {
+				key: "proxy",
+				condition: (value) => value === true,
+			},
+		}),
+		proxyBypassRules: setting("textfield", {
+			name: "Proxy Bypass Rules",
+			defaultValue: "<local>",
+			description: "Sets electron proxy bypass rules",
+			showAfter: {
+				key: "proxy",
+				condition: (value) => value === true,
+			},
+		}),
 		customFirewallRules: setting("checkbox", {
 			name: "Custom firewall rules",
 			defaultValue: false,

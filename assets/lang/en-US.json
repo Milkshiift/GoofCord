@@ -138,5 +138,11 @@
   "opt-disableGpuCompositing": "Disable GPU compositing",
   "opt-disableGpuCompositing-desc": "May fix infinitely loading screenshare for viewers, but can also reduce performance in other areas of GoofCord.",
   "opt-vaapi": "VA-API",
-  "opt-vaapi-desc": "Enables the Video Acceleration API (VA-API). Not supported on Nvidia GPUs."
+  "opt-vaapi-desc": "Enables the Video Acceleration API (VA-API). Not supported on Nvidia GPUs.",
+  "opt-proxy": "Proxy",
+  "opt-proxy-desc": "Allows usage of an http proxy",
+  "opt-proxyRules": "Proxy Rules",
+  "opt-proxyRules-desc": "Sets electron proxy rules. See <a target=\"_blank\" href=\"https://www.electronjs.org/docs/latest/api/structures/proxy-config\">electron docs</a> for rules schema.",
+  "opt-proxyBypassRules": "Proxy Bypass Rules",
+  "opt-proxyBypassRules-desc": "Sets electron proxy bypass rules"
 }
