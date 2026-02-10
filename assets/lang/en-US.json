@@ -140,9 +140,9 @@
   "opt-vaapi": "VA-API",
   "opt-vaapi-desc": "Enables the Video Acceleration API (VA-API). Not supported on Nvidia GPUs.",
   "opt-proxy": "Proxy",
-  "opt-proxy-desc": "Allows usage of an http proxy",
-  "opt-proxyRules": "Proxy Rules",
-  "opt-proxyRules-desc": "Sets electron proxy rules. See <a target=\"_blank\" href=\"https://www.electronjs.org/docs/latest/api/structures/proxy-config\">electron docs</a> for rules schema.",
-  "opt-proxyBypassRules": "Proxy Bypass Rules",
-  "opt-proxyBypassRules-desc": "Sets electron proxy bypass rules"
+  "opt-proxy-desc": "Routes Discord traffic through a specified proxy. Internal GoofCord requests (e.g., fetching external assets) will bypass this proxy.",
+  "opt-proxyRules": "Proxy rules",
+  "opt-proxyRules-desc": "Sets Electron proxy rules. See the <a target=\"_blank\" href=\"https://www.electronjs.org/docs/latest/api/structures/proxy-config\">Electron documentation</a> for the schema.",
+  "opt-proxyBypassRules": "Proxy bypass rules",
+  "opt-proxyBypassRules-desc": "Sets the Electron proxy bypass rules."
 }
