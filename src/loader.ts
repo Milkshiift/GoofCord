@@ -7,6 +7,7 @@ import { initArrpc } from "./modules/arrpc/arrpc.ts";
 import { manageAssets, updateAssets } from "./modules/assets/assetDownloader.ts";
 import { categorizeAllAssets, startStyleWatcher } from "./modules/assets/assetLoader.ts";
 import { initFirewall, unstrictCSP } from "./modules/firewall.ts";
+import { initProxy } from "./modules/proxy.ts";
 import { setApplicationMenu } from "./modules/menus/applicationMenu.ts";
 import { initEncryption } from "./modules/messageEncryption.ts";
 import { createTray } from "./modules/tray.ts";
@@ -36,6 +37,7 @@ export async function load() {
 	console.timeEnd(pc.green("[Timer]") + " Electron loaded in");
 
 	setPermissions();
+	await initProxy();
 	initFirewall();
 	unstrictCSP();
 	await modPromise;
