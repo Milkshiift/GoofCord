@@ -138,5 +138,11 @@
     "opt-vaapi-desc": "Active l'API d'accélération vidéo (VA-API). Non supportée sur les cartes graphiques Nvidia.",
     "settings-dictionary-key": "Clé (nom de fichier)",
     "category-assets": "Ressources",
-    "opt-assets": "Ressources externes"
+    "opt-assets": "Ressources externes",
+    "opt-proxy": "Proxy",
+    "opt-proxy-desc": "Redirige le trafic Discord dans un proxy. Les requêtes GoofCord internes (comme la récupération des ressources externes) contourneront ce proxy.",
+    "opt-proxyRules": "Règles de proxy",
+    "opt-proxyRules-desc": "Définit les règles de proxy Electron. Voir la <a target=\"_blank\" href=\"https://www.electronjs.org/docs/latest/api/structures/proxy-config\">documentation Electron </a> pour le schéma.",
+    "opt-proxyBypassRules": "Règles de contournements de proxy",
+    "opt-proxyBypassRules-desc": "Définit les règles de contournement du proxy Electron."
 }
