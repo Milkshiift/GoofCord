@@ -84,7 +84,7 @@ export async function loadConfig(): Promise<void> {
 }
 
 export function getConfig<K extends ConfigKey>(key: K): Config[K] {
-	return configHost.get()[key] ?? getDefaults()[key];
+	return configHost.get()[key] ?? getDefaultValue(key);
 }
 
 export function getConfigRaw<K extends ConfigKey>(key: K): Config[K] | undefined {

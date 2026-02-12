@@ -474,7 +474,7 @@ export const settingsSchema = {
 			},
 		}),
 		screensharePreviousSettings: hidden<[number, number, boolean, string]>([720, 30, false, "motion"]),
-		"windowState:main": hidden<[boolean, [number, number]]>([true, [835, 600]]),
+		"windowState:main": hidden<[boolean, [number, number], [number, number]]>([true, [-1, -1], [835, 600]]),
 		"button-openGoofCordFolder": button("Open GoofCord folder", "openFolder", "GoofCord"),
 		"button-clearCache": button("Clear cache", "clearCache"),
 	},
