@@ -9,7 +9,7 @@ import type { setBadgeCount as ___modules_dynamicIcon_setBadgeCount } from "../m
 import type { cycleThroughPasswords as ___modules_messageEncryption_cycleThroughPasswords, decryptMessage as ___modules_messageEncryption_decryptMessage, encryptMessage as ___modules_messageEncryption_encryptMessage } from "../modules/messageEncryption";
 import type { isVenbindLoaded as ___modules_native_venbind_isVenbindLoaded, setKeybinds as ___modules_native_venbind_setKeybinds } from "../modules/native/venbind";
 import type { stopVenmic as ___modules_native_venmic_stopVenmic } from "../modules/native/venmic";
-import type { decryptSafeStorage as ___utils_decryptSafeStorage, encryptSafeStorage as ___utils_encryptSafeStorage, getDisplayVersion as ___utils_getDisplayVersion, getVersion as ___utils_getVersion, isEncryptionAvailable as ___utils_isEncryptionAvailable, saveFileToGCFolder as ___utils_saveFileToGCFolder } from "../utils";
+import type { getDisplayVersion as ___utils_getDisplayVersion, getVersion as ___utils_getVersion, isEncryptionAvailable as ___utils_isEncryptionAvailable, saveFileToGCFolder as ___utils_saveFileToGCFolder } from "../utils";
 import type { createQuickCssWindow as ___windows_main_quickCssFix_createQuickCssWindow } from "../windows/main/quickCssFix";
 import type { deleteCloud as ___windows_settings_cloud_cloud_deleteCloud, loadCloud as ___windows_settings_cloud_cloud_loadCloud, saveCloud as ___windows_settings_cloud_cloud_saveCloud } from "../windows/settings/cloud/cloud";
 import type { createSettingsWindow as ___windows_settings_settings_createSettingsWindow, hotreloadLocale as ___windows_settings_settings_hotreloadLocale, invidiousConfigChanged as ___windows_settings_settings_invidiousConfigChanged, openFolder as ___windows_settings_settings_openFolder, reloadWindow as ___windows_settings_settings_reloadWindow } from "../windows/settings/settings";
@@ -40,8 +40,6 @@ export interface IpcOnChannels {
   "assetLoader:getAssets": typeof ___modules_assets_assetLoader_getAssets;
   "messageEncryption:decryptMessage": typeof ___modules_messageEncryption_decryptMessage;
   "messageEncryption:encryptMessage": typeof ___modules_messageEncryption_encryptMessage;
-  "utils:decryptSafeStorage": typeof ___utils_decryptSafeStorage;
-  "utils:encryptSafeStorage": typeof ___utils_encryptSafeStorage;
   "utils:getDisplayVersion": typeof ___utils_getDisplayVersion;
   "utils:getVersion": typeof ___utils_getVersion;
   "utils:isEncryptionAvailable": typeof ___utils_isEncryptionAvailable;

@@ -111,24 +111,6 @@ export function isEncryptionAvailable<IPCOn>() {
 	return safeStorage.isEncryptionAvailable();
 }
 
-export function encryptSafeStorage<IPCOn>(plaintextString: string) {
-	try {
-		return isEncryptionAvailable() ? safeStorage.encryptString(plaintextString).toString("base64") : plaintextString;
-	} catch (e) {
-		console.error(e);
-		return plaintextString;
-	}
-}
-
-export function decryptSafeStorage<IPCOn>(encryptedBase64: string) {
-	try {
-		return isEncryptionAvailable() ? safeStorage.decryptString(Buffer.from(encryptedBase64, "base64")) : encryptedBase64;
-	} catch (e) {
-		console.error(e);
-		return encryptedBase64;
-	}
-}
-
 export async function saveFileToGCFolder<IPCHandle>(filePath: string, content: string | Buffer<ArrayBuffer>) {
 	const fullPath = path.join(getGoofCordFolderPath(), filePath);
 	await fs.promises.writeFile(fullPath, content);

@@ -4,7 +4,6 @@ import pc from "picocolors";
 import { encryptionPasswords } from "../../../modules/messageEncryption.ts";
 import type { Config } from "../../../settingsSchema.ts"; // Removed unused imports
 import { getConfig, setConfigBulk } from "../../../stores/config/config.main.ts";
-import { decryptSafeStorage } from "../../../utils.ts";
 import { decryptString, encryptString } from "./encryption.ts";
 import { deleteToken, getCloudHost, getCloudToken } from "./token.ts";
 
@@ -31,7 +30,7 @@ async function withLock<T>(operation: string, fn: () => Promise<T>): Promise<T |
 
 function getEncryptionKey(): string {
 	try {
-		return decryptSafeStorage(getConfig("cloudEncryptionKey"));
+		return getConfig("cloudEncryptionKey");
 	} catch {
 		return "";
 	}

@@ -2,11 +2,11 @@ import { dialog } from "electron";
 import pc from "picocolors";
 import StegCloak from "stegcloak";
 import { getConfig } from "../stores/config/config.main.ts";
-import { decryptSafeStorage, getErrorMessage } from "../utils.ts";
+import { getErrorMessage } from "../utils.ts";
 import { mainWindow } from "../windows/main/main.ts";
 
 let stegcloak: StegCloak;
-export const encryptionPasswords: string[] = [];
+export let encryptionPasswords: string[] = [];
 let chosenPassword: string;
 let encryptionMark: string;
 let cover: string;
@@ -23,12 +23,8 @@ export function initEncryption() {
 }
 
 async function loadPasswords() {
-	const encryptedPasswords = getConfig("encryptionPasswords");
 	try {
-		for (const password of encryptedPasswords) {
-			if (!password) continue;
-			encryptionPasswords.push(decryptSafeStorage(password));
-		}
+		encryptionPasswords = getConfig("encryptionPasswords");
 		chosenPassword = encryptionPasswords[0];
 		console.log(pc.magenta("[Message Encryption]"), "Loaded encryption passwords");
 	} catch (error) {
