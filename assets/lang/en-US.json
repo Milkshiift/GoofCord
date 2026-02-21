@@ -138,7 +138,7 @@
   "opt-disableGpuCompositing": "Disable GPU compositing",
   "opt-disableGpuCompositing-desc": "May fix infinitely loading screenshare for viewers, but can also reduce performance in other areas of GoofCord.",
   "opt-vaapi": "VA-API",
-  "opt-vaapi-desc": "Enables the Video Acceleration API (VA-API). Not supported on Nvidia GPUs.",
+  "opt-vaapi-desc": "Enables the Video Acceleration API (VA-API). Mostly unsupported on Nvidia GPUs.",
   "opt-proxy": "Proxy",
   "opt-proxy-desc": "Routes Discord traffic through a specified proxy. Internal GoofCord requests (e.g., fetching external assets) will bypass this proxy.",
   "opt-proxyRules": "Proxy rules",

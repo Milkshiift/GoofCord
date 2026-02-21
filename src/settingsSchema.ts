@@ -377,7 +377,7 @@ export const settingsSchema = {
 		vaapi: setting("checkbox", {
 			name: "VA-API",
 			defaultValue: true,
-			description: "Enables the Video Acceleration API (VA-API). Not supported on Nvidia GPUs.",
+			description: "Enables the Video Acceleration API (VA-API). Mostly unsupported on Nvidia GPUs.",
 			showAfter: {
 				key: "hardwareAcceleration",
 				condition: (value) => process.platform === "linux" && value === true,

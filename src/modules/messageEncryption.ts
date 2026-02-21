@@ -15,7 +15,7 @@ export function initEncryption() {
 	try {
 		void loadPasswords();
 		void loadCover();
-		stegcloak = new StegCloak(true, false);
+		stegcloak = new StegCloak();
 		encryptionMark = getConfig("encryptionMark");
 	} catch (error) {
 		console.error("Encryption initialization error:", error);

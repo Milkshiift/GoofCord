@@ -3,15 +3,11 @@ import { initLocalization } from "@root/src/stores/localization/localization.mai
 import { app } from "electron";
 import pc from "picocolors";
 import { getConfig, loadConfig } from "./stores/config/config.main.ts";
-import { getDisplayVersion, isDev } from "./utils.ts";
+import { getDisplayVersion } from "./utils.ts";
 
 console.time(pc.green("[Timer]") + " GoofCord fully loaded in");
 
 module.enableCompileCache();
-
-if (isDev()) {
-	require("source-map-support").install();
-}
 
 console.log("GoofCord", getDisplayVersion());
 
