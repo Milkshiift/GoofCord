@@ -10,7 +10,7 @@ import { setBadgeCount as ___modules_dynamicIcon_setBadgeCount } from "../module
 import { cycleThroughPasswords as ___modules_messageEncryption_cycleThroughPasswords, decryptMessage as ___modules_messageEncryption_decryptMessage, encryptMessage as ___modules_messageEncryption_encryptMessage } from "../modules/messageEncryption";
 import { isVenbindLoaded as ___modules_native_venbind_isVenbindLoaded, setKeybinds as ___modules_native_venbind_setKeybinds } from "../modules/native/venbind";
 import { stopVenmic as ___modules_native_venmic_stopVenmic } from "../modules/native/venmic";
-import { decryptSafeStorage as ___utils_decryptSafeStorage, encryptSafeStorage as ___utils_encryptSafeStorage, getDisplayVersion as ___utils_getDisplayVersion, getVersion as ___utils_getVersion, isEncryptionAvailable as ___utils_isEncryptionAvailable, saveFileToGCFolder as ___utils_saveFileToGCFolder } from "../utils";
+import { getDisplayVersion as ___utils_getDisplayVersion, getVersion as ___utils_getVersion, isEncryptionAvailable as ___utils_isEncryptionAvailable, saveFileToGCFolder as ___utils_saveFileToGCFolder } from "../utils";
 import { createQuickCssWindow as ___windows_main_quickCssFix_createQuickCssWindow } from "../windows/main/quickCssFix";
 import { deleteCloud as ___windows_settings_cloud_cloud_deleteCloud, loadCloud as ___windows_settings_cloud_cloud_loadCloud, saveCloud as ___windows_settings_cloud_cloud_saveCloud } from "../windows/settings/cloud/cloud";
 import { createSettingsWindow as ___windows_settings_settings_createSettingsWindow, hotreloadLocale as ___windows_settings_settings_hotreloadLocale, invidiousConfigChanged as ___windows_settings_settings_invidiousConfigChanged, openFolder as ___windows_settings_settings_openFolder, reloadWindow as ___windows_settings_settings_reloadWindow } from "../windows/settings/settings";
@@ -34,8 +34,6 @@ export function registerAllHandlers() {
   ipcMain.handle("settings:invidiousConfigChanged", async (event) => { return await ___windows_settings_settings_invidiousConfigChanged(); });
   ipcMain.handle("settings:openFolder", async (event, folder) => { return await ___windows_settings_settings_openFolder(folder); });
   ipcMain.handle("settings:reloadWindow", async (event) => { return await ___windows_settings_settings_reloadWindow(); });
-  ipcMain.on("utils:decryptSafeStorage", (event, encryptedBase64) => { event.returnValue = ___utils_decryptSafeStorage(encryptedBase64); });
-  ipcMain.on("utils:encryptSafeStorage", (event, plaintextString) => { event.returnValue = ___utils_encryptSafeStorage(plaintextString); });
   ipcMain.on("utils:getDisplayVersion", (event) => { event.returnValue = ___utils_getDisplayVersion(); });
   ipcMain.on("utils:getVersion", (event) => { event.returnValue = ___utils_getVersion(); });
   ipcMain.on("utils:isEncryptionAvailable", (event) => { event.returnValue = ___utils_isEncryptionAvailable(); });

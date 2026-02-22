@@ -2,7 +2,7 @@ import { i } from "@root/src/stores/localization/localization.preload.ts";
 import type { JSX } from "preact";
 import { useCallback, useEffect, useState } from "preact/hooks";
 import { type ConfigKey, type HiddenEntry, isEditableSetting, type SettingEntry } from "../../../settingsSchema.ts";
-import { decrypt, getConfig, saveSetting, subscribe } from "./config.ts";
+import { getConfig, saveSetting, subscribe } from "./config.ts";
 import { InputComponents } from "./inputs.tsx";
 
 interface SettingFieldProps {
@@ -15,13 +15,7 @@ export function SettingField({ settingKey, entry, forceVisible = false }: Settin
 	const isEditable = isEditableSetting(entry);
 
 	// Get initial value, decrypting if needed
-	const getInitialValue = useCallback(() => {
-		let val = getConfig(settingKey);
-		if (isEditable && entry.encrypted) {
-			val = decrypt(val);
-		}
-		return val;
-	}, [settingKey, isEditable, entry]);
+	const getInitialValue = useCallback(() => getConfig(settingKey), [settingKey, isEditable, entry]);
 
 	const [value, setValue] = useState(getInitialValue);
 

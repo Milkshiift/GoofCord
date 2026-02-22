@@ -1,11 +1,5 @@
 import { deleteAssets } from "@root/src/modules/assets/assetLoader.ts";
-import {
-	cleanUpConfig,
-	getConfig,
-	getConfigRaw,
-	getDefaultValue,
-	setConfig
-} from "@root/src/stores/config/config.main.ts";
+import { cleanUpConfig, getConfig, getConfigRaw, getDefaultValue, setConfig } from "@root/src/stores/config/config.main.ts";
 import { getVersion } from "@root/src/utils.ts";
 
 export async function runMigrations() {

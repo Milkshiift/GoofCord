@@ -14,10 +14,13 @@ export function adjustWindow(window: BrowserWindow, configEntry: ConfigKey) {
 
 	const debouncedSaveState = debounce(async () => await saveState(window, configEntry), 1000);
 
-	for (const event of ["resize", "maximize", "unmaximize"]) {
-		// @ts-expect-error
-		window.on(event, debouncedSaveState);
-	}
+	// Delay to avoid capturing internal events
+	setTimeout(() => {
+		for (const event of ["resize", "maximize", "unmaximize"]) {
+			// @ts-expect-error
+			window.on(event, debouncedSaveState);
+		}
+	}, 1000);
 }
 
 export async function saveState(window: BrowserWindow, configEntry: ConfigKey) {

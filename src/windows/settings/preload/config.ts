@@ -19,30 +19,12 @@ function notify(key: string): void {
 	}
 }
 
-export function encrypt<T>(value: T): T {
-	if (typeof value === "string") return sendSync("utils:encryptSafeStorage", value) as T;
-	if (Array.isArray(value)) return value.map((v) => sendSync("utils:encryptSafeStorage", v as string)) as T;
-	return value;
-}
-
-export function decrypt<T>(value: T): T {
-	if (typeof value === "string") return sendSync("utils:decryptSafeStorage", value) as T;
-	if (Array.isArray(value)) return value.map((v) => sendSync("utils:decryptSafeStorage", v as string)) as T;
-	return value;
-}
-
 export function isEncryptionAvailable(): boolean {
 	return sendSync("utils:isEncryptionAvailable") as boolean;
 }
 
 export async function saveSetting(key: ConfigKey, value: unknown, entry: SettingEntry | null): Promise<void> {
-	let finalValue = value;
-
-	if (entry?.encrypted) {
-		finalValue = encrypt(value);
-	}
-
-	await setConfig(key, finalValue as Config[ConfigKey]);
+	await setConfig(key, value as Config[ConfigKey]);
 	notify(key);
 
 	void invoke("flashTitlebar", "#5865F2");

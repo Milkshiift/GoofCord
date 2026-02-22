@@ -7,12 +7,11 @@ import { initArrpc } from "./modules/arrpc/arrpc.ts";
 import { manageAssets, updateAssets } from "./modules/assets/assetDownloader.ts";
 import { categorizeAllAssets, startStyleWatcher } from "./modules/assets/assetLoader.ts";
 import { initFirewall, unstrictCSP } from "./modules/firewall.ts";
-import { initProxy } from "./modules/proxy.ts";
 import { setApplicationMenu } from "./modules/menus/applicationMenu.ts";
-import { initEncryption } from "./modules/messageEncryption.ts";
+import { initProxy } from "./modules/proxy.ts";
 import { createTray } from "./modules/tray.ts";
 import { checkForUpdate } from "./modules/updateCheck.ts";
-import { firstLaunch, getConfig } from "./stores/config/config.main.ts";
+import { decryptSettings, firstLaunch, getConfig } from "./stores/config/config.main.ts";
 import { isDev } from "./utils.ts";
 import { createMainWindow } from "./windows/main/main.ts";
 import { createSettingsWindow } from "./windows/settings/settings.ts";
@@ -30,7 +29,6 @@ export async function load() {
 		await categorizeAllAssets();
 	});
 	registerAllHandlers();
-	initEncryption();
 
 	console.time(pc.green("[Timer]") + " Electron loaded in");
 	await app.whenReady();
@@ -40,6 +38,7 @@ export async function load() {
 	await initProxy();
 	initFirewall();
 	unstrictCSP();
+	await decryptSettings();
 	await modPromise;
 	firstLaunch ? await createSettingsWindow() : await createMainWindow();
 
