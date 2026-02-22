@@ -97,7 +97,7 @@
   "opt-encryptionPasswords": "Encryption passwords",
   "opt-encryptionPasswords-desc": "A list of passwords used for encryption. They are stored securely. Keep a backup in a safe location.",
   "opt-encryptionCover": "Encryption cover",
-  "opt-encryptionCover-desc": "A message that a user without the password will see. At least two words or empty.",
+  "opt-encryptionCover-desc": "A message that a user without the password will see.",
   "opt-encryptionMark": "Decryption marker",
   "opt-encryptionMark-desc": "A string prepended to decrypted messages to distinguish them from normal text.",
   "opt-domOptimizer": "DOM optimizer",

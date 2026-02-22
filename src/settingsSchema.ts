@@ -83,7 +83,7 @@ export type SettingEntry<K extends keyof InputTypeMap = keyof InputTypeMap> = K 
 			inputType: K;
 			defaultValue: InputTypeMap[K];
 			accept?: string;
-			encrypted?: boolean;
+			encrypted?: boolean; // Encrypted settings can't be read before appReady
 			options?: readonly string[] | readonly [string, string][] | Record<string, unknown>;
 			showAfter?: {
 				key: string;
@@ -332,7 +332,7 @@ export const settingsSchema = {
 		encryptionCover: setting("textfield", {
 			name: "Encryption cover",
 			defaultValue: "",
-			description: "A message that a user without the password will see. At least two words or empty.",
+			description: "A message that a user without the password will see.",
 			showAfter: {
 				key: "messageEncryption",
 				condition: (value) => value === true,
@@ -553,4 +553,32 @@ export function getDefinition<K extends ConfigKey>(key: K): EntryForKey<K> {
 
 export function isEditableSetting(entry: SchemaEntry): entry is SettingEntry {
 	return "inputType" in entry;
+}
+
+
+let encryptedCache: Set<string> | null = null;
+function ensureEncryptedCache() {
+	if (encryptedCache) return;
+	encryptedCache = new Set();
+
+	for (const section of Object.values(settingsSchema)) {
+		for (const [key, entry] of Object.entries(section)) {
+			// Utilize existing type guard to check for .encrypted property safely
+			if (isEditableSetting(entry) && entry.encrypted) {
+				encryptedCache.add(key);
+			}
+		}
+	}
+}
+
+export function getEncryptedKeys(): string[] {
+	ensureEncryptedCache();
+	// biome-ignore lint/style/noNonNullAssertion: Cache is ensured above
+	return Array.from(encryptedCache!);
+}
+
+export function isEncrypted(key: string): boolean {
+	ensureEncryptedCache();
+	// biome-ignore lint/style/noNonNullAssertion: Cache is ensured above
+	return encryptedCache!.has(key);
 }

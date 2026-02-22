@@ -1,14 +1,28 @@
 import fs from "node:fs";
 import path from "node:path";
-import { app, dialog, shell } from "electron";
+import {app, dialog, safeStorage, shell} from "electron";
 import { createHost, type StoreHost } from "electron-sync-store/main";
-import { type Config, type ConfigKey, getDefaults } from "../../settingsSchema.ts";
+import {
+	type Config,
+	type ConfigKey,
+	getDefaults,
+	isEncrypted
+} from "../../settingsSchema.ts";
 import { getErrorMessage, getGoofCordFolderPath, tryCreateFolder } from "../../utils.ts";
 
-export let firstLaunch = false;
+// ============================================================================
+// State & Initialization
+// ============================================================================
 
-function getConfigLocation(): string {
-	return path.join(getGoofCordFolderPath(), "settings.json");
+export let firstLaunch = false;
+let configHost: StoreHost<Config>;
+
+export async function loadConfig(): Promise<void> {
+	configHost = createHost<Config>("config", {
+		onHydrate: hydrate,
+		onPersist: saveToDisk,
+	});
+	await configHost.ready();
 }
 
 async function setup(): Promise<Config> {
@@ -19,13 +33,125 @@ async function setup(): Promise<Config> {
 	return defaults;
 }
 
+// ============================================================================
+// Getters
+// ============================================================================
+
+export function getConfig<K extends ConfigKey>(key: K): Config[K] {
+	return configHost.get()[key] ?? getDefaultValue(key);
+}
+
+export function getConfigRaw<K extends ConfigKey>(key: K): Config[K] | undefined {
+	return configHost.get()[key];
+}
+
+export function getConfigBulk(): Config {
+	return configHost.get();
+}
+
+export function getDefaultValue<K extends ConfigKey>(entry: K): Config[K] {
+	return getDefaults()[entry] as Config[K];
+}
+
+// ============================================================================
+// Setters
+// ============================================================================
+
+export async function setConfig<K extends ConfigKey>(key: K, value: Config[K]): Promise<void> {
+	const current = configHost.get();
+	await configHost.set({ ...current, [key]: value });
+}
+
+export async function setConfigBulk(config: Config): Promise<void> {
+	await configHost.set(config);
+}
+
+// ============================================================================
+// Maintenance
+// ============================================================================
+
+export async function cleanUpConfig(): Promise<void> {
+	const currentConfig = configHost.get();
+	const defaults = getDefaults();
+	const validKeys = new Set(Object.keys(defaults));
+
+	const cleanedConfig = { ...currentConfig };
+	let hasChanges = false;
+	let removedCount = 0;
+
+	for (const key of Object.keys(cleanedConfig)) {
+		if (!validKeys.has(key)) {
+			// @ts-expect-error: Deleting a key that isn't in the type definition
+			delete cleanedConfig[key];
+			hasChanges = true;
+			removedCount++;
+			console.log(`[Config] Removed obsolete property: "${key}"`);
+		}
+	}
+
+	if (hasChanges) {
+		console.log(`[Config] Cleanup complete. Removed ${removedCount} obsolete keys.`);
+		await configHost.set(cleanedConfig);
+	}
+}
+
+// ============================================================================
+// Private
+// ============================================================================
+
+async function hydrate(): Promise<Config> {
+	safeStorage.setUsePlainTextEncryption(true);
+	while (true) {
+		try {
+			// fs.promises.readFile is much slower than fs.readFileSync
+			const rawData = fs.readFileSync(getConfigLocation(), "utf-8");
+			return JSON.parse(rawData) as Config;
+		} catch (e: unknown) {
+			const result = await handleConfigError(e);
+			if (result.data) return result.data;
+			if (!result.retry) return getDefaults();
+		}
+	}
+}
+
 async function saveToDisk(state: Config) {
+	// Safeguard for safeStorage.
+	// This should only trigger on setup, where we don't mind the extra delay.
+	await app.whenReady();
+
 	try {
+		for (const [key, value] of Object.entries(state)) {
+			if (isEncrypted(key)) {
+				(state as any)[key as ConfigKey] = encryptSafeStorage(value);
+			}
+		}
 		await fs.promises.writeFile(getConfigLocation(), JSON.stringify(state, null, 2), "utf-8");
 	} catch (e: unknown) {
 		console.error("Failed to save settings:", e);
 		dialog.showErrorBox("GoofCord was unable to save the settings", getErrorMessage(e));
 	}
+}
+
+export async function decryptSettings() {
+	// Safeguard for safeStorage. Ideally the function should be called after init.
+	await app.whenReady();
+
+	const config = configHost.get();
+	for (const [key, value] of Object.entries(config)) {
+		if (isEncrypted(key)) {
+			(config as any)[key as ConfigKey] = decryptSafeStorage(value as string);
+		}
+	}
+	await configHost.set(config, {persist: false});
+}
+
+export function encryptSafeStorage(plaintext: unknown) {
+	const plaintextString = JSON.stringify(plaintext);
+	return safeStorage.encryptString(plaintextString).toString("base64");
+}
+
+export function decryptSafeStorage(encryptedBase64: string) {
+	return JSON.parse(safeStorage.decryptString(Buffer.from(encryptedBase64, "base64")));
 }
 
 async function handleConfigError(e: unknown): Promise<{ retry: boolean; data?: Config }> {
@@ -59,77 +185,6 @@ async function handleConfigError(e: unknown): Promise<{ retry: boolean; data?: C
 	}
 }
 
-const DiskPersistence = {
-	onHydrate: async (): Promise<Config> => {
-		while (true) {
-			try {
-				// fs.promises.readFile is much slower than fs.readFileSync
-				const rawData = fs.readFileSync(getConfigLocation(), "utf-8");
-				return JSON.parse(rawData) as Config;
-			} catch (e: unknown) {
-				const result = await handleConfigError(e);
-				if (result.data) return result.data;
-				if (!result.retry) return getDefaults();
-			}
-		}
-	},
-	onPersist: saveToDisk,
-};
-
-let configHost: StoreHost<Config>;
-
-export async function loadConfig(): Promise<void> {
-	configHost = createHost<Config>("config", DiskPersistence);
-	await configHost.ready();
-}
-
-export function getConfig<K extends ConfigKey>(key: K): Config[K] {
-	return configHost.get()[key] ?? getDefaultValue(key);
-}
-
-export function getConfigRaw<K extends ConfigKey>(key: K): Config[K] | undefined {
-	return configHost.get()[key];
-}
-
-export function getConfigBulk(): Config {
-	return configHost.get();
-}
-
-export async function setConfig<K extends ConfigKey>(key: K, value: Config[K]): Promise<void> {
-	const current = configHost.get();
-	await configHost.set({ ...current, [key]: value });
-}
-
-export async function setConfigBulk(config: Config): Promise<void> {
-	await configHost.set(config);
-}
-
-export function getDefaultValue<K extends ConfigKey>(entry: K): Config[K] {
-	return getDefaults()[entry] as Config[K];
-}
-
-export async function cleanUpConfig(): Promise<void> {
-	const currentConfig = configHost.get();
-	const defaults = getDefaults();
-
-	const validKeys = new Set(Object.keys(defaults));
-
-	const cleanedConfig = { ...currentConfig };
-	let hasChanges = false;
-	let removedCount = 0;
-
-	for (const key of Object.keys(cleanedConfig)) {
-		if (!validKeys.has(key)) {
-			// @ts-expect-error: Deleting a key that isn't in the type definition
-			delete cleanedConfig[key];
-			hasChanges = true;
-			removedCount++;
-			console.log(`[Config] Removed obsolete property: "${key}"`);
-		}
-	}
-
-	if (hasChanges) {
-		console.log(`[Config] Cleanup complete. Removed ${removedCount} obsolete keys.`);
-		await configHost.set(cleanedConfig);
-	}
+function getConfigLocation(): string {
+	return path.join(getGoofCordFolderPath(), "settings.json");
 }

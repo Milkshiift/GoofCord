@@ -1,8 +1,7 @@
 import { getConfigBulk } from "@root/src/stores/config/config.main.ts";
 import { dialog } from "electron";
 import pc from "picocolors";
-import { encryptionPasswords } from "../../../modules/messageEncryption.ts";
-import type { Config } from "../../../settingsSchema.ts"; // Removed unused imports
+import {Config, isEncrypted} from "../../../settingsSchema.ts";
 import { getConfig, setConfigBulk } from "../../../stores/config/config.main.ts";
 import { decryptString, encryptString } from "./encryption.ts";
 import { deleteToken, getCloudHost, getCloudToken } from "./token.ts";
@@ -71,11 +70,15 @@ export async function saveCloud<IPCHandle>(silent = false): Promise<void> {
 
 		const configToSave: Config = { ...getConfigBulk() };
 
-		if (getEncryptionKey()) {
-			configToSave.encryptionPasswords = encryptionPasswords;
-		} else {
-			excludedOptions.push("encryptionPasswords");
+		if (!getEncryptionKey()) {
+			for (const [key, value] of Object.entries(configToSave)) {
+				if (isEncrypted(key)) {
+					excludedOptions.push(key);
+				}
+			}
 		}
+
+		console.log(excludedOptions);
 
 		const settings = Object.fromEntries(Object.entries(configToSave).filter(([key]) => !excludedOptions.includes(key)));
 		const encryptedSettings = await encryptString(JSON.stringify(settings), getEncryptionKey());
