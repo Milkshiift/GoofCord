@@ -331,7 +331,7 @@ export const settingsSchema = {
 		}),
 		encryptionCover: setting("textfield", {
 			name: "Encryption cover",
-			defaultValue: "",
+			defaultValue: "Super secret message",
 			description: "A message that a user without the password will see.",
 			showAfter: {
 				key: "messageEncryption",

@@ -664,7 +664,7 @@
 
     "stat-mode": ["stat-mode@1.0.0", "", {}, "sha512-jH9EhtKIjuXZ2cWxmXS8ZP80XyC3iasQxMDV8jzhNJpfDb7VbQLVW4Wvsxz9QZvzV+G4YoSfBUVKDOyxLzi/sg=="],
 
-    "stegcloak": ["stegcloak@github:Milkshiift/stegcloak-node#7717eeb", {}, "Milkshiift-stegcloak-node-7717eeb"],
+    "stegcloak": ["stegcloak@github:Milkshiift/stegcloak-node#23f2625", {}, "Milkshiift-stegcloak-node-23f2625"],
 
     "string-width": ["string-width@4.2.3", "", { "dependencies": { "emoji-regex": "^8.0.0", "is-fullwidth-code-point": "^3.0.0", "strip-ansi": "^6.0.1" } }, "sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g=="],
 

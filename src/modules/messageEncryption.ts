@@ -27,7 +27,7 @@ function ensureInitialized() {
 		let rawCover = getConfig("encryptionCover") ?? "";
 		// Stegcloak requires a two-word cover. Add invisible chars if cover is too short.
 		if (rawCover === "" || rawCover.split(" ").length < 2) {
-			rawCover = `${rawCover}\u200c \u200c`;
+			rawCover = `${rawCover}\u200b \u200b`;
 		}
 		cover = rawCover;
 
@@ -79,6 +79,7 @@ export function decryptMessage<IPCOn>(message: string) {
 				return encryptionMark + decryptedMessage;
 			}
 		} catch (e) {
+			// console.log(e);
 			// Continue to next password if revelation fails
 		}
 	}
