@@ -1,13 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
-import {app, dialog, safeStorage, shell} from "electron";
+import { app, dialog, safeStorage, shell } from "electron";
 import { createHost, type StoreHost } from "electron-sync-store/main";
-import {
-	type Config,
-	type ConfigKey,
-	getDefaults,
-	isEncrypted
-} from "../../settingsSchema.ts";
+import { type Config, type ConfigKey, getDefaults, isEncrypted } from "../../settingsSchema.ts";
 import { getErrorMessage, getGoofCordFolderPath, tryCreateFolder } from "../../utils.ts";
 
 // ============================================================================
@@ -122,6 +117,7 @@ async function saveToDisk(state: Config) {
 	try {
 		for (const [key, value] of Object.entries(state)) {
 			if (isEncrypted(key)) {
+				// biome-ignore lint/suspicious/noExplicitAny: It's fine
 				(state as any)[key as ConfigKey] = encryptSafeStorage(value);
 			}
 		}
@@ -139,10 +135,11 @@ export async function decryptSettings() {
 	const config = configHost.get();
 	for (const [key, value] of Object.entries(config)) {
 		if (isEncrypted(key)) {
+			// biome-ignore lint/suspicious/noExplicitAny: It's fine
 			(config as any)[key as ConfigKey] = decryptSafeStorage(value as string);
 		}
 	}
-	await configHost.set(config, {persist: false});
+	await configHost.set(config, { persist: false });
 }
 
 export function encryptSafeStorage(plaintext: unknown) {

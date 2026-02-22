@@ -15,10 +15,7 @@ export function SettingField({ settingKey, entry, forceVisible = false }: Settin
 	const isEditable = isEditableSetting(entry);
 
 	// Get initial value, decrypting if needed
-	const getInitialValue = useCallback(
-		() => getConfig(settingKey),
-		[settingKey, isEditable, entry]
-	);
+	const getInitialValue = useCallback(() => getConfig(settingKey), [settingKey, isEditable, entry]);
 
 	const [value, setValue] = useState(getInitialValue);
 

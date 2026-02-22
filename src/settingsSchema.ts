@@ -555,7 +555,6 @@ export function isEditableSetting(entry: SchemaEntry): entry is SettingEntry {
 	return "inputType" in entry;
 }
 
-
 let encryptedCache: Set<string> | null = null;
 function ensureEncryptedCache() {
 	if (encryptedCache) return;
