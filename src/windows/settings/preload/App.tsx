@@ -120,7 +120,7 @@ function SettingsPanel({ name, active, revealed }: SettingsPanelProps): JSX.Elem
 									const [fnName, ...args] = (entry as ButtonEntry).action;
 									const actionFn = buttonClickActions[fnName as ActionKey];
 									// @ts-expect-error This is safe
-									actionFn(...args);
+									void actionFn(...args);
 								}}
 							>
 								{i(`opt-${key}`)}

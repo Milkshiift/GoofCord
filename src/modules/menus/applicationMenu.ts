@@ -16,7 +16,7 @@ export async function setApplicationMenu() {
 					label: i("goofcord-settings"),
 					accelerator: "CmdOrCtrl+Shift+'",
 					click: () => {
-						createSettingsWindow();
+						void createSettingsWindow();
 					},
 				},
 				{
@@ -99,7 +99,7 @@ export async function setApplicationMenu() {
 							useContentSize: true,
 							title: "GPU Internals",
 						});
-						gpuWindow.loadURL("chrome://gpu");
+						void gpuWindow.loadURL("chrome://gpu");
 					},
 				},
 			],

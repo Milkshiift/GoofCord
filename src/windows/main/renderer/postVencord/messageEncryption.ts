@@ -130,7 +130,7 @@ function handleFluxDispatch(dispatch: any) {
 			if (msg.content) msg.content = GoofCord.decryptMessage(msg.content, dispatch.channelId);
 		}
 	};
-	console.log(dispatch);
+
 	switch (dispatch.type) {
 		case "MESSAGE_CREATE":
 		case "MESSAGE_UPDATE":

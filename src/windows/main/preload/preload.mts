@@ -45,4 +45,4 @@ function disableAltMenu() {
 	}
 }
 
-whenConfigReady().then(init);
+void whenConfigReady().then(init);

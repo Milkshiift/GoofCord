@@ -44,7 +44,7 @@ export async function load() {
 
 	console.timeEnd(pc.green("[Timer]") + " GoofCord fully loaded in");
 
-	void setContextMenu();
+	setContextMenu();
 	void updateAssets();
 	void checkForUpdate();
 	void initArrpc();

@@ -464,5 +464,5 @@ export async function genIpcHandlers(config: Partial<GeneratorConfig> = {}) {
 }
 
 if (import.meta.main) {
-	genIpcHandlers();
+	void genIpcHandlers();
 }

@@ -14,12 +14,8 @@ interface SettingFieldProps {
 export function SettingField({ settingKey, entry, forceVisible = false }: SettingFieldProps): JSX.Element {
 	const isEditable = isEditableSetting(entry);
 
-	// Get initial value, decrypting if needed
-	const getInitialValue = useCallback(() => getConfig(settingKey), [settingKey, isEditable, entry]);
+	const [value, setValue] = useState(() => getConfig(settingKey));
 
-	const [value, setValue] = useState(getInitialValue);
-
-	// Visibility state
 	const [visible, setVisible] = useState(() => {
 		if (forceVisible) return true;
 		if (!isEditable) return false;
@@ -27,7 +23,6 @@ export function SettingField({ settingKey, entry, forceVisible = false }: Settin
 		return entry.showAfter.condition(getConfig(entry.showAfter.key as ConfigKey));
 	});
 
-	// Subscribe to controller changes for visibility
 	useEffect(() => {
 		if (forceVisible || !isEditable || !entry.showAfter) return;
 
@@ -46,7 +41,7 @@ export function SettingField({ settingKey, entry, forceVisible = false }: Settin
 
 	const handleChange = useCallback(
 		async (newValue: unknown) => {
-			setValue(newValue as typeof value);
+			setValue((prev) => newValue as typeof prev);
 			await saveSetting(settingKey, newValue, isEditable ? entry : null);
 		},
 		[settingKey, isEditable, entry],
@@ -61,7 +56,7 @@ export function SettingField({ settingKey, entry, forceVisible = false }: Settin
 			return;
 		}
 
-		setValue(entry.defaultValue as typeof value);
+		setValue(() => entry.defaultValue as any);
 		await saveSetting(settingKey, entry.defaultValue, isEditable ? entry : null);
 	}, [settingKey, entry, isEditable]);
 

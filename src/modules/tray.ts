@@ -43,7 +43,7 @@ export async function createTray() {
 		{
 			label: i("goofcord-settings"),
 			click: () => {
-				createSettingsWindow();
+				void createSettingsWindow();
 			},
 		},
 		{

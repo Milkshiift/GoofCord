@@ -39,12 +39,12 @@ export async function initArrpc<IPCHandle>() {
 
 		worker.on("error", (e: Error) => {
 			console.error("The arRPC worker encountered a fatal error:", e);
-			dialog.showMessageBox(mainWindow, {
+			void dialog.showMessageBox(mainWindow, {
 				type: "error",
 				title: "GoofCord was unable to start arRPC (Rich Presence)",
 				message: e.message,
 			});
-			worker?.terminate();
+			void worker?.terminate();
 			worker = undefined;
 		});
 

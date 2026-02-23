@@ -5,7 +5,7 @@ import { createHost, type StoreHost } from "electron-sync-store/main";
 import { getConfig, setConfig } from "../config/config.main.ts";
 
 function bakeLocalization(lang: string): Record<string, string> {
-	return { ...(allLangData["en-US"] || {}), ...(allLangData[lang] || {}) };
+	return { ...allLangData["en-US"], ...allLangData[lang] };
 }
 
 const TranslationLogic = {

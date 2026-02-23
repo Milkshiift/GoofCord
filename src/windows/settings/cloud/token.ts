@@ -191,7 +191,7 @@ async function getCallbackUrlViaWindow(cloudHostUrl: string): Promise<string> {
 				}
 			});
 
-			authWindow.loadURL(cloudHostUrl + ENDPOINT_VERSION + "login");
+			void authWindow.loadURL(cloudHostUrl + ENDPOINT_VERSION + "login");
 			authWindow.show();
 		} catch (error) {
 			cleanup();

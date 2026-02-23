@@ -51,7 +51,7 @@ export async function createSettingsWindow<IPCHandle>() {
 	});
 
 	settingsWindow.webContents.setWindowOpenHandler(({ url }) => {
-		shell.openExternal(url);
+		void shell.openExternal(url);
 		return { action: "deny" };
 	});
 

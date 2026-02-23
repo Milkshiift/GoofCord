@@ -25,7 +25,7 @@ export async function checkForUpdate() {
 		});
 
 		notification.on("click", () => {
-			shell.openExternal("https://github.com/Milkshiift/GoofCord/releases/latest");
+			void shell.openExternal("https://github.com/Milkshiift/GoofCord/releases/latest");
 		});
 
 		notification.show();
@@ -37,7 +37,7 @@ function isSemverLower(version1: string, version2: string): boolean {
 		const aNum = typeof a === "number" || (typeof a === "string" && !Number.isNaN(Number(a)));
 		const bNum = typeof b === "number" || (typeof b === "string" && !Number.isNaN(Number(b)));
 
-		if (aNum && bNum) return (Number(a) ?? 0) - (Number(b) ?? 0);
+		if (aNum && bNum) return Number(a) - Number(b);
 		if (aNum) return -1;
 		if (bNum) return 1;
 		return String(a ?? "").localeCompare(String(b ?? ""));
