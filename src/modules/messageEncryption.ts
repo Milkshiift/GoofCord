@@ -1,6 +1,6 @@
 import { dialog } from "electron";
 import pc from "picocolors";
-import StegCloak from "stegcloak";
+import { StegCloak } from "stegcloak/pkg";
 import { getConfig } from "../stores/config/config.main.ts";
 import { getErrorMessage } from "../utils.ts";
 import { mainWindow } from "../windows/main/main.ts";
@@ -8,8 +8,6 @@ import { mainWindow } from "../windows/main/main.ts";
 let stegcloak: StegCloak | null = null;
 let isInitialized = false;
 let chosenPassword: string = "";
-let encryptionMark: string = "";
-let cover: string = "";
 let currentIndex = 0;
 
 function ensureInitialized() {
@@ -24,14 +22,6 @@ function ensureInitialized() {
 			console.warn(pc.yellow("[Message Encryption]"), "No encryption passwords found in config.");
 		}
 
-		let rawCover = getConfig("encryptionCover") ?? "";
-		// Stegcloak requires a two-word cover. Add invisible chars if cover is too short.
-		if (rawCover === "" || rawCover.split(" ").length < 2) {
-			rawCover = `${rawCover}\u200c \u200c`;
-		}
-		cover = rawCover;
-
-		encryptionMark = getConfig("encryptionMark") ?? "";
 		stegcloak = new StegCloak();
 
 		isInitialized = true;
@@ -40,7 +30,7 @@ function ensureInitialized() {
 	}
 }
 
-export function encryptMessage<IPCOn>(message: string) {
+export function encryptMessage<IPCOn>(message: string, salt: string) {
 	ensureInitialized();
 
 	if (!stegcloak || !chosenPassword) {
@@ -51,7 +41,7 @@ export function encryptMessage<IPCOn>(message: string) {
 	}
 
 	try {
-		return stegcloak.hide(`${message}\u200b`, chosenPassword, cover);
+		return stegcloak.hide(`${message}`, chosenPassword, salt, getConfig("encryptionCover"));
 	} catch (e: unknown) {
 		console.error("Failed to encrypt message:", e);
 		dialog.showErrorBox("Encryption Failed", getErrorMessage(e));
@@ -59,27 +49,33 @@ export function encryptMessage<IPCOn>(message: string) {
 	}
 }
 
-export function decryptMessage<IPCOn>(message: string) {
-	// Fast fail before initializing if message is not encrypted
-	// Character \u200c is present in every stegcloaked message
-	if (!message || !message.includes("\u200c")) return message;
+export function decryptMessage<IPCOn>(message: string, salt: string) {
+	if (!message || !StegCloak.isCloaked(message) || !getConfig("messageEncryption")) return message;
 
 	ensureInitialized();
-
-	try {
-		if (!stegcloak || !getConfig("messageEncryption")) return message;
-	} catch (e) {
-		return message;
-	}
+	if (!stegcloak) return message;
 
 	for (const password of getConfig("encryptionPasswords")) {
 		try {
-			const decryptedMessage = stegcloak.reveal(message, password);
-			if (decryptedMessage.endsWith("\u200b")) {
-				return encryptionMark + decryptedMessage;
+			const decryptedMessage = stegcloak.reveal(message, password, salt);
+			return getConfig("encryptionMark") + decryptedMessage;
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				if (err.name === "PayloadNotFoundError") {
+					// The message doesn't contain hidden data
+					break;
+				} else if (err.name === "DecryptionError") {
+					// Wrong password.
+					continue;
+				} else if (err.name === "IntegrityError") {
+					// Password was right, but data is corrupted
+					console.warn("Decryption successful, but data is corrupted:", err.message);
+					break;
+				} else {
+					console.error("StegCloak fatal error:", err.message);
+					return "Decryption failed: " + err.message
+				}
 			}
-		} catch (e) {
-			// Continue to next password if revelation fails
 		}
 	}
 

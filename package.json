@@ -39,7 +39,7 @@
     "electron-sync-store": "github:Milkshiift/electron-sync-store",
     "picocolors": "1.1.1",
     "preact": "^10.28.4",
-    "stegcloak": "github:Milkshiift/stegcloak-node"
+    "stegcloak": "github:Milkshiift/stegcloak-rs"
   },
   "optionalDependencies": {
     "@vencord/venmic": "6.1.0",
@@ -55,7 +55,7 @@
     "arrpc"
   ],
   "engines": {
-    "node": ">=21.0.0"
+    "node": ">=24.0.0"
   },
   "type": "module"
 }

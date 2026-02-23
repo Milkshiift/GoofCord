@@ -26,8 +26,8 @@ export function registerAllHandlers() {
   ipcMain.handle("dynamicIcon:setBadgeCount", async (event, requestedCount) => { return await ___modules_dynamicIcon_setBadgeCount(requestedCount); });
   ipcMain.handle("loader:setAutoLaunchState", async (event) => { return await ___loader_setAutoLaunchState(); });
   ipcMain.handle("messageEncryption:cycleThroughPasswords", (event) => { return ___modules_messageEncryption_cycleThroughPasswords(); });
-  ipcMain.on("messageEncryption:decryptMessage", (event, message) => { event.returnValue = ___modules_messageEncryption_decryptMessage(message); });
-  ipcMain.on("messageEncryption:encryptMessage", (event, message) => { event.returnValue = ___modules_messageEncryption_encryptMessage(message); });
+  ipcMain.on("messageEncryption:decryptMessage", (event, message, salt) => { event.returnValue = ___modules_messageEncryption_decryptMessage(message, salt); });
+  ipcMain.on("messageEncryption:encryptMessage", (event, message, salt) => { event.returnValue = ___modules_messageEncryption_encryptMessage(message, salt); });
   ipcMain.handle("quickCssFix:createQuickCssWindow", async (event) => { return await ___windows_main_quickCssFix_createQuickCssWindow(); });
   ipcMain.handle("settings:createSettingsWindow", async (event) => { return await ___windows_settings_settings_createSettingsWindow(); });
   ipcMain.handle("settings:hotreloadLocale", async (event) => { return await ___windows_settings_settings_hotreloadLocale(); });

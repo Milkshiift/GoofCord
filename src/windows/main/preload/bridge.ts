@@ -35,8 +35,8 @@ const api = {
 		return getConfig(key);
 	},
 	setConfig: <K extends ConfigKey>(key: K, value: Config[K]) => setConfig(key, value),
-	encryptMessage: (message: string) => sendSync("messageEncryption:encryptMessage", message),
-	decryptMessage: (message: string) => sendSync("messageEncryption:decryptMessage", message),
+	encryptMessage: (message: string, salt: string) => sendSync("messageEncryption:encryptMessage", message, salt),
+	decryptMessage: (message: string, salt: string) => sendSync("messageEncryption:decryptMessage", message, salt),
 	cycleThroughPasswords: () => invoke("messageEncryption:cycleThroughPasswords"),
 	openSettingsWindow: () => invoke("settings:createSettingsWindow"),
 	setBadgeCount: (count: number) => invoke("dynamicIcon:setBadgeCount", count),
