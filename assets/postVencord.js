@@ -147,14 +147,14 @@ function initMessageEncryption() {
   VC.Settings.plugins.ChatInputButtonAPI.enabled = true;
   VC.Settings.plugins.MessageEventsAPI.enabled = true;
   VC.Api.ChatButtons.addChatBarButton("messageEncryption", EncryptionToggle, UnlockIcon);
-  VC.Api.MessageEvents.addMessagePreSendListener((channelId, msg) => {
+  VC.Api.MessageEvents.addMessagePreSendListener((_, msg) => {
     if (encryptionEnabled && msg.content) {
-      msg.content = GoofCord.encryptMessage(msg.content, channelId);
+      msg.content = GoofCord.encryptMessage(msg.content);
     }
   });
-  VC.Api.MessageEvents.addMessagePreEditListener((channelId, __, msg) => {
+  VC.Api.MessageEvents.addMessagePreEditListener((_, __, msg) => {
     if (encryptionEnabled && msg.content) {
-      msg.content = GoofCord.encryptMessage(msg.content, channelId);
+      msg.content = GoofCord.encryptMessage(msg.content);
     }
   });
   const originalDispatch = Common.FluxDispatcher.dispatch;
@@ -175,15 +175,14 @@ function handleFluxDispatch(dispatch) {
   const decryptAll = (messages) => {
     for (const msg of messages) {
       if (msg.content)
-        msg.content = GoofCord.decryptMessage(msg.content, dispatch.channelId);
+        msg.content = GoofCord.decryptMessage(msg.content);
     }
   };
-  console.log(dispatch);
   switch (dispatch.type) {
     case "MESSAGE_CREATE":
     case "MESSAGE_UPDATE":
       if (dispatch.message?.content) {
-        dispatch.message.content = GoofCord.decryptMessage(dispatch.message.content, dispatch.channelId);
+        dispatch.message.content = GoofCord.decryptMessage(dispatch.message.content);
       }
       break;
     case "MESSAGE_START_EDIT":
