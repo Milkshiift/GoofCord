@@ -1,5 +1,6 @@
 import { i } from "@root/src/stores/localization/localization.main.ts";
 import { Notification, shell } from "electron";
+
 import { getConfig } from "../stores/config/config.main.ts";
 import { getVersion } from "../utils.ts";
 

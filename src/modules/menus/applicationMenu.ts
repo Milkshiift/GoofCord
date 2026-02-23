@@ -1,5 +1,6 @@
 import { i } from "@root/src/stores/localization/localization.main.ts";
 import { app, BrowserWindow, Menu } from "electron";
+
 import { mainWindow } from "../../windows/main/main.ts";
 import { createSettingsWindow } from "../../windows/settings/settings.ts";
 import { cycleThroughPasswords } from "../messageEncryption.ts";

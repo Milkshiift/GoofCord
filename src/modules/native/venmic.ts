@@ -1,12 +1,12 @@
 // @ts-nocheck Bun will not install venmic on Windows/macOS, so typescript won't compile with checks
 
-// @ts-expect-error
-import venmicPath from "native-module:../../../assets/native/venmic-*.node";
 import { createRequire } from "node:module";
-// biome-ignore lint/suspicious/noTsIgnore: Venmic may not be installed on all platforms
-// @ts-ignore
+
+// @ts-ignore Venmic may not be installed on all platforms
 import type { LinkData, PatchBay } from "@vencord/venmic";
 import { app } from "electron";
+// @ts-expect-error
+import venmicPath from "native-module:../../../assets/native/venmic-*.node";
 import pc from "picocolors";
 
 const require = createRequire(import.meta.url);

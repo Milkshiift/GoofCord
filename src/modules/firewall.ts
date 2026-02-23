@@ -1,6 +1,7 @@
 // This file contains everything that uses session.defaultSession.webRequest
 import { session } from "electron";
 import pc from "picocolors";
+
 import type { Config, ConfigKey } from "../settingsSchema.ts";
 import { getConfig, getDefaultValue } from "../stores/config/config.main.ts";
 

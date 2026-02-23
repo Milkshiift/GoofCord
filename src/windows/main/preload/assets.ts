@@ -1,11 +1,13 @@
 import { getConfig } from "@root/src/stores/config/config.preload.ts";
 import { ipcRenderer, webFrame } from "electron";
+
 import { sendSync } from "../../../ipc/client.preload.ts";
 import { error, log } from "../../../modules/logger.preload.ts";
 import { setVencordPresent } from "./bridge.ts";
+import { patchVencord } from "./vencordPatcher.ts";
+
 // @ts-expect-error
 import discordCss from "./discord.css" with { type: "text" };
-import { patchVencord } from "./vencordPatcher.ts";
 
 const assets = sendSync("assetLoader:getAssets");
 

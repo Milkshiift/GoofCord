@@ -1,18 +1,18 @@
 {
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["eslint", "typescript", "react", "unicorn", "oxc", "promise", "node"],
-  "categories": {},
-  "rules": {
-    "no-unused-vars": "allow",
-    "no-unused-expressions": "allow",
-    "no-useless-escape": "allow",
-    "unbound-method": "allow",
-    "restrict-template-expressions": "allow"
-  },
-  "settings": {},
-  "env": {
-    "builtin": true
-  },
-  "globals": {},
-  "ignorePatterns": ["assets/**"]
+	"$schema": "./node_modules/oxlint/configuration_schema.json",
+	"plugins": ["eslint", "typescript", "react", "unicorn", "oxc", "promise", "node"],
+	"categories": {},
+	"rules": {
+		"no-unused-vars": "allow",
+		"no-unused-expressions": "allow",
+		"no-useless-escape": "allow",
+		"unbound-method": "allow",
+		"restrict-template-expressions": "allow"
+	},
+	"settings": {},
+	"env": {
+		"builtin": true
+	},
+	"globals": {},
+	"ignorePatterns": ["assets/**"]
 }

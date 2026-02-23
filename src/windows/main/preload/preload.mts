@@ -1,5 +1,6 @@
 import "./bridge.ts";
 import { getConfig, whenConfigReady } from "@root/src/stores/config/config.preload.ts";
+
 import { log } from "../../../modules/logger.preload.ts";
 import { loadScripts, loadStyles } from "./assets.ts";
 import { startKeybindWatcher } from "./keybinds.ts";

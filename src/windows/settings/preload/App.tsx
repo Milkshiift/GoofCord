@@ -3,6 +3,7 @@ import { getConfig } from "@root/src/stores/config/config.preload.ts";
 import { i } from "@root/src/stores/localization/localization.preload.ts";
 import type { JSX } from "preact";
 import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
+
 import { type ButtonEntry, type ConfigKey, type SettingEntry, settingsSchema } from "../../../settingsSchema.ts";
 import { isEncryptionAvailable } from "./config.ts";
 import { SettingField } from "./SettingField.tsx";

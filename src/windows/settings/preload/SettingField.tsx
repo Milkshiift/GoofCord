@@ -1,6 +1,7 @@
 import { i } from "@root/src/stores/localization/localization.preload.ts";
 import type { JSX } from "preact";
 import { useCallback, useEffect, useState } from "preact/hooks";
+
 import { type ConfigKey, type HiddenEntry, isEditableSetting, type SettingEntry } from "../../../settingsSchema.ts";
 import { getConfig, saveSetting, subscribe } from "./config.ts";
 import { InputComponents } from "./inputs.tsx";

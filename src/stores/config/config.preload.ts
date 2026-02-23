@@ -1,4 +1,5 @@
 import { createClient, type StoreClient } from "electron-sync-store/preload";
+
 import { type Config, type ConfigKey, getDefaults } from "../../settingsSchema";
 
 const configClient: StoreClient<Config> = createClient("config");

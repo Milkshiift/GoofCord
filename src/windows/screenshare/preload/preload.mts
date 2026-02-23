@@ -1,6 +1,7 @@
 import { getConfig, setConfig, whenConfigReady } from "@root/src/stores/config/config.preload.ts";
 import { i, whenLocalizationReady } from "@root/src/stores/localization/localization.preload.ts";
 import { ipcRenderer } from "electron";
+
 import { invoke } from "../../../ipc/client.preload.ts";
 
 interface IPCSource {

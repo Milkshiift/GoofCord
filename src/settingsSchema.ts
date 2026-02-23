@@ -1,66 +1,10 @@
+import type { ActionKey, ButtonActionMap } from "@root/src/windows/settings/preload/App.tsx";
 // @ts-expect-error See /build/globbyGlob.ts
 import allLangs from "glob-filenames:../assets/lang/*.json";
-import type { ActionKey, ButtonActionMap } from "@root/src/windows/settings/preload/App.tsx";
+
 import packageJson from "../package.json";
 
-const spellcheckLangs = [
-	"af",
-	"bg",
-	"ca",
-	"cs",
-	"cy",
-	"da",
-	"de",
-	"de-DE",
-	"el",
-	"en",
-	"en-AU",
-	"en-CA",
-	"en-GB",
-	"en-GB-oxendict",
-	"en-US",
-	"es",
-	"es-419",
-	"es-AR",
-	"es-ES",
-	"es-MX",
-	"es-US",
-	"et",
-	"fa",
-	"fo",
-	"fr",
-	"fr-FR",
-	"he",
-	"hi",
-	"hr",
-	"hu",
-	"hy",
-	"id",
-	"it",
-	"it-IT",
-	"ko",
-	"lt",
-	"lv",
-	"nb",
-	"nl",
-	"pl",
-	"pt",
-	"pt-BR",
-	"pt-PT",
-	"ro",
-	"ru",
-	"sh",
-	"sk",
-	"sl",
-	"sq",
-	"sr",
-	"sv",
-	"ta",
-	"tg",
-	"tr",
-	"uk",
-	"vi",
-] as const;
+const spellcheckLangs = ["af", "bg", "ca", "cs", "cy", "da", "de", "de-DE", "el", "en", "en-AU", "en-CA", "en-GB", "en-GB-oxendict", "en-US", "es", "es-419", "es-AR", "es-ES", "es-MX", "es-US", "et", "fa", "fo", "fr", "fr-FR", "he", "hi", "hr", "hu", "hy", "id", "it", "it-IT", "ko", "lt", "lv", "nb", "nl", "pl", "pt", "pt-BR", "pt-PT", "ro", "ru", "sh", "sk", "sl", "sq", "sr", "sv", "ta", "tg", "tr", "uk", "vi"] as const;
 
 export type InputTypeMap = {
 	checkbox: boolean;
@@ -76,7 +20,6 @@ export interface BaseEntry {
 	description?: string;
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: Wawa
 export type SettingEntry<K extends keyof InputTypeMap = keyof InputTypeMap> = K extends any
 	? {
 			name: string;
@@ -547,7 +490,6 @@ export function getDefinition<K extends ConfigKey>(key: K): EntryForKey<K> {
 		throw new Error(`Setting definition for "${key}" not found.`);
 	}
 
-	// biome-ignore lint/suspicious/noExplicitAny: Type inference matches K to the specific entry type via EntryForKey
 	return definition as any;
 }
 
@@ -572,12 +514,10 @@ function ensureEncryptedCache() {
 
 export function getEncryptedKeys(): string[] {
 	ensureEncryptedCache();
-	// biome-ignore lint/style/noNonNullAssertion: Cache is ensured above
 	return Array.from(encryptedCache!);
 }
 
 export function isEncrypted(key: string): boolean {
 	ensureEncryptedCache();
-	// biome-ignore lint/style/noNonNullAssertion: Cache is ensured above
 	return encryptedCache!.has(key);
 }

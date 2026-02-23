@@ -1,4 +1,5 @@
 import path from "node:path";
+
 import ts from "typescript";
 
 const SCHEMA_PATH = path.join(import.meta.dir, "..", "src", "settingsSchema.ts");

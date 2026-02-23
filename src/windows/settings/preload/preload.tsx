@@ -1,6 +1,7 @@
 import { whenConfigReady } from "@root/src/stores/config/config.preload.ts";
 import { whenLocalizationReady } from "@root/src/stores/localization/localization.preload.ts";
 import { render } from "preact";
+
 import { App } from "./App.tsx";
 
 console.log("GoofCord Settings");

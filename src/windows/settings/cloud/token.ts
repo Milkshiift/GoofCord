@@ -1,4 +1,5 @@
 import { BrowserWindow } from "electron";
+
 import { getConfig, setConfig } from "../../../stores/config/config.main.ts";
 import { mainWindow } from "../../main/main.ts";
 import { settingsWindow } from "../settings.ts";

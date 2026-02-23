@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer } from "electron";
+
 import { invoke } from "../../../ipc/client.preload.ts";
 import { warn } from "../../../modules/logger.preload.ts";
 
