@@ -1,6 +1,8 @@
 import path from "node:path";
 import { Worker } from "node:worker_threads";
+
 import { dialog } from "electron";
+
 import { getConfig } from "../../stores/config/config.main.ts";
 import { dirname, getGoofCordFolderPath } from "../../utils.ts";
 import { mainWindow } from "../../windows/main/main.ts";
@@ -39,12 +41,12 @@ export async function initArrpc<IPCHandle>() {
 
 		worker.on("error", (e: Error) => {
 			console.error("The arRPC worker encountered a fatal error:", e);
-			dialog.showMessageBox(mainWindow, {
+			void dialog.showMessageBox(mainWindow, {
 				type: "error",
 				title: "GoofCord was unable to start arRPC (Rich Presence)",
 				message: e.message,
 			});
-			worker?.terminate();
+			void worker?.terminate();
 			worker = undefined;
 		});
 

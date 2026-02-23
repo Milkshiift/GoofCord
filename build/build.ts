@@ -1,7 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
+
 import pc from "picocolors";
+
 import { genIpcHandlers } from "./genIpcHandlers.ts";
 import { genSettingsLangFile } from "./genSettingsLangFile.ts";
 import { globImporterPlugin } from "./globbyGlob.ts";

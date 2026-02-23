@@ -1,4 +1,5 @@
 import { BrowserWindow } from "electron";
+
 import { getConfig, setConfig } from "../../../stores/config/config.main.ts";
 import { mainWindow } from "../../main/main.ts";
 import { settingsWindow } from "../settings.ts";
@@ -191,7 +192,7 @@ async function getCallbackUrlViaWindow(cloudHostUrl: string): Promise<string> {
 				}
 			});
 
-			authWindow.loadURL(cloudHostUrl + ENDPOINT_VERSION + "login");
+			void authWindow.loadURL(cloudHostUrl + ENDPOINT_VERSION + "login");
 			authWindow.show();
 		} catch (error) {
 			cleanup();

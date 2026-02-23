@@ -1,7 +1,9 @@
 import module from "node:module";
+
 import { initLocalization } from "@root/src/stores/localization/localization.main.ts";
 import { app } from "electron";
 import pc from "picocolors";
+
 import { getConfig, loadConfig } from "./stores/config/config.main.ts";
 import { getDisplayVersion } from "./utils.ts";
 

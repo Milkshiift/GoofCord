@@ -1,6 +1,8 @@
 import path from "node:path";
+
 import { app, BrowserWindow, session, shell } from "electron";
 import pc from "picocolors";
+
 // @ts-expect-error
 import adblocker from "../../../assets/adblocker.js" with { type: "text" };
 import { registerHandle } from "../../ipc/registry.main.ts";

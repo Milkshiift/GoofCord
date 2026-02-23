@@ -1,5 +1,6 @@
 import { getConfig, setConfig } from "@root/src/stores/config/config.preload.ts";
 import { ipcRenderer } from "electron";
+
 import { invoke, sendSync } from "../../../ipc/client.preload.ts";
 import type { Config, ConfigKey, SettingEntry } from "../../../settingsSchema.ts";
 

@@ -188,7 +188,6 @@ export async function updateAssets() {
 				if (!response.body) throw new Error("Empty response body");
 
 				const fileStream = createWriteStream(tempPath);
-				// biome-ignore lint/suspicious/noExplicitAny: fromWeb expects ReadableStream<any>
 				const readableNodeStream = Readable.fromWeb(response.body as any);
 
 				await pipeline(readableNodeStream, fileStream);

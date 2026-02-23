@@ -1,4 +1,5 @@
 import path from "node:path";
+
 import { Glob } from "bun";
 import ts from "typescript";
 
@@ -464,5 +465,5 @@ export async function genIpcHandlers(config: Partial<GeneratorConfig> = {}) {
 }
 
 if (import.meta.main) {
-	genIpcHandlers();
+	void genIpcHandlers();
 }

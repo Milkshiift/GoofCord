@@ -1,4 +1,5 @@
 import { initKeybinds } from "@root/src/windows/main/renderer/postVencord/keybinds.ts";
+
 import { initDynamicIcon } from "./dynamicIcon.ts";
 import { updateInvidiousInstance } from "./invidiousEmbeds.ts";
 import { initMessageEncryption } from "./messageEncryption.ts";

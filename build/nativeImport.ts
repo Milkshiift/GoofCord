@@ -1,4 +1,5 @@
 import path from "node:path";
+
 import type { BunPlugin, OnLoadArgs } from "bun";
 
 interface NativePluginOptions {

@@ -2,6 +2,7 @@ import { runMigrations } from "@root/src/migration.ts";
 import { setContextMenu } from "@root/src/modules/menus/contextMenu.ts";
 import { app, net, session, systemPreferences } from "electron";
 import pc from "picocolors";
+
 import { registerAllHandlers } from "./ipc/gen.ts";
 import { initArrpc } from "./modules/arrpc/arrpc.ts";
 import { manageAssets, updateAssets } from "./modules/assets/assetDownloader.ts";
@@ -44,7 +45,7 @@ export async function load() {
 
 	console.timeEnd(pc.green("[Timer]") + " GoofCord fully loaded in");
 
-	void setContextMenu();
+	setContextMenu();
 	void updateAssets();
 	void checkForUpdate();
 	void initArrpc();

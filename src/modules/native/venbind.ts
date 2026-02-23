@@ -1,13 +1,14 @@
 // @ts-nocheck Bun will not install venbind on macOS, so typescript won't compile with checks
 
+import { createRequire } from "node:module";
+
+import { isWayland } from "@root/src/utils.ts";
 // @ts-expect-error
 import venbindPath from "native-module:../../../assets/native/venbind-*.node";
-import { createRequire } from "node:module";
-import { isWayland } from "@root/src/utils.ts";
 import pc from "picocolors";
-// biome-ignore lint/suspicious/noTsIgnore: Venbind may not be installed on all platforms
-// @ts-ignore
+// @ts-ignore Venbind may not be installed on all platforms
 import type { Venbind as VenbindType } from "venbind";
+
 import { mainWindow } from "../../windows/main/main.ts";
 
 const require = createRequire(import.meta.url);

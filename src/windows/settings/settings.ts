@@ -1,9 +1,11 @@
 import path from "node:path";
 import { isDeepStrictEqual } from "node:util";
+
 import { getConfigBulk } from "@root/src/stores/config/config.main.ts";
 import { i, initLocalization } from "@root/src/stores/localization/localization.main.ts";
 import { saveCloud } from "@root/src/windows/settings/cloud/cloud.ts";
 import { app, BrowserWindow, dialog, shell } from "electron";
+
 import type { Config } from "../../settingsSchema.ts";
 import { firstLaunch, getConfig } from "../../stores/config/config.main.ts";
 import { dirname, getCustomIcon, getDisplayVersion, relToAbs, userDataPath } from "../../utils.ts";
@@ -51,7 +53,7 @@ export async function createSettingsWindow<IPCHandle>() {
 	});
 
 	settingsWindow.webContents.setWindowOpenHandler(({ url }) => {
-		shell.openExternal(url);
+		void shell.openExternal(url);
 		return { action: "deny" };
 	});
 

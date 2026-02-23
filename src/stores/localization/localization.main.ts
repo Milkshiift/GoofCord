@@ -1,11 +1,12 @@
-// @ts-expect-error See /build/globbyGlob.ts
-import allLangData from "glob-import:../../../assets/lang/*.json";
 import { app } from "electron";
 import { createHost, type StoreHost } from "electron-sync-store/main";
+// @ts-expect-error See /build/globbyGlob.ts
+import allLangData from "glob-import:../../../assets/lang/*.json";
+
 import { getConfig, setConfig } from "../config/config.main.ts";
 
 function bakeLocalization(lang: string): Record<string, string> {
-	return { ...(allLangData["en-US"] || {}), ...(allLangData[lang] || {}) };
+	return { ...allLangData["en-US"], ...allLangData[lang] };
 }
 
 const TranslationLogic = {

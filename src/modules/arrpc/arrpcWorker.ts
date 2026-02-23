@@ -1,4 +1,5 @@
 import { parentPort, workerData } from "node:worker_threads";
+
 import Server from "@root/node_modules/arrpc/src/server.ts";
 import type { BridgeMessage } from "arrpc/src/types";
 

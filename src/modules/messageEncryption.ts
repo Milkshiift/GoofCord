@@ -1,6 +1,7 @@
 import { dialog } from "electron";
 import pc from "picocolors";
 import { StegCloak } from "stegcloak/pkg";
+
 import { getConfig } from "../stores/config/config.main.ts";
 import { getErrorMessage } from "../utils.ts";
 import { mainWindow } from "../windows/main/main.ts";
@@ -73,7 +74,7 @@ export function decryptMessage<IPCOn>(message: string, salt: string) {
 					break;
 				} else {
 					console.error("StegCloak fatal error:", err.message);
-					return "Decryption failed: " + err.message
+					return "Decryption failed: " + err.message;
 				}
 			}
 		}

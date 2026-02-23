@@ -1,6 +1,7 @@
 import { getConfigBulk } from "@root/src/stores/config/config.main.ts";
 import { dialog } from "electron";
 import pc from "picocolors";
+
 import { type Config, isEncrypted } from "../../../settingsSchema.ts";
 import { getConfig, setConfigBulk } from "../../../stores/config/config.main.ts";
 import { decryptString, encryptString } from "./encryption.ts";

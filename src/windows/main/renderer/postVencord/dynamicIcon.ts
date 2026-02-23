@@ -1,6 +1,4 @@
-// biome-ignore lint/suspicious/noExplicitAny: It's Discord's code
 let GuildReadStateStore: any;
-// biome-ignore lint/suspicious/noExplicitAny: It's Discord's code
 let RelationshipStore: any;
 
 export function initDynamicIcon() {

@@ -122,15 +122,13 @@ export function initMessageEncryption() {
 	};
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: Discord territory
 function handleFluxDispatch(dispatch: any) {
-	// biome-ignore lint/suspicious/noExplicitAny: Discord territory
 	const decryptAll = (messages: any[]) => {
 		for (const msg of messages) {
 			if (msg.content) msg.content = GoofCord.decryptMessage(msg.content, dispatch.channelId);
 		}
 	};
-	console.log(dispatch);
+
 	switch (dispatch.type) {
 		case "MESSAGE_CREATE":
 		case "MESSAGE_UPDATE":

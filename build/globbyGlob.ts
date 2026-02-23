@@ -1,4 +1,5 @@
 import path from "node:path";
+
 import type { BunPlugin, OnLoadArgs } from "bun";
 
 interface GlobPluginData {
@@ -103,7 +104,9 @@ export const globImporterPlugin: BunPlugin = {
 				}
 
 				default:
-					return { errors: [{ text: `Internal glob-plugin error: Unknown command '${command}'.` }] };
+					return {
+						errors: [{ text: `Internal glob-plugin error: Unknown command '${command}'.` }],
+					};
 			}
 		});
 	},

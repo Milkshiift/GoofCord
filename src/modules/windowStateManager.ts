@@ -1,4 +1,5 @@
 import type { BrowserWindow } from "electron";
+
 import type { ConfigKey } from "../settingsSchema.ts";
 import { getConfig, setConfig } from "../stores/config/config.main.ts";
 

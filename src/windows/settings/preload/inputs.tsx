@@ -1,6 +1,7 @@
 import { i } from "@root/src/stores/localization/localization.preload.ts";
 import type { ComponentType, JSX } from "preact";
 import { useCallback, useState } from "preact/hooks";
+
 import { invoke } from "../../../ipc/client.preload.ts";
 import type { SettingEntry } from "../../../settingsSchema.ts";
 import { MultiSelect } from "./MultiSelect.tsx";

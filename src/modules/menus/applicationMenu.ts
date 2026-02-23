@@ -1,5 +1,6 @@
 import { i } from "@root/src/stores/localization/localization.main.ts";
 import { app, BrowserWindow, Menu } from "electron";
+
 import { mainWindow } from "../../windows/main/main.ts";
 import { createSettingsWindow } from "../../windows/settings/settings.ts";
 import { cycleThroughPasswords } from "../messageEncryption.ts";
@@ -16,7 +17,7 @@ export async function setApplicationMenu() {
 					label: i("goofcord-settings"),
 					accelerator: "CmdOrCtrl+Shift+'",
 					click: () => {
-						createSettingsWindow();
+						void createSettingsWindow();
 					},
 				},
 				{
@@ -99,7 +100,7 @@ export async function setApplicationMenu() {
 							useContentSize: true,
 							title: "GPU Internals",
 						});
-						gpuWindow.loadURL("chrome://gpu");
+						void gpuWindow.loadURL("chrome://gpu");
 					},
 				},
 			],

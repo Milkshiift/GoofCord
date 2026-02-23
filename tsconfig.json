@@ -1,28 +1,26 @@
 {
-  "include": ["src/**/*", "build/**/*"],
-  "exclude": ["node_modules",
-    "src/modules/arrpc/arrpcWorker.ts"
-  ],
-  "compilerOptions": {
-    "rootDir": "./",
-    "paths": {
-      "@root/*": ["./*"]
-    },
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "target": "esnext",
-    "jsx": "react-jsx",
-    "jsxImportSource": "preact",
-    "lib": ["ESNext", "dom", "dom.Iterable"],
+	"include": ["src/**/*", "build/**/*"],
+	"exclude": ["node_modules", "src/modules/arrpc/arrpcWorker.ts"],
+	"compilerOptions": {
+		"rootDir": "./",
+		"paths": {
+			"@root/*": ["./*"]
+		},
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"target": "esnext",
+		"jsx": "react-jsx",
+		"jsxImportSource": "preact",
+		"lib": ["ESNext", "dom", "dom.Iterable"],
 
-    "strict": true,
-    "noImplicitReturns": true,
-    "skipLibCheck": true,
+		"strict": true,
+		"noImplicitReturns": true,
+		"skipLibCheck": true,
 
-    "noEmit": true,
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "esModuleInterop": true
-  }
+		"noEmit": true,
+		"allowImportingTsExtensions": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"esModuleInterop": true
+	}
 }

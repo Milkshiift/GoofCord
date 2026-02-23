@@ -1,8 +1,10 @@
 // Spoofs the Chrome browser
 
 import { release } from "node:os";
+
 import type { BrowserWindow } from "electron";
 import pc from "picocolors";
+
 import { getConfig } from "../stores/config/config.main.ts";
 
 // Fun

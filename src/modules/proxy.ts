@@ -1,6 +1,7 @@
 // Enables HTTP proxy support
 import { session } from "electron";
 import pc from "picocolors";
+
 import { getConfig } from "../stores/config/config.main.ts";
 
 export async function initProxy() {

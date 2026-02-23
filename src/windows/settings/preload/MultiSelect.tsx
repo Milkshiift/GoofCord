@@ -1,5 +1,5 @@
 import type { JSX } from "preact";
-import { useCallback, useEffect, useRef, useState } from "preact/hooks";
+import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
 
 interface MultiSelectProps {
 	id: string;
@@ -17,7 +17,7 @@ export function MultiSelect({ id, options, value, onChange, placeholder = "Selec
 	const containerRef = useRef<HTMLDivElement>(null);
 	const listRef = useRef<HTMLDivElement>(null);
 
-	const selected = new Set(value);
+	const selected = useMemo(() => new Set(value), [value]);
 
 	const toggleOption = useCallback(
 		(opt: string) => {

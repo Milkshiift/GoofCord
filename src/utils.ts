@@ -1,8 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+
 import { app, safeStorage } from "electron";
 import pc from "picocolors";
+
 // @ts-expect-error
 import gfIconIco from "../assets/gf_icon.ico";
 // @ts-expect-error

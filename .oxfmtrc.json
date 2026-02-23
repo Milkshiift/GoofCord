@@ -1,0 +1,7 @@
+{
+	"$schema": "./node_modules/oxfmt/configuration_schema.json",
+	"ignorePatterns": [".github", "assets", "assetsDev", "ts-out", "src/ipc/types.ts", "src/ipc/gen.ts", "src/settingsSchema.ts"],
+	"useTabs": true,
+	"sortImports": {},
+	"printWidth": 320
+}

@@ -1,5 +1,6 @@
 import { i } from "@root/src/stores/localization/localization.main.ts";
 import { app, dialog, Menu, nativeImage, Tray } from "electron";
+
 // @ts-expect-error
 import symbolicIconBlack from "../../assets/gf_symbolic_black.png";
 // @ts-expect-error
@@ -43,7 +44,7 @@ export async function createTray() {
 		{
 			label: i("goofcord-settings"),
 			click: () => {
-				createSettingsWindow();
+				void createSettingsWindow();
 			},
 		},
 		{

@@ -1,5 +1,6 @@
 import { getConfig, setConfig } from "@root/src/stores/config/config.preload.ts";
 import { contextBridge, ipcRenderer } from "electron";
+
 import { invoke, sendSync } from "../../../ipc/client.preload.ts";
 import { type Config, type ConfigKey, getDefaults, isEncrypted } from "../../../settingsSchema.ts";
 import { flashTitlebar, flashTitlebarWithText } from "./titlebarFlash.ts";
