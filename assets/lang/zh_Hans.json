@@ -77,5 +77,13 @@
     "opt-trayIcon": "系统托盘图标样式",
     "opt-trayIcon-desc": "选择托盘图标样式。符号图标尝试与 GNOME 的单色样式相匹配。",
     "opt-autoscroll": "自动滚动",
-    "opt-autoscroll-desc": "点击中键以启用自动滚动。"
+    "opt-autoscroll-desc": "点击中键以启用自动滚动。",
+    "opt-popoutWindowAlwaysOnTop": "浮动窗口始终置顶",
+    "opt-popoutWindowAlwaysOnTop-desc": "强制弹出窗口保持在其他窗口之上。",
+    "opt-transparency": "窗口透明度",
+    "opt-transparency-desc": "允许窗口透明。适用于半透明主题。",
+    "opt-disableSettingsAnimations": "禁用设置动画",
+    "opt-disableSettingsAnimations-desc": "移除此设置菜单中的过渡动画。",
+    "opt-assets": "外部资产",
+    "opt-assets-desc": "启动时加载在线脚本和样式。请参阅 <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/Asset-Loader\">维基</a>。<br>\n- 确保包含模块的样式（如有）。<br>\n- 不要混合同一模块的分支（例如 Vencord 和 Equicord）。<br>\n- GoofCord 需要基于 Vencord 的模块，包括 PreVencord 和 PostVencord 以实现完整功能。"
 }
