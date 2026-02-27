@@ -15,7 +15,7 @@
 	"type": "module",
 	"main": "ts-out/main.js",
 	"scripts": {
-		"build": "bun build/build.ts --onlyGenerators && bun run check && bun build/build.ts --skipGenerators",
+		"build": "bun build/build.ts",
 		"start": "bun run build --dev && NODE_OPTIONS=\"--enable-source-maps\" electron ./ts-out/main.js --dev",
 		"packageLinux": "electron-builder --linux",
 		"packageWindows": "electron-builder --win",
