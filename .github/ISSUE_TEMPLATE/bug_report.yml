@@ -103,5 +103,6 @@ body:
     attributes:
       label: Additional Information
       description: Any other context, logs, or details that might be helpful.
+      placeholder: 
     validations:
       required: false
