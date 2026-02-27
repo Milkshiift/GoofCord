@@ -27,6 +27,7 @@
   Choose `GoofCord-Setup-<YOUR ARCHITECTURE>.exe` for an installer, or  
   `GoofCord-<VERSION>-win-<YOUR ARCHITECTURE>.zip` to manually unpack into a directory of your choice.
 - Install using **winget**: `winget install GoofCord`
+- Install using **Scoop**: `scoop install extras/goofcord`
 
 ### Linux 🐧
 
