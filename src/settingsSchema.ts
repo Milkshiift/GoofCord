@@ -105,7 +105,7 @@ export const settingsSchema = {
 			name: "Launch on startup",
 			defaultValue: false,
 			description: "Automatically starts GoofCord when you log in. Compatibility varies by Linux environment.",
-			onChange: "loader:setAutoLaunchState",
+			onChange: "autostart:setAutostart",
 		}),
 		updateNotification: setting("checkbox", {
 			name: "Update notifications",

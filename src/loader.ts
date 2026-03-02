@@ -12,13 +12,11 @@ import { setApplicationMenu } from "./modules/menus/applicationMenu.ts";
 import { initProxy } from "./modules/proxy.ts";
 import { createTray } from "./modules/tray.ts";
 import { checkForUpdate } from "./modules/updateCheck.ts";
-import { decryptSettings, firstLaunch, getConfig } from "./stores/config/config.main.ts";
-import { isDev } from "./utils.ts";
+import { decryptSettings, firstLaunch } from "./stores/config/config.main.ts";
 import { createMainWindow } from "./windows/main/main.ts";
 import { createSettingsWindow } from "./windows/settings/settings.ts";
 
 export async function load() {
-	void setAutoLaunchState();
 	void setApplicationMenu();
 	void createTray();
 	await runMigrations();
@@ -36,9 +34,9 @@ export async function load() {
 	console.timeEnd(pc.green("[Timer]") + " Electron loaded in");
 
 	setPermissions();
-	await initProxy();
 	initFirewall();
 	unstrictCSP();
+	await initProxy();
 	await decryptSettings();
 	await modPromise;
 	firstLaunch ? await createSettingsWindow() : await createMainWindow();
@@ -58,17 +56,6 @@ async function waitForInternetConnection() {
 	while (!net.isOnline()) {
 		await new Promise((resolve) => setTimeout(resolve, 1000));
 	}
-}
-
-export async function setAutoLaunchState<IPCHandle>() {
-	const { default: AutoLaunch } = await import("auto-launch");
-	const isAUR = process.execPath.endsWith("electron") && !isDev();
-	const gfAutoLaunch = new AutoLaunch({
-		name: "GoofCord",
-		path: isAUR ? "/bin/goofcord" : undefined,
-	});
-
-	getConfig("launchWithOsBoot") ? await gfAutoLaunch.enable() : await gfAutoLaunch.disable();
 }
 
 function setPermissions() {
