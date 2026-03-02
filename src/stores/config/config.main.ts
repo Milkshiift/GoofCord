@@ -7,9 +7,7 @@ import { createHost, type StoreHost } from "electron-sync-store/main";
 import { type Config, type ConfigKey, getDefaults, isEncrypted } from "../../settingsSchema.ts";
 import { getErrorMessage, getGoofCordFolderPath, tryCreateFolder } from "../../utils.ts";
 
-// ============================================================================
-// State & Initialization
-// ============================================================================
+// ─── State & Initialization ─────────────────────────────────────────────
 
 export let firstLaunch = false;
 let configHost: StoreHost<Config>;
@@ -30,9 +28,7 @@ async function setup(): Promise<Config> {
 	return defaults;
 }
 
-// ============================================================================
-// Getters
-// ============================================================================
+// ─── Getters ─────────────────────────────────────────────
 
 export function getConfig<K extends ConfigKey>(key: K): Config[K] {
 	return configHost.get()[key] ?? getDefaultValue(key);
@@ -50,9 +46,7 @@ export function getDefaultValue<K extends ConfigKey>(entry: K): Config[K] {
 	return getDefaults()[entry] as Config[K];
 }
 
-// ============================================================================
-// Setters
-// ============================================================================
+// ─── Setters ─────────────────────────────────────────────
 
 export async function setConfig<K extends ConfigKey>(key: K, value: Config[K]): Promise<void> {
 	const current = configHost.get();
@@ -63,9 +57,7 @@ export async function setConfigBulk(config: Config): Promise<void> {
 	await configHost.set(config);
 }
 
-// ============================================================================
-// Maintenance
-// ============================================================================
+// ─── Maintenance ─────────────────────────────────────────────
 
 export async function cleanUpConfig(): Promise<void> {
 	const currentConfig = configHost.get();
@@ -92,9 +84,7 @@ export async function cleanUpConfig(): Promise<void> {
 	}
 }
 
-// ============================================================================
-// Private
-// ============================================================================
+// ─── Private ─────────────────────────────────────────────
 
 async function hydrate(): Promise<Config> {
 	safeStorage.setUsePlainTextEncryption(true);

@@ -27,14 +27,12 @@
 	},
 	"dependencies": {
 		"arrpc": "github:Milkshiift/arrpc",
-		"auto-launch": "github:Teamwork/node-auto-launch",
 		"electron-sync-store": "github:Milkshiift/electron-sync-store",
 		"picocolors": "1.1.1",
 		"preact": "^10.28.4",
 		"stegcloak": "github:Milkshiift/stegcloak-rs"
 	},
 	"devDependencies": {
-		"@types/auto-launch": "^5.0.5",
 		"@types/bun": "1.3.9",
 		"@types/node": "25.3.2",
 		"@vencord/types": "1.14.1",
