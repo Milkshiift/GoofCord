@@ -34,38 +34,37 @@ async function main() {
 function setFlags() {
 	if (process.argv.includes("--no-flags")) return;
 
-	const enableFeatures = new Set(["WebRTC", "WebRtcHideLocalIpsWithMdns", "PlatformHEVCEncoderSupport", "TransportCallback", "AudioServiceOutOfProcess"]);
-
-	const disableFeatures = new Set(["UseChromeOSDirectVideoDecoder", "HardwareMediaKeyHandling", "MediaSessionService", "WebRtcAllowInputVolumeAdjustment", "Vulkan", "PaintHolding", "DestroyProfileOnBrowserClose"]);
-
+	const enableFeatures: Set<string> = new Set([]);
+	const disableFeatures = new Set([
+		"MediaSessionService",
+		"HardwareMediaKeyHandling", //
+	]);
 	const switches = new Map<string, string | null>([
-		["autoplay-policy", "no-user-gesture-required"],
 		["enable-speech-dispatcher", null],
 		// Prevent app unloading when backgrounded
-		["disable-renderer-backgrounding", null],
-		["disable-background-timer-throttling", null],
-		["disable-disable-backgrounding-occluded-windows", null],
-
-		["enable-quic", null],
-		["enable-tcp-fast-open", null],
+		// It's not certain whether this problem currently exists
+		// ["disable-renderer-backgrounding", null],
+		// ["disable-background-timer-throttling", null],
+		// ["disable-disable-backgrounding-occluded-windows", null],
 	]);
 
 	if (process.platform === "linux") {
-		enableFeatures.add("PulseaudioLoopbackForScreenShare");
-		enableFeatures.add("WaylandLinuxDrmSyncobj");
+		disableFeatures.add("Vulkan"); // Vulkan doesn't support Wayland
 
 		const noVaapi = process.argv.includes("--no-vaapi");
-		if (noVaapi || !getConfig("vaapi")) {
-			console.log(pc.red("[!]") + " Disabling VA-API");
+		if (!noVaapi && getConfig("vaapi")) {
+			console.log(pc.red("[!]") + " Enabling VA-API");
 			enableFeatures.add("AcceleratedVideoDecodeLinuxGL");
 			enableFeatures.add("AcceleratedVideoEncoder");
 			enableFeatures.add("AcceleratedVideoDecoder");
 			enableFeatures.add("AcceleratedVideoDecodeLinuxZeroCopyGL");
+		} else {
+			console.log(pc.red("[!]") + " Disabling VA-API");
 		}
 	}
 
 	if (process.platform === "win32") {
-		disableFeatures.add("CalculateNativeWinOcclusion");
+		enableFeatures.add("Vulkan");
 	}
 
 	if (getConfig("performanceFlags")) {

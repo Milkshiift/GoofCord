@@ -32,7 +32,6 @@ const IS_DEV = !!values.dev;
 const TARGET_PLATFORM = typeof values.platform === "string" ? values.platform : process.platform;
 const TARGET_ARCH = typeof values.arch === "string" ? values.arch : process.arch;
 
-
 console.log(pc.cyan(`\n🚀 Starting Build for target: ${TARGET_PLATFORM}-${TARGET_ARCH} ${IS_DEV ? "(Dev)" : "(Prod)"}\n`));
 
 // 1. Generators
@@ -78,12 +77,7 @@ await fs.promises.mkdir(OUT_DIR, { recursive: true });
 console.log(pc.blue("📦 Building sources..."));
 console.time("Build");
 
-const results = await Promise.all([
-	copyNativeModules(),
-	buildMain(),
-	...buildRendererScripts(),
-	...(await buildPreloads()),
-]);
+const results = await Promise.all([copyNativeModules(), buildMain(), ...buildRendererScripts(), ...(await buildPreloads())]);
 
 console.timeEnd("Build");
 
@@ -99,17 +93,11 @@ if (results.every(Boolean)) {
 function buildMain() {
 	return runBuild({
 		label: "Main Process",
-		entrypoints: [
-			path.join(SRC_DIR, "main.ts"),
-			path.join(SRC_DIR, "modules", "arrpc", "arrpcWorker.ts")
-		],
+		entrypoints: [path.join(SRC_DIR, "main.ts"), path.join(SRC_DIR, "modules", "arrpc", "arrpcWorker.ts")],
 		outdir: OUT_DIR,
 		target: "node",
 		external: ["electron"],
-		plugins: [
-			globImporterPlugin,
-			nativeModulePlugin({ targetPlatform: TARGET_PLATFORM, targetArch: TARGET_ARCH })
-		],
+		plugins: [globImporterPlugin, nativeModulePlugin({ targetPlatform: TARGET_PLATFORM, targetArch: TARGET_ARCH })],
 		splitting: true,
 	});
 }
