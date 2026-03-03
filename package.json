@@ -39,7 +39,7 @@
 		"electron": "40.6.1",
 		"electron-builder": "26.8.1",
 		"oxfmt": "^0.35.0",
-		"oxlint": "^1.50.0",
+		"oxlint": "^1.51.0",
 		"oxlint-tsgolint": "^0.15.0",
 		"typescript": "5.9.3"
 	},

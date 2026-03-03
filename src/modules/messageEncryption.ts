@@ -1,6 +1,6 @@
 import { dialog } from "electron";
 import pc from "picocolors";
-import { StegCloak } from "stegcloak/pkg";
+import { StegCloak } from "stegcloak";
 
 import { getConfig } from "../stores/config/config.main.ts";
 import { getErrorMessage } from "../utils.ts";
