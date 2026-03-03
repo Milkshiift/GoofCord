@@ -38,19 +38,8 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Use Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: "25.x"
-
-      - name: Install Node dependencies
+      - name: Install dependencies
         run: bun install --frozen-lockfile
-
-#      - name: Install electron-builder globally
-#        run: bun add electron-builder -g
-
-#      - name: Build GoofCord
-#        run: bun run build
 
       - name: Package GoofCord
         env:

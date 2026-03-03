@@ -1,9 +1,9 @@
 <div align="center">
-<img src="assetsDev/gf_logo_full.png" width="520" alt="GoofCord logo">
+<img src="assetsDev/gf_logo_horizontal.png" width="500" alt="GoofCord logo">
 <h2>Take control of your Discord experience with GoofCord – the highly configurable and privacy-focused Discord client.<br><sub>Based on <a href="https://github.com/Legcord/Legcord">Legcord</a></sub></h2>
-<img src="https://img.shields.io/github/downloads/Milkshiift/GoofCord/total">
+<a href="https://github.com/Milkshiift/GoofCord/releases/latest"><img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/milkshiift/GoofCord/total?logo=github"></a>
+<a href="https://flathub.org/en/apps/io.github.milkshiift.GoofCord"><img alt="Flathub Downloads" src="https://img.shields.io/flathub/downloads/io.github.milkshiift.GoofCord?logo=flathub"></a>
 <a href="https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md"><img src="https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg"></a>
-<img src="https://img.shields.io/github/license/Milkshiift/GoofCord">
 <a href="https://hosted.weblate.org/engage/goofcord/">
 <img src="https://hosted.weblate.org/widget/goofcord/goofcord/svg-badge.svg" alt="Translation status" />
 </a><br>
@@ -16,8 +16,8 @@
 - **:chart_with_upwards_trend: Fast and Performant**: Noticeable speed and responsiveness improvement compared to the official client.
 - **:bookmark: Standalone**: GoofCord is a standalone application, not reliant on the original Discord client in any way.
 - **:electric_plug: Plugins & Themes support**: Easily use client mods like [Vencord](https://github.com/Vendicated/Vencord), [Equicord](https://github.com/Equicord/Equicord) or [Shelter](https://github.com/uwu/shelter) for plugins and themes.
-- **⌨️ Global Keybinds**: Set up keybinds and use them across the system
-- **🐧 Linux support**: Seamless screensharing with audio and native Wayland support on Linux. See FAQ for details.
+- **⌨️ Global Keybinds**: Set up keybinds and use them across the system. [Learn more](https://github.com/Milkshiift/GoofCord/wiki/Global-Keybinds)
+- **🐧 Linux support**: Screensharing with audio and native Wayland support on Linux.
 
 ## Installation
 
@@ -50,21 +50,21 @@ Note: As I don't have a macOS device, macOS support is limited.
 
 To explore plugins and themes, head over to the Vencord category in the Discord settings.
 
-And if you want to compile it yourself, here's how:
+### Building from source 🔧
 
-1. Install [Node.js](https://nodejs.dev) _and_ [Bun](https://bun.sh) for package management and bundling.
-2. Grab the source code from the latest release. Getting it from the main branch is not recommended for a stable experience.
+1. Install [Bun](https://bun.sh).
+2. Download the source code from the latest release. Getting it from the main branch is not recommended for a stable experience.
 3. Open a command line in the directory of the source code
 4. Install the dependencies with `bun install`
 5. Package GoofCord with either `bun run packageWindows`, `bun run packageLinux` or `bun run packageMac`
-6. Find your freshly compiled app in the `dist` folder.
+6. Find the compiled app in the `dist` folder.
 
 ## Short FAQ
 
 ### Need Support? Join Our Discord!
 
 [![](https://dcbadge.limes.pink/api/server/CZc4bpnjmm)](https://discord.gg/CZc4bpnjmm)
-
+z
 ### Where is the long FAQ?
 
 - [On the Wiki](https://github.com/Milkshiift/GoofCord/wiki/FAQ)
@@ -73,9 +73,9 @@ And if you want to compile it yourself, here's how:
 
 - See the development [guide](https://github.com/Milkshiift/GoofCord/wiki/How-to-develop-GoofCord)
 
-### Can I get banned from using GoofCord? 🤔
+### Can I get banned from using GoofCord?
 
-- While using GoofCord goes against [Discord ToS](https://discord.com/terms#software-in-discord%E2%80%99s-services), no one has ever been banned from using it or any client mods.
+- While using GoofCord goes against the [Discord ToS](https://discord.com/terms#software-in-discord%E2%80%99s-services), there are no known bans from using it or any client mods.
 
 ### How can I access the settings? ⚙️
 
@@ -84,18 +84,9 @@ And if you want to compile it yourself, here's how:
   - Click the "Settings" button in the "GoofCord" category in the Discord settings
   - Press `Ctrl+Shift+'` shortcut.
 
-### How do I run GoofCord natively on Wayland?
-
-- GoofCord should run natively out of the box, but if it doesn't, run with these arguments:  
-  `--enable-features=UseOzonePlatform --ozone-platform-hint=auto`
-
 ### Why Electron?
 
 - It's the right tool for this job. While Electron may not be the perfect choice for all applications, achieving a user experience on par with the official Discord client inherently requires embedding its web version within a browser/webview. Currently, no other frameworks come close to Electron in providing this capability and covering all of GoofCord's needs.
-
-### Seeking the Source Code? 🕵️‍♂️
-
-- You can find our source code on [GitHub](https://github.com/Milkshiift/GoofCord/).
 
 ### Check out our [wiki](https://github.com/Milkshiift/GoofCord/wiki) if you've got questions left
 
