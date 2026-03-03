@@ -1,6 +1,6 @@
 import { execSync } from "node:child_process";
 
-import { Arch, Configuration } from "electron-builder";
+import {Arch, Configuration, Platform} from "electron-builder";
 
 const files = ["!*", "!node_modules/**/*", "ts-out", "package.json", "LICENSE"];
 
@@ -72,7 +72,7 @@ export const config: Configuration = {
 	electronLanguages: ["en-US"],
 	beforePack: async (context) => {
 		const currentArch = getArchString(context.arch);
-		const currentPlatform = context.packager.platform.name;
+		const currentPlatform = getPlatformString(context.packager.platform);
 
 		const output = execSync(`bun run build --platform=${currentPlatform} --arch=${currentArch}`, {
 			encoding: "utf-8",
@@ -80,6 +80,19 @@ export const config: Configuration = {
 		console.log(output);
 	},
 };
+
+function getPlatformString(platform: Platform): string {
+	switch (platform) {
+		case Platform.WINDOWS:
+			return "win32";
+		case Platform.LINUX:
+			return "linux";
+		case Platform.MAC:
+			return "darwin";
+		default:
+			return "unknown";
+	}
+}
 
 function getArchString(arch: Arch): string {
 	switch (arch) {
