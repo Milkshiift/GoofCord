@@ -97,7 +97,7 @@
     "opt-encryptionPasswords": "Şifreleme parolaları",
     "opt-encryptionPasswords-desc": "Şifreleme için kullanılan parolaların listesi. Güvenli bir şekilde saklanırlar. Güvenli bir yerde yedek bulundurun.",
     "opt-encryptionCover": "Şifreleme kılıfı",
-    "opt-encryptionCover-desc": "Parolaya sahip olmayan bir kullanıcının göreceği mesaj. En az iki kelime olmalı veya boş bırakılmalıdır.",
+    "opt-encryptionCover-desc": "Parolaya sahip olmayan bir kullanıcının göreceği mesaj.",
     "opt-encryptionMark": "Şifre çözme işareti",
     "opt-encryptionMark-desc": "Şifresi çözülmüş mesajları normal metinden ayırt etmek için başlarına eklenen karakter dizisi.",
     "opt-domOptimizer": "DOM iyileştirici",
@@ -134,5 +134,15 @@
     "opt-cloudEncryptionKey-desc": "Buluta gönderilen verileri şifrelemek için kullanılır. Kaybolması durumunda verileriniz geri döndürülemez. Şifrelemeyi devre dışı bırakmak ve mesaj şifreleme parolalarını kaydetmemek için boş bırakın.",
     "opt-button-loadFromCloud": "Buluttan yükle",
     "opt-button-saveToCloud": "Buluta Kaydet",
-    "opt-button-deleteCloud": "Bulut verisini sil"
+    "opt-button-deleteCloud": "Bulut verisini sil",
+    "opt-disableGpuCompositing": "GPU kompozisyonunu devre dışı bırak",
+    "opt-disableGpuCompositing-desc": "Ekran paylaşımındaki sonsuz yükleme sorununu çözebilir, ancak GoofCord'un genel performansını düşürebilir.",
+    "opt-vaapi": "VA-API",
+    "opt-vaapi-desc": "Video Hızlandırma API'sini (VA-API) etkinleştirir. Nvidia ekran kartlarının çoğunda desteklenmemektedir.",
+    "opt-proxy": "Proxy",
+    "opt-proxy-desc": "Discord trafiğini belirtilen bir proxy üzerinden yönlendirir. Dahili GoofCord istekleri (örneğin harici kaynakların getirilmesi) bu proxy'yi kullanmayacaktır.",
+    "opt-proxyRules": "Proxy kuralları",
+    "opt-proxyRules-desc": "Electron proxy kurallarını ayarlar. Şema için <a target=\"_blank\" href=\"https://www.electronjs.org/docs/latest/api/structures/proxy-config\">Electron dokümantasyonuna</a> göz atın.",
+    "opt-proxyBypassRules": "Proxy bypass kuralları",
+    "opt-proxyBypassRules-desc": "Electron proxy bypass kurallarını belirler."
 }
