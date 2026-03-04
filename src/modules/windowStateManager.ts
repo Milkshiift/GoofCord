@@ -1,4 +1,4 @@
-import type { BrowserWindow } from "electron";
+import type { BrowserWindow, Display } from "electron";
 
 import type { ConfigKey } from "../settingsSchema.ts";
 import { getConfig, setConfig } from "../stores/config/config.main.ts";
@@ -6,12 +6,28 @@ import { getConfig, setConfig } from "../stores/config/config.main.ts";
 type NumberPair = [number, number];
 type WindowState = [boolean, NumberPair, NumberPair];
 
+function isPositionOnScreen(x: number, y: number): boolean {
+	const displays = require("electron").screen.getAllDisplays();
+	return displays.some((display: Display) => {
+		const { bounds } = display;
+		return x >= bounds.x && x < bounds.x + bounds.width && y >= bounds.y && y < bounds.y + bounds.height;
+	});
+}
+
 export function adjustWindow(window: BrowserWindow, configEntry: ConfigKey) {
-	const previousWindowState = getConfig(configEntry) as WindowState;
+	let previousWindowState = getConfig(configEntry) as WindowState;
 	const [osMaximized, [x, y], [width, height]] = previousWindowState;
-	window.setSize(width, height);
-	window.setPosition(x, y);
-	if (osMaximized) window.maximize();
+
+	// Validate window position is on a visible display
+	if (!isPositionOnScreen(x, y)) {
+		console.log("Saved window position is off-screen, resetting to default");
+		previousWindowState = [true, [-1, -1], [835, 600]];
+	}
+
+	const [maximized, [posX, posY], [winWidth, winHeight]] = previousWindowState;
+	window.setSize(winWidth, winHeight);
+	window.setPosition(posX, posY);
+	if (maximized) window.maximize();
 
 	const debouncedSaveState = debounce(async () => await saveState(window, configEntry), 1000);
 
