@@ -34,50 +34,52 @@ export async function checkForUpdate() {
 }
 
 function isSemverLower(version1: string, version2: string): boolean {
-	function compareParts(a: string | number | undefined, b: string | number | undefined): number {
-		const aNum = typeof a === "number" || (typeof a === "string" && !Number.isNaN(Number(a)));
-		const bNum = typeof b === "number" || (typeof b === "string" && !Number.isNaN(Number(b)));
+	// Strip build metadata (+...)
+	const v1 = version1.split('+', 1)[0];
+	const v2 = version2.split('+', 1)[0];
 
-		if (aNum && bNum) return Number(a) - Number(b);
-		if (aNum) return -1;
-		if (bNum) return 1;
-		return String(a ?? "").localeCompare(String(b ?? ""));
+	// Split on FIRST '-' only
+	const [m1, p1 = ''] = v1.split('-', 2);
+	const [m2, p2 = ''] = v2.split('-', 2);
+
+	// === 1. Compare main version (major.minor.patch...) numerically ===
+	const parts1 = m1.split('.').map(Number);
+	const parts2 = m2.split('.').map(Number);
+
+	for (let i = 0; i < Math.max(parts1.length, parts2.length); i++) {
+		const a = parts1[i] ?? 0;
+		const b = parts2[i] ?? 0;
+		if (a !== b) return a < b;
 	}
 
-	function compareVersionParts(v1: string, v2: string): boolean {
-		const [v1Main, v1Pre] = v1.split("-");
-		const [v2Main, v2Pre] = v2.split("-");
+	// Main versions are equal → move to pre-release rules
+	if (!p1 && !p2) return false;     // both stable → not lower
+	if (!p1) return false;            // v1 stable > any pre-release
+	if (!p2) return true;             // v1 pre-release < stable v2
 
-		const v1MainParts = v1Main.split(".").map(Number);
-		const v2MainParts = v2Main.split(".").map(Number);
+	// === 2. Both have pre-releases – compare identifiers ===
+	const pr1 = p1.split('.');
+	const pr2 = p2.split('.');
 
-		const v1IsPreRelease = v1Pre !== undefined;
-		const v2IsPreRelease = v2Pre !== undefined;
+	for (let i = 0; i < Math.max(pr1.length, pr2.length); i++) {
+		const a = pr1[i];
+		const b = pr2[i];
 
-		if (!v1IsPreRelease && v2IsPreRelease) {
-			return false;
+		if (a === undefined) return true;   // shorter prefix is lower
+		if (b === undefined) return false;
+
+		const isNumA = /^[0-9]+$/.test(a);
+		const isNumB = /^[0-9]+$/.test(b);
+
+		if (isNumA && isNumB) {
+			const diff = Number(a) - Number(b);
+			if (diff !== 0) return diff < 0;
+		} else if (isNumA !== isNumB) {
+			return isNumA;                    // numeric identifier always lower than non-numeric
+		} else if (a !== b) {
+			return a < b;                     // lexical (pure ASCII) compare
 		}
-		if (v1IsPreRelease && !v2IsPreRelease) {
-			return true;
-		}
-
-		for (let i = 0; i < Math.max(v1MainParts.length, v2MainParts.length); i++) {
-			const cmp = compareParts(v1MainParts[i], v2MainParts[i]);
-			if (cmp !== 0) return cmp < 0;
-		}
-		const v1PreParts = v1Pre ? v1Pre.split(".") : [];
-		const v2PreParts = v2Pre ? v2Pre.split(".") : [];
-
-		if (!v1Pre && v2Pre) return false;
-		if (v1Pre && !v2Pre) return true;
-
-		for (let i = 0; i < Math.max(v1PreParts.length, v2PreParts.length); i++) {
-			const cmp = compareParts(v1PreParts[i], v2PreParts[i]);
-			if (cmp !== 0) return cmp < 0;
-		}
-
-		return false;
 	}
 
-	return compareVersionParts(version1, version2);
+	return false; // identical pre-releases
 }
