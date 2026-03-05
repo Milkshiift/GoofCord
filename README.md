@@ -64,7 +64,7 @@ To explore plugins and themes, head over to the Vencord category in the Discord 
 ### Need Support? Join Our Discord!
 
 [![](https://dcbadge.limes.pink/api/server/CZc4bpnjmm)](https://discord.gg/CZc4bpnjmm)
-z
+
 ### Where is the long FAQ?
 
 - [On the Wiki](https://github.com/Milkshiift/GoofCord/wiki/FAQ)

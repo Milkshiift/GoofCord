@@ -1,6 +1,6 @@
 import { execSync } from "node:child_process";
 
-import {Arch, Configuration, Platform} from "electron-builder";
+import { Arch, Configuration, Platform } from "electron-builder";
 
 const files = ["!*", "!node_modules/**/*", "ts-out", "package.json", "LICENSE"];
 

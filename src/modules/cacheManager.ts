@@ -14,9 +14,7 @@ export async function clearCache<IPCHandle>() {
 
 	for (const folder of folders) {
 		if (folder.toLowerCase().includes("cache")) {
-			try {
-				void fs.rm(path.join(userDataPath, folder), { recursive: true, force: true });
-			} catch (e) {}
+			void fs.rm(path.join(userDataPath, folder), { recursive: true, force: true }).catch((err) => console.log("[Cache manager]", err));
 		}
 	}
 
