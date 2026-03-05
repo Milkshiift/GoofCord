@@ -1,6 +1,6 @@
 import { i } from "@root/src/stores/localization/localization.preload.ts";
 import type { ComponentType, JSX } from "preact";
-import { useCallback, useState } from "preact/hooks";
+import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 
 import { invoke } from "../../../ipc/client.preload.ts";
 import type { SettingEntry } from "../../../settingsSchema.ts";
@@ -93,6 +93,20 @@ function DictionaryInput({ id, value, onChange, entry }: InputProps): JSX.Elemen
 	const dictValue = value as Record<string, string>;
 	const [entries, setEntries] = useState(() => Object.entries(dictValue));
 
+	const entriesRef = useRef(entries);
+	entriesRef.current = entries;
+
+	useEffect(() => {
+		const currentObj: Record<string, string> = {};
+		for (const [k, v] of entriesRef.current) {
+			if (k.trim()) currentObj[k.trim()] = v.trim();
+		}
+
+		if (JSON.stringify(currentObj) !== JSON.stringify(value)) {
+			setEntries(Object.entries(value as Record<string, string>));
+		}
+	}, [value]);
+
 	const syncToParent = useCallback(
 		(newEntries: [string, string][]) => {
 			setEntries(newEntries);
@@ -172,6 +186,11 @@ function DictionaryInput({ id, value, onChange, entry }: InputProps): JSX.Elemen
 function JsonInput({ id, value, onChange }: InputProps): JSX.Element {
 	const [text, setText] = useState(() => (typeof value === "string" ? value : JSON.stringify(value, null, "\t")));
 	const [error, setError] = useState<string | null>(null);
+
+	useEffect(() => {
+		setText(typeof value === "string" ? value : JSON.stringify(value, null, "\t"));
+		setError(null);
+	}, [value]);
 
 	const handleBlur = () => {
 		try {

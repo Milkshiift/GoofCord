@@ -8,6 +8,7 @@ async function getLatestVersion(): Promise<string> {
 	try {
 		const response = await fetch("https://api.github.com/repos/Milkshiift/GoofCord/releases/latest");
 		const data = await response.json();
+		if (!response.ok || !data.tag_name) return getVersion();
 		return data.tag_name.replace("v", "");
 	} catch (e) {
 		console.error("Failed to fetch the latest GitHub release information. Possibly API rate limit exceeded or timeout reached");
