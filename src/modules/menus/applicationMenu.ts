@@ -92,7 +92,7 @@ export async function setApplicationMenu() {
 				},
 				{
 					label: i("menu-development-gpuDebug"),
-					accelerator: "CmdorCtrl+Alt+G",
+					accelerator: "CmdOrCtrl+Alt+G",
 					click() {
 						const gpuWindow = new BrowserWindow({
 							width: 900,
