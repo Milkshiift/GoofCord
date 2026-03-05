@@ -34,31 +34,46 @@ export function registerScreenshareHandler() {
 				preload: path.join(dirname(), "windows/screenshare/preload/preload.js"),
 			},
 		});
+
 		capturerWindow.center();
 		capturerWindow.maximize();
-
 		await capturerWindow.loadFile(relToAbs(html.index));
 		capturerWindow.webContents.send("getSources", sources);
 
+		let selectionMade = false;
+
+		capturerWindow.once("closed", () => {
+			if (selectionMade) return;
+			ipcMain.removeHandler("selectScreenshareSource");
+			callback({});
+		});
+
 		ipcMain.handleOnce("selectScreenshareSource", async (_event, id, name, audio, contentHint, resolution, framerate) => {
-			capturerWindow.close();
+			selectionMade = true;
+
+			if (!capturerWindow.isDestroyed()) {
+				capturerWindow.close();
+			}
 
 			if (!id) return callback({});
 
 			// src/window/main/screenshare.ts
 			await request.frame?.executeJavaScript(`
-				window.screenshareSettings = ${JSON.stringify({ resolution: resolution, framerate: framerate, contentHint: contentHint })};
+				window.screenshareSettings = ${JSON.stringify({ resolution, framerate, contentHint })};
             `);
 
 			const result = isWayland || id === "0" ? sources[0] : { id, name, width: 9999, height: 9999 };
+
 			if (audio) {
 				if (process.platform === "linux") {
 					await venmicStartSystem();
 					callback({ video: result });
+					return;
 				}
 				callback({ video: result, audio: "loopback" });
 				return;
 			}
+
 			callback({ video: result });
 		});
 	});
