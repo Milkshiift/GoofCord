@@ -12,7 +12,7 @@ import { setApplicationMenu } from "./modules/menus/applicationMenu.ts";
 import { initProxy } from "./modules/proxy.ts";
 import { createTray } from "./modules/tray.ts";
 import { checkForUpdate } from "./modules/updateCheck.ts";
-import { decryptSettings, firstLaunch } from "./stores/config/config.main.ts";
+import { decryptSettings, firstLaunch, initConfigEncryption } from "./stores/config/config.main.ts";
 import { createMainWindow } from "./windows/main/main.ts";
 import { createSettingsWindow } from "./windows/settings/settings.ts";
 
@@ -37,6 +37,7 @@ export async function load() {
 	initFirewall();
 	unstrictCSP();
 	await initProxy();
+	await initConfigEncryption();
 	await decryptSettings();
 	await modPromise;
 	firstLaunch ? await createSettingsWindow() : await createMainWindow();

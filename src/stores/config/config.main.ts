@@ -3,14 +3,43 @@ import path from "node:path";
 
 import { app, dialog, safeStorage, shell } from "electron";
 import { createHost, type StoreHost } from "electron-sync-store/main";
+import pc from "picocolors";
 
 import { type Config, type ConfigKey, getDefaults, isEncrypted } from "../../settingsSchema.ts";
 import { getErrorMessage, getGoofCordFolderPath, tryCreateFolder } from "../../utils.ts";
+
+const LOG_PREFIX = pc.yellowBright("[Config]");
 
 // ─── State & Initialization ─────────────────────────────────────────────
 
 export let firstLaunch = false;
 let configHost: StoreHost<Config>;
+let _encryptionAvailable: boolean | undefined = undefined;
+
+export async function initConfigEncryption(): Promise<boolean> {
+	if (_encryptionAvailable !== undefined) return _encryptionAvailable;
+
+	await app.whenReady();
+
+	_encryptionAvailable = safeStorage.isEncryptionAvailable();
+
+	if (!_encryptionAvailable && firstLaunch) {
+		await dialog.showMessageBox({
+			type: "warning",
+			title: "Secure storage unavailable",
+			message: "Some sensitive settings (e.g. message encryption passwords) will be stored in plaintext.\n" + (process.platform === "linux" ? "Install and start gnome-keyring or kwallet, then restart the app." : "This is unusual on Windows/macOS — please report the issue."),
+			detail: `Backend: ${safeStorage.getSelectedStorageBackend() || "unknown"}`,
+		});
+	}
+
+	if (_encryptionAvailable && process.platform === "linux") {
+		console.log(LOG_PREFIX, `Secure backend: ${safeStorage.getSelectedStorageBackend()}`);
+	} else if (!_encryptionAvailable) {
+		console.warn(LOG_PREFIX, "safeStorage encryption unavailable — using plaintext fallback");
+	}
+
+	return _encryptionAvailable;
+}
 
 export async function loadConfig(): Promise<void> {
 	configHost = createHost<Config>("config", {
@@ -21,7 +50,7 @@ export async function loadConfig(): Promise<void> {
 }
 
 async function setup(): Promise<Config> {
-	console.log("Setting up default GoofCord settings.");
+	console.log(LOG_PREFIX, "Setting up default GoofCord settings.");
 	firstLaunch = true;
 	const defaults = getDefaults();
 	await saveToDisk(defaults);
@@ -74,12 +103,12 @@ export async function cleanUpConfig(): Promise<void> {
 			delete cleanedConfig[key];
 			hasChanges = true;
 			removedCount++;
-			console.log(`[Config] Removed obsolete property: "${key}"`);
+			console.log(LOG_PREFIX, `Removed obsolete property: "${key}"`);
 		}
 	}
 
 	if (hasChanges) {
-		console.log(`[Config] Cleanup complete. Removed ${removedCount} obsolete keys.`);
+		console.log(LOG_PREFIX, `Cleanup complete. Removed ${removedCount} obsolete keys.`);
 		await configHost.set(cleanedConfig);
 	}
 }
@@ -87,7 +116,6 @@ export async function cleanUpConfig(): Promise<void> {
 // ─── Private ─────────────────────────────────────────────
 
 async function hydrate(): Promise<Config> {
-	safeStorage.setUsePlainTextEncryption(true);
 	while (true) {
 		try {
 			// fs.promises.readFile is much slower than fs.readFileSync
@@ -109,12 +137,13 @@ async function saveToDisk(state: Config) {
 	try {
 		for (const [key, value] of Object.entries(state)) {
 			if (isEncrypted(key)) {
+				// state is a copy, so we can just write to it
 				(state as any)[key as ConfigKey] = encryptSafeStorage(value);
 			}
 		}
 		await fs.promises.writeFile(getConfigLocation(), JSON.stringify(state, null, 2), "utf-8");
 	} catch (e: unknown) {
-		console.error("Failed to save settings:", e);
+		console.error(LOG_PREFIX, "Failed to save settings:", e);
 		dialog.showErrorBox("GoofCord was unable to save the settings", getErrorMessage(e));
 	}
 }
@@ -126,19 +155,51 @@ export async function decryptSettings() {
 	const config = configHost.get();
 	for (const [key, value] of Object.entries(config)) {
 		if (isEncrypted(key)) {
-			(config as any)[key as ConfigKey] = decryptSafeStorage(value as string);
+			try {
+				(config as any)[key as ConfigKey] = decryptSafeStorage(value as string);
+			} catch (e) {
+				(config as any)[key as ConfigKey] = getDefaultValue(key as ConfigKey);
+			}
 		}
 	}
 	await configHost.set(config, { persist: false });
 }
 
-export function encryptSafeStorage(plaintext: unknown) {
-	const plaintextString = JSON.stringify(plaintext);
-	return safeStorage.encryptString(plaintextString).toString("base64");
+export function encryptSafeStorage(plaintext: unknown): string {
+	const json = JSON.stringify(plaintext);
+
+	if (!_encryptionAvailable && _encryptionAvailable !== undefined) {
+		return `PLAIN:${json}`;
+	}
+
+	try {
+		const buf = safeStorage.encryptString(json);
+		return `ENC:${buf.toString("base64")}`;
+	} catch (err) {
+		console.error(LOG_PREFIX, "encryptSafeStorage failed:", err);
+		_encryptionAvailable = false;
+		return `PLAIN:${json}`;
+	}
 }
 
-export function decryptSafeStorage(encryptedBase64: string) {
-	return JSON.parse(safeStorage.decryptString(Buffer.from(encryptedBase64, "base64")));
+export function decryptSafeStorage(stored: string): any {
+	if (stored.startsWith("PLAIN:")) {
+		return JSON.parse(stored.slice(6));
+	}
+
+	if (stored.startsWith("ENC:")) {
+		const base64 = stored.slice(4);
+		try {
+			const buf = Buffer.from(base64, "base64");
+			const decrypted = safeStorage.decryptString(buf);
+			return JSON.parse(decrypted);
+		} catch (err) {
+			console.error(LOG_PREFIX, "decryptSafeStorage failed:", err);
+			throw new Error(`Cannot decrypt protected setting: ${getErrorMessage(err)}`);
+		}
+	}
+
+	throw new Error(`Unknown storage prefix: ${stored.slice(0, 10)}…`);
 }
 
 async function handleConfigError(e: unknown): Promise<{ retry: boolean; data?: Config }> {
@@ -147,7 +208,7 @@ async function handleConfigError(e: unknown): Promise<{ retry: boolean; data?: C
 		return { retry: false, data: await setup() };
 	}
 
-	console.error("Failed to load the config:", e);
+	console.error(LOG_PREFIX, "Failed to load the config:", e);
 	await app.whenReady();
 
 	const buttonId = dialog.showMessageBoxSync({

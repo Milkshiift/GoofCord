@@ -7,7 +7,7 @@ import pc from "picocolors";
 import { getGoofCordFolderPath, readOrCreateFolder } from "../../utils.ts";
 import { mainWindow } from "../../windows/main/main.ts";
 
-const LOG_PREFIX = pc.yellowBright("[Asset Loader]");
+const LOG_PREFIX = pc.yellow("[Asset Loader]");
 export const ASSETS_FOLDER = path.join(getGoofCordFolderPath(), "assets/");
 
 const SCAN_LENGTH = 500;
