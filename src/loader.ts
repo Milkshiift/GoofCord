@@ -9,6 +9,7 @@ import { manageAssets, updateAssets } from "./modules/assets/assetDownloader.ts"
 import { categorizeAllAssets, startStyleWatcher } from "./modules/assets/assetLoader.ts";
 import { initFirewall, unstrictCSP } from "./modules/firewall.ts";
 import { setApplicationMenu } from "./modules/menus/applicationMenu.ts";
+import { obtainVenbind } from "./modules/native/venbind.ts";
 import { initProxy } from "./modules/proxy.ts";
 import { createTray } from "./modules/tray.ts";
 import { checkForUpdate } from "./modules/updateCheck.ts";
@@ -40,6 +41,9 @@ export async function load() {
 	await initConfigEncryption();
 	await decryptSettings();
 	await modPromise;
+	// Start venbind early so the XDG portal session is established before
+	// the renderer fires its first setKeybinds IPC call.
+	void obtainVenbind();
 	firstLaunch ? await createSettingsWindow() : await createMainWindow();
 
 	console.timeEnd(pc.green("[Timer]") + " GoofCord fully loaded in");
