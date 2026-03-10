@@ -37,7 +37,7 @@ export async function startVenbind(venbind: VenbindType) {
 	venbind?.startKeybinds((id, keyup) => {
 		if (!isWayland && mainWindow.isFocused()) return;
 		mainWindow.webContents.send("keybinds:trigger", id, keyup);
-	}, null);
+	}, "io.github.milkshiift.GoofCord");
 }
 
 export async function setKeybinds<IPCHandle>(keybinds: { id: string; name?: string; shortcut?: string }[]) {

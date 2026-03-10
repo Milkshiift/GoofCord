@@ -20,7 +20,17 @@ interface EventSettings {
 interface Keybind {
 	shortcut: string;
 	eventSettings: EventSettings;
+	mouseButton?: number;
 }
+
+// Maps mouse button index to the MouseEvent.buttons bitmask
+const MOUSE_BUTTON_BITMASK: Record<number, number> = {
+	0: 1, // left
+	1: 4, // middle
+	2: 2, // right
+	3: 8, // back (Mouse 4)
+	4: 16, // forward (Mouse 5)
+};
 
 interface RawBinding {
 	managed?: boolean;
@@ -141,18 +151,41 @@ const getActiveKeybinds = (): Map<string, Keybind> => {
 		// Only process user-defined, enabled keybinds
 		if (binding.managed || binding.enabled === false || !binding.shortcut) continue;
 
-		// Extract just the keyCodes from the shortcut data structure
-		const keys = binding.shortcut.map((x) => x[1]);
+		// x[0] is the input type: 0 = keyboard, 1 = mouse button
+		const keyboardInputs = binding.shortcut.filter((x) => x[0] === 0).map((x) => x[1]);
+		const mouseButtons = binding.shortcut.filter((x) => x[0] === 1).map((x) => x[1]);
 
 		const modifiers = {
-			ctrl: keys.includes(MODIFIERS.CTRL),
-			alt: keys.includes(MODIFIERS.ALT),
-			shift: keys.includes(MODIFIERS.SHIFT),
-			meta: keys.some((k) => k === MODIFIERS.META_LEFT || k === MODIFIERS.META_RIGHT || k === MODIFIERS.META_MAC),
+			ctrl: keyboardInputs.includes(MODIFIERS.CTRL),
+			alt: keyboardInputs.includes(MODIFIERS.ALT),
+			shift: keyboardInputs.includes(MODIFIERS.SHIFT),
+			meta: keyboardInputs.some((k) => k === MODIFIERS.META_LEFT || k === MODIFIERS.META_RIGHT || k === MODIFIERS.META_MAC),
 		};
 
-		// Isolate the primary keys (non-modifiers)
-		const mainKeys = keys.filter((key) => !MODIFIER_VALUES.includes(key));
+		if (mouseButtons.length > 0) {
+			// Mouse button keybind — venbind cannot capture these globally.
+			// Store with mouseButton so the trigger handler dispatches a MouseEvent.
+			const primaryMouseButton = mouseButtons[mouseButtons.length - 1];
+			activeKeybinds.set(binding.action, {
+				shortcut: "",
+				mouseButton: primaryMouseButton,
+				eventSettings: {
+					key: "",
+					code: "",
+					keyCode: 0,
+					which: 0,
+					location: 0,
+					ctrlKey: modifiers.ctrl,
+					altKey: modifiers.alt,
+					shiftKey: modifiers.shift,
+					metaKey: modifiers.meta,
+				},
+			});
+			continue;
+		}
+
+		// Isolate the primary keyboard keys (non-modifiers)
+		const mainKeys = keyboardInputs.filter((key) => !MODIFIER_VALUES.includes(key));
 		const primaryKeyCode = mainKeys.length > 0 ? mainKeys[mainKeys.length - 1] : null;
 
 		if (!primaryKeyCode) continue;
@@ -192,11 +225,13 @@ let activeKeybinds: Map<string, Keybind> = new Map();
 function updateKeybinds() {
 	activeKeybinds = getActiveKeybinds();
 
-	const toSend = Array.from(activeKeybinds.entries()).map(([key, value]) => ({
-		id: key,
-		name: key,
-		shortcut: value.shortcut,
-	}));
+	const toSend = Array.from(activeKeybinds.entries())
+		.filter(([, value]) => value.mouseButton === undefined && value.shortcut !== "")
+		.map(([key, value]) => ({
+			id: key,
+			name: key,
+			shortcut: value.shortcut,
+		}));
 
 	console.log(toSend);
 	void invoke("venbind:setKeybinds", toSend);
@@ -217,6 +252,22 @@ export function startKeybindWatcher() {
 ipcRenderer.on("keybinds:trigger", (_, id: string, keyup: boolean) => {
 	const keybind = activeKeybinds.get(id);
 	if (!keybind) return;
+
+	if (keybind.mouseButton !== undefined) {
+		const event = new MouseEvent(keyup ? "mouseup" : "mousedown", {
+			button: keybind.mouseButton,
+			buttons: keyup ? 0 : (MOUSE_BUTTON_BITMASK[keybind.mouseButton] ?? 0),
+			ctrlKey: keybind.eventSettings.ctrlKey,
+			altKey: keybind.eventSettings.altKey,
+			shiftKey: keybind.eventSettings.shiftKey,
+			metaKey: keybind.eventSettings.metaKey,
+			bubbles: true,
+			cancelable: true,
+			composed: true,
+		});
+		document.dispatchEvent(event);
+		return;
+	}
 
 	const event = new KeyboardEvent(keyup ? "keyup" : "keydown", {
 		...keybind.eventSettings,
