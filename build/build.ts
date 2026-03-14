@@ -39,7 +39,7 @@ if (!values.skipGenerators) {
 	console.log(pc.blue("⚙️  Running generators..."));
 	console.time("Generators");
 	try {
-		await Promise.all([genSettingsLangFile(), genIpcHandlers()]);
+		await Promise.all([copyNativeModules(), genSettingsLangFile(), genIpcHandlers()]);
 	} catch (e) {
 		console.error(pc.red("❌ Generators failed"), e);
 		process.exit(1);
@@ -77,7 +77,7 @@ await fs.promises.mkdir(OUT_DIR, { recursive: true });
 console.log(pc.blue("📦 Building sources..."));
 console.time("Build");
 
-const results = await Promise.all([copyNativeModules(), buildMain(), ...buildRendererScripts(), ...(await buildPreloads())]);
+const results = await Promise.all([buildMain(), ...buildRendererScripts(), ...(await buildPreloads())]);
 
 console.timeEnd("Build");
 
@@ -173,11 +173,11 @@ async function copyNativeModules() {
 
 	const modules = [
 		{
-			name: "venmic",
-			envPath: process.env.GOOFCORD_VENMIC_PATH,
+			name: "patchcord",
+			envPath: process.env.GOOFCORD_PATCHCORD_PATH,
 			prebuilds: [
-				{ src: ["@vencord", "venmic", "prebuilds", "venmic-addon-linux-x64", "node-napi-v7.node"], platform: "linux", arch: "x64" },
-				{ src: ["@vencord", "venmic", "prebuilds", "venmic-addon-linux-arm64", "node-napi-v7.node"], platform: "linux", arch: "arm64" },
+				{ src: ["patchcord", "dist", "patchcord-linux-x64"], platform: "linux", arch: "x64" },
+				{ src: ["patchcord", "dist", "patchcord-linux-arm64"], platform: "linux", arch: "arm64" },
 			],
 		},
 		{
@@ -195,11 +195,16 @@ async function copyNativeModules() {
 	const copyFile = async (src: string, dest: string) => {
 		await fs.promises.access(src);
 		await Bun.write(dest, Bun.file(src));
+
+		if (process.platform !== "win32") {
+			await fs.promises.chmod(dest, 0o755);
+		}
 	};
 
 	const tasks = modules.flatMap((mod) => {
 		if (mod.envPath) {
-			const dest = path.join(nativeDir, `${mod.name}-${platform}-${TARGET_ARCH}.node`);
+			const ext = path.extname(mod.envPath);
+			const dest = path.join(nativeDir, `${mod.name}-${platform}-${TARGET_ARCH}${ext}`);
 
 			console.log(pc.cyan(`Using env override for ${mod.name}:`));
 			console.log(pc.gray(`  Input:  ${mod.envPath}`));
@@ -215,7 +220,9 @@ async function copyNativeModules() {
 
 		return mod.prebuilds.map((prebuild) => {
 			const src = path.join(ROOT_DIR, "node_modules", ...prebuild.src);
-			const dest = path.join(nativeDir, `${mod.name}-${prebuild.platform}-${prebuild.arch}.node`);
+			const ext = path.extname(src);
+			const dest = path.join(nativeDir, `${mod.name}-${prebuild.platform}-${prebuild.arch}${ext}`);
+
 			return copyFile(src, dest).catch(() => {});
 		});
 	});

@@ -7,8 +7,8 @@ import type { setAutostart as ___modules_autostart_setAutostart } from "../modul
 import type { clearCache as ___modules_cacheManager_clearCache } from "../modules/cacheManager";
 import type { setBadgeCount as ___modules_dynamicIcon_setBadgeCount } from "../modules/dynamicIcon";
 import type { cycleThroughPasswords as ___modules_messageEncryption_cycleThroughPasswords, decryptMessage as ___modules_messageEncryption_decryptMessage, encryptMessage as ___modules_messageEncryption_encryptMessage } from "../modules/messageEncryption";
+import type { stopPatchcord as ___modules_native_patchcord_stopPatchcord } from "../modules/native/patchcord";
 import type { isVenbindLoaded as ___modules_native_venbind_isVenbindLoaded, setKeybinds as ___modules_native_venbind_setKeybinds } from "../modules/native/venbind";
-import type { stopVenmic as ___modules_native_venmic_stopVenmic } from "../modules/native/venmic";
 import type { getDisplayVersion as ___utils_getDisplayVersion, getVersion as ___utils_getVersion, isEncryptionAvailable as ___utils_isEncryptionAvailable, saveFileToGCFolder as ___utils_saveFileToGCFolder } from "../utils";
 import type { createQuickCssWindow as ___windows_main_quickCssFix_createQuickCssWindow } from "../windows/main/quickCssFix";
 import type { deleteCloud as ___windows_settings_cloud_cloud_deleteCloud, loadCloud as ___windows_settings_cloud_cloud_loadCloud, saveCloud as ___windows_settings_cloud_cloud_saveCloud } from "../windows/settings/cloud/cloud";
@@ -24,6 +24,7 @@ export interface IpcHandleChannels {
   "cloud:saveCloud": typeof ___windows_settings_cloud_cloud_saveCloud;
   "dynamicIcon:setBadgeCount": typeof ___modules_dynamicIcon_setBadgeCount;
   "messageEncryption:cycleThroughPasswords": typeof ___modules_messageEncryption_cycleThroughPasswords;
+  "patchcord:stopPatchcord": typeof ___modules_native_patchcord_stopPatchcord;
   "quickCssFix:createQuickCssWindow": typeof ___windows_main_quickCssFix_createQuickCssWindow;
   "settings:createSettingsWindow": typeof ___windows_settings_settings_createSettingsWindow;
   "settings:hotreloadLocale": typeof ___windows_settings_settings_hotreloadLocale;
@@ -33,7 +34,6 @@ export interface IpcHandleChannels {
   "utils:saveFileToGCFolder": typeof ___utils_saveFileToGCFolder;
   "venbind:isVenbindLoaded": typeof ___modules_native_venbind_isVenbindLoaded;
   "venbind:setKeybinds": typeof ___modules_native_venbind_setKeybinds;
-  "venmic:stopVenmic": typeof ___modules_native_venmic_stopVenmic;
 }
 
 export interface IpcOnChannels {

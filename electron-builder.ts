@@ -70,11 +70,18 @@ export const config: Configuration = {
 		onlyLoadAppFromAsar: true,
 	},
 	electronLanguages: ["en-US"],
+	extraResources: [
+		{
+			from: "assets/native/patchcord-linux-${arch}",
+			to: "patchcord",
+			filter: ["**/*"],
+		},
+	],
 	beforePack: async (context) => {
 		const currentArch = getArchString(context.arch);
 		const currentPlatform = getPlatformString(context.packager.platform);
 
-		const output = execSync(`bun run build --platform=${currentPlatform} --arch=${currentArch}`, {
+		const output = execSync(`bun run build --skipTypecheck --platform=${currentPlatform} --arch=${currentArch}`, {
 			encoding: "utf-8",
 		});
 		console.log(output);

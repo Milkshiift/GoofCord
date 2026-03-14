@@ -49,6 +49,7 @@ function setFlags() {
 	]);
 
 	if (process.platform === "linux") {
+		enableFeatures.add("PulseaudioLoopbackForScreenShare");
 		disableFeatures.add("Vulkan"); // Vulkan doesn't support Wayland
 
 		const noVaapi = process.argv.includes("--no-vaapi");

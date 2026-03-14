@@ -54,7 +54,7 @@ var devtoolsFix_default = definePatch({
     {
       find: "setDevtoolsCallbacks",
       replacement: {
-        match: /if\(null!=\i&&"0.0.0"===\i\.remoteApp\.getVersion\(\)\)/,
+        match: /if\(null!=\i&&"0.0.0"===\i\.app\.getVersion\(\)\)/,
         replace: "if(true)"
       }
     }

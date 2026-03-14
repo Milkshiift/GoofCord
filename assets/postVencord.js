@@ -246,7 +246,14 @@ function patchScreenshare() {
   async function getVirtmic() {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
-      const audioDevice = devices.find(({ label }) => label === "vencord-screen-share");
+      let audioDevice;
+      if (GoofCord.stopVenmic) {
+        audioDevice = devices.find(({ label }) => label === "vencord-screen-share");
+      } else {
+        audioDevice = devices.find(({ label, kind }) => {
+          return kind === "audioinput" && label.includes("GoofCord-Virtual-Mic");
+        });
+      }
       return audioDevice?.deviceId;
     } catch (error) {
       return null;
@@ -288,8 +295,10 @@ function patchScreenshare() {
           sampleSize: 16
         }
       });
-      for (const t of stream.getAudioTracks())
+      for (const t of stream.getAudioTracks()) {
+        t.stop();
         stream.removeTrack(t);
+      }
       stream.addTrack(audio.getAudioTracks()[0]);
     }
     return stream;
@@ -299,7 +308,11 @@ function patchScreenshare() {
     if (owner !== Common.UserStore.getCurrentUser().id) {
       return;
     }
-    GoofCord.stopVenmic();
+    if (GoofCord.stopVenmic) {
+      GoofCord.stopVenmic();
+    } else {
+      GoofCord.stopPatchcord();
+    }
   });
 }
 

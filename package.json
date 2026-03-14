@@ -29,7 +29,7 @@
 		"arrpc": "github:Milkshiift/arrpc",
 		"electron-sync-store": "github:Milkshiift/electron-sync-store",
 		"picocolors": "1.1.1",
-		"preact": "^10.28.4",
+		"preact": "^10.29.0",
 		"stegcloak": "github:Milkshiift/stegcloak-rs"
 	},
 	"devDependencies": {
@@ -39,7 +39,7 @@
 		"electron": "40.8.0",
 		"electron-builder": "26.8.1",
 		"oxfmt": "^0.36.0",
-		"oxlint": "^1.51.0",
+		"oxlint": "^1.55.0",
 		"oxlint-tsgolint": "^0.16.0",
 		"typescript": "5.9.3"
 	},
@@ -47,16 +47,10 @@
 		"@typescript/native-preview": "^7.0.0-dev.20260306.1"
 	},
 	"optionalDependencies": {
-		"@vencord/venmic": "6.1.0",
-		"venbind": "0.1.7"
-	},
-	"engines": {
-		"node": ">=24.0.0"
+		"venbind": "0.1.7",
+		"patchcord": "github:Milkshiift/patchcord"
 	},
 	"trustedDependencies": [
-		"@biomejs/biome",
-		"bufferutil",
-		"electron",
-		"arrpc"
+		"electron"
 	]
 }
