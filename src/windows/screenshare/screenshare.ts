@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import { venmicStartSystem } from "@root/src/modules/native/venmic.ts";
+import { patchcordStartSystem } from "@root/src/modules/native/patchcord.ts";
 import { BrowserWindow, desktopCapturer, ipcMain, screen, session } from "electron";
 
 import { dirname, isWayland, relToAbs } from "../../utils.ts";
@@ -66,7 +66,7 @@ export function registerScreenshareHandler() {
 
 			if (audio) {
 				if (process.platform === "linux") {
-					await venmicStartSystem();
+					await patchcordStartSystem();
 					callback({ video: result });
 					return;
 				}

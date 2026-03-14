@@ -4,7 +4,15 @@ export function patchScreenshare() {
 	async function getVirtmic() {
 		try {
 			const devices = await navigator.mediaDevices.enumerateDevices();
-			const audioDevice = devices.find(({ label }) => label === "vencord-screen-share");
+			let audioDevice;
+			// @ts-expect-error
+			if (GoofCord.stopVenmic) {
+				audioDevice = devices.find(({ label }) => label === "vencord-screen-share");
+			} else {
+				audioDevice = devices.find(({ label, kind }) => {
+					return kind === "audioinput" && label.includes("GoofCord-Virtual-Mic");
+				});
+			}
 			return audioDevice?.deviceId;
 		} catch (error) {
 			return null;
@@ -41,7 +49,7 @@ export function patchScreenshare() {
 		const audioTrack = stream.getAudioTracks()[0];
 		if (audioTrack) audioTrack.contentHint = "music";
 
-		// Venmic
+		// Patchcord
 		const id = await getVirtmic();
 		if (id) {
 			const audio = await navigator.mediaDevices.getUserMedia({
@@ -58,7 +66,11 @@ export function patchScreenshare() {
 				},
 			});
 
-			for (const t of stream.getAudioTracks()) stream.removeTrack(t);
+			for (const t of stream.getAudioTracks()) {
+				t.stop();
+				stream.removeTrack(t);
+			}
+
 			stream.addTrack(audio.getAudioTracks()[0]);
 		}
 
@@ -72,6 +84,12 @@ export function patchScreenshare() {
 			return;
 		}
 
-		void GoofCord.stopVenmic();
+		// @ts-expect-error
+		if (GoofCord.stopVenmic) {
+			// @ts-expect-error
+			void GoofCord.stopVenmic();
+		} else {
+			void GoofCord.stopPatchcord();
+		}
 	});
 }

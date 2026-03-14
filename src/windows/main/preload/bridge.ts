@@ -41,7 +41,7 @@ const api = {
 	cycleThroughPasswords: () => invoke("messageEncryption:cycleThroughPasswords"),
 	openSettingsWindow: () => invoke("settings:createSettingsWindow"),
 	setBadgeCount: (count: number) => invoke("dynamicIcon:setBadgeCount", count),
-	stopVenmic: () => invoke("venmic:stopVenmic"),
+	stopPatchcord: () => invoke("patchcord:stopPatchcord"),
 	isVencordPresent: () => isVencordPresent,
 	onInvidiousConfigChanged: (callback: () => void) => ipcRenderer.on("invidiousConfigChanged", callback),
 	openQuickCssWindow: () => invoke("quickCssFix:createQuickCssWindow"),
