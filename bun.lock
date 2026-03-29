@@ -593,7 +593,7 @@
 
     "package-json-from-dist": ["package-json-from-dist@1.0.1", "", {}, "sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw=="],
 
-    "patchcord": ["patchcord@github:Milkshiift/patchcord#344a424", {}, "Milkshiift-patchcord-344a424", "sha512-NW1NtgO/tELhWPK67MnKdqDohWaoA+VePWPyoELf+q+/uCMw35HAtQ8ENM8MhM9nUy9t4eBf1JTcz8leoxnRAw=="],
+    "patchcord": ["patchcord@github:Milkshiift/patchcord#f261163", {}, "Milkshiift-patchcord-f261163", "sha512-J2wot61Kh8GXsu+dgAegaHizj6Wgmu9FohdoGdPqxYswOXXHdl/JKBsXwIVMJrKfAbaPFTicCEy2UCiN3S2gNQ=="],
 
     "path-is-absolute": ["path-is-absolute@1.0.1", "", {}, "sha512-AVbw3UJ2e9bq64vSaS9Am0fje1Pa8pbGqTTsmXfaIiMpnr5DlDhfJOuLj9Sf95ZPVDAUerDfEk88MPmPe7UCQg=="],
 

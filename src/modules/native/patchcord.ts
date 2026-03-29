@@ -137,7 +137,9 @@ app.on("before-quit", (event) => {
 		patchbay = undefined;
 		console.log(pc.cyan("[Screenshare]"), "Cleaning up virtual sinks before exit...");
 
-		pb.dispose()
+		const timeout = new Promise((resolve) => setTimeout(resolve, 1500));
+
+		Promise.race([pb.dispose(), timeout])
 			.catch((err) => console.error("Dispose failed:", err))
 			.finally(() => app.quit());
 	}
