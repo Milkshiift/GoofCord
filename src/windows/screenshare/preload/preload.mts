@@ -152,6 +152,11 @@ function addDisplays(): void {
 				</div>
 			`;
 
+			const firstButton = document.querySelector(".desktop-capturer-selection__btn") as HTMLElement;
+			if (firstButton) {
+				firstButton.focus();
+			}
+
 			document.body.addEventListener("click", (event) => {
 				const button = (event.target as HTMLElement).closest(".desktop-capturer-selection__btn");
 				if (button instanceof HTMLElement) {
@@ -169,7 +174,5 @@ addDisplays();
 document.addEventListener("keydown", (event) => {
 	if (event.code === "Escape") {
 		void ipcRenderer.invoke("selectScreenshareSource");
-	} else if (event.code === "Enter") {
-		void selectSource("0", "Screen");
 	}
 });
