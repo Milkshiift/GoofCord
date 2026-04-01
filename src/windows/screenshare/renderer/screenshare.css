@@ -42,29 +42,15 @@
 
 body,
 html {
-	overflow: hidden;
-	background-color: rgba(0, 0, 0, 0.7);
-}
-
-.desktop-capturer-selection {
 	margin: 0;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	min-width: 280px;
-	max-width: 440px;
-	transform: translate(-50%, -50%);
 	background-color: var(--bg-secondary);
-	border-radius: var(--border-radius-md);
-	border: var(--border-color-divider) solid 1px;
 	color: var(--font-color-normal);
 	display: flex;
+	height: 100%;
 	font-family: var(--font-family);
-	align-items: center;
-	justify-content: center;
+	justify-content: space-between;
 	flex-direction: column;
 	overflow: hidden;
-	box-shadow: var(--shadow-lg);
 	animation: fadeIn var(--transition-duration-normal) var(--easing-smooth);
 }
 
