@@ -1,7 +1,7 @@
 import path from "node:path";
 
 import { patchcordStartSystem } from "@root/src/modules/native/patchcord.ts";
-import { BrowserWindow, desktopCapturer, ipcMain, screen, session } from "electron";
+import { BrowserWindow, desktopCapturer, ipcMain, session } from "electron";
 
 import { dirname, isWayland, relToAbs } from "../../utils.ts";
 import html from "./renderer/screenshare.html";
@@ -9,9 +9,6 @@ import html from "./renderer/screenshare.html";
 let capturerWindow: BrowserWindow;
 
 export function registerScreenshareHandler() {
-	const primaryDisplay = screen.getPrimaryDisplay();
-	const { width, height } = primaryDisplay.workAreaSize;
-
 	session.defaultSession.setDisplayMediaRequestHandler(async (request, callback) => {
 		const sources = await desktopCapturer.getSources({
 			types: ["screen", "window"],
@@ -23,11 +20,10 @@ export function registerScreenshareHandler() {
 		}
 
 		capturerWindow = new BrowserWindow({
-			width: width,
-			height: height,
-			transparent: true,
-			resizable: false,
-			frame: false,
+			width: 500,
+			height: 500,
+			resizable: true,
+			frame: true,
 			autoHideMenuBar: true,
 			webPreferences: {
 				sandbox: true,
@@ -36,7 +32,6 @@ export function registerScreenshareHandler() {
 		});
 
 		capturerWindow.center();
-		capturerWindow.maximize();
 		await capturerWindow.loadFile(relToAbs(html.index));
 		capturerWindow.webContents.send("getSources", sources);
 

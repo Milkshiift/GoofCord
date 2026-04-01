@@ -122,16 +122,8 @@ function addDisplays(): void {
 			const previousSettingsRaw = getConfig("screensharePreviousSettings");
 			const previousSettings = parseStoredSettings(previousSettingsRaw);
 
-			const closeButton = document.createElement("button");
-			closeButton.classList.add("closeButton");
-			closeButton.addEventListener("click", () => {
-				void ipcRenderer.invoke("selectScreenshareSource");
-			});
-
-			const selectionElem = document.createElement("div");
-			selectionElem.classList.add("desktop-capturer-selection");
-			selectionElem.innerHTML = `
-				<h1 style="margin-bottom: 0">${escapeHtml(i("screenshare-screenshare"))}</h1>
+			document.body.innerHTML = `
+				<h1 style="margin-bottom: 0; text-align: center;">${escapeHtml(i("screenshare-screenshare"))}</h1>
 				<div class="desktop-capturer-selection__scroller">
 				  <ul class="desktop-capturer-selection__list">
 					${sources.map(createSourceItemHtml).join("")}
@@ -160,10 +152,7 @@ function addDisplays(): void {
 				</div>
 			`;
 
-			document.body.appendChild(closeButton);
-			document.body.appendChild(selectionElem);
-
-			selectionElem.addEventListener("click", (event) => {
+			document.body.addEventListener("click", (event) => {
 				const button = (event.target as HTMLElement).closest(".desktop-capturer-selection__btn");
 				if (button instanceof HTMLElement) {
 					void selectSource(button.dataset.id ?? null, button.title ?? null);
