@@ -3,6 +3,7 @@ import type { ActionKey, ButtonActionMap } from "@root/src/windows/settings/prel
 import allLangs from "glob-filenames:../assets/lang/*.json";
 
 import packageJson from "../package.json";
+import {type ScreenshareSettings} from "@root/src/windows/screenshare/preload/preload.mts";
 
 const spellcheckLangs = ["af", "bg", "ca", "cs", "cy", "da", "de", "de-DE", "el", "en", "en-AU", "en-CA", "en-GB", "en-GB-oxendict", "en-US", "es", "es-419", "es-AR", "es-ES", "es-MX", "es-US", "et", "fa", "fo", "fr", "fr-FR", "he", "hi", "hr", "hu", "hy", "id", "it", "it-IT", "ko", "lt", "lv", "nb", "nl", "pl", "pt", "pt-BR", "pt-PT", "ro", "ru", "sh", "sk", "sl", "sq", "sr", "sv", "ta", "tg", "tr", "uk", "vi"] as const;
 
@@ -416,7 +417,12 @@ export const settingsSchema = {
 				condition: (value) => value === true,
 			},
 		}),
-		screensharePreviousSettings: hidden<[number, number, boolean, string]>([720, 30, false, "motion"]),
+		screensharePreviousSettings: hidden<ScreenshareSettings>({
+			resolution: 1080,
+			framerate: 30,
+			audioConfig: { mode: "none", pids: [] },
+			contentHint: "motion",
+		}),
 		"windowState:main": hidden<[boolean, [number, number], [number, number]]>([true, [-1, -1], [835, 600]]),
 		"button-openGoofCordFolder": button("Open GoofCord folder", "openFolder", "GoofCord"),
 		"button-clearCache": button("Clear cache", "clearCache"),

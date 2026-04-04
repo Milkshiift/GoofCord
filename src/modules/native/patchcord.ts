@@ -1,31 +1,51 @@
 import path from "node:path";
-
 import { app } from "electron";
 import { AudioSharePatchbay, type ShareableNode } from "patchcord";
 import pc from "picocolors";
+
+/**
+ * Creates a stateful matcher that intelligently tracks applications across restarts.
+ * It starts with a Process ID, but "learns" binary and application names
+ * from matching nodes to survive process restarts.
+ */
+function createMatcher(initialPids: number[]) {
+	const pids = new Set(initialPids);
+	const binaries = new Set<string>();
+	const appNames = new Set<string>();
+
+	return ({ processId, binary, applicationName }: ShareableNode) => {
+		const match =
+			(processId && pids.has(processId)) ||
+			(binary && binaries.has(binary)) ||
+			(applicationName && appNames.has(applicationName));
+
+		if (match) {
+			if (processId) pids.add(processId);
+			if (binary) binaries.add(binary);
+			if (applicationName) appNames.add(applicationName);
+		}
+
+		return !!match;
+	};
+}
 
 let patchbay: AudioSharePatchbay | undefined;
 export let hasPipewirePulse = false;
 
 let isSharing = false;
-let isUpdatingRoutes = false;
+let nodeFilter: ((node: ShareableNode) => boolean) | undefined;
+let isUpdating = false;
 let debounceTimer: NodeJS.Timeout | undefined;
 let fallbackInterval: NodeJS.Timeout | undefined;
 
-function getBinaryPath() {
-	if (app.isPackaged) {
-		return path.join(process.resourcesPath, "binaries", "patchcord");
-	} else {
-		return path.join(app.getAppPath(), "..", "assets", "native", `patchcord-linux-${process.arch}`);
-	}
-}
-
 export async function initPatchcord() {
-	if (process.argv.some((arg) => arg === "--no-patchcord") || patchbay !== undefined) return;
+	if (patchbay || process.argv.includes("--no-patchcord")) return;
 
 	try {
 		patchbay = new AudioSharePatchbay({
-			command: getBinaryPath(),
+			command: app.isPackaged
+				? path.join(process.resourcesPath, "binaries", "patchcord")
+				: path.join(app.getAppPath(), "..", "assets", "native", `patchcord-linux-${process.arch}`),
 			sinkPrefix: "goofcord-share",
 			sinkDescription: "GoofCord Screen Share",
 			virtualMic: true,
@@ -36,9 +56,8 @@ export async function initPatchcord() {
 		patchbay.on("graphChanged", () => {
 			if (!isSharing) return;
 			console.log(pc.cyan("[Screenshare]"), pc.dim("System audio graph changed, refreshing routes..."));
-
 			clearTimeout(debounceTimer);
-			debounceTimer = setTimeout(() => updateAudioRoutes(), 200);
+			debounceTimer = setTimeout(updateAudioRoutes, 200);
 		});
 
 		patchbay.on("monitorDied", () => {
@@ -48,51 +67,69 @@ export async function initPatchcord() {
 		});
 
 		hasPipewirePulse = await patchbay.hasPipeWire();
-	} catch (e: unknown) {
+	} catch (e) {
 		console.error("Failed to import/init patchcord", e);
 		hasPipewirePulse = false;
 	}
 }
 
-function getRendererAudioServicePid(): number | undefined {
-	const pidStr = app.getAppMetrics().find((proc) => proc.name === "Audio Service")?.pid;
-	return pidStr ? Number(pidStr) : undefined;
-}
-
 export async function patchcordList(): Promise<ShareableNode[]> {
+	await initPatchcord();
 	if (!patchbay) return [];
 
-	const audioPid = getRendererAudioServicePid();
+	const audioPid = app.getAppMetrics().find((p) => p.name === "Audio Service")?.pid;
 	const nodes = await patchbay.listShareableNodes(false);
 
+	// Exclude GoofCord's own audio renderer to prevent feedback loops
 	return nodes.filter((n) => n.processId !== audioPid);
 }
 
 async function updateAudioRoutes() {
-	if (!isSharing || !patchbay || isUpdatingRoutes) return;
+	if (!isSharing || !patchbay || isUpdating || !nodeFilter) return;
 
-	isUpdatingRoutes = true;
+	isUpdating = true;
 	try {
-		const shareableNodes = await patchcordList();
-		if (!isSharing || !patchbay) return;
+		const nodes = await patchcordList();
 
-		const nodeIds = shareableNodes.map((n) => n.id);
+		// State may have been wiped during the await
+		if (!isSharing || !patchbay || !nodeFilter) return;
 
-		if (nodeIds.length > 0) {
-			console.log(pc.cyan("[Screenshare]"), pc.white("Routing audio for:"), pc.green(shareableNodes.map((n) => n.displayName).join(", ")));
+		const targetNodes = nodes.filter(nodeFilter);
+
+		if (targetNodes.length > 0) {
+			console.log(pc.cyan("[Screenshare]"), pc.white("Routing audio for:"), pc.green(targetNodes.map((n) => n.displayName).join(", ")));
 		} else {
 			console.log(pc.cyan("[Screenshare]"), pc.dim("No active audio sources found to route."));
 		}
 
-		await patchbay.routeNodes(nodeIds);
+		await patchbay.routeNodes(targetNodes.map((n) => n.id));
 	} catch (err) {
 		console.error(pc.red("[Screenshare] Failed to update dynamic audio routes:"), err);
 	} finally {
-		isUpdatingRoutes = false;
+		isUpdating = false;
 	}
 }
 
-export async function patchcordStartSystem() {
+/**
+ * Starts sharing system audio.
+ * @param excludePids Array of process IDs that should not be captured
+ */
+export async function patchcordStartSystem(excludePids: number[] = []) {
+	const isExcluded = createMatcher(excludePids);
+	nodeFilter = (node) => !isExcluded(node);
+	return startPatchcordSession();
+}
+
+/**
+ * Starts sharing audio for specific applications.
+ * @param targetPids Array of process IDs of the applications to share
+ */
+export async function patchcordStartApp(targetPids: number[]) {
+	nodeFilter = createMatcher(targetPids);
+	return startPatchcordSession();
+}
+
+async function startPatchcordSession() {
 	await initPatchcord();
 	if (!patchbay || !hasPipewirePulse) return null;
 
@@ -100,14 +137,13 @@ export async function patchcordStartSystem() {
 
 	try {
 		const sinkInfo = await patchbay.ensureVirtualSink();
-
 		isSharing = true;
 		await updateAudioRoutes();
-
 		return sinkInfo.virtualMicDescription;
 	} catch (err) {
 		console.error("Patchcord failed to route nodes:", err);
 		isSharing = false;
+		nodeFilter = undefined;
 		return null;
 	}
 }
@@ -119,28 +155,30 @@ export async function stopPatchcord<IPCHandler>() {
 	console.log(pc.cyan("[Screenshare]"), "Stopping Patchcord...");
 
 	isSharing = false;
+	nodeFilter = undefined;
 	patchbay = undefined;
 
 	clearTimeout(debounceTimer);
-	if (fallbackInterval) {
-		clearInterval(fallbackInterval);
-		fallbackInterval = undefined;
-	}
+	clearInterval(fallbackInterval);
+	fallbackInterval = undefined;
 
 	await pb.dispose().catch(() => {});
 }
 
 app.on("before-quit", (event) => {
 	const pb = patchbay;
-	if (pb) {
-		event.preventDefault();
-		patchbay = undefined;
-		console.log(pc.cyan("[Screenshare]"), "Cleaning up virtual sinks before exit...");
+	if (!pb) return;
 
-		const timeout = new Promise((resolve) => setTimeout(resolve, 1500));
+	event.preventDefault();
+	console.log(pc.cyan("[Screenshare]"), "Cleaning up virtual sinks before exit...");
 
-		Promise.race([pb.dispose(), timeout])
-			.catch((err) => console.error("Dispose failed:", err))
-			.finally(() => app.quit());
-	}
+	patchbay = undefined;
+	isSharing = false;
+
+	Promise.race([
+		pb.dispose(),
+		new Promise((resolve) => setTimeout(resolve, 1500))
+	])
+		.catch((err) => console.error("Dispose failed:", err))
+		.finally(() => app.quit());
 });
