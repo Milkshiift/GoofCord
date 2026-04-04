@@ -14,6 +14,10 @@ export function getConfigBulk(): Config {
 	return configClient.get();
 }
 
+export function getDefaultValue<K extends ConfigKey>(entry: K): Config[K] {
+	return getDefaults()[entry] as Config[K];
+}
+
 export async function setConfig<K extends ConfigKey>(key: K, value: Config[K]): Promise<void> {
 	const current = configClient.get();
 	await configClient.set({ ...current, [key]: value });

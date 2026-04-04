@@ -1,75 +1,128 @@
 import path from "node:path";
 
-import { patchcordStartSystem } from "@root/src/modules/native/patchcord.ts";
+import { hasPipewirePulse, patchcordList, patchcordStartApp, patchcordStartSystem } from "@root/src/modules/native/patchcord.ts";
 import { BrowserWindow, desktopCapturer, ipcMain, session } from "electron";
+import type { ShareableNode } from "patchcord";
 
 import { dirname, isWayland, relToAbs } from "../../utils.ts";
 import html from "./renderer/screenshare.html";
 
-let capturerWindow: BrowserWindow;
+interface ActiveRequest {
+	callback: (res: any) => void;
+	window: BrowserWindow;
+	frame: any;
+	initialPromise?: Promise<any>;
+}
+
+const activeRequests = new Map<number, ActiveRequest>();
+
+async function fetchScreenshareData(isRefresh = false) {
+	// If it's a manual refresh AND we are on Wayland, skip fetching video sources to prevent re-triggering the OS portal.
+	const skipSources = isRefresh && isWayland;
+
+	const [rawSources, audioNodes] = await Promise.all([skipSources ? null : desktopCapturer.getSources({ types: ["screen", "window"], thumbnailSize: { width: 320, height: 180 } }), process.platform === "linux" ? patchcordList().catch(() => [] as ShareableNode[]) : []]);
+
+	return {
+		sources:
+			rawSources?.map((s) => ({
+				id: s.id,
+				name: s.name || "unknown",
+				thumbnail: s.thumbnail.toDataURL(),
+			})) ?? null,
+		audioNodes,
+		isPatchcord: hasPipewirePulse,
+	};
+}
 
 export function registerScreenshareHandler() {
-	session.defaultSession.setDisplayMediaRequestHandler(async (request, callback) => {
-		const sources = await desktopCapturer.getSources({
-			types: ["screen", "window"],
-		});
-		if (!sources) return callback({});
+	ipcMain.removeHandler("refreshScreenshareSources");
+	ipcMain.removeHandler("selectScreenshareSource");
+	ipcMain.removeHandler("showScreenshareWindow");
 
-		for (const source of sources) {
-			if (!source.name) source.name = "unknown";
+	ipcMain.handle("refreshScreenshareSources", async (event) => {
+		const req = activeRequests.get(event.sender.id);
+
+		if (req?.initialPromise) {
+			const res = await req.initialPromise;
+			req.initialPromise = undefined;
+			return res;
 		}
 
-		capturerWindow = new BrowserWindow({
-			width: 500,
-			height: 500,
+		return fetchScreenshareData(true);
+	});
+
+	ipcMain.handle("selectScreenshareSource", async (event, id, name, audioConfig, contentHint, resolution, framerate) => {
+		const req = activeRequests.get(event.sender.id);
+		if (!req) return;
+
+		activeRequests.delete(event.sender.id);
+		const { callback, window, frame } = req;
+
+		if (!id) {
+			callback({});
+			if (!window.isDestroyed()) window.close();
+			return;
+		}
+
+		if (frame) {
+			frame.executeJavaScript(`window.screenshareSettings = ${JSON.stringify({ resolution, framerate, contentHint })};`).catch(() => {});
+		}
+
+		const result: any = { video: { id, name, width: 9999, height: 9999 } };
+
+		if (audioConfig.mode !== "none") {
+			if (hasPipewirePulse && process.platform === "linux") {
+				try {
+					await (audioConfig.mode === "system" ? patchcordStartSystem : patchcordStartApp)(audioConfig.pids);
+				} catch (err) {
+					console.error("[Screenshare] Failed to start patchcord node:", err);
+				}
+			} else {
+				result.audio = "loopback";
+			}
+		}
+
+		callback(result);
+		if (!window.isDestroyed()) window.close();
+	});
+
+	ipcMain.handle("showScreenshareWindow", (event) => {
+		const req = activeRequests.get(event.sender.id);
+		if (req && !req.window.isDestroyed()) {
+			req.window.show();
+			req.window.focus();
+		}
+	});
+
+	session.defaultSession.setDisplayMediaRequestHandler((request, callback) => {
+		const capturerWindow = new BrowserWindow({
+			width: 800,
+			height: 650,
+			minWidth: 600,
+			minHeight: 500,
 			resizable: true,
 			frame: true,
 			autoHideMenuBar: true,
+			backgroundColor: "#27292e",
+			show: false,
 			webPreferences: {
 				sandbox: true,
 				preload: path.join(dirname(), "windows/screenshare/preload/preload.js"),
 			},
 		});
 
-		capturerWindow.center();
-		await capturerWindow.loadFile(relToAbs(html.index));
-		capturerWindow.webContents.send("getSources", sources);
+		const wcId = capturerWindow.webContents.id;
 
-		let selectionMade = false;
+		activeRequests.set(wcId, { callback, window: capturerWindow, frame: request.frame, initialPromise: fetchScreenshareData(false) });
 
 		capturerWindow.once("closed", () => {
-			if (selectionMade) return;
-			ipcMain.removeHandler("selectScreenshareSource");
-			callback({});
+			if (activeRequests.has(wcId)) {
+				activeRequests.delete(wcId);
+				callback({});
+			}
 		});
 
-		ipcMain.handleOnce("selectScreenshareSource", async (_event, id, name, audio, contentHint, resolution, framerate) => {
-			selectionMade = true;
-
-			if (!capturerWindow.isDestroyed()) {
-				capturerWindow.close();
-			}
-
-			if (!id) return callback({});
-
-			// src/window/main/screenshare.ts
-			await request.frame?.executeJavaScript(`
-				window.screenshareSettings = ${JSON.stringify({ resolution, framerate, contentHint })};
-            `);
-
-			const result = isWayland || id === "0" ? sources[0] : { id, name, width: 9999, height: 9999 };
-
-			if (audio) {
-				if (process.platform === "linux") {
-					await patchcordStartSystem();
-					callback({ video: result });
-					return;
-				}
-				callback({ video: result, audio: "loopback" });
-				return;
-			}
-
-			callback({ video: result });
-		});
+		capturerWindow.center();
+		void capturerWindow.loadFile(relToAbs(html.index));
 	});
 }

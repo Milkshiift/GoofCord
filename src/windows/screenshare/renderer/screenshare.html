@@ -7,5 +7,131 @@
 		<title>GoofCord Screenshare</title>
 		<link rel="stylesheet" href="screenshare.css" />
 	</head>
-	<body></body>
+	<body>
+		<div class="header-container">
+			<div class="header-titles">
+				<h1 id="title-text"></h1>
+				<p class="header-subtitle" id="subtitle-text"></p>
+			</div>
+			<button class="refresh-btn" id="refresh-btn">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw-icon lucide-refresh-cw">
+					<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+					<path d="M21 3v5h-5" />
+					<path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+					<path d="M8 16H3v5" />
+				</svg>
+			</button>
+		</div>
+		<div class="desktop-capturer-selection__scroller">
+			<ul class="desktop-capturer-selection__list" id="sources-list"></ul>
+		</div>
+		<div class="settings-panel">
+			<div class="settings-section">
+				<h3 class="settings-section-title">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings2-icon lucide-settings-2">
+						<path d="M14 17H5" />
+						<path d="M19 7h-9" />
+						<circle cx="17" cy="17" r="3" />
+						<circle cx="7" cy="7" r="3" />
+					</svg>
+					<span id="stream-settings-title"></span>
+				</h3>
+
+				<div class="settings-grid">
+					<div class="setting-group">
+						<span class="settings-label">
+							<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
+							<span id="hint-label"></span>
+						</span>
+						<div id="content-hint-group" class="segmented-control" role="radiogroup" aria-labelledby="hint-label"></div>
+					</div>
+					<div class="setting-group">
+						<span class="settings-label">
+							<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								<rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+								<line x1="8" y1="21" x2="16" y2="21" />
+								<line x1="12" y1="17" x2="12" y2="21" />
+							</svg>
+							<span id="resolution-label"></span>
+						</span>
+						<div id="resolution-group" class="segmented-control" role="radiogroup" aria-labelledby="resolution-label"></div>
+					</div>
+					<div class="setting-group">
+						<span class="settings-label">
+							<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								<path d="m12 14 4-4" />
+								<path d="M3.34 19a10 10 0 1 1 17.32 0" />
+							</svg>
+							<span id="framerate-label"></span>
+						</span>
+						<div id="framerate-group" class="segmented-control" role="radiogroup" aria-labelledby="framerate-label"></div>
+					</div>
+				</div>
+			</div>
+
+			<hr class="settings-divider" />
+
+			<!-- Linux Native Audio Selector -->
+			<div class="settings-section" id="linux-audio-section" style="display: none">
+				<h3 class="settings-section-title">
+					<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+						<path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+						<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+					</svg>
+					<span id="linux-audio-title"></span>
+				</h3>
+
+				<div class="settings-grid">
+					<div class="setting-group">
+						<span class="settings-label">
+							<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								<path d="M2 10v3" />
+								<path d="M6 6v11" />
+								<path d="M10 3v18" />
+								<path d="M14 8v7" />
+								<path d="M18 5v13" />
+								<path d="M22 10v3" />
+							</svg>
+							<span id="audio-mode-label"></span>
+						</span>
+						<div id="audio-mode-group" class="segmented-control" role="radiogroup" aria-labelledby="audio-mode-label"></div>
+					</div>
+					<div class="setting-group audio-apps-container" id="audio-apps-container" style="display: none">
+						<div class="audio-apps-header">
+							<span class="settings-label">
+								<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<rect width="7" height="9" x="3" y="3" rx="1" />
+									<rect width="7" height="5" x="14" y="3" rx="1" />
+									<rect width="7" height="9" x="14" y="12" rx="1" />
+									<rect width="7" height="5" x="3" y="16" rx="1" />
+								</svg>
+								<span id="audio-apps-label"></span>
+							</span>
+							<span id="audio-apps-desc" class="setting-description"></span>
+						</div>
+						<div class="audio-apps-list" id="audio-apps-list"></div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Standard Electron Audio Selector -->
+			<div class="settings-section audio-toggle-section" id="standard-audio-section" style="display: none">
+				<label class="checkbox-container">
+					<input type="checkbox" id="audio-share-checkbox" />
+					<div class="checkbox-text">
+						<span class="checkbox-label">
+							<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								<path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+								<path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+								<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+							</svg>
+							<span id="audio-toggle-label"></span>
+						</span>
+						<span class="setting-description" id="audio-toggle-desc"></span>
+					</div>
+				</label>
+			</div>
+		</div>
+	</body>
 </html>
