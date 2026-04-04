@@ -80,7 +80,6 @@
     "opt-blocklist-desc": "Eine Liste der zu blockierenden URLs. Jeder Eintrag muss durch ein Komma getrennt werden.",
     "screenshare-screenshare": "Bildschirmfreigabe",
     "screenshare-framerate": "Bildfrequenz",
-    "screenshare-audio": "Audio",
     "screenshare-optimization": "Optimierung",
     "screenshare-optimization-motion": "Bewegung",
     "screenshare-optimization-detail": "Detail",

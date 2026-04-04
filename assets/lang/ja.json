@@ -110,7 +110,6 @@
     "opt-firewall": "ファイアーウォール",
     "opt-firewall-desc": "既知の追跡およびテレメトリをブロックします。デバッグ時のみ無効化してください。",
     "opt-customFirewallRules": "カスタム ファイアーウォール ルール",
-    "screenshare-audio": "オーディオ",
     "screenshare-optimization": "最適化",
     "screenshare-framerate": "フレームレート",
     "screenshare-screenshare": "画面共有",
