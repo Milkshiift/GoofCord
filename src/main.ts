@@ -41,11 +41,6 @@ function setFlags() {
 	]);
 	const switches = new Map<string, string | null>([
 		["enable-speech-dispatcher", null],
-		// Prevent app unloading when backgrounded
-		// It's not certain whether this problem currently exists
-		// ["disable-renderer-backgrounding", null],
-		// ["disable-background-timer-throttling", null],
-		// ["disable-disable-backgrounding-occluded-windows", null],
 	]);
 
 	if (process.platform === "linux") {
@@ -66,6 +61,10 @@ function setFlags() {
 
 	if (process.platform === "win32") {
 		enableFeatures.add("Vulkan");
+		// Prevent app unloading when backgrounded
+		switches.set("disable-renderer-backgrounding", null);
+		switches.set("disable-background-timer-throttling", null);
+		switches.set("disable-disable-backgrounding-occluded-windows", null);
 	}
 
 	if (getConfig("performanceFlags")) {
