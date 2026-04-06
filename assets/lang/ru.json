@@ -142,5 +142,22 @@
     "opt-proxyRules": "Правила прокси",
     "opt-proxyRules-desc": "Устанавливает правила электронного прокси-сервера. Схему смотрите в <a target=\"_blank\" href=\"https://www.electronjs.org/docs/latest/api/structures/proxy-config\">документации</a> Electron.",
     "opt-proxyBypassRules": "Правила обхода прокси-сервера",
-    "opt-proxyBypassRules-desc": "Устанавливает правила обхода электронного прокси-сервера."
+    "opt-proxyBypassRules-desc": "Устанавливает правила обхода электронного прокси-сервера.",
+    "screenshare-audio-linux-title": "Захват Аудио",
+    "screenshare-audio-mode-label": "Режим Источника Звука",
+    "screenshare-audio-none": "Без Аудио",
+    "screenshare-audio-system": "Вся Система",
+    "screenshare-audio-app": "Приложения",
+    "screenshare-audio-excluded": "Исключенные Приложения",
+    "screenshare-audio-included": "Включённые Приложения",
+    "screenshare-subtitle": "Выберите экран или окно, чтобы начать демонстрацию",
+    "screenshare-refresh": "Обновить источники",
+    "screenshare-unknown-source": "Неизвестный Источник",
+    "screenshare-stream-settings": "Настройки трансляции",
+    "screenshare-audio-mute-desc": "Выберите приложения, которые будут приглушены в трансляции.",
+    "screenshare-audio-hear-desc": "Будет слышен только звук выбранных приложений.",
+    "screenshare-audio-empty": "Активные аудиоприложения не найдены",
+    "screenshare-audio-capture": "Захват системного звука",
+    "screenshare-audio-capture-desc": "Передавать звук компьютера вместе с экраном",
+    "menu-development": "Разработка"
 }
