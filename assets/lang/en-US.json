@@ -24,6 +24,7 @@
   "menu-development": "Development",
   "menu-development-devtools": "Open DevTools",
   "menu-development-gpuDebug": "Open chrome://gpu",
+  "menu-development-gcFolder": "Open GoofCord folder",
   "updateNotification-title": "A new update is available ✨",
   "updateNotification-body": "Click on the notification to open release notes",
   "screenshare-screenshare": "Screen Share",
