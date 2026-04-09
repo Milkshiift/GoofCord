@@ -1,10 +1,12 @@
 import { i } from "@root/src/stores/localization/localization.main.ts";
-import { app, BrowserWindow, Menu } from "electron";
+import {app, BrowserWindow, Menu, shell} from "electron";
 
 import { mainWindow } from "../../windows/main/main.ts";
 import { createSettingsWindow } from "../../windows/settings/settings.ts";
 import { cycleThroughPasswords } from "../messageEncryption.ts";
 import { saveState } from "../windowStateManager.ts";
+import path from "node:path";
+import {userDataPath} from "@root/src/utils.ts";
 
 export async function setApplicationMenu() {
 	const template: Electron.MenuItemConstructorOptions[] = [
@@ -101,6 +103,13 @@ export async function setApplicationMenu() {
 							title: "GPU Internals",
 						});
 						void gpuWindow.loadURL("chrome://gpu");
+					},
+				},
+				{
+					label: i("menu-development-gcFolder"),
+					accelerator: "CmdOrCtrl+Alt+J",
+					click: () => {
+						void shell.openPath(path.join(userDataPath, `/GoofCord/`));
 					},
 				},
 			],
