@@ -51,7 +51,6 @@
     "opt-updateNotification": "更新通知",
     "opt-updateNotification-desc": "得知新版本釋出消息。",
     "opt-cloudEncryptionKey-desc": "留空以禁用加密並且不將訊息加密密碼儲存到雲端。若遺忘密碼及無法復原。",
-    "screenshare-audio": "音效",
     "screenshare-screenshare": "螢幕分享",
     "screenshare-optimization-detail": "資訊",
     "opt-messageEncryption-desc": "詳見 <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/Message-Encryption\">訊息加密</a>。",
