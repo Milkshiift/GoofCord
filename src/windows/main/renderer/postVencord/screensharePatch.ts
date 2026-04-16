@@ -20,10 +20,21 @@ export function patchScreenshare() {
 	}
 
 	navigator.mediaDevices.getDisplayMedia = async function (opts) {
-		const stream = await original.call(this, opts);
+		let stream: MediaStream;
+		try {
+			stream = await original.call(this, opts);
+		} catch (error) {
+			if (error instanceof TypeError && error.message.includes("no video stream was provided")) {
+				throw new DOMException("The screen share picker was closed before a source was selected.", "NotAllowedError");
+			}
+
+			throw error;
+		}
+
 		console.log("Setting stream's content hint and audio device");
 
 		const settings = window.screenshareSettings;
+		if (!settings) return stream;
 		settings.width = Math.round(settings.resolution * (screen.width / screen.height));
 
 		const videoTrack = stream.getVideoTracks()[0];
