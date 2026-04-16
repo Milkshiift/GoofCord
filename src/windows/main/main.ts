@@ -53,10 +53,12 @@ export async function createMainWindow() {
 
 async function doAfterDefiningTheWindow() {
 	console.log(`${pc.blue("[Window]")} Setting up window...`);
+	const windowsSpoofEnabled = getConfig("spoofWindows");
 
-	void spoofChrome(mainWindow);
+	await spoofChrome(mainWindow);
 
 	void mainWindow.loadURL(getConfig("discordUrl"));
+	if (windowsSpoofEnabled) void mainWindow.webContents.reload();
 
 	mainWindow.on("close", (event) => {
 		if (getConfig("minimizeToTray") || process.platform === "darwin") {
