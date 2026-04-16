@@ -52,26 +52,33 @@ export function patchScreenshare() {
 		// Patchcord
 		const id = await getVirtmic();
 		if (id) {
-			const audio = await navigator.mediaDevices.getUserMedia({
-				audio: {
-					deviceId: {
-						exact: id,
+			try {
+				const audio = await navigator.mediaDevices.getUserMedia({
+					audio: {
+						deviceId: {
+							exact: id,
+						},
+						autoGainControl: false,
+						echoCancellation: false,
+						noiseSuppression: false,
+						channelCount: 2,
+						sampleRate: 48000,
+						sampleSize: 16,
 					},
-					autoGainControl: false,
-					echoCancellation: false,
-					noiseSuppression: false,
-					channelCount: 2,
-					sampleRate: 48000,
-					sampleSize: 16,
-				},
-			});
+				});
 
-			for (const t of stream.getAudioTracks()) {
-				t.stop();
-				stream.removeTrack(t);
+				const replacementTrack = audio.getAudioTracks()[0];
+				if (replacementTrack) {
+					for (const t of stream.getAudioTracks()) {
+						t.stop();
+						stream.removeTrack(t);
+					}
+
+					stream.addTrack(replacementTrack);
+				}
+			} catch (error) {
+				console.warn("[Screenshare] Failed to replace loopback audio track, using the original track instead.", error);
 			}
-
-			stream.addTrack(audio.getAudioTracks()[0]);
 		}
 
 		return stream;
