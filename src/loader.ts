@@ -61,15 +61,32 @@ async function waitForInternetConnection() {
 
 function setPermissions() {
 	session.defaultSession.setPermissionRequestHandler(async (_webContents, permission, callback, details) => {
-		if (process.platform === "darwin" && "mediaTypes" in details) {
-			if (details.mediaTypes?.includes("audio")) {
-				callback(await systemPreferences.askForMediaAccess("microphone"));
+		if (process.platform === "darwin" && permission === "media" && "mediaTypes" in details) {
+			const types = details.mediaTypes ?? [];
+
+			const promises: Promise<boolean>[] = [];
+
+			if (types.includes("audio")) {
+				promises.push(systemPreferences.askForMediaAccess("microphone"));
 			}
-			if (details.mediaTypes?.includes("video")) {
-				callback(await systemPreferences.askForMediaAccess("camera"));
+			if (types.includes("video")) {
+				promises.push(systemPreferences.askForMediaAccess("camera"));
 			}
-		} else if (["media", "notifications", "fullscreen", "clipboard-sanitized-write", "openExternal", "pointerLock", "keyboardLock"].includes(permission)) {
+
+			if (promises.length === 0) {
+				callback(false);
+				return;
+			}
+
+			const results = await Promise.all(promises);
+			callback(results.every((granted) => granted));
+			return;
+		}
+
+		if (["media", "notifications", "fullscreen", "display-capture", "clipboard-sanitized-write", "openExternal", "pointerLock", "keyboardLock"].includes(permission)) {
 			callback(true);
+		} else {
+			callback(false);
 		}
 	});
 }
