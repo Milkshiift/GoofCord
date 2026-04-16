@@ -64,12 +64,19 @@ function setPermissions() {
 		if (process.platform === "darwin" && "mediaTypes" in details) {
 			if (details.mediaTypes?.includes("audio")) {
 				callback(await systemPreferences.askForMediaAccess("microphone"));
+				return;
 			}
 			if (details.mediaTypes?.includes("video")) {
 				callback(await systemPreferences.askForMediaAccess("camera"));
+				return;
 			}
-		} else if (["media", "notifications", "fullscreen", "clipboard-sanitized-write", "openExternal", "pointerLock", "keyboardLock"].includes(permission)) {
-			callback(true);
 		}
+
+		if (["media", "display-capture", "notifications", "fullscreen", "clipboard-sanitized-write", "openExternal", "pointerLock", "keyboardLock"].includes(permission)) {
+			callback(true);
+			return;
+		}
+
+		callback(false);
 	});
 }
