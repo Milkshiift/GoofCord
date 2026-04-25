@@ -12,8 +12,8 @@ export default definePatch({
 		{
 			find: "canUseCustomStickersEverywhere:",
 			replacement: {
-				match: /(?<=canStreamQuality:)\i/,
-				replace: "() => true",
+				match: /(?<=canStreamQuality:function\(\i,\i\)\{)/,
+				replace: "return true;",
 			},
 		},
 	],

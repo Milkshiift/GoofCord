@@ -14,7 +14,7 @@ export function patchVencord(bundle: string) {
 		// This finds:
 		// export const patches = []
 		// From patchWebpack.ts in the original code
-		const patcherHookRegex = /([a-zA-Z_$][\w$]*)\s*=\s*\[\s*\](\s*[,;]\s*(?:(?:var|const|let)\s+)?[a-zA-Z_$][\w$]*\s*=\s*Symbol\("WebpackPatcher\.isProxiedFactory"\))/;
+		const patcherHookRegex = /([a-zA-Z_$][\w$]*)\s*=\s*\[\s*\](\s*[,;]\s*(?:(?:var|const|let)\s+)?[a-zA-Z_$][\w$]*\s*=\s*Symbol\("WebpackPatcher\.originalModuleFactories"\))/;
 		const patcherHookReplacement = "$1=window.__GOOFCORD_PATCHES__=window.__GOOFCORD_PATCHES__||[]$2";
 
 		if (patcherHookRegex.test(snippet)) {
@@ -30,5 +30,5 @@ export function patchVencord(bundle: string) {
 	} else {
 		error("Could not find Vencord Patcher anchor string.");
 	}
-	return "";
+	return bundle;
 }
