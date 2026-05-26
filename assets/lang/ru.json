@@ -159,5 +159,6 @@
     "screenshare-audio-empty": "Активные аудиоприложения не найдены",
     "screenshare-audio-capture": "Захват системного звука",
     "screenshare-audio-capture-desc": "Передавать звук компьютера вместе с экраном",
-    "menu-development": "Разработка"
+    "menu-development": "Разработка",
+    "menu-development-gcFolder": "Открыть корневую папку GoofCord"
 }

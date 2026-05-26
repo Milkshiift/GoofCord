@@ -133,5 +133,6 @@
     "settings-dictionary-add": "+ Додати",
     "settings-dictionary-value": "Значення (Покликання)",
     "opt-hardwareAcceleration": "Апаратне прискорення",
-    "updateNotification-title": "Доступне нове оновлення ✨"
+    "updateNotification-title": "Доступне нове оновлення ✨",
+    "menu-development-gcFolder": "Відкрити кореневу папку GoofCord"
 }
