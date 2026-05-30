@@ -20,10 +20,20 @@ export function patchScreenshare() {
 	}
 
 	navigator.mediaDevices.getDisplayMedia = async function (opts) {
-		const stream = await original.call(this, opts);
+		let stream: MediaStream;
+		try {
+			stream = await original.call(this, opts);
+		} catch {
+			// Backing out of GoofCord's source picker makes Electron reject getDisplayMedia with a
+			// generic error that Discord doesn't recognize as a cancellation, surfacing it as an
+			// uncaught error. Re-throw "NotAllowedError" — the standard name the web client treats as a
+			// user-cancelled capture — so the error is swallowed and the go-live control re-arms for a retry.
+			throw new DOMException("Permission denied by system", "NotAllowedError");
+		}
 		console.log("Setting stream's content hint and audio device");
 
 		const settings = window.screenshareSettings;
+		if (!settings) return stream;
 		settings.width = Math.round(settings.resolution * (screen.width / screen.height));
 
 		const videoTrack = stream.getVideoTracks()[0];

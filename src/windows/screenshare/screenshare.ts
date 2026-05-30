@@ -16,6 +16,23 @@ interface ActiveRequest {
 
 const activeRequests = new Map<number, ActiveRequest>();
 
+// Single-owner, exactly-once teardown for a screenshare request (Pitfall 3).
+// The map-delete is the idempotency token: the first caller to reach a live entry
+// owns the callback + window close; every later caller (select/cancel vs. the window
+// `closed` event racing) hits the `!req` guard and is a no-op. Delete BEFORE the
+// callback so a re-entrant `closed` during the callback can't double-fire.
+function finishRequest(wcId: number, result: any) {
+	const req = activeRequests.get(wcId);
+	if (!req) return;
+	activeRequests.delete(wcId);
+	try {
+		req.callback(result);
+	} catch {
+		// Swallow a throw from the Electron callback so teardown (window close) still completes.
+	}
+	if (!req.window.isDestroyed()) req.window.close();
+}
+
 async function fetchScreenshareData(isRefresh = false) {
 	// If it's a manual refresh AND we are on Wayland, skip fetching video sources to prevent re-triggering the OS portal.
 	const skipSources = isRefresh && isWayland;
@@ -52,15 +69,15 @@ export function registerScreenshareHandler() {
 	});
 
 	ipcMain.handle("selectScreenshareSource", async (event, id, name, audioConfig, contentHint, resolution, framerate) => {
-		const req = activeRequests.get(event.sender.id);
+		const wcId = event.sender.id;
+		// Snapshot what we need to read before any `await` — finishRequest owns the
+		// delete + callback + close, so we never pre-delete or call the callback here.
+		const req = activeRequests.get(wcId);
 		if (!req) return;
-
-		activeRequests.delete(event.sender.id);
-		const { callback, window, frame } = req;
+		const { frame } = req;
 
 		if (!id) {
-			callback({});
-			if (!window.isDestroyed()) window.close();
+			finishRequest(wcId, {});
 			return;
 		}
 
@@ -82,8 +99,7 @@ export function registerScreenshareHandler() {
 			}
 		}
 
-		callback(result);
-		if (!window.isDestroyed()) window.close();
+		finishRequest(wcId, result);
 	});
 
 	ipcMain.handle("showScreenshareWindow", (event) => {
@@ -116,10 +132,10 @@ export function registerScreenshareHandler() {
 		activeRequests.set(wcId, { callback, window: capturerWindow, frame: request.frame, initialPromise: fetchScreenshareData(false) });
 
 		capturerWindow.once("closed", () => {
-			if (activeRequests.has(wcId)) {
-				activeRequests.delete(wcId);
-				callback({});
-			}
+			// Idempotent: if select/cancel already ran, the entry is gone and
+			// finishRequest is a no-op (its `!req` guard). Otherwise (OS close button /
+			// window destroyed mid-request) this is the cancel path.
+			finishRequest(wcId, {});
 		});
 
 		capturerWindow.center();
