@@ -48,7 +48,8 @@
 	},
 	"optionalDependencies": {
 		"patchcord": "github:Milkshiift/patchcord",
-		"venbind": "0.1.7"
+		"venbind": "0.1.7",
+		"wasapi-loopback": "github:thomas-quant/wasapi-loopback"
 	},
 	"trustedDependencies": [
 		"electron"
