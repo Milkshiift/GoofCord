@@ -129,7 +129,15 @@ export function registerScreenshareHandler() {
 
 		const wcId = capturerWindow.webContents.id;
 
-		activeRequests.set(wcId, { callback, window: capturerWindow, frame: request.frame, initialPromise: fetchScreenshareData(false) });
+		// Acquiring sources triggers the OS screen-share portal on Wayland — the picker shown
+		// *before* our window. If the user dismisses that portal, getSources() rejects (Electron 35+
+		// surfaces the dismissal as a failure). Our window is only shown once sources resolve, so on
+		// that rejection it would never appear and never close — leaving this request's callback
+		// un-fired, which is what blocks Discord from starting a new screenshare. Treat it as a cancel.
+		const initialPromise = fetchScreenshareData(false);
+		initialPromise.catch(() => finishRequest(wcId, {}));
+
+		activeRequests.set(wcId, { callback, window: capturerWindow, frame: request.frame, initialPromise });
 
 		capturerWindow.once("closed", () => {
 			// Idempotent: if select/cancel already ran, the entry is gone and
