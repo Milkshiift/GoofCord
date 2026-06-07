@@ -59,7 +59,7 @@ export function registerScreenshareHandler() {
 		const { callback, window, frame } = req;
 
 		if (!id) {
-			callback({});
+			try { callback({}); } catch { /* Ignore missing video error */ }
 			if (!window.isDestroyed()) window.close();
 			return;
 		}
@@ -113,12 +113,18 @@ export function registerScreenshareHandler() {
 
 		const wcId = capturerWindow.webContents.id;
 
-		activeRequests.set(wcId, { callback, window: capturerWindow, frame: request.frame, initialPromise: fetchScreenshareData(false) });
+		const initialPromise = fetchScreenshareData(false);
+		initialPromise.catch(() => {
+			// Close and clean up if getSources errors
+			if (!capturerWindow.isDestroyed()) capturerWindow.close();
+		});
+
+		activeRequests.set(wcId, { callback, window: capturerWindow, frame: request.frame, initialPromise });
 
 		capturerWindow.once("closed", () => {
 			if (activeRequests.has(wcId)) {
 				activeRequests.delete(wcId);
-				callback({});
+				try { callback({}); } catch { /* Ignore missing video error */ }
 			}
 		});
 
