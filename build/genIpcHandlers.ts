@@ -1,7 +1,7 @@
 import path from "node:path";
 
 import { Glob } from "bun";
-import ts from "typescript";
+import ts from "typescriptOld";
 
 interface IpcFunctionInfo {
 	channelName: string;
