@@ -104,7 +104,7 @@
     "opt-autoSaveCloud": "தானாகச் சேமிக்கவும்",
     "opt-autoSaveCloud-desc": "மேகக்கணியில் அமைப்புகளை மாற்றும்போது தானாகவே சேமிக்கிறது.",
     "opt-cloudHost": "முகில் புரவலன் முகவரி",
-    "opt-cloudHost-desc": "முகில் Serverக்கான URL. சுய-ஓச்டிங்கிற்கு, <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">களஞ்சியத்தைப்</a> பார்க்கவும்.",
+    "opt-cloudHost-desc": "முகில் Serverக்கான URL. சுய-ஓச்டிங்கிற்கு, <a target=\"_blank\" href=\"https://codeberg.org/Wuemeli/goofcord-cloudserver\">களஞ்சியத்தைப்</a> பார்க்கவும்.",
     "updateNotification-title": "புதிய புதுப்பிப்பு உள்ளது ✨",
     "updateNotification-body": "வெளியீட்டு குறிப்புகளைத் திறக்க அறிவிப்பைக் சொடுக்கு செய்யவும்",
     "settings-dictionary-add": "+ சேர்",

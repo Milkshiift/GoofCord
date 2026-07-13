@@ -93,7 +93,7 @@
     "yes": "Si",
     "no": "No",
     "opt-cloudHost": "Host en la nube",
-    "opt-cloudHost-desc": "URL del servidor en la nube de GoofCord: ¿Te gustaría hostear GoofCord? Visita el <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">repositorio oficial</a> para obtener más información y comenzar.",
+    "opt-cloudHost-desc": "URL del servidor en la nube de GoofCord: ¿Te gustaría hostear GoofCord? Visita el <a target=\"_blank\" href=\"https://codeberg.org/Wuemeli/goofcord-cloudserver\">repositorio oficial</a> para obtener más información y comenzar.",
     "category-appearance": "Apariencia",
     "opt-trayIcon": "Icono del tray",
     "opt-autoSaveCloud": "Guardado automático",
