@@ -101,7 +101,7 @@
     "opt-autoSaveCloud": "Salvataggio Automatico",
     "opt-autoSaveCloud-desc": "Salva automaticamente le impostazioni sul cloud quando vengono modificate.",
     "opt-cloudHost": "Host cloud",
-    "opt-cloudHost-desc": "URL del GoofCord Cloud Server. Puoi ospitarlo autonomamente, vedi il <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">repository</a>.",
+    "opt-cloudHost-desc": "URL del GoofCord Cloud Server. Puoi ospitarlo autonomamente, vedi il <a target=\"_blank\" href=\"https://codeberg.org/Wuemeli/goofcord-cloudserver\">repository</a>.",
     "opt-cloudEncryptionKey": "Chiave di crittografia cloud",
     "opt-cloudEncryptionKey-desc": "Lascialo vuoto per non usare la crittografia e non salvare le password di crittografia dei messaggi sul cloud. Non potrai recuperare la password se la perdi.",
     "opt-button-loadFromCloud": "Carica dal cloud",

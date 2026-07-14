@@ -105,7 +105,7 @@
     "opt-autoSaveCloud": "Sauvegarde automatique",
     "opt-autoSaveCloud-desc": "Sauvegarde automatiquement les paramètres dans le cloud lorsqu'ils changent.",
     "opt-cloudHost": "URL de l'hôte du serveur de cloud",
-    "opt-cloudHost-desc": "L'URL du serveur cloud. Pour l'auto-hébergement, regardez le <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">repository</a>.",
+    "opt-cloudHost-desc": "L'URL du serveur cloud. Pour l'auto-hébergement, regardez le <a target=\"_blank\" href=\"https://codeberg.org/Wuemeli/goofcord-cloudserver\">repository</a>.",
     "opt-cloudEncryptionKey": "Clé de chiffrement du cloud",
     "opt-cloudEncryptionKey-desc": "Utilisée pour chiffrer les données envoyées dans le cloud. Si perdu, vos données ne pourront plus être récupérées. Laissez vide pour désactiver le chiffrement et ne pas sauvegarder votre mot de passe de chiffrement des messages.",
     "opt-button-loadFromCloud": "Charger depuis le cloud",

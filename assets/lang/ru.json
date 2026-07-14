@@ -127,7 +127,7 @@
     "opt-autoSaveCloud": "Автоматическое сохранение",
     "opt-autoSaveCloud-desc": "Автоматически сохраняет настройки в облаке при изменении.",
     "opt-cloudHost": "URL-адрес облачного хостинга",
-    "opt-cloudHost-desc": "URL-адрес Облачного сервера. Информацию о самостоятельном размещении смотрите в <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">репозитории</a>.",
+    "opt-cloudHost-desc": "URL-адрес Облачного сервера. Информацию о самостоятельном размещении смотрите в <a target=\"_blank\" href=\"https://codeberg.org/Wuemeli/goofcord-cloudserver\">репозитории</a>.",
     "opt-cloudEncryptionKey": "Облачный ключ шифрования",
     "opt-cloudEncryptionKey-desc": "Используется для шифрования данных, отправляемых в облако. В случае потери ваши данные восстановить будет невозможно. Оставьте поле пустым, чтобы отключить шифрование и не сохранять пароли для шифрования сообщений.",
     "opt-button-loadFromCloud": "Загрузка из облака",

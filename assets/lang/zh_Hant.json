@@ -89,7 +89,7 @@
     "no": "不",
     "opt-locale": "語言 🌍",
     "opt-locale-desc": "這與 Discord 的語言不同。您可以在 <a target=\"_blank\" href=\"https://hosted.weblate.org/projects/goofcord/goofcord/\">這裡</a> 翻譯 GoofCord。",
-    "opt-cloudHost-desc": "GoofCord 雲端伺服器 URL。您可以自行架設，請參閱 <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">倉庫</a>。",
+    "opt-cloudHost-desc": "GoofCord 雲端伺服器 URL。您可以自行架設，請參閱 <a target=\"_blank\" href=\"https://codeberg.org/Wuemeli/goofcord-cloudserver\">倉庫</a>。",
     "opt-cloudHost": "雲端主機",
     "yes": "是的",
     "opt-domOptimizer-desc": "將 DOM 更新延遲以可能提高性能。可能會導致視覺上的瑕疵。",
