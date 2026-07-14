@@ -10,6 +10,7 @@ import { setBadgeCount as ___modules_dynamicIcon_setBadgeCount } from "../module
 import { cycleThroughPasswords as ___modules_messageEncryption_cycleThroughPasswords, decryptMessage as ___modules_messageEncryption_decryptMessage, encryptMessage as ___modules_messageEncryption_encryptMessage } from "../modules/messageEncryption";
 import { stopPatchcord as ___modules_native_patchcord_stopPatchcord } from "../modules/native/patchcord";
 import { isVenbindLoaded as ___modules_native_venbind_isVenbindLoaded, setKeybinds as ___modules_native_venbind_setKeybinds } from "../modules/native/venbind";
+import { shouldInjectWasapiTransport as ___modules_native_wasapiLoopback_shouldInjectWasapiTransport, stopWasapiLoopback as ___modules_native_wasapiLoopback_stopWasapiLoopback } from "../modules/native/wasapiLoopback";
 import { getDisplayVersion as ___utils_getDisplayVersion, getVersion as ___utils_getVersion, isEncryptionAvailable as ___utils_isEncryptionAvailable, saveFileToGCFolder as ___utils_saveFileToGCFolder } from "../utils";
 import { createQuickCssWindow as ___windows_main_quickCssFix_createQuickCssWindow } from "../windows/main/quickCssFix";
 import { deleteCloud as ___windows_settings_cloud_cloud_deleteCloud, loadCloud as ___windows_settings_cloud_cloud_loadCloud, saveCloud as ___windows_settings_cloud_cloud_saveCloud } from "../windows/settings/cloud/cloud";
@@ -41,4 +42,6 @@ export function registerAllHandlers() {
   ipcMain.handle("utils:saveFileToGCFolder", async (event, filePath, content) => { return await ___utils_saveFileToGCFolder(filePath, content); });
   ipcMain.handle("venbind:isVenbindLoaded", async (event) => { return await ___modules_native_venbind_isVenbindLoaded(); });
   ipcMain.handle("venbind:setKeybinds", async (event, keybinds) => { return await ___modules_native_venbind_setKeybinds(keybinds); });
+  ipcMain.on("wasapiLoopback:shouldInjectWasapiTransport", (event) => { event.returnValue = ___modules_native_wasapiLoopback_shouldInjectWasapiTransport(); });
+  ipcMain.handle("wasapiLoopback:stopWasapiLoopback", async (event) => { return await ___modules_native_wasapiLoopback_stopWasapiLoopback(); });
 }

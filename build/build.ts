@@ -82,6 +82,7 @@ const results = await Promise.all([buildMain(), ...buildRendererScripts(), ...(a
 console.timeEnd("Build");
 
 if (results.every(Boolean)) {
+	await copyNativeAddonsToOutDir();
 	console.log(pc.green("\n✅ Build completed successfully! 🎉\n"));
 } else {
 	console.error(pc.red("\n❌ Build completed with errors.\n"));
@@ -190,6 +191,22 @@ async function copyNativeModules() {
 				{ src: ["venbind", "prebuilds", "linux-aarch64", "venbind-linux-aarch64.node"], platform: "linux", arch: "arm64" },
 			],
 		},
+		// Phase 5 — Windows WASAPI EXCLUDE-tree echo-fix addon, consumed as a published
+		// optionalDependency (github:thomas-quant/wasapi-loopback), mirroring patchcord/venbind.
+		// Phase 5: env override removed; prebuild-only (host-agnostic copy stays — Bun's file-loader
+		// emits zero .node on a Windows build host). bun clones the github ref and the committed
+		// prebuild lands at node_modules/wasapi-loopback/prebuilds/windows-x86_64/wasapi-loopback-win32-x64.node.
+		// CRITICAL (Pitfall 3): with name "wasapi-loopback" the prebuild dest is
+		// `wasapi-loopback-win32-x64.node` on a win32/x64 build — containing BOTH "win32" AND "x64",
+		// exactly what nativeImport.ts's glob substring match needs. A name lacking either substring
+		// would silently emit `export default null` → silent "loopback" fallback (looks like the fix
+		// doesn't work, with no error). The prebuild copy is best-effort (.catch in the prebuild
+		// branch), so a missing prebuild off-Windows (bun skips the win32-only optionalDependency)
+		// never fails the local build.
+		{
+			name: "wasapi-loopback",
+			prebuilds: [{ src: ["wasapi-loopback", "prebuilds", "windows-x86_64", "wasapi-loopback-win32-x64.node"], platform: "win32", arch: "x64" }],
+		},
 	];
 
 	const copyFile = async (src: string, dest: string) => {
@@ -229,4 +246,39 @@ async function copyNativeModules() {
 
 	await Promise.all(tasks);
 	return true;
+}
+
+// Phase 4 — HOST-AGNOSTIC native-addon emission into ts-out/native/.
+//
+// The `native-module:` Bun file-loader (build/nativeImport.ts, `with { type: "file" }`) silently
+// fails to copy the .node into OUT_DIR when the BUILD HOST is Windows (CI windows-latest on bun
+// `latest`): ts-out ends up with ZERO .node files, so every addon resolves to `export default null`
+// → silent "loopback" fallback (Pitfall 3 — looks like the echo fix doesn't work, with no error).
+// A plain fs copy is deterministic across Linux/macOS/Windows build hosts. wasapiLoopback.ts loads
+// the addon from this ts-out/native/ path at runtime (NOT via the file-loader). electron-builder's
+// per-platform `files` filters already key off `ts-out/native/*-<plat>-*.node`, so packaging needs
+// no change. Scoped to wasapi-loopback only; venbind keeps the `native-module:` loader for now.
+// Phase 5: the env override is gone, but this host-agnostic copy STAYS — it is the permanent fix
+// for Bun's Windows-host file-loader bug (zero .node emitted), NOT env-override scaffolding.
+async function copyNativeAddonsToOutDir() {
+	const srcDir = path.join(ASSETS_DIR, "native");
+	const destDir = path.join(OUT_DIR, "native");
+
+	let entries: string[];
+	try {
+		entries = await fs.promises.readdir(srcDir);
+	} catch {
+		return; // nothing staged for this platform → nothing to copy
+	}
+
+	const addons = entries.filter((name) => /^wasapi-loopback-.*\.node$/.test(name));
+	if (addons.length === 0) return;
+
+	await fs.promises.mkdir(destDir, { recursive: true });
+	await Promise.all(
+		addons.map(async (name) => {
+			await Bun.write(path.join(destDir, name), Bun.file(path.join(srcDir, name)));
+			console.log(pc.cyan("Copied native addon into ts-out/native:"), name);
+		}),
+	);
 }

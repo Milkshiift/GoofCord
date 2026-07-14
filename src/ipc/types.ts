@@ -9,6 +9,7 @@ import type { setBadgeCount as ___modules_dynamicIcon_setBadgeCount } from "../m
 import type { cycleThroughPasswords as ___modules_messageEncryption_cycleThroughPasswords, decryptMessage as ___modules_messageEncryption_decryptMessage, encryptMessage as ___modules_messageEncryption_encryptMessage } from "../modules/messageEncryption";
 import type { stopPatchcord as ___modules_native_patchcord_stopPatchcord } from "../modules/native/patchcord";
 import type { isVenbindLoaded as ___modules_native_venbind_isVenbindLoaded, setKeybinds as ___modules_native_venbind_setKeybinds } from "../modules/native/venbind";
+import type { shouldInjectWasapiTransport as ___modules_native_wasapiLoopback_shouldInjectWasapiTransport, stopWasapiLoopback as ___modules_native_wasapiLoopback_stopWasapiLoopback } from "../modules/native/wasapiLoopback";
 import type { getDisplayVersion as ___utils_getDisplayVersion, getVersion as ___utils_getVersion, isEncryptionAvailable as ___utils_isEncryptionAvailable, saveFileToGCFolder as ___utils_saveFileToGCFolder } from "../utils";
 import type { createQuickCssWindow as ___windows_main_quickCssFix_createQuickCssWindow } from "../windows/main/quickCssFix";
 import type { deleteCloud as ___windows_settings_cloud_cloud_deleteCloud, loadCloud as ___windows_settings_cloud_cloud_loadCloud, saveCloud as ___windows_settings_cloud_cloud_saveCloud } from "../windows/settings/cloud/cloud";
@@ -34,6 +35,7 @@ export interface IpcHandleChannels {
   "utils:saveFileToGCFolder": typeof ___utils_saveFileToGCFolder;
   "venbind:isVenbindLoaded": typeof ___modules_native_venbind_isVenbindLoaded;
   "venbind:setKeybinds": typeof ___modules_native_venbind_setKeybinds;
+  "wasapiLoopback:stopWasapiLoopback": typeof ___modules_native_wasapiLoopback_stopWasapiLoopback;
 }
 
 export interface IpcOnChannels {
@@ -43,6 +45,7 @@ export interface IpcOnChannels {
   "utils:getDisplayVersion": typeof ___utils_getDisplayVersion;
   "utils:getVersion": typeof ___utils_getVersion;
   "utils:isEncryptionAvailable": typeof ___utils_isEncryptionAvailable;
+  "wasapiLoopback:shouldInjectWasapiTransport": typeof ___modules_native_wasapiLoopback_shouldInjectWasapiTransport;
 }
 
 export interface RegisteredIpcHandleChannels {

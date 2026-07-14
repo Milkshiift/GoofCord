@@ -65,6 +65,12 @@ export const config: Configuration = {
 		},
 		files: [...files, "!ts-out/native/*-linux-*.node", "!ts-out/native/*-win32-*.node"],
 	},
+	// Native addons must live OUTSIDE app.asar — `require()`/`dlopen` cannot load a .node from
+	// inside an asar archive. electron-builder does NOT auto-unpack app-source .node files (only
+	// node_modules native deps), so ts-out/native/*.node (wasapi) and the loader-emitted
+	// ts-out/*.node (venbind) would otherwise be packed unloadable. Unpack all .node to
+	// app.asar.unpacked. (Also fixes venbind's latent Windows packaging gap.)
+	asarUnpack: ["**/*.node"],
 	electronFuses: {
 		runAsNode: false,
 		onlyLoadAppFromAsar: true,

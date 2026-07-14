@@ -42,6 +42,9 @@ const api = {
 	openSettingsWindow: () => invoke("settings:createSettingsWindow"),
 	setBadgeCount: (count: number) => invoke("dynamicIcon:setBadgeCount", count),
 	stopPatchcord: () => invoke("patchcord:stopPatchcord"),
+	// Windows WASAPI EXCLUDE-tree echo fix (#46): tears the native capture down from the main-world
+	// getDisplayMedia teardown handler (mirror stopPatchcord).
+	stopWasapiLoopback: () => invoke("wasapiLoopback:stopWasapiLoopback"),
 	isVencordPresent: () => isVencordPresent,
 	onInvidiousConfigChanged: (callback: () => void) => ipcRenderer.on("invidiousConfigChanged", callback),
 	openQuickCssWindow: () => invoke("quickCssFix:createQuickCssWindow"),
