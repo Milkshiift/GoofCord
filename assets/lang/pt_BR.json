@@ -125,7 +125,7 @@
     "opt-autoSaveCloud": "Envio automático",
     "opt-autoSaveCloud-desc": "Automaticamente envia configurações para a nuvem quando houver mudanças.",
     "opt-cloudHost": "URL para o host da nuvem",
-    "opt-cloudHost-desc": "A URL para o servidor da nuvem. Veja o <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">reposiório</a> caso queira usar sua própria instância.",
+    "opt-cloudHost-desc": "A URL para o servidor da nuvem. Veja o <a target=\"_blank\" href=\"https://codeberg.org/Wuemeli/goofcord-cloudserver\">reposiório</a> caso queira usar sua própria instância.",
     "opt-cloudEncryptionKey": "Chave de encriptação da nuvem",
     "opt-cloudEncryptionKey-desc": "Usado para encriptar dados enviados para a nuvem. Se perdidos, seus dados não poderão ser restaurados. Deixe o campo vazio para desativar a encriptação e não salvar senhas de mensagens encriptadas.",
     "opt-button-loadFromCloud": "Baixar da nuvem",

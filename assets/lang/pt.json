@@ -93,7 +93,7 @@
     "yes": "Sim",
     "no": "Não",
     "opt-cloudHost": "URL para o host da nuvem",
-    "opt-cloudHost-desc": "A URL para o servidor da nuvem. Veja o <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">reposiório</a> caso queira usar a sua própria instância.",
+    "opt-cloudHost-desc": "A URL para o servidor da nuvem. Veja o <a target=\"_blank\" href=\"https://codeberg.org/Wuemeli/goofcord-cloudserver\">reposiório</a> caso queira usar a sua própria instância.",
     "menu-development-gcFolder": "Abrir diretório do GoofCord",
     "updateNotification-title": "Há uma atualização disponível ✨",
     "updateNotification-body": "Clique na notificação para ver as notas de lançamento",

@@ -435,7 +435,7 @@ export const settingsSchema = {
 		}),
 		cloudHost: setting("textfield", {
 			name: "Cloud Host URL",
-			description: 'The URL for the Cloud Server. For self-hosting, see the <a target="_blank" href="https://github.com/Wuemeli/goofcord-cloudserver">repository</a>.',
+			description: 'The URL for the Cloud Server. For self-hosting, see the <a target="_blank" href="https://codeberg.org/Wuemeli/goofcord-cloudserver">repository</a>.',
 			defaultValue: "https://goofcordcloud.wuemeli.com",
 		}),
 		cloudToken: hidden(""),

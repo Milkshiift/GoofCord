@@ -122,7 +122,7 @@
     "opt-autoSaveCloud": "Automatisch opslaan",
     "opt-autoSaveCloud-desc": "Slaat instellingen automatisch op in de cloud bij veranderingen.",
     "opt-cloudHost": "Cloud Host URL",
-    "opt-cloudHost-desc": "De URL voor de Cloud Server. Om zelf te hosten, zie deze <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">repository</a>.",
+    "opt-cloudHost-desc": "De URL voor de Cloud Server. Om zelf te hosten, zie deze <a target=\"_blank\" href=\"https://codeberg.org/Wuemeli/goofcord-cloudserver\">repository</a>.",
     "opt-cloudEncryptionKey": "Cloud Encryptiesleutel",
     "opt-cloudEncryptionKey-desc": "Wordt gebruikt om data die naar de cloud wordt verzonden te versleutelen. Als je deze sleutel verliest kan de data niet gerecupereerd worden. Laat leeg om encryptie uit te schakelen en berichtencryptiesleutels niet te bewaren.",
     "opt-button-loadFromCloud": "Laadt vanuit de cloud",

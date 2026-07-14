@@ -107,7 +107,7 @@
     "opt-trayIcon-desc": "Którą ikonę paska zadań użyć. Symboliczne próby naśladowania monochromatycznych ikon Gnome.",
     "opt-messageEncryption-desc": "Sprawdź <a target=\"_blank\" href=\"https://github.com/Milkshiift/GoofCord/wiki/Message-Encryption\">szyfrowanie wiadomości</a>.",
     "opt-encryptionCover": "Krycie szyfrowania",
-    "opt-cloudHost-desc": "Adres URL Serwera Chmury GoofCord. Możesz samodzielnie go hostować, sprawdź <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">repozytorium</a>.",
+    "opt-cloudHost-desc": "Adres URL Serwera Chmury GoofCord. Możesz samodzielnie go hostować, sprawdź <a target=\"_blank\" href=\"https://codeberg.org/Wuemeli/goofcord-cloudserver\">repozytorium</a>.",
     "goofcord-settings": "Otwórz Ustawienia",
     "opt-staticTitle": "Niezmienny tytuł",
     "opt-staticTitle-desc": "Zapobiega zmianie nazwy okna przez Discorda."

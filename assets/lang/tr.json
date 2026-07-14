@@ -128,7 +128,7 @@
     "opt-autoSaveCloud": "Otomatik kaydet",
     "opt-autoSaveCloud-desc": "Ayarlar değiştirildiğinde otomatik olarak buluta kaydedilir.",
     "opt-cloudHost": "Bulut Sunucu URL'si",
-    "opt-cloudHost-desc": "Bulut Sunucu URL'si. Kendi sunucunuzu kurmak (self-hosting) için <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">depoya</a> göz atın.",
+    "opt-cloudHost-desc": "Bulut Sunucu URL'si. Kendi sunucunuzu kurmak (self-hosting) için <a target=\"_blank\" href=\"https://codeberg.org/Wuemeli/goofcord-cloudserver\">depoya</a> göz atın.",
     "opt-cloudEncryptionKey": "Bulut Şifreleme Anahtarı",
     "opt-cloudEncryptionKey-desc": "Buluta gönderilen verileri şifrelemek için kullanılır. Kaybolması durumunda verileriniz geri döndürülemez. Şifrelemeyi devre dışı bırakmak ve mesaj şifreleme parolalarını kaydetmemek için boş bırakın.",
     "opt-button-loadFromCloud": "Buluttan yükle",

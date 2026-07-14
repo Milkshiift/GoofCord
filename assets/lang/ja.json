@@ -39,7 +39,7 @@
     "opt-autoSaveCloud": "自動保存",
     "opt-autoSaveCloud-desc": "設定が変更されたら即座にクラウドに保存する。",
     "opt-cloudHost": "クラウドホストのURL",
-    "opt-cloudHost-desc": "クラウドサーバーのURL。セルフホスティングの場合は<a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">リポジトリ</a>を参照してください。",
+    "opt-cloudHost-desc": "クラウドサーバーのURL。セルフホスティングの場合は<a target=\"_blank\" href=\"https://codeberg.org/Wuemeli/goofcord-cloudserver\">リポジトリ</a>を参照してください。",
     "opt-cloudEncryptionKey": "クラウド暗号鍵",
     "opt-cloudEncryptionKey-desc": "クラウドに送信するデータを暗号化するために使用されます。紛失するとデータは復元できません。 暗号化を無効にしたい場合は空欄のままにしてください。",
     "opt-button-loadFromCloud": "クラウドからロード",

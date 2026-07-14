@@ -93,5 +93,5 @@
     "settings-encryption-unavailable": "GoofCord hett keen Passwort-Manager funnen. Verslüchene Instellen wurrt in Klartext speichert. Wenn du op Linux büst, installeer gnome-libsecret oder kwallet",
     "opt-domOptimizer-desc": "Schiebt DOM-Ännerungen up, üm mööglicherweise de Leistung to verbeteren. Kann visuelle Artefakte veroorzaken.",
     "opt-locale-desc": "Dit is anders as Discord's Sprake. Du kannst GoofCord <a target=\"_blank\" href=\"https://hosted.weblate.org/projects/goofcord/goofcord/\">hier</a> ümschrieven.",
-    "opt-cloudHost-desc": "GoofCord Cloud-Server-URL. Du kannst dat sjelf hosten, kiek dat <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">repository</a> an."
+    "opt-cloudHost-desc": "GoofCord Cloud-Server-URL. Du kannst dat sjelf hosten, kiek dat <a target=\"_blank\" href=\"https://codeberg.org/Wuemeli/goofcord-cloudserver\">repository</a> an."
 }

@@ -49,7 +49,7 @@
     "welcomeMessage": "Vítejte ke GoofCordu!\nNastavte si nastavení k vaší oblibě a restartujte GoofCord pro přístup k Discordu.\nMůžete to udělat pomocí Ctrl+Shift+R nebo přes nabídky v tácku/doku.\nŠťastné povídání!",
     "opt-launchWithOsBoot": "Otevřít GoofCord po spuštění",
     "opt-minimizeToTray": "Minimalizovat do tácku",
-    "opt-cloudHost-desc": "Odkaz na cloudový server GoofCordu. Můžete jej hostovat sami, pro informace navštivte <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">tuto repozitář</a>.",
+    "opt-cloudHost-desc": "Odkaz na cloudový server GoofCordu. Můžete jej hostovat sami, pro informace navštivte <a target=\"_blank\" href=\"https://codeberg.org/Wuemeli/goofcord-cloudserver\">tuto repozitář</a>.",
     "opt-updateNotification": "Aktualizační oznámení",
     "opt-button-clearCache": "Smazat mezipamět",
     "opt-launchWithOsBoot-desc": "GoofCord se automaticky spustí po zapnutí počítače. V některých Linuxových prostředí nemusí fungovat.",

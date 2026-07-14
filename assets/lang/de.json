@@ -89,7 +89,7 @@
     "no": "Nein",
     "opt-locale": "Sprache 🌍",
     "opt-cloudHost": "Cloud-Host",
-    "opt-cloudHost-desc": "GoofCord Cloud-Server-URL. Du kannst ihn selbst hosten, sieh dir das <a target=\"_blank\" href=\"https://github.com/Wuemeli/goofcord-cloudserver\">repository</a> an.",
+    "opt-cloudHost-desc": "GoofCord Cloud-Server-URL. Du kannst ihn selbst hosten, sieh dir das <a target=\"_blank\" href=\"https://codeberg.org/Wuemeli/goofcord-cloudserver\">repository</a> an.",
     "inviteMessage": "Willst du beitreten",
     "settings-encryption-unavailable": "GoofCord konnte keinen Passwort-Manager erkennen. Verschlüsselte Einstellungen werden im Klartext gespeichert. Wenn du Linux verwendest, installiere bitte gnome-libsecre* oder kwallet",
     "opt-domOptimizer": "DOM-Optimierer",
