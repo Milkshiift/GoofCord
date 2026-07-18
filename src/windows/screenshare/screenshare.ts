@@ -97,7 +97,7 @@ export function registerScreenshareHandler() {
 	session.defaultSession.setDisplayMediaRequestHandler((request, callback) => {
 		const capturerWindow = new BrowserWindow({
 			width: 800,
-			height: 650,
+			height: 800,
 			minWidth: 600,
 			minHeight: 500,
 			resizable: true,
