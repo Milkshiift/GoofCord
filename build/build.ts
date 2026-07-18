@@ -7,7 +7,6 @@ import pc from "picocolors";
 import { genIpcHandlers } from "./genIpcHandlers.ts";
 import { genSettingsLangFile } from "./genSettingsLangFile.ts";
 import { globImporterPlugin } from "./globbyGlob.ts";
-import { nativeModulePlugin } from "./nativeImport";
 
 const ROOT_DIR = process.cwd();
 const OUT_DIR = path.join(ROOT_DIR, "ts-out");
@@ -18,8 +17,6 @@ const { values } = parseArgs({
 	args: Bun.argv,
 	options: {
 		dev: { type: "boolean", short: "d" },
-		platform: { type: "string" },
-		arch: { type: "string" },
 		onlyGenerators: { type: "boolean" },
 		skipGenerators: { type: "boolean" },
 		skipTypecheck: { type: "boolean" },
@@ -29,17 +26,15 @@ const { values } = parseArgs({
 });
 
 const IS_DEV = !!values.dev;
-const TARGET_PLATFORM = typeof values.platform === "string" ? values.platform : process.platform;
-const TARGET_ARCH = typeof values.arch === "string" ? values.arch : process.arch;
 
-console.log(pc.cyan(`\n🚀 Starting Build for target: ${TARGET_PLATFORM}-${TARGET_ARCH} ${IS_DEV ? "(Dev)" : "(Prod)"}\n`));
+console.log(pc.cyan(`\n🚀 Starting Build ${IS_DEV ? "(Dev)" : "(Prod)"}\n`));
 
 // 1. Generators
 if (!values.skipGenerators) {
 	console.log(pc.blue("⚙️  Running generators..."));
 	console.time("Generators");
 	try {
-		await Promise.all([copyNativeModules(), genSettingsLangFile(), genIpcHandlers()]);
+		await Promise.all([genSettingsLangFile(), genIpcHandlers()]);
 	} catch (e) {
 		console.error(pc.red("❌ Generators failed"), e);
 		process.exit(1);
@@ -97,7 +92,7 @@ function buildMain() {
 		outdir: OUT_DIR,
 		target: "node",
 		external: ["electron"],
-		plugins: [globImporterPlugin, nativeModulePlugin({ targetPlatform: TARGET_PLATFORM, targetArch: TARGET_ARCH })],
+		plugins: [globImporterPlugin],
 		splitting: true,
 	});
 }
@@ -163,70 +158,4 @@ async function runBuild(config: ExtendedBuildConfig): Promise<boolean> {
 	}
 
 	return result.success;
-}
-
-async function copyNativeModules() {
-	const nativeDir = path.join(ASSETS_DIR, "native");
-	await fs.promises.mkdir(nativeDir, { recursive: true });
-
-	const platform = TARGET_PLATFORM === "win32" ? "win32" : "linux";
-
-	const modules = [
-		{
-			name: "patchcord",
-			envPath: process.env.GOOFCORD_PATCHCORD_PATH,
-			prebuilds: [
-				{ src: ["patchcord", "dist", "patchcord-linux-x64"], platform: "linux", arch: "x64" },
-				{ src: ["patchcord", "dist", "patchcord-linux-arm64"], platform: "linux", arch: "arm64" },
-			],
-		},
-		{
-			name: "venbind",
-			envPath: process.env.GOOFCORD_VENBIND_PATH,
-			prebuilds: [
-				{ src: ["venbind", "prebuilds", "windows-x86_64", "venbind-windows-x86_64.node"], platform: "win32", arch: "x64" },
-				{ src: ["venbind", "prebuilds", "windows-aarch64", "venbind-windows-aarch64.node"], platform: "win32", arch: "arm64" },
-				{ src: ["venbind", "prebuilds", "linux-x86_64", "venbind-linux-x86_64.node"], platform: "linux", arch: "x64" },
-				{ src: ["venbind", "prebuilds", "linux-aarch64", "venbind-linux-aarch64.node"], platform: "linux", arch: "arm64" },
-			],
-		},
-	];
-
-	const copyFile = async (src: string, dest: string) => {
-		await fs.promises.access(src);
-		await Bun.write(dest, Bun.file(src));
-
-		if (process.platform !== "win32") {
-			await fs.promises.chmod(dest, 0o755);
-		}
-	};
-
-	const tasks = modules.flatMap((mod) => {
-		if (mod.envPath) {
-			const ext = path.extname(mod.envPath);
-			const dest = path.join(nativeDir, `${mod.name}-${platform}-${TARGET_ARCH}${ext}`);
-
-			console.log(pc.cyan(`Using env override for ${mod.name}:`));
-			console.log(pc.gray(`  Input:  ${mod.envPath}`));
-			console.log(pc.gray(`  Output: ${path.basename(dest)}`));
-
-			return [
-				copyFile(mod.envPath, dest).catch((e) => {
-					console.error(pc.red(`❌ Provided ENV path for ${mod.name} is invalid or unreadable.`));
-					throw e;
-				}),
-			];
-		}
-
-		return mod.prebuilds.map((prebuild) => {
-			const src = path.join(ROOT_DIR, "node_modules", ...prebuild.src);
-			const ext = path.extname(src);
-			const dest = path.join(nativeDir, `${mod.name}-${prebuild.platform}-${prebuild.arch}${ext}`);
-
-			return copyFile(src, dest).catch(() => {});
-		});
-	});
-
-	await Promise.all(tasks);
-	return true;
 }

@@ -15,6 +15,7 @@ import { checkForUpdate } from "./modules/updateCheck.ts";
 import { decryptSettings, firstLaunch, initConfigEncryption } from "./stores/config/config.main.ts";
 import { createMainWindow } from "./windows/main/main.ts";
 import { createSettingsWindow } from "./windows/settings/settings.ts";
+import {initGoofbind} from "@root/src/modules/native/goofbind.ts";
 
 export async function load() {
 	void setApplicationMenu();

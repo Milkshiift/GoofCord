@@ -8,8 +8,8 @@ import { setAutostart as ___modules_autostart_setAutostart } from "../modules/au
 import { clearCache as ___modules_cacheManager_clearCache } from "../modules/cacheManager";
 import { setBadgeCount as ___modules_dynamicIcon_setBadgeCount } from "../modules/dynamicIcon";
 import { cycleThroughPasswords as ___modules_messageEncryption_cycleThroughPasswords, decryptMessage as ___modules_messageEncryption_decryptMessage, encryptMessage as ___modules_messageEncryption_encryptMessage } from "../modules/messageEncryption";
+import { setKeybinds as ___modules_native_goofbind_setKeybinds } from "../modules/native/goofbind";
 import { stopPatchcord as ___modules_native_patchcord_stopPatchcord } from "../modules/native/patchcord";
-import { isVenbindLoaded as ___modules_native_venbind_isVenbindLoaded, setKeybinds as ___modules_native_venbind_setKeybinds } from "../modules/native/venbind";
 import { getDisplayVersion as ___utils_getDisplayVersion, getVersion as ___utils_getVersion, isEncryptionAvailable as ___utils_isEncryptionAvailable, saveFileToGCFolder as ___utils_saveFileToGCFolder } from "../utils";
 import { createQuickCssWindow as ___windows_main_quickCssFix_createQuickCssWindow } from "../windows/main/quickCssFix";
 import { deleteCloud as ___windows_settings_cloud_cloud_deleteCloud, loadCloud as ___windows_settings_cloud_cloud_loadCloud, saveCloud as ___windows_settings_cloud_cloud_saveCloud } from "../windows/settings/cloud/cloud";
@@ -25,6 +25,7 @@ export function registerAllHandlers() {
   ipcMain.handle("cloud:loadCloud", async (event) => { return await ___windows_settings_cloud_cloud_loadCloud(); });
   ipcMain.handle("cloud:saveCloud", async (event, silent) => { return await ___windows_settings_cloud_cloud_saveCloud(silent); });
   ipcMain.handle("dynamicIcon:setBadgeCount", async (event, requestedCount) => { return await ___modules_dynamicIcon_setBadgeCount(requestedCount); });
+  ipcMain.handle("goofbind:setKeybinds", async (event, keybinds) => { return await ___modules_native_goofbind_setKeybinds(keybinds); });
   ipcMain.handle("messageEncryption:cycleThroughPasswords", (event) => { return ___modules_messageEncryption_cycleThroughPasswords(); });
   ipcMain.on("messageEncryption:decryptMessage", (event, message, salt) => { event.returnValue = ___modules_messageEncryption_decryptMessage(message, salt); });
   ipcMain.on("messageEncryption:encryptMessage", (event, message, salt) => { event.returnValue = ___modules_messageEncryption_encryptMessage(message, salt); });
@@ -39,6 +40,4 @@ export function registerAllHandlers() {
   ipcMain.on("utils:getVersion", (event) => { event.returnValue = ___utils_getVersion(); });
   ipcMain.on("utils:isEncryptionAvailable", (event) => { event.returnValue = ___utils_isEncryptionAvailable(); });
   ipcMain.handle("utils:saveFileToGCFolder", async (event, filePath, content) => { return await ___utils_saveFileToGCFolder(filePath, content); });
-  ipcMain.handle("venbind:isVenbindLoaded", async (event) => { return await ___modules_native_venbind_isVenbindLoaded(); });
-  ipcMain.handle("venbind:setKeybinds", async (event, keybinds) => { return await ___modules_native_venbind_setKeybinds(keybinds); });
 }

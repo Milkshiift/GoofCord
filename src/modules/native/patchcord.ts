@@ -45,7 +45,7 @@ export async function initPatchcord() {
 		patchbay = new AudioSharePatchbay({
 			command: app.isPackaged
 				? path.join(process.resourcesPath, "patchcord")
-				: path.join(app.getAppPath(), "..", "assets", "native", `patchcord-linux-${process.arch}`),
+				: path.join(app.getAppPath(), "..", "node_modules", "patchcord", "dist", `patchcord-linux-${process.arch}`),
 			sinkPrefix: "goofcord-share",
 			sinkDescription: "GoofCord Screen Share",
 			virtualMic: true,

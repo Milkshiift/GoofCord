@@ -31,8 +31,7 @@ export const config: Configuration = {
 				Categories: "Network;InstantMessaging;Chat;",
 				Keywords: "discord;goofcord;",
 			},
-		},
-		files: [...files, "!ts-out/native/*-win32-*.node"],
+		}
 	},
 	win: {
 		icon: "assets/gf_icon.ico",
@@ -41,8 +40,7 @@ export const config: Configuration = {
 				target: "NSIS",
 				arch: ["x64", "ia32", "arm64"],
 			},
-		],
-		files: [...files, "!ts-out/native/*-linux-*.node"],
+		]
 	},
 	mac: {
 		category: "public.app-category.social-networking",
@@ -62,8 +60,7 @@ export const config: Configuration = {
 			NSCameraUsageDescription: "This app needs access to the camera",
 			"com.apple.security.device.audio-input": true,
 			"com.apple.security.device.camera": true,
-		},
-		files: [...files, "!ts-out/native/*-linux-*.node", "!ts-out/native/*-win32-*.node"],
+		}
 	},
 	electronFuses: {
 		runAsNode: false,
@@ -72,48 +69,27 @@ export const config: Configuration = {
 	electronLanguages: ["en-US"],
 	extraResources: [
 		{
-			from: "assets/native/patchcord-linux-${arch}",
+			from: "node_modules/patchcord/dist/patchcord-${os}-${arch}",
 			to: "patchcord",
+			filter: ["**/*"],
+		},
+		{
+			from: "node_modules/goofbind/dist/goofbind-${os}-${arch}",
+			to: "goofbind",
+			filter: ["**/*"],
+		},
+		{
+			from: "node_modules/goofbind/dist/goofbind-${os}-${arch}.exe",
+			to: "goofbind.exe",
 			filter: ["**/*"],
 		},
 	],
 	beforePack: async (context) => {
-		const currentArch = getArchString(context.arch);
-		const currentPlatform = getPlatformString(context.packager.platform);
-
-		const output = execSync(`bun run build --skipTypecheck --platform=${currentPlatform} --arch=${currentArch}`, {
+		const output = execSync(`bun run build --skipTypecheck`, {
 			encoding: "utf-8",
 		});
 		console.log(output);
 	},
 };
-
-function getPlatformString(platform: Platform): string {
-	switch (platform) {
-		case Platform.WINDOWS:
-			return "win32";
-		case Platform.LINUX:
-			return "linux";
-		case Platform.MAC:
-			return "darwin";
-		default:
-			return "unknown";
-	}
-}
-
-function getArchString(arch: Arch): string {
-	switch (arch) {
-		case Arch.x64:
-			return "x64";
-		case Arch.arm64:
-			return "arm64";
-		case Arch.ia32:
-			return "ia32";
-		case Arch.armv7l:
-			return "armv7l";
-		default:
-			return "unknown";
-	}
-}
 
 export default config;

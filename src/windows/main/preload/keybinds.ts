@@ -2,16 +2,7 @@ import { contextBridge, ipcRenderer } from "electron";
 
 import { invoke } from "../../../ipc/client.preload.ts";
 import { warn } from "../../../modules/logger.preload.ts";
-
-interface Keybind {
-	shortcut: string;
-	eventSettings: {
-		keyCode: number;
-		ctrlKey: boolean;
-		altKey: boolean;
-		shiftKey: boolean;
-	};
-}
+import {type Keybind} from "goofbind";
 
 const getActiveKeybinds = (): Map<string, Keybind> => {
 	const activeKeybinds = new Map<string, Keybind>();
@@ -26,6 +17,7 @@ const getActiveKeybinds = (): Map<string, Keybind> => {
 		CTRL: 17,
 		ALT: 18,
 		SHIFT: 16,
+		META: 91
 	};
 
 	for (const bind in keybinds) {
@@ -35,34 +27,21 @@ const getActiveKeybinds = (): Map<string, Keybind> => {
 		if (binding.managed === true || binding.enabled === false) continue;
 
 		const keys = binding.shortcut.map((x: number[]) => x[1]);
-		const modifiers = {
-			ctrl: keys.includes(MODIFIERS.CTRL),
-			alt: keys.includes(MODIFIERS.ALT),
-			shift: keys.includes(MODIFIERS.SHIFT),
-		};
 
 		// Filter out modifier keys
-		const mainKeys = keys.filter((key: number) => ![MODIFIERS.CTRL, MODIFIERS.ALT, MODIFIERS.SHIFT].includes(key));
-
-		// Build keyboard shortcut string
-		const keyParts: string[] = [];
-		if (modifiers.ctrl) keyParts.push("ctrl");
-		if (modifiers.alt) keyParts.push("alt");
-		if (modifiers.shift) keyParts.push("shift");
-
-		const mainKey = mainKeys.length > 0 ? String.fromCharCode(mainKeys.at(-1)) : "";
-		keyParts.push(mainKey);
+		const mainKeys = keys.filter((key: number) => ![MODIFIERS.CTRL, MODIFIERS.ALT, MODIFIERS.SHIFT, MODIFIERS.META].includes(key));
+		const mainKey = mainKeys.length > 0 ? mainKeys.at(-1) : "";
 
 		if (!mainKey) continue;
 
-		activeKeybinds.set(macroCaseToTitleCase(binding.action), {
-			shortcut: keyParts.join("+").toLowerCase(),
-			eventSettings: {
-				keyCode: mainKeys.at(-1),
-				ctrlKey: modifiers.ctrl,
-				altKey: modifiers.alt,
-				shiftKey: modifiers.shift,
-			},
+		activeKeybinds.set(binding.action, {
+			id: binding.action,
+			name: macroCaseToTitleCase(binding.action),
+			keycode: mainKey,
+			ctrl: keys.includes(MODIFIERS.CTRL),
+			alt: keys.includes(MODIFIERS.ALT),
+			shift: keys.includes(MODIFIERS.SHIFT),
+			meta: keys.includes(MODIFIERS.META)
 		});
 	}
 
@@ -82,21 +61,10 @@ let activeKeybinds: Map<string, Keybind> = getActiveKeybinds();
 
 function updateKeybinds() {
 	activeKeybinds = getActiveKeybinds();
-	const toSend: {
-		id: string;
-		name?: string | undefined;
-		shortcut?: string | undefined;
-	}[] = [];
+	const toSend = activeKeybinds.values().toArray();
 
-	for (const [key, value] of activeKeybinds) {
-		toSend.push({
-			id: key,
-			name: key,
-			shortcut: value.shortcut,
-		});
-	}
 	console.log(toSend);
-	void invoke("venbind:setKeybinds", toSend);
+	void invoke("goofbind:setKeybinds", toSend);
 }
 
 export const KeybindApi = {
@@ -121,7 +89,13 @@ ipcRenderer.on("keybinds:trigger", (_, id, keyup) => {
 		return;
 	}
 
-	const event = new KeyboardEvent(keyup ? "keyup" : "keydown", keybind.eventSettings);
+	const event = new KeyboardEvent(keyup ? "keyup" : "keydown", {
+		keyCode: keybind.keycode,
+		shiftKey: keybind.shift,
+		ctrlKey: keybind.ctrl,
+		altKey: keybind.alt,
+		metaKey: keybind.meta
+	});
 
 	document.dispatchEvent(event);
 });
