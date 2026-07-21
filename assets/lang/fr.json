@@ -143,5 +143,22 @@
     "opt-proxyRules": "Règles de proxy",
     "opt-proxyRules-desc": "Définit les règles de proxy Electron. Voir la <a target=\"_blank\" href=\"https://www.electronjs.org/docs/latest/api/structures/proxy-config\">documentation Electron </a> pour le schéma.",
     "opt-proxyBypassRules": "Règles de contournements de proxy",
-    "opt-proxyBypassRules-desc": "Définit les règles de contournement du proxy Electron."
+    "opt-proxyBypassRules-desc": "Définit les règles de contournement du proxy Electron.",
+    "menu-development-gcFolder": "Ouvrir le dossier GoofCord",
+    "screenshare-subtitle": "Choisissez un onglet ou une fenêtre à partager",
+    "screenshare-refresh": "Actualiser les sources",
+    "screenshare-unknown-source": "Source inconnue",
+    "screenshare-stream-settings": "Paramètres du flux vidéo",
+    "screenshare-audio-linux-title": "Enregistrement audio",
+    "screenshare-audio-app": "Applications",
+    "screenshare-audio-excluded": "Applications exclues",
+    "screenshare-audio-included": "Applications incluses",
+    "screenshare-audio-mute-desc": "Sélectionnez les applications à mettre en sourdine depuis le flux",
+    "screenshare-audio-hear-desc": "Seules les applications sélectionnées seront audibles",
+    "screenshare-audio-system": "Tout le système",
+    "screenshare-audio-empty": "Aucune application n'émet de son",
+    "screenshare-audio-capture": "Enregistrer l'audio du système",
+    "screenshare-audio-capture-desc": "Partager l'audio de l'ordinateur avec l'écran",
+    "screenshare-audio-none": "Pas de piste audio",
+    "screenshare-audio-mode-label": "Mode de la source audio"
 }
