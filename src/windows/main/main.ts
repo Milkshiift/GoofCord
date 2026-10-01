@@ -120,10 +120,10 @@ function subscribeToAppEvents() {
 	registerHandle("window:Show", () => mainWindow.show());
 	registerHandle("window:Hide", () => mainWindow.hide());
 	registerHandle("window:Close", () => mainWindow.close());
-	registerHandle("flashTitlebar", (_event, color: string) => {
+	registerHandle("flashTitlebar", (color: string) => {
 		void mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebar("${color}")`);
 	});
-	registerHandle("flashTitlebarWithText", (_event, color: string, text: string) => {
+	registerHandle("flashTitlebarWithText", (color: string, text: string) => {
 		void mainWindow.webContents.executeJavaScript(`goofcord.titlebar.flashTitlebarWithText("${color}", "${text}")`);
 	});
 }
