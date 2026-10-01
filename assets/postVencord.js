@@ -1,5 +1,14 @@
 // postvencordmarker
 
+// src/windows/main/renderer/postVencord/disableWebScreensharePlugin.ts
+function disableWebScreensharePlugin() {
+  console.log("Disabling WebScreenShare Vencord plugin...");
+  VC.Plugins.plugins.WebScreenShare.enabledByDefault = false;
+  const prev = window.VencordNative.settings.get();
+  prev.plugins.WebScreenShare.enabled = false;
+  window.VencordNative.settings.set(prev);
+}
+
 // src/windows/main/renderer/postVencord/keybinds.ts
 function initKeybinds() {
   Common.FluxDispatcher.subscribe("KEYBINDS_SET_KEYBIND", () => {
@@ -377,7 +386,7 @@ function runSafe(tasks) {
   }
 }
 async function init() {
-  runSafe([updateInvidiousInstance, initRichPresence]);
+  runSafe([updateInvidiousInstance, initRichPresence, disableWebScreensharePlugin]);
   await VC.Webpack.onceReady;
   runSafe([initDynamicIcon, patchScreenshare, initSettingsButton, initMessageEncryption, initQuickCssFix, initKeybinds]);
 }
