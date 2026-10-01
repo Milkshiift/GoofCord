@@ -1,6 +1,6 @@
 import { i } from "@root/src/stores/localization/localization.preload.ts";
 import type { JSX } from "preact";
-import { useCallback, useEffect, useState } from "preact/hooks";
+import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 
 import { type ConfigKey, type HiddenEntry, isEditableSetting, type SettingEntry } from "../../../settingsSchema.ts";
 import { getConfig, saveSetting, subscribe } from "./config.ts";
@@ -17,28 +17,37 @@ export function SettingField({ settingKey, entry, forceVisible = false }: Settin
 
 	const [value, setValue] = useState(() => getConfig(settingKey));
 
-	const [visible, setVisible] = useState(() => {
+	const evaluateVisibility = useCallback((): boolean => {
 		if (forceVisible) return true;
 		if (!isEditable) return false;
 		if (!entry.showAfter) return true;
-		return entry.showAfter.condition(getConfig(entry.showAfter.key as ConfigKey));
-	});
+		return Boolean(entry.showAfter.condition(getConfig(entry.showAfter.key as ConfigKey)));
+	}, [forceVisible, isEditable, entry]);
+
+	const [visible, setVisible] = useState(evaluateVisibility);
 
 	useEffect(() => {
-		if (forceVisible || !isEditable || !entry.showAfter) return;
+		if (forceVisible) {
+			setVisible(true);
+			return;
+		}
+
+		if (!isEditable || !entry.showAfter) {
+			setVisible(evaluateVisibility());
+			return;
+		}
 
 		const controllerKey = entry.showAfter.key;
 		const condition = entry.showAfter.condition;
 
-		return subscribe(controllerKey, () => {
+		const updateVisibility = () => {
 			const controllerValue = getConfig(controllerKey as ConfigKey);
-			setVisible(condition(controllerValue));
-		});
-	}, [forceVisible, isEditable, entry]);
+			setVisible(Boolean(condition(controllerValue)));
+		};
 
-	useEffect(() => {
-		if (forceVisible) setVisible(true);
-	}, [forceVisible]);
+		updateVisibility();
+		return subscribe(controllerKey, updateVisibility);
+	}, [forceVisible, isEditable, entry, evaluateVisibility]);
 
 	const handleChange = useCallback(
 		async (newValue: unknown) => {
@@ -61,13 +70,22 @@ export function SettingField({ settingKey, entry, forceVisible = false }: Settin
 		await saveSetting(settingKey, entry.defaultValue, isEditable ? entry : null);
 	}, [settingKey, entry, isEditable]);
 
+	// Check if current value differs from default
+	const isModified = useMemo(() => {
+		if (!isEditable || entry.defaultValue === undefined) return false;
+		if (typeof value === "object" && value !== null) {
+			return JSON.stringify(value) !== JSON.stringify(entry.defaultValue);
+		}
+		return value !== entry.defaultValue;
+	}, [value, entry, isEditable]);
+
 	if (!visible) {
 		return <fieldset class="hidden" data-setting-key={settingKey} />;
 	}
 
-	const isOffset = isEditable && entry.showAfter && entry.showAfter.key !== settingKey;
+	const isOffset = isEditable && Boolean(entry.showAfter) && entry.showAfter?.key !== settingKey;
 	const name = isEditable && entry.name ? (i(`opt-${settingKey}`) ?? settingKey) : settingKey;
-	const description = i(`opt-${settingKey}-desc`) ?? entry.description ?? "";
+	const description = i(`opt-${settingKey}-desc`) ?? (isEditable ? entry.description : "") ?? "";
 
 	const inputType = isEditable ? entry.inputType : "json";
 	const InputComponent = InputComponents[inputType];
@@ -80,7 +98,7 @@ export function SettingField({ settingKey, entry, forceVisible = false }: Settin
 	return (
 		<fieldset class={isOffset ? "offset" : ""} data-setting-key={settingKey}>
 			<div class="checkbox-container">
-				<button type="button" class="revert-button" title="Revert to default value" onClick={handleRevert} />
+				{isModified && <button type="button" class="revert-button" title={i("settings-revert")} onClick={handleRevert} />}
 				<InputComponent id={settingKey} value={value} onChange={handleChange} entry={isEditable ? entry : null} />
 				<label for={settingKey}>{name}</label>
 			</div>

@@ -1,6 +1,6 @@
 import { i } from "@root/src/stores/localization/localization.preload.ts";
 import type { ComponentType, JSX } from "preact";
-import { useCallback, useEffect, useRef, useState } from "preact/hooks";
+import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
 
 import { invoke } from "../../../ipc/client.preload.ts";
 import type { SettingEntry } from "../../../settingsSchema.ts";
@@ -13,48 +13,103 @@ export interface InputProps {
 	entry: SettingEntry | null;
 }
 
-function CheckboxInput({ id, value, onChange }: InputProps): JSX.Element {
-	return <input type="checkbox" id={id} setting-name={id} checked={value as boolean} onChange={(e) => onChange((e.target as HTMLInputElement).checked)} />;
+function toStringValue(val: unknown): string {
+	if (typeof val === "string") return val;
+	if (typeof val === "number" || typeof val === "boolean" || typeof val === "bigint") {
+		return String(val);
+	}
+	return "";
 }
 
+function CheckboxInput({ id, value, onChange }: InputProps): JSX.Element {
+	return <input type="checkbox" id={id} setting-name={id} checked={Boolean(value)} onChange={(e) => onChange((e.currentTarget as HTMLInputElement).checked)} />;
+}
+
+// Buffered TextField to eliminate IPC keystroke lag
 function TextFieldInput({ id, value, onChange }: InputProps): JSX.Element {
-	return <input type="text" id={id} setting-name={id} class="text" value={value as string} onChange={(e) => onChange((e.target as HTMLInputElement).value)} />;
+	const stringValue = toStringValue(value);
+	const [localValue, setLocalValue] = useState(stringValue);
+
+	useEffect(() => {
+		setLocalValue(toStringValue(value));
+	}, [value]);
+
+	const commit = () => {
+		if (localValue !== value) {
+			onChange(localValue);
+		}
+	};
+
+	return (
+		<input
+			type="text"
+			id={id}
+			setting-name={id}
+			class="text"
+			value={localValue}
+			onInput={(e) => setLocalValue((e.currentTarget as HTMLInputElement).value)}
+			onBlur={commit}
+			onKeyDown={(e) => {
+				if (e.key === "Enter") {
+					(e.currentTarget as HTMLInputElement).blur();
+				}
+			}}
+		/>
+	);
 }
 
 function DropdownInput({ id, value, onChange, entry }: InputProps): JSX.Element {
-	const options = Array.isArray(entry?.options) ? entry.options : Object.keys(entry?.options ?? {});
+	const options = useMemo(() => {
+		if (!entry?.options) return [];
+		return Array.isArray(entry.options) ? entry.options : Object.keys(entry.options);
+	}, [entry?.options]);
 
 	return (
-		<select id={id} setting-name={id} class="left dropdown" value={value as string} onChange={(e) => onChange((e.target as HTMLSelectElement).value)}>
-			{options.map((opt) => (
-				<option key={String(opt)} value={String(opt)}>
-					{String(opt)}
-				</option>
-			))}
+		<select id={id} setting-name={id} class="left dropdown" value={toStringValue(value)} onChange={(e) => onChange((e.currentTarget as HTMLSelectElement).value)}>
+			{options.map((opt) => {
+				const strOpt = String(opt);
+				return (
+					<option key={strOpt} value={strOpt}>
+						{strOpt}
+					</option>
+				);
+			})}
 		</select>
 	);
 }
 
 function MultiSelectInput({ id, value, onChange, entry }: InputProps): JSX.Element {
-	const options = Array.isArray(entry?.options) ? entry.options : Object.keys(entry?.options ?? {});
-	return <MultiSelect id={id} options={options.map(String)} value={value as string[]} onChange={onChange} />;
+	const options = useMemo(() => {
+		if (!entry?.options) return [];
+		const raw = Array.isArray(entry.options) ? entry.options : Object.keys(entry.options);
+		return raw.map(String);
+	}, [entry?.options]);
+
+	const safeValue = Array.isArray(value) ? (value as string[]) : [];
+
+	return <MultiSelect id={id} options={options} value={safeValue} onChange={onChange} />;
 }
 
 function FileInput({ id, onChange, entry }: InputProps): JSX.Element {
 	const handleChange = async (e: Event) => {
-		const file = (e.target as HTMLInputElement).files?.[0];
+		const target = e.currentTarget as HTMLInputElement;
+		const file = target.files?.[0];
 		if (!file) return;
 
-		const buffer = await file.arrayBuffer();
-		const path = await invoke("utils:saveFileToGCFolder", id, Buffer.from(buffer));
-		onChange(path);
+		try {
+			const buffer = await file.arrayBuffer();
+			const path = await invoke("utils:saveFileToGCFolder", id, Buffer.from(buffer));
+			onChange(path);
+		} catch (err) {
+			console.error(`Failed to save file for setting "${id}":`, err);
+		}
 	};
 
 	return <input type="file" id={id} setting-name={id} accept={entry?.accept ?? "*"} onChange={handleChange} />;
 }
 
 function ListInput({ id, value, onChange }: InputProps): JSX.Element {
-	const items = value as string[];
+	const items = useMemo(() => (Array.isArray(value) ? (value as string[]) : []), [value]);
 
 	const handleAdd = () => onChange([...items, ""]);
 
@@ -63,8 +118,7 @@ function ListInput({ id, value, onChange }: InputProps): JSX.Element {
 	};
 
 	const handleItemChange = (index: number, newValue: string) => {
-		const updated = [...items];
-		updated[index] = newValue;
+		const updated = items.map((item, i) => (i === index ? newValue : item));
 		onChange(updated);
 	};
 
@@ -73,8 +127,8 @@ function ListInput({ id, value, onChange }: InputProps): JSX.Element {
 			<div class="dictionary-rows">
 				{items.map((item, idx) => (
 					<div key={idx} class="dictionary-row">
-						<input type="text" class="list-value" value={item} onChange={(e) => handleItemChange(idx, (e.target as HTMLInputElement).value)} />
-						<button type="button" class="dictionary-remove-btn" onClick={() => handleRemove(idx)}>
+						<input type="text" class="list-value" value={item} onChange={(e) => handleItemChange(idx, (e.currentTarget as HTMLInputElement).value)} />
+						<button type="button" class="dictionary-remove-btn" aria-label="Remove item" onClick={() => handleRemove(idx)}>
 							✕
 						</button>
 					</div>
@@ -90,9 +144,14 @@ function ListInput({ id, value, onChange }: InputProps): JSX.Element {
 }
 
 function DictionaryInput({ id, value, onChange, entry }: InputProps): JSX.Element {
-	const dictValue = value as Record<string, string>;
-	const [entries, setEntries] = useState(() => Object.entries(dictValue));
+	const dictValue = useMemo(() => {
+		if (value && typeof value === "object" && !Array.isArray(value)) {
+			return value as Record<string, string>;
+		}
+		return {};
+	}, [value]);
 
+	const [entries, setEntries] = useState<[string, string][]>(() => Object.entries(dictValue));
 	const entriesRef = useRef(entries);
 
 	useEffect(() => {
@@ -102,22 +161,53 @@ function DictionaryInput({ id, value, onChange, entry }: InputProps): JSX.Elemen
 	useEffect(() => {
 		const currentObj: Record<string, string> = {};
 		for (const [k, v] of entriesRef.current) {
-			if (k.trim()) currentObj[k.trim()] = v.trim();
+			const trimmed = k.trim();
+			if (trimmed) currentObj[trimmed] = v.trim();
 		}
 
-		if (JSON.stringify(currentObj) !== JSON.stringify(value)) {
-			setEntries(Object.entries(value as Record<string, string>));
+		if (JSON.stringify(currentObj) !== JSON.stringify(dictValue)) {
+			setEntries(Object.entries(dictValue));
 		}
-	}, [value]);
+	}, [dictValue]);
+
+	// Track key occurrences for duplicate validation
+	const keyCounts = useMemo(() => {
+		const counts: Record<string, number> = {};
+		for (const [k] of entries) {
+			const trimmed = k.trim();
+			if (trimmed) {
+				counts[trimmed] = (counts[trimmed] || 0) + 1;
+			}
+		}
+		return counts;
+	}, [entries]);
 
 	const syncToParent = useCallback(
 		(newEntries: [string, string][]) => {
 			setEntries(newEntries);
-			const obj: Record<string, string> = {};
-			for (const [k, v] of newEntries) {
-				if (k.trim()) obj[k.trim()] = v.trim();
+
+			const counts: Record<string, number> = {};
+			let hasEmpty = false;
+
+			for (const [k] of newEntries) {
+				const trimmed = k.trim();
+				if (!trimmed) {
+					hasEmpty = true;
+				} else {
+					counts[trimmed] = (counts[trimmed] || 0) + 1;
+				}
 			}
-			onChange(obj);
+
+			const hasDuplicates = Object.values(counts).some((count) => count > 1);
+
+			// Only persist valid, non-colliding entries
+			if (!hasDuplicates && !hasEmpty) {
+				const obj: Record<string, string> = {};
+				for (const [k, v] of newEntries) {
+					obj[k.trim()] = v.trim();
+				}
+				onChange(obj);
+			}
 		},
 		[onChange],
 	);
@@ -131,19 +221,17 @@ function DictionaryInput({ id, value, onChange, entry }: InputProps): JSX.Elemen
 	};
 
 	const handleKeyChange = (index: number, newKey: string) => {
-		const updated = [...entries];
-		updated[index] = [newKey, updated[index][1]];
+		const updated = entries.map((e, i): [string, string] => (i === index ? [newKey, e[1]] : e));
 		syncToParent(updated);
 	};
 
 	const handleValueChange = (index: number, newValue: string) => {
-		const updated = [...entries];
-		updated[index] = [updated[index][0], newValue];
+		const updated = entries.map((e, i): [string, string] => (i === index ? [e[0], newValue] : e));
 		syncToParent(updated);
 	};
 
 	const handlePresetChange = (e: Event) => {
-		const select = e.target as HTMLSelectElement;
+		const select = e.currentTarget as HTMLSelectElement;
 		const option = select.selectedOptions[0];
 		const key = select.value === "$$empty$$" ? "" : select.value;
 		const val = option?.dataset.val ?? "";
@@ -151,20 +239,36 @@ function DictionaryInput({ id, value, onChange, entry }: InputProps): JSX.Elemen
 		handleAdd(key, val);
 	};
 
-	const presets = (Array.isArray(entry?.options) ? entry.options : []) as Array<string | [string, string]>;
+	const presets = useMemo(() => {
+		return (Array.isArray(entry?.options) ? entry.options : []) as Array<string | [string, string]>;
+	}, [entry?.options]);
 
 	return (
 		<div class="dictionary-container" id={id} setting-name={id}>
 			<div class="dictionary-rows">
-				{entries.map(([k, v], idx) => (
-					<div key={idx} class="dictionary-row">
-						<input type="text" class="dict-key" placeholder={i("settings-dictionary-key")} value={k} onChange={(e) => handleKeyChange(idx, (e.target as HTMLInputElement).value)} />
-						<input type="text" class="dict-value" placeholder={i("settings-dictionary-value")} value={v} onChange={(e) => handleValueChange(idx, (e.target as HTMLInputElement).value)} />
-						<button type="button" class="dictionary-remove-btn" onClick={() => handleRemove(idx)}>
-							✕
-						</button>
-					</div>
-				))}
+				{entries.map(([k, v], idx) => {
+					const trimmed = k.trim();
+					const isEmpty = !trimmed;
+					const isDuplicate = trimmed ? (keyCounts[trimmed] ?? 0) > 1 : false;
+					const hasError = isEmpty || isDuplicate;
+
+					return (
+						<div key={idx} class="dictionary-row">
+							<input
+								type="text"
+								class={`dict-key${hasError ? " input-error" : ""}`}
+								placeholder={i("settings-dictionary-key")}
+								value={k}
+								title={isDuplicate ? i("settings-dictionary-duplicate-key") : isEmpty ? i("settings-dictionary-empty-key") : undefined}
+								onChange={(e) => handleKeyChange(idx, (e.currentTarget as HTMLInputElement).value)}
+							/>
+							<input type="text" class="dict-value" placeholder={i("settings-dictionary-value")} value={v} onChange={(e) => handleValueChange(idx, (e.currentTarget as HTMLInputElement).value)} />
+							<button type="button" class="dictionary-remove-btn" aria-label="Remove entry" onClick={() => handleRemove(idx)}>
+								✕
+							</button>
+						</div>
+					);
+				})}
 			</div>
 			<div class="dictionary-controls">
 				<select class="dictionary-preset-select" onChange={handlePresetChange}>
@@ -187,11 +291,17 @@ function DictionaryInput({ id, value, onChange, entry }: InputProps): JSX.Elemen
 }
 
 function JsonInput({ id, value, onChange }: InputProps): JSX.Element {
-	const [text, setText] = useState(() => (typeof value === "string" ? value : JSON.stringify(value, null, "\t")));
+	const formatValue = (val: unknown): string => {
+		if (typeof val === "string") return val;
+		const str = JSON.stringify(val, null, "\t");
+		return str !== undefined ? str : "";
+	};
+
+	const [text, setText] = useState(() => formatValue(value));
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		setText(typeof value === "string" ? value : JSON.stringify(value, null, "\t"));
+		setText(formatValue(value));
 		setError(null);
 	}, [value]);
 
@@ -207,7 +317,7 @@ function JsonInput({ id, value, onChange }: InputProps): JSX.Element {
 
 	return (
 		<div class="json-input-wrapper">
-			<textarea id={id} setting-name={id} class="code-font" spellcheck={false} style={{ fontFamily: "monospace", whiteSpace: "pre" }} value={text} onInput={(e) => setText((e.target as HTMLTextAreaElement).value)} onBlur={handleBlur} />
+			<textarea id={id} setting-name={id} class="code-font" spellcheck={false} style={{ fontFamily: "monospace", whiteSpace: "pre" }} value={text} onInput={(e) => setText((e.currentTarget as HTMLTextAreaElement).value)} onBlur={handleBlur} />
 			{error && <div class="json-error">{error}</div>}
 		</div>
 	);
