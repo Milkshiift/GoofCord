@@ -1,5 +1,6 @@
 import { runMigrations } from "@root/src/migration.ts";
 import { setContextMenu } from "@root/src/modules/menus/contextMenu.ts";
+import { initGoofbind } from "@root/src/modules/native/goofbind.ts";
 import { app, net, session, systemPreferences } from "electron";
 import pc from "picocolors";
 
@@ -15,7 +16,6 @@ import { checkForUpdate } from "./modules/updateCheck.ts";
 import { decryptSettings, firstLaunch, initConfigEncryption } from "./stores/config/config.main.ts";
 import { createMainWindow } from "./windows/main/main.ts";
 import { createSettingsWindow } from "./windows/settings/settings.ts";
-import {initGoofbind} from "@root/src/modules/native/goofbind.ts";
 
 export async function load() {
 	void setApplicationMenu();

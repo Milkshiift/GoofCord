@@ -1,8 +1,8 @@
 import { contextBridge, ipcRenderer } from "electron";
+import { type Keybind } from "goofbind";
 
 import { invoke } from "../../../ipc/client.preload.ts";
 import { warn } from "../../../modules/logger.preload.ts";
-import {type Keybind} from "goofbind";
 
 const getActiveKeybinds = (): Map<string, Keybind> => {
 	const activeKeybinds = new Map<string, Keybind>();
@@ -17,7 +17,7 @@ const getActiveKeybinds = (): Map<string, Keybind> => {
 		CTRL: 17,
 		ALT: 18,
 		SHIFT: 16,
-		META: 91
+		META: 91,
 	};
 
 	for (const bind in keybinds) {
@@ -41,7 +41,7 @@ const getActiveKeybinds = (): Map<string, Keybind> => {
 			ctrl: keys.includes(MODIFIERS.CTRL),
 			alt: keys.includes(MODIFIERS.ALT),
 			shift: keys.includes(MODIFIERS.SHIFT),
-			meta: keys.includes(MODIFIERS.META)
+			meta: keys.includes(MODIFIERS.META),
 		});
 	}
 
@@ -94,7 +94,7 @@ ipcRenderer.on("keybinds:trigger", (_, id, keyup) => {
 		shiftKey: keybind.shift,
 		ctrlKey: keybind.ctrl,
 		altKey: keybind.alt,
-		metaKey: keybind.meta
+		metaKey: keybind.meta,
 	});
 
 	document.dispatchEvent(event);

@@ -39,9 +39,7 @@ function setFlags() {
 		"MediaSessionService",
 		"HardwareMediaKeyHandling", //
 	]);
-	const switches = new Map<string, string | null>([
-		["enable-speech-dispatcher", null],
-	]);
+	const switches = new Map<string, string | null>([["enable-speech-dispatcher", null]]);
 
 	if (process.platform === "linux") {
 		enableFeatures.add("PulseaudioLoopbackForScreenShare");
