@@ -74,27 +74,6 @@ var invidiousEmbeds_default = definePatch({
   ]
 });
 
-// src/windows/main/renderer/preVencord/patches/keybinds.ts
-var keybinds_default = definePatch({
-  patches: [
-    {
-      find: "keybindActionTypes",
-      replacement: [
-        { match: /\i\.isPlatformEmbedded/g, replace: "true" },
-        { match: /\(0,\i\.isDesktop\)\(\)/g, replace: "true" },
-        {
-          match: /(CUSTOM_KEYBINDS_SETTING.*?Component:\s*(?:function\(\)\{|\(\)=>)\s*(?:return\s*)?)\i\.\i(\s*\?)/,
-          replace: "$1true$2"
-        },
-        {
-          match: /(SYSTEM_CUSTOM_KEYBINDS_CATEGORY.*?useHeaderDecoration:\s*(?:function\(\)\{|\(\)=>)\s*(?:return\s*)?)\i\.\i(\s*\?)/,
-          replace: "$1true$2"
-        }
-      ]
-    }
-  ]
-});
-
 // src/windows/main/renderer/preVencord/patches/screenshare.ts
 var screenshare_default = definePatch({
   patches: [
@@ -161,13 +140,34 @@ var titlebar_default = definePatch({
   ]
 });
 
+// src/windows/main/renderer/preVencord/patches/keybinds.ts
+var keybinds_default = definePatch({
+  patches: [
+    {
+      find: "keybindActionTypes",
+      replacement: [
+        { match: /\i\.isPlatformEmbedded/g, replace: "true" },
+        { match: /\(0,\i\.isDesktop\)\(\)/g, replace: "true" },
+        {
+          match: /(CUSTOM_KEYBINDS_SETTING.*?Component:\s*(?:function\(\)\{|\(\)=>)\s*(?:return\s*)?)\i\.\i(\s*\?)/,
+          replace: "$1true$2"
+        },
+        {
+          match: /(SYSTEM_CUSTOM_KEYBINDS_CATEGORY.*?useHeaderDecoration:\s*(?:function\(\)\{|\(\)=>)\s*(?:return\s*)?)\i\.\i(\s*\?)/,
+          replace: "$1true$2"
+        }
+      ]
+    }
+  ]
+});
+
 // glob-plugin:eyJjb21tYW5kIjoiaW1wb3J0IiwiZ2xvYlBhdHRlcm4iOiIuL3BhdGNoZXMvKiovKi50cyIsImltcG9ydGVyIjoiL2hvbWUvdGNwLXByb3RvY29sL1Byb2dyYW1taW5nL0dvb2ZDb3JkL3NyYy93aW5kb3dzL21haW4vcmVuZGVyZXIvcHJlVmVuY29yZC9wcmVWZW5jb3JkLnRzIn0
 var eyJjb21tYW5kIjoiaW1wb3J0IiwiZ2xvYlBhdHRlcm4iOiIuL3BhdGNoZXMvKiovKi50cyIsImltcG9ydGVyIjoiL2hvbWUvdGNwLXByb3RvY29sL1Byb2dyYW1taW5nL0dvb2ZDb3JkL3NyYy93aW5kb3dzL21haW4vcmVuZGVyZXIvcHJlVmVuY29yZC9wcmVWZW5jb3JkLnRzIn0_default = {
   "devtoolsFix.ts": devtoolsFix_default,
   "invidiousEmbeds.ts": invidiousEmbeds_default,
-  "keybinds.ts": keybinds_default,
   "screenshare.ts": screenshare_default,
-  "titlebar.ts": titlebar_default
+  "titlebar.ts": titlebar_default,
+  "keybinds.ts": keybinds_default
 };
 
 // src/windows/main/renderer/preVencord/domOptimizer.ts

@@ -1,6 +1,6 @@
 {
 	"$schema": "./node_modules/oxlint/configuration_schema.json",
-	"plugins": ["eslint", "typescript", "react", "unicorn", "oxc", "promise", "node"],
+	"plugins": ["eslint", "typescript", "unicorn", "oxc", "promise", "node"],
 	"categories": {},
 	"rules": {
 		"no-unused-vars": "allow",
