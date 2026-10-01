@@ -94,7 +94,10 @@ function DictionaryInput({ id, value, onChange, entry }: InputProps): JSX.Elemen
 	const [entries, setEntries] = useState(() => Object.entries(dictValue));
 
 	const entriesRef = useRef(entries);
-	entriesRef.current = entries;
+
+	useEffect(() => {
+		entriesRef.current = entries;
+	}, [entries]);
 
 	useEffect(() => {
 		const currentObj: Record<string, string> = {};

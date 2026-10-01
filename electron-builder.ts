@@ -31,7 +31,7 @@ export const config: Configuration = {
 				Categories: "Network;InstantMessaging;Chat;",
 				Keywords: "discord;goofcord;",
 			},
-		}
+		},
 	},
 	win: {
 		icon: "assets/gf_icon.ico",
@@ -40,7 +40,7 @@ export const config: Configuration = {
 				target: "NSIS",
 				arch: ["x64", "ia32", "arm64"],
 			},
-		]
+		],
 	},
 	mac: {
 		category: "public.app-category.social-networking",
@@ -60,7 +60,7 @@ export const config: Configuration = {
 			NSCameraUsageDescription: "This app needs access to the camera",
 			"com.apple.security.device.audio-input": true,
 			"com.apple.security.device.camera": true,
-		}
+		},
 	},
 	electronFuses: {
 		runAsNode: false,

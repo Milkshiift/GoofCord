@@ -59,7 +59,11 @@ export function registerScreenshareHandler() {
 		const { callback, window, frame } = req;
 
 		if (!id) {
-			try { callback({}); } catch { /* Ignore missing video error */ }
+			try {
+				callback({});
+			} catch {
+				/* Ignore missing video error */
+			}
 			if (!window.isDestroyed()) window.close();
 			return;
 		}
@@ -124,7 +128,11 @@ export function registerScreenshareHandler() {
 		capturerWindow.once("closed", () => {
 			if (activeRequests.has(wcId)) {
 				activeRequests.delete(wcId);
-				try { callback({}); } catch { /* Ignore missing video error */ }
+				try {
+					callback({});
+				} catch {
+					/* Ignore missing video error */
+				}
 			}
 		});
 

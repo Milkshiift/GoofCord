@@ -1,4 +1,5 @@
 import path from "node:path";
+
 import { app } from "electron";
 import { AudioSharePatchbay, type ShareableNode } from "patchcord";
 import pc from "picocolors";
@@ -14,10 +15,7 @@ function createMatcher(initialPids: number[]) {
 	const appNames = new Set<string>();
 
 	return ({ processId, binary, applicationName }: ShareableNode) => {
-		const match =
-			(processId && pids.has(processId)) ||
-			(binary && binaries.has(binary)) ||
-			(applicationName && appNames.has(applicationName));
+		const match = (processId && pids.has(processId)) || (binary && binaries.has(binary)) || (applicationName && appNames.has(applicationName));
 
 		if (match) {
 			if (processId) pids.add(processId);
@@ -43,9 +41,7 @@ export async function initPatchcord() {
 
 	try {
 		patchbay = new AudioSharePatchbay({
-			command: app.isPackaged
-				? path.join(process.resourcesPath, "patchcord")
-				: path.join(app.getAppPath(), "..", "node_modules", "patchcord", "dist", `patchcord-linux-${process.arch}`),
+			command: app.isPackaged ? path.join(process.resourcesPath, "patchcord") : path.join(app.getAppPath(), "..", "node_modules", "patchcord", "dist", `patchcord-linux-${process.arch}`),
 			sinkPrefix: "goofcord-share",
 			sinkDescription: "GoofCord Screen Share",
 			virtualMic: true,
@@ -175,10 +171,7 @@ app.on("before-quit", (event) => {
 	patchbay = undefined;
 	isSharing = false;
 
-	Promise.race([
-		pb.dispose(),
-		new Promise((resolve) => setTimeout(resolve, 1500))
-	])
+	Promise.race([pb.dispose(), new Promise((resolve) => setTimeout(resolve, 1500))])
 		.catch((err) => console.error("Dispose failed:", err))
 		.finally(() => app.quit());
 });

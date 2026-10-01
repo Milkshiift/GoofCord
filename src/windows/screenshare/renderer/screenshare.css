@@ -167,7 +167,9 @@ html {
 	overflow: hidden;
 	background: var(--bg-tertiary);
 	border: 2px solid transparent;
-	transition: border-color var(--transition-duration-fast) var(--easing-smooth), box-shadow var(--transition-duration-fast) var(--easing-smooth);
+	transition:
+		border-color var(--transition-duration-fast) var(--easing-smooth),
+		box-shadow var(--transition-duration-fast) var(--easing-smooth);
 	box-sizing: border-box;
 	box-shadow: var(--shadow-sm);
 }
@@ -334,8 +336,8 @@ html {
 	flex-shrink: 0;
 	opacity: 0.6;
 	transition:
-			transform var(--transition-duration-fast) var(--easing-smooth),
-			opacity var(--transition-duration-fast) var(--easing-smooth);
+		transform var(--transition-duration-fast) var(--easing-smooth),
+		opacity var(--transition-duration-fast) var(--easing-smooth);
 }
 
 .segmented-control__item input:checked + span {

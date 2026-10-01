@@ -10,12 +10,12 @@ export default definePatch({
 
 				{
 					match: /(CUSTOM_KEYBINDS_SETTING.*?Component:\s*(?:function\(\)\{|\(\)=>)\s*(?:return\s*)?)\i\.\i(\s*\?)/,
-					replace: "$1true$2"
+					replace: "$1true$2",
 				},
 				{
 					match: /(SYSTEM_CUSTOM_KEYBINDS_CATEGORY.*?useHeaderDecoration:\s*(?:function\(\)\{|\(\)=>)\s*(?:return\s*)?)\i\.\i(\s*\?)/,
-					replace: "$1true$2"
-				}
+					replace: "$1true$2",
+				},
 			],
 		},
 	],

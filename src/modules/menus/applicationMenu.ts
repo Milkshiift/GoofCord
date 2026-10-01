@@ -1,12 +1,13 @@
+import path from "node:path";
+
 import { i } from "@root/src/stores/localization/localization.main.ts";
-import {app, BrowserWindow, Menu, shell} from "electron";
+import { userDataPath } from "@root/src/utils.ts";
+import { app, BrowserWindow, Menu, shell } from "electron";
 
 import { mainWindow } from "../../windows/main/main.ts";
 import { createSettingsWindow } from "../../windows/settings/settings.ts";
 import { cycleThroughPasswords } from "../messageEncryption.ts";
 import { saveState } from "../windowStateManager.ts";
-import path from "node:path";
-import {userDataPath} from "@root/src/utils.ts";
 
 export async function setApplicationMenu() {
 	const template: Electron.MenuItemConstructorOptions[] = [
