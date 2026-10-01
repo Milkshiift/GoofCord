@@ -1,3 +1,4 @@
+import { disableWebScreensharePlugin } from "@root/src/windows/main/renderer/postVencord/disableWebScreensharePlugin.ts";
 import { initKeybinds } from "@root/src/windows/main/renderer/postVencord/keybinds.ts";
 
 import { initDynamicIcon } from "./dynamicIcon.ts";
@@ -25,7 +26,7 @@ function runSafe(tasks: (() => void)[]) {
 }
 
 async function init() {
-	runSafe([updateInvidiousInstance, initRichPresence]);
+	runSafe([updateInvidiousInstance, initRichPresence, disableWebScreensharePlugin]);
 
 	await VC.Webpack.onceReady;
 

@@ -39,7 +39,7 @@ function setFlags() {
 		"MediaSessionService",
 		"HardwareMediaKeyHandling", //
 	]);
-	const switches = new Map<string, string | null>;
+	const switches = new Map<string, string | null>();
 
 	if (process.platform === "linux") {
 		disableFeatures.add("Vulkan"); // Vulkan doesn't support Wayland
