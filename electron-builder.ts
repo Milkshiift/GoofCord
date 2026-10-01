@@ -20,7 +20,7 @@ export const config: Configuration = {
 		target: [
 			{
 				target: "AppImage",
-				arch: ["x64", "arm64", "armv7l"],
+				arch: ["x64", "arm64"],
 			},
 		],
 		desktop: {
@@ -38,7 +38,7 @@ export const config: Configuration = {
 		target: [
 			{
 				target: "NSIS",
-				arch: ["x64", "ia32", "arm64"],
+				arch: ["x64", "arm64"],
 			},
 		],
 	},
