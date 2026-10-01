@@ -143,5 +143,22 @@
     "opt-proxyRules": "Proxy kuralları",
     "opt-proxyRules-desc": "Electron proxy kurallarını ayarlar. Şema için <a target=\"_blank\" href=\"https://www.electronjs.org/docs/latest/api/structures/proxy-config\">Electron dokümantasyonuna</a> göz atın.",
     "opt-proxyBypassRules": "Proxy bypass kuralları",
-    "opt-proxyBypassRules-desc": "Electron proxy bypass kurallarını belirler."
+    "opt-proxyBypassRules-desc": "Electron proxy bypass kurallarını belirler.",
+    "menu-development-gcFolder": "GoofCord klasörünü aç",
+    "screenshare-subtitle": "Paylaşmak için bir ekran veya pencere seçiniz",
+    "screenshare-refresh": "Kaynakları Yenile",
+    "screenshare-unknown-source": "Bilinmeyen Kaynak",
+    "screenshare-stream-settings": "Yayın Ayarları",
+    "screenshare-audio-linux-title": "Ses Yakalama",
+    "screenshare-audio-mode-label": "Ses Kaynak Modu",
+    "screenshare-audio-none": "Ses Yok",
+    "screenshare-audio-system": "Tüm Sistem",
+    "screenshare-audio-app": "Uygulamalar",
+    "screenshare-audio-excluded": "Dışlanan Uygulamalar",
+    "screenshare-audio-included": "Dahil Uygulamalar",
+    "screenshare-audio-mute-desc": "Yayından SUSTURMAK için uygulamaları seçin.",
+    "screenshare-audio-hear-desc": "Sadece seçilen uygulamalar DUYULACAKTIR.",
+    "screenshare-audio-empty": "Aktif ses uygulamaları bulunmadı",
+    "screenshare-audio-capture": "Sistem Sesini Yakala",
+    "screenshare-audio-capture-desc": "Bilgisayar sesini ekran ile birlikte paylaş"
 }
