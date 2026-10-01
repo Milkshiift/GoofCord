@@ -21,12 +21,14 @@ function getInitialTab(): number {
 		const saved = localStorage.getItem(STORAGE_KEY);
 		if (saved) {
 			const { id, timestamp } = JSON.parse(saved);
-			if (Date.now() - timestamp < STATE_RETENTION_MS) {
+			if (typeof timestamp === "number" && Date.now() - timestamp < STATE_RETENTION_MS) {
 				const idx = categories.findIndex((c) => toId(c) === id);
 				if (idx !== -1) return idx;
 			}
 		}
-	} catch {}
+	} catch {
+		// Ignore local storage errors
+	}
 	return 0;
 }
 
@@ -45,13 +47,19 @@ export function App(): JSX.Element {
 	const handleTabClick = (index: number, e: MouseEvent) => {
 		const tripleClick = easterEgg.handleClick(index, e);
 		if (tripleClick) {
-			setRevealedPanels((prev) => new Set(prev).add(index));
+			setRevealedPanels((prev) => {
+				const next = new Set(prev);
+				next.add(index);
+				return next;
+			});
 		}
 		setActiveTab(index);
 
 		try {
 			localStorage.setItem(STORAGE_KEY, JSON.stringify({ id: toId(categories[index]), timestamp: Date.now() }));
-		} catch {}
+		} catch {
+			// Ignore local storage errors
+		}
 	};
 
 	const closeSearch = useCallback(() => {
@@ -59,14 +67,21 @@ export function App(): JSX.Element {
 		setSearchQuery("");
 	}, []);
 
-	const toggleSearch = () => {
+	const toggleSearch = useCallback(() => {
 		if (isSearchOpen) {
 			closeSearch();
 		} else {
 			setIsSearchOpen(true);
-			setTimeout(() => searchInputRef.current?.focus(), 50);
 		}
-	};
+	}, [isSearchOpen, closeSearch]);
+
+	// Auto-focus search input with timer cleanup when search opens
+	useEffect(() => {
+		if (!isSearchOpen) return;
+
+		const timer = setTimeout(() => searchInputRef.current?.focus(), 50);
+		return () => clearTimeout(timer);
+	}, [isSearchOpen]);
 
 	// Only close on outside click if the user has NOT typed anything yet
 	useEffect(() => {
@@ -117,25 +132,12 @@ export function App(): JSX.Element {
 			<header class="settings-header">
 				<nav class="settings-tabs" aria-label="Settings Categories">
 					{categories.map((name, idx) => (
-						<button
-							type="button"
-							key={name}
-							class={`tab-item${idx === activeTab && !isShowingSearchResults ? " active" : ""}`}
-							role="tab"
-							aria-selected={idx === activeTab}
-							aria-controls={toId(name)}
-							onClick={(e) => handleTabClick(idx, e)}
-						>
+						<button type="button" key={name} class={`tab-item${idx === activeTab && !isShowingSearchResults ? " active" : ""}`} role="tab" aria-selected={idx === activeTab} aria-controls={toId(name)} onClick={(e) => handleTabClick(idx, e)}>
 							{i(`category-${name.toLowerCase().split(" ")[0]}`)}
 						</button>
 					))}
 
-					<button
-						type="button"
-						className={`tab-item search-toggle-btn${isSearchOpen ? " active" : ""}`}
-						onClick={toggleSearch}
-						title={i("settings-search")}
-					>
+					<button type="button" class={`tab-item search-toggle-btn${isSearchOpen ? " active" : ""}`} onClick={toggleSearch} title={i("settings-search")}>
 						🔍
 					</button>
 				</nav>
@@ -146,10 +148,10 @@ export function App(): JSX.Element {
 							ref={searchInputRef}
 							type="text"
 							role="searchbox"
-							className="text search-input"
+							class="text search-input"
 							placeholder={i("settings-search-placeholder")}
 							value={searchQuery}
-							onInput={(e) => setSearchQuery((e.target as HTMLInputElement).value)}
+							onInput={(e) => setSearchQuery((e.currentTarget as HTMLInputElement).value)}
 							onKeyDown={(e) => {
 								if (e.key === "Escape") closeSearch();
 							}}
@@ -164,12 +166,7 @@ export function App(): JSX.Element {
 			{!isEncryptionAvailable() && !warningDismissed && (
 				<div class="message warning">
 					<p>{i("settings-encryption-unavailable")}</p>
-					<button
-						type="button"
-						class="message-dismiss-btn"
-						aria-label="Dismiss warning"
-						onClick={() => setWarningDismissed(true)}
-					>
+					<button type="button" class="message-dismiss-btn" aria-label="Dismiss warning" onClick={() => setWarningDismissed(true)}>
 						✕
 					</button>
 				</div>
@@ -180,20 +177,16 @@ export function App(): JSX.Element {
 					<div class="content-panel active">
 						<form class="settingsContainer">
 							{searchResults.length === 0 ? (
-								<p className="description" style={{margin: "30px 0"}}>
+								<p class="description" style={{ margin: "30px 0" }}>
 									{i("settings-search-no-results")}
 								</p>
 							) : (
-								searchResults.map(({key, entry}) => (
-									<SettingField key={key} settingKey={key} entry={entry} forceVisible={true} />
-								))
+								searchResults.map(({ key, entry }) => <SettingField key={key} settingKey={key} entry={entry} forceVisible={true} />)
 							)}
 						</form>
 					</div>
 				) : (
-					categories.map((name, idx) => (
-						<SettingsPanel key={name} name={name} active={idx === activeTab} revealed={revealedPanels.has(idx)} />
-					))
+					categories.map((name, idx) => <SettingsPanel key={name} name={name} active={idx === activeTab} revealed={revealedPanels.has(idx)} />)
 				)}
 			</div>
 		</div>
@@ -218,31 +211,42 @@ interface SettingsPanelProps {
 
 function SettingsPanel({ name, active, revealed }: SettingsPanelProps): JSX.Element {
 	const category = settingsSchema[name];
-	const entries = Object.entries(category) as [string, SettingEntry | ButtonEntry][];
 
-	const settings = entries.filter(([key]) => !key.startsWith("button-"));
-	const buttons = entries.filter(([key]) => key.startsWith("button-"));
+	const { settings, buttons } = useMemo(() => {
+		const s: [ConfigKey, SettingEntry][] = [];
+		const b: [string, ButtonEntry][] = [];
+		for (const [key, entry] of Object.entries(category)) {
+			if (key.startsWith("button-")) {
+				b.push([key, entry as ButtonEntry]);
+			} else {
+				s.push([key as ConfigKey, entry as SettingEntry]);
+			}
+		}
+		return { settings: s, buttons: b };
+	}, [category]);
+
+	const handleButtonClick = (entry: ButtonEntry) => {
+		const [fnName, ...args] = entry.action;
+		const actionFn = buttonClickActions[fnName as ActionKey];
+		if (typeof actionFn === "function") {
+			// @ts-expect-error Safe dynamic invocation
+			void actionFn(...args);
+		} else {
+			console.warn(`Unknown action: ${fnName}`);
+		}
+	};
 
 	return (
 		<div id={toId(name)} class={`content-panel${active ? " active" : ""}`} role="tabpanel">
 			<form class="settingsContainer">
 				{settings.map(([key, entry]) => (
-					<SettingField key={key} settingKey={key as ConfigKey} entry={entry as SettingEntry} forceVisible={revealed} />
+					<SettingField key={key} settingKey={key} entry={entry} forceVisible={revealed} />
 				))}
 
 				{buttons.length > 0 && (
 					<div class="buttonContainer">
 						{buttons.map(([key, entry]) => (
-							<button
-								key={key}
-								type="button"
-								onClick={() => {
-									const [fnName, ...args] = (entry as ButtonEntry).action;
-									const actionFn = buttonClickActions[fnName as ActionKey];
-									// @ts-expect-error Safe invocation
-									void actionFn(...args);
-								}}
-							>
+							<button key={key} type="button" onClick={() => handleButtonClick(entry)}>
 								{i(`opt-${key}`)}
 							</button>
 						))}

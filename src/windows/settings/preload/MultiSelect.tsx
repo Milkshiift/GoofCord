@@ -9,6 +9,8 @@ interface MultiSelectProps {
 	placeholder?: string;
 }
 
+const MAX_VISIBLE_CHIPS = 3;
+
 export function MultiSelect({ id, options, value, onChange, placeholder = "Select..." }: MultiSelectProps): JSX.Element {
 	const [isOpen, setIsOpen] = useState(false);
 	const [highlightIndex, setHighlightIndex] = useState(-1);
@@ -17,24 +19,25 @@ export function MultiSelect({ id, options, value, onChange, placeholder = "Selec
 	const containerRef = useRef<HTMLDivElement>(null);
 	const listRef = useRef<HTMLDivElement>(null);
 
-	const selected = useMemo(() => new Set(value), [value]);
+	const safeValue = useMemo(() => (Array.isArray(value) ? value : []), [value]);
+	const selected = useMemo(() => new Set(safeValue), [safeValue]);
 
 	const toggleOption = useCallback(
 		(opt: string) => {
-			const newValue = selected.has(opt) ? value.filter((v) => v !== opt) : [...value, opt];
+			const newValue = selected.has(opt) ? safeValue.filter((v) => v !== opt) : [...safeValue, opt];
 			onChange(newValue);
 		},
-		[value, selected, onChange],
+		[safeValue, selected, onChange],
 	);
 
 	const open = useCallback(() => {
 		setIsOpen(true);
-		setHighlightIndex(
-			Math.max(
-				0,
-				options.findIndex((o) => selected.has(o)),
-			),
-		);
+		if (options.length === 0) {
+			setHighlightIndex(-1);
+			return;
+		}
+		const firstSelectedIndex = options.findIndex((o) => selected.has(o));
+		setHighlightIndex(firstSelectedIndex !== -1 ? firstSelectedIndex : 0);
 	}, [options, selected]);
 
 	const close = useCallback(() => {
@@ -43,16 +46,26 @@ export function MultiSelect({ id, options, value, onChange, placeholder = "Selec
 		if (searchTimeout.current) clearTimeout(searchTimeout.current);
 	}, []);
 
-	// Close on outside click
+	// Clear search timeout on unmount
 	useEffect(() => {
+		return () => {
+			if (searchTimeout.current) clearTimeout(searchTimeout.current);
+		};
+	}, []);
+
+	// Listen for outside clicks only while open
+	useEffect(() => {
+		if (!isOpen) return;
+
 		const handleClickOutside = (e: MouseEvent) => {
 			if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
 				close();
 			}
 		};
+
 		document.addEventListener("click", handleClickOutside);
 		return () => document.removeEventListener("click", handleClickOutside);
-	}, [close]);
+	}, [isOpen, close]);
 
 	// Scroll highlighted item into view
 	useEffect(() => {
@@ -74,6 +87,11 @@ export function MultiSelect({ id, options, value, onChange, placeholder = "Selec
 				return;
 			}
 
+			if (options.length === 0) {
+				if (e.key === "Escape") close();
+				return;
+			}
+
 			switch (e.key) {
 				case "Escape":
 					close();
@@ -91,7 +109,9 @@ export function MultiSelect({ id, options, value, onChange, placeholder = "Selec
 				case "Enter":
 				case " ":
 					e.preventDefault();
-					if (highlightIndex >= 0) toggleOption(options[highlightIndex]);
+					if (highlightIndex >= 0 && highlightIndex < options.length) {
+						toggleOption(options[highlightIndex]);
+					}
 					break;
 				default:
 					if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
@@ -112,27 +132,12 @@ export function MultiSelect({ id, options, value, onChange, placeholder = "Selec
 	);
 
 	const activeDescendantId = isOpen && highlightIndex >= 0 ? `${id}-opt-${highlightIndex}` : undefined;
-
-	// Chip overflow handling: show up to 3 items + "+N more" badge
-	const MAX_VISIBLE_CHIPS = 3;
-	const visibleChips = value.slice(0, MAX_VISIBLE_CHIPS);
-	const hiddenCount = value.length - MAX_VISIBLE_CHIPS;
+	const visibleChips = safeValue.slice(0, MAX_VISIBLE_CHIPS);
+	const hiddenCount = safeValue.length - MAX_VISIBLE_CHIPS;
 
 	return (
-		<div
-			ref={containerRef}
-			class={`multiselect-dropdown${isOpen ? " open" : ""}`}
-			id={id}
-			setting-name={id}
-			role="listbox"
-			aria-label="Multiselect dropdown"
-			aria-activedescendant={activeDescendantId}
-			aria-expanded={isOpen}
-			tabIndex={0}
-			onClick={() => (isOpen ? close() : open())}
-			onKeyDown={handleKeyDown}
-		>
-			{value.length === 0 ? (
+		<div ref={containerRef} class={`multiselect-dropdown${isOpen ? " open" : ""}`} id={id} setting-name={id} role="listbox" aria-label="Multiselect dropdown" aria-activedescendant={activeDescendantId} aria-expanded={isOpen} tabIndex={0} onClick={() => (isOpen ? close() : open())} onKeyDown={handleKeyDown}>
+			{safeValue.length === 0 ? (
 				<span class="placeholder">{placeholder}</span>
 			) : (
 				<>
@@ -142,14 +147,14 @@ export function MultiSelect({ id, options, value, onChange, placeholder = "Selec
 						</span>
 					))}
 					{hiddenCount > 0 && (
-						<span class="optext" title={value.slice(MAX_VISIBLE_CHIPS).join(", ")}>
+						<span class="optext" title={safeValue.slice(MAX_VISIBLE_CHIPS).join(", ")}>
 							+{hiddenCount} more
 						</span>
 					)}
 				</>
 			)}
 
-			<div class={`multiselect-dropdown-list-wrapper${isOpen ? "" : " dropdown-hidden"}`}>
+			<div class={`multiselect-dropdown-list-wrapper${isOpen ? "" : " dropdown-hidden"}`} onClick={(e) => e.stopPropagation()}>
 				<div ref={listRef} class="multiselect-dropdown-list">
 					{options.map((opt, idx) => (
 						<div

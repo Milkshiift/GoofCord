@@ -6,13 +6,15 @@ import { App } from "./App.tsx";
 
 console.log("GoofCord Settings");
 
-async function init() {
+async function init(): Promise<void> {
 	if (document.readyState === "loading") {
-		await new Promise<void>((r) => document.addEventListener("DOMContentLoaded", r as unknown as EventListener));
+		await new Promise<void>((resolve) => {
+			document.addEventListener("DOMContentLoaded", () => resolve(), { once: true });
+		});
 	}
 
-	await whenConfigReady();
-	await whenLocalizationReady();
+	// Initialize config and localization stores concurrently
+	await Promise.all([whenConfigReady(), whenLocalizationReady()]);
 
 	const root = document.createElement("div");
 	root.id = "app-root";
