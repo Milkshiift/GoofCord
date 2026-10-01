@@ -20,7 +20,9 @@ export async function openFolder<IPCHandle>(folder: string) {
 }
 
 export async function invidiousConfigChanged<IPCHandle>() {
-	mainWindow.webContents.send("invidiousConfigChanged");
+	if (mainWindow && !mainWindow.isDestroyed()) {
+		mainWindow.webContents.send("invidiousConfigChanged");
+	}
 }
 
 function hasConfigChanged(original: Config, current: Config): boolean {
@@ -28,9 +30,10 @@ function hasConfigChanged(original: Config, current: Config): boolean {
 }
 
 export async function createSettingsWindow<IPCHandle>() {
-	if (settingsWindow) {
+	if (settingsWindow && !settingsWindow.isDestroyed()) {
 		settingsWindow.show();
 		settingsWindow.restore();
+		settingsWindow.focus();
 		return;
 	}
 
@@ -67,20 +70,25 @@ export async function createSettingsWindow<IPCHandle>() {
 			icon: getCustomIcon(),
 			noLink: false,
 		});
-		app.relaunch(); // Relaunches only when user closes settings window
+		app.relaunch();
 	}
 
 	settingsWindow.on("close", async (event) => {
+		const win = settingsWindow;
 		if (getConfig("autoSaveCloud") && hasConfigChanged(originalConfig, getConfigBulk())) {
 			event.preventDefault();
+			settingsWindow = undefined;
 			try {
 				console.log("Settings changed, auto-saving to cloud...");
 				await saveCloud(true);
-				settingsWindow?.destroy();
 			} catch (error) {
 				console.error("Error saving config before closing:", error);
-				settingsWindow?.destroy();
+			} finally {
+				if (win && !win.isDestroyed()) {
+					win.destroy();
+				}
 			}
+			return;
 		}
 
 		settingsWindow = undefined;
@@ -89,9 +97,13 @@ export async function createSettingsWindow<IPCHandle>() {
 
 export async function hotreloadLocale<IPCHandle>() {
 	await initLocalization();
-	if (settingsWindow) settingsWindow.webContents.reload();
+	if (settingsWindow && !settingsWindow.isDestroyed()) {
+		settingsWindow.webContents.reload();
+	}
 }
 
 export async function reloadWindow<IPCHandle>() {
-	if (settingsWindow) settingsWindow.webContents.reload();
+	if (settingsWindow && !settingsWindow.isDestroyed()) {
+		settingsWindow.webContents.reload();
+	}
 }
