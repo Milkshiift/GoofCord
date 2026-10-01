@@ -29,24 +29,24 @@
 		"arrpc": "github:Milkshiift/arrpc",
 		"electron-sync-store": "github:Milkshiift/electron-sync-store",
 		"picocolors": "1.1.1",
-		"preact": "^10.29.7",
+		"preact": "^11.0.0",
 		"stegcloak": "github:Milkshiift/stegcloak-rs"
 	},
 	"devDependencies": {
-		"@types/bun": "1.3.14",
-		"@types/node": "26.1.1",
-		"@vencord/types": "1.14.15",
-		"electron": "43.1.1",
+		"@types/bun": "1.4.2",
+		"@types/node": "26.6.3",
+		"@vencord/types": "1.15.1",
+		"electron": "44.5.1",
 		"electron-builder": "26.15.3",
-		"oxfmt": "^0.59.0",
-		"oxlint": "^1.74.0",
-		"oxlint-tsgolint": "^0.25.0",
+		"oxfmt": "^0.71.0",
+		"oxlint": "^1.86.0",
+		"oxlint-tsgolint": "^7.0.2003",
 		"typescript": "7.0.2",
 		"typescriptOld": "npm:@typescript/typescript6@^6.0.2"
 	},
 	"optionalDependencies": {
-		"patchcord": "github:Milkshiift/patchcord",
-		"goofbind": "github:Milkshiift/goofbind"
+		"goofbind": "github:Milkshiift/goofbind",
+		"patchcord": "github:Milkshiift/patchcord"
 	},
 	"trustedDependencies": [
 		"electron"
