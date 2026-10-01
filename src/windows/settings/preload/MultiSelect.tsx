@@ -113,16 +113,40 @@ export function MultiSelect({ id, options, value, onChange, placeholder = "Selec
 
 	const activeDescendantId = isOpen && highlightIndex >= 0 ? `${id}-opt-${highlightIndex}` : undefined;
 
+	// Chip overflow handling: show up to 3 items + "+N more" badge
+	const MAX_VISIBLE_CHIPS = 3;
+	const visibleChips = value.slice(0, MAX_VISIBLE_CHIPS);
+	const hiddenCount = value.length - MAX_VISIBLE_CHIPS;
+
 	return (
-		<div ref={containerRef} class={`multiselect-dropdown${isOpen ? " open" : ""}`} id={id} setting-name={id} role="listbox" aria-label="Multiselect dropdown" aria-activedescendant={activeDescendantId} aria-expanded={isOpen} tabIndex={0} onClick={() => (isOpen ? close() : open())} onKeyDown={handleKeyDown}>
+		<div
+			ref={containerRef}
+			class={`multiselect-dropdown${isOpen ? " open" : ""}`}
+			id={id}
+			setting-name={id}
+			role="listbox"
+			aria-label="Multiselect dropdown"
+			aria-activedescendant={activeDescendantId}
+			aria-expanded={isOpen}
+			tabIndex={0}
+			onClick={() => (isOpen ? close() : open())}
+			onKeyDown={handleKeyDown}
+		>
 			{value.length === 0 ? (
 				<span class="placeholder">{placeholder}</span>
 			) : (
-				value.map((v) => (
-					<span key={v} class="optext">
-						{v}
-					</span>
-				))
+				<>
+					{visibleChips.map((v) => (
+						<span key={v} class="optext">
+							{v}
+						</span>
+					))}
+					{hiddenCount > 0 && (
+						<span class="optext" title={value.slice(MAX_VISIBLE_CHIPS).join(", ")}>
+							+{hiddenCount} more
+						</span>
+					)}
+				</>
 			)}
 
 			<div class={`multiselect-dropdown-list-wrapper${isOpen ? "" : " dropdown-hidden"}`}>

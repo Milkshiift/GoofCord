@@ -14,7 +14,7 @@ const categories = Object.keys(settingsSchema) as CategoryName[];
 const toId = (name: string) => `panel-${name.toLowerCase().replace(/\s+/g, "-")}`;
 
 const STORAGE_KEY = "tabSwitcherState";
-const STATE_RETENTION_MS = 15_000;
+const STATE_RETENTION_MS = 60_000;
 
 function getInitialTab(): number {
 	try {
@@ -33,6 +33,12 @@ function getInitialTab(): number {
 export function App(): JSX.Element {
 	const [activeTab, setActiveTab] = useState(getInitialTab);
 	const [revealedPanels, setRevealedPanels] = useState<Set<number>>(() => new Set());
+	const [warningDismissed, setWarningDismissed] = useState(false);
+
+	const [isSearchOpen, setIsSearchOpen] = useState(false);
+	const [searchQuery, setSearchQuery] = useState("");
+	const searchContainerRef = useRef<HTMLDivElement>(null);
+	const searchInputRef = useRef<HTMLInputElement>(null);
 
 	const easterEgg = useEasterEgg(categories.length);
 
@@ -48,34 +54,147 @@ export function App(): JSX.Element {
 		} catch {}
 	};
 
+	const closeSearch = useCallback(() => {
+		setIsSearchOpen(false);
+		setSearchQuery("");
+	}, []);
+
+	const toggleSearch = () => {
+		if (isSearchOpen) {
+			closeSearch();
+		} else {
+			setIsSearchOpen(true);
+			setTimeout(() => searchInputRef.current?.focus(), 50);
+		}
+	};
+
+	// Only close on outside click if the user has NOT typed anything yet
+	useEffect(() => {
+		if (!isSearchOpen) return;
+
+		const handleClickOutside = (e: MouseEvent) => {
+			if (searchQuery.trim().length > 0) return;
+
+			if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
+				closeSearch();
+			}
+		};
+
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => document.removeEventListener("mousedown", handleClickOutside);
+	}, [isSearchOpen, searchQuery, closeSearch]);
+
+	const searchResults = useMemo(() => {
+		const q = searchQuery.trim().toLowerCase();
+		if (!q) return [];
+
+		const matches: { category: CategoryName; key: ConfigKey; entry: SettingEntry }[] = [];
+		for (const cat of categories) {
+			for (const [key, entry] of Object.entries(settingsSchema[cat])) {
+				if (key.startsWith("button-")) continue;
+
+				const label = (i(`opt-${key}`) ?? key).toLowerCase();
+				const desc = (i(`opt-${key}-desc`) ?? (entry as SettingEntry).description ?? "").toLowerCase();
+
+				if (key.toLowerCase().includes(q) || label.includes(q) || desc.includes(q)) {
+					matches.push({ category: cat, key: key as ConfigKey, entry: entry as SettingEntry });
+				}
+			}
+		}
+		return matches;
+	}, [searchQuery]);
+
 	useEffect(() => {
 		if (getConfig("disableSettingsAnimations")) {
 			document.body.classList.add("disable-animations");
 		}
 	}, []);
 
+	const isShowingSearchResults = isSearchOpen && searchQuery.trim().length > 0;
+
 	return (
 		<div class="settings-page-container">
 			<header class="settings-header">
 				<nav class="settings-tabs" aria-label="Settings Categories">
 					{categories.map((name, idx) => (
-						<button type="button" key={name} class={`tab-item${idx === activeTab ? " active" : ""}`} role="tab" aria-selected={idx === activeTab} aria-controls={toId(name)} onClick={(e) => handleTabClick(idx, e)}>
+						<button
+							type="button"
+							key={name}
+							class={`tab-item${idx === activeTab && !isShowingSearchResults ? " active" : ""}`}
+							role="tab"
+							aria-selected={idx === activeTab}
+							aria-controls={toId(name)}
+							onClick={(e) => handleTabClick(idx, e)}
+						>
 							{i(`category-${name.toLowerCase().split(" ")[0]}`)}
 						</button>
 					))}
+
+					<button
+						type="button"
+						className={`tab-item search-toggle-btn${isSearchOpen ? " active" : ""}`}
+						onClick={toggleSearch}
+						title={i("settings-search")}
+					>
+						🔍
+					</button>
 				</nav>
+
+				{isSearchOpen && (
+					<div class="search-overlay" ref={searchContainerRef}>
+						<input
+							ref={searchInputRef}
+							type="text"
+							role="searchbox"
+							className="text search-input"
+							placeholder={i("settings-search-placeholder")}
+							value={searchQuery}
+							onInput={(e) => setSearchQuery((e.target as HTMLInputElement).value)}
+							onKeyDown={(e) => {
+								if (e.key === "Escape") closeSearch();
+							}}
+						/>
+						<button type="button" class="search-close-btn" title="Close search" onClick={closeSearch}>
+							✕
+						</button>
+					</div>
+				)}
 			</header>
 
-			{!isEncryptionAvailable() && (
+			{!isEncryptionAvailable() && !warningDismissed && (
 				<div class="message warning">
 					<p>{i("settings-encryption-unavailable")}</p>
+					<button
+						type="button"
+						class="message-dismiss-btn"
+						aria-label="Dismiss warning"
+						onClick={() => setWarningDismissed(true)}
+					>
+						✕
+					</button>
 				</div>
 			)}
 
 			<div class="settings-content">
-				{categories.map((name, idx) => (
-					<SettingsPanel key={name} name={name} active={idx === activeTab} revealed={revealedPanels.has(idx)} />
-				))}
+				{isShowingSearchResults ? (
+					<div class="content-panel active">
+						<form class="settingsContainer">
+							{searchResults.length === 0 ? (
+								<p className="description" style={{margin: "30px 0"}}>
+									{i("settings-search-no-results")}
+								</p>
+							) : (
+								searchResults.map(({key, entry}) => (
+									<SettingField key={key} settingKey={key} entry={entry} forceVisible={true} />
+								))
+							)}
+						</form>
+					</div>
+				) : (
+					categories.map((name, idx) => (
+						<SettingsPanel key={name} name={name} active={idx === activeTab} revealed={revealedPanels.has(idx)} />
+					))
+				)}
 			</div>
 		</div>
 	);
@@ -120,7 +239,7 @@ function SettingsPanel({ name, active, revealed }: SettingsPanelProps): JSX.Elem
 								onClick={() => {
 									const [fnName, ...args] = (entry as ButtonEntry).action;
 									const actionFn = buttonClickActions[fnName as ActionKey];
-									// @ts-expect-error This is safe
+									// @ts-expect-error Safe invocation
 									void actionFn(...args);
 								}}
 							>
@@ -201,6 +320,7 @@ function useEasterEgg(tabCount: number) {
 
 	const handleClick = useCallback(
 		(tabIndex: number, e: MouseEvent): boolean => {
+			if (tabIndex === -1) return false;
 			const now = Date.now();
 			const state = clickState.current;
 			const isSame = tabIndex === state.tabIndex;
@@ -210,7 +330,6 @@ function useEasterEgg(tabCount: number) {
 			state.time = now;
 			state.tabIndex = tabIndex;
 
-			// Check secret sequence on single clicks
 			if (state.count === 1) {
 				secretProgress.current.push(tabIndex);
 				if (secretProgress.current.length > secretTarget.length) {
@@ -223,7 +342,6 @@ function useEasterEgg(tabCount: number) {
 				}
 			}
 
-			// Triple click reveals hidden settings
 			if (state.count === 3) {
 				const target = e.currentTarget as HTMLElement;
 				const rect = target.getBoundingClientRect();

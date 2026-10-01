@@ -1,6 +1,6 @@
 import { i } from "@root/src/stores/localization/localization.preload.ts";
 import type { ComponentType, JSX } from "preact";
-import { useCallback, useEffect, useRef, useState } from "preact/hooks";
+import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
 
 import { invoke } from "../../../ipc/client.preload.ts";
 import type { SettingEntry } from "../../../settingsSchema.ts";
@@ -17,8 +17,36 @@ function CheckboxInput({ id, value, onChange }: InputProps): JSX.Element {
 	return <input type="checkbox" id={id} setting-name={id} checked={value as boolean} onChange={(e) => onChange((e.target as HTMLInputElement).checked)} />;
 }
 
+// Buffered TextField to eliminate IPC keystroke lag
 function TextFieldInput({ id, value, onChange }: InputProps): JSX.Element {
-	return <input type="text" id={id} setting-name={id} class="text" value={value as string} onChange={(e) => onChange((e.target as HTMLInputElement).value)} />;
+	const [localValue, setLocalValue] = useState(value as string);
+
+	useEffect(() => {
+		setLocalValue(value as string);
+	}, [value]);
+
+	const commit = () => {
+		if (localValue !== value) {
+			onChange(localValue);
+		}
+	};
+
+	return (
+		<input
+			type="text"
+			id={id}
+			setting-name={id}
+			class="text"
+			value={localValue}
+			onInput={(e) => setLocalValue((e.target as HTMLInputElement).value)}
+			onBlur={commit}
+			onKeyDown={(e) => {
+				if (e.key === "Enter") {
+					(e.target as HTMLInputElement).blur();
+				}
+			}}
+		/>
+	);
 }
 
 function DropdownInput({ id, value, onChange, entry }: InputProps): JSX.Element {
@@ -92,7 +120,6 @@ function ListInput({ id, value, onChange }: InputProps): JSX.Element {
 function DictionaryInput({ id, value, onChange, entry }: InputProps): JSX.Element {
 	const dictValue = value as Record<string, string>;
 	const [entries, setEntries] = useState(() => Object.entries(dictValue));
-
 	const entriesRef = useRef(entries);
 
 	useEffect(() => {
@@ -110,14 +137,38 @@ function DictionaryInput({ id, value, onChange, entry }: InputProps): JSX.Elemen
 		}
 	}, [value]);
 
+	// Track key occurrences for duplicate validation
+	const keyCounts = useMemo(() => {
+		const counts: Record<string, number> = {};
+		for (const [k] of entries) {
+			const trimmed = k.trim();
+			if (trimmed) counts[trimmed] = (counts[trimmed] || 0) + 1;
+		}
+		return counts;
+	}, [entries]);
+
 	const syncToParent = useCallback(
 		(newEntries: [string, string][]) => {
 			setEntries(newEntries);
-			const obj: Record<string, string> = {};
-			for (const [k, v] of newEntries) {
-				if (k.trim()) obj[k.trim()] = v.trim();
+
+			// Check for duplicates or empty keys
+			const counts: Record<string, number> = {};
+			for (const [k] of newEntries) {
+				const trimmed = k.trim();
+				if (trimmed) counts[trimmed] = (counts[trimmed] || 0) + 1;
 			}
-			onChange(obj);
+
+			const hasDuplicates = Object.values(counts).some((count) => count > 1);
+			const hasEmpty = newEntries.some(([k]) => !k.trim());
+
+			// Only persist valid, non-colliding entries
+			if (!hasDuplicates && !hasEmpty) {
+				const obj: Record<string, string> = {};
+				for (const [k, v] of newEntries) {
+					obj[k.trim()] = v.trim();
+				}
+				onChange(obj);
+			}
 		},
 		[onChange],
 	);
@@ -156,15 +207,41 @@ function DictionaryInput({ id, value, onChange, entry }: InputProps): JSX.Elemen
 	return (
 		<div class="dictionary-container" id={id} setting-name={id}>
 			<div class="dictionary-rows">
-				{entries.map(([k, v], idx) => (
-					<div key={idx} class="dictionary-row">
-						<input type="text" class="dict-key" placeholder={i("settings-dictionary-key")} value={k} onChange={(e) => handleKeyChange(idx, (e.target as HTMLInputElement).value)} />
-						<input type="text" class="dict-value" placeholder={i("settings-dictionary-value")} value={v} onChange={(e) => handleValueChange(idx, (e.target as HTMLInputElement).value)} />
-						<button type="button" class="dictionary-remove-btn" onClick={() => handleRemove(idx)}>
-							✕
-						</button>
-					</div>
-				))}
+				{entries.map(([k, v], idx) => {
+					const trimmed = k.trim();
+					const isEmpty = !trimmed;
+					const isDuplicate = trimmed ? (keyCounts[trimmed] ?? 0) > 1 : false;
+					const hasError = isEmpty || isDuplicate;
+
+					return (
+						<div key={idx} class="dictionary-row">
+							<input
+								type="text"
+								className={`dict-key${hasError ? " input-error" : ""}`}
+								placeholder={i("settings-dictionary-key")}
+								value={k}
+								title={
+									isDuplicate
+										? i("settings-dictionary-duplicate-key")
+										: isEmpty
+											? i("settings-dictionary-empty-key")
+											: undefined
+								}
+								onChange={(e) => handleKeyChange(idx, (e.target as HTMLInputElement).value)}
+							/>
+							<input
+								type="text"
+								className="dict-value"
+								placeholder={i("settings-dictionary-value")}
+								value={v}
+								onChange={(e) => handleValueChange(idx, (e.target as HTMLInputElement).value)}
+							/>
+							<button type="button" class="dictionary-remove-btn" onClick={() => handleRemove(idx)}>
+								✕
+							</button>
+						</div>
+					);
+				})}
 			</div>
 			<div class="dictionary-controls">
 				<select class="dictionary-preset-select" onChange={handlePresetChange}>

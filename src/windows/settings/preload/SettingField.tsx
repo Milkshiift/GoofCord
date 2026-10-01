@@ -1,6 +1,6 @@
 import { i } from "@root/src/stores/localization/localization.preload.ts";
 import type { JSX } from "preact";
-import { useCallback, useEffect, useState } from "preact/hooks";
+import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 
 import { type ConfigKey, type HiddenEntry, isEditableSetting, type SettingEntry } from "../../../settingsSchema.ts";
 import { getConfig, saveSetting, subscribe } from "./config.ts";
@@ -61,6 +61,15 @@ export function SettingField({ settingKey, entry, forceVisible = false }: Settin
 		await saveSetting(settingKey, entry.defaultValue, isEditable ? entry : null);
 	}, [settingKey, entry, isEditable]);
 
+	// Check if current value differs from default
+	const isModified = useMemo(() => {
+		if (!isEditable || entry.defaultValue === undefined) return false;
+		if (typeof value === "object" && value !== null) {
+			return JSON.stringify(value) !== JSON.stringify(entry.defaultValue);
+		}
+		return value !== entry.defaultValue;
+	}, [value, entry, isEditable]);
+
 	if (!visible) {
 		return <fieldset class="hidden" data-setting-key={settingKey} />;
 	}
@@ -80,7 +89,15 @@ export function SettingField({ settingKey, entry, forceVisible = false }: Settin
 	return (
 		<fieldset class={isOffset ? "offset" : ""} data-setting-key={settingKey}>
 			<div class="checkbox-container">
-				<button type="button" class="revert-button" title="Revert to default value" onClick={handleRevert} />
+				{/* Only display revert button if the setting is modified */}
+				{isModified && (
+					<button
+						type="button"
+						className="revert-button"
+						title={i("settings-revert")}
+						onClick={handleRevert}
+					/>
+				)}
 				<InputComponent id={settingKey} value={value} onChange={handleChange} entry={isEditable ? entry : null} />
 				<label for={settingKey}>{name}</label>
 			</div>
