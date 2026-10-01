@@ -43,6 +43,11 @@ export const config: Configuration = {
 		],
 	},
 	mac: {
+		sign: {
+			identity: "",
+			entitlements: "build/entitlements.mac.plist",
+			entitlementsInherit: "build/entitlements.mac.plist",
+		},
 		category: "public.app-category.social-networking",
 		target: [
 			{
@@ -52,9 +57,6 @@ export const config: Configuration = {
 		],
 		icon: "assets/gf_icon.icns",
 		darkModeSupport: true,
-		identity: "",
-		entitlements: "build/entitlements.mac.plist",
-		entitlementsInherit: "build/entitlements.mac.plist",
 		extendInfo: {
 			NSMicrophoneUsageDescription: "This app needs access to the microphone",
 			NSCameraUsageDescription: "This app needs access to the camera",
