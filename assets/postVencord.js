@@ -3,10 +3,15 @@
 // src/windows/main/renderer/postVencord/disableWebScreensharePlugin.ts
 function disableWebScreensharePlugin() {
   console.log("Disabling WebScreenShare Vencord plugin...");
-  VC.Plugins.plugins.WebScreenShare.enabledByDefault = false;
-  const prev = window.VencordNative.settings.get();
+  if (VC?.Plugins?.plugins) {
+    VC.Plugins.plugins.WebScreenShare ??= {};
+    VC.Plugins.plugins.WebScreenShare.enabledByDefault = false;
+  }
+  const prev = window.VencordNative?.settings?.get() || {};
+  prev.plugins ??= {};
+  prev.plugins.WebScreenShare ??= {};
   prev.plugins.WebScreenShare.enabled = false;
-  window.VencordNative.settings.set(prev);
+  window.VencordNative?.settings?.set(prev);
 }
 
 // src/windows/main/renderer/postVencord/keybinds.ts
