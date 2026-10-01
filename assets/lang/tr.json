@@ -160,5 +160,11 @@
     "screenshare-audio-hear-desc": "Sadece seçilen uygulamalar DUYULACAKTIR.",
     "screenshare-audio-empty": "Aktif ses uygulamaları bulunmadı",
     "screenshare-audio-capture": "Sistem Sesini Yakala",
-    "screenshare-audio-capture-desc": "Bilgisayar sesini ekran ile birlikte paylaş"
+    "screenshare-audio-capture-desc": "Bilgisayar sesini ekran ile birlikte paylaş",
+    "settings-search": "Ara",
+    "settings-search-placeholder": "Ayarlarda ara...",
+    "settings-search-no-results": "Eşleşen ayar bulunamadı",
+    "settings-revert": "Varsayılan değere geri dön",
+    "settings-dictionary-duplicate-key": "Yinelenen anahtar",
+    "settings-dictionary-empty-key": "Anahtar boş olamaz"
 }
