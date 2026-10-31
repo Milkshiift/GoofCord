@@ -21,6 +21,7 @@ if (!app.requestSingleInstanceLock() || process.argv.includes("--kill")) {
 async function main() {
 	await loadConfig();
 	setFlags(); // Flags should be set as early as possible
+	configureWebRtc(); // Must run before any window is created
 	if (!getConfig("hardwareAcceleration")) {
 		app.disableHardwareAcceleration();
 		console.log(pc.red("[!]") + " Hardware acceleration is: " + app.isHardwareAccelerationEnabled());
@@ -96,6 +97,14 @@ function setFlags() {
 			app.commandLine.appendSwitch(flag, value);
 		}
 	}
+}
+
+function configureWebRtc() {
+	app.on("web-contents-created", (_event, webContents) => {
+		if (getConfig("webrtcIgnoreVpnInterfaces")) {
+			webContents.setWebRTCIPHandlingPolicy("default_public_and_private_interfaces");
+		}
+	});
 }
 
 main().catch(console.error);
