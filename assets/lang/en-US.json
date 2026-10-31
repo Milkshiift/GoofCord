@@ -136,6 +136,8 @@
   "opt-spoofChrome-desc": "Emulates the Chrome web browser to better blend in with normal traffic.",
   "opt-spoofWindows": "Spoof Windows (VPN Bypass)",
   "opt-spoofWindows-desc": "Reports the OS as Windows. Enable this if Discord blocks your connection while using a VPN on Linux.",
+  "opt-webrtcIgnoreVpnInterfaces": "Ignore VPN interfaces",
+  "opt-webrtcIgnoreVpnInterfaces-desc": "Restricts WebRTC to the default route, so voice and video only use the main network interface. Enable this if voice chat or screensharing gets stuck on \"DTLS connecting\" while a VPN such as Tailscale or WireGuard is active.",
   "opt-firewall": "Firewall",
   "opt-firewall-desc": "Blocks known tracking and telemetry. Disable only for debugging.",
   "opt-customFirewallRules": "Custom firewall rules",

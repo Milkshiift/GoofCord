@@ -346,6 +346,11 @@ export const settingsSchema = {
 				condition: (value) => process.platform !== "win32" && value === true,
 			},
 		}),
+		webrtcIgnoreVpnInterfaces: setting("checkbox", {
+			name: "Ignore VPN interfaces",
+			defaultValue: false,
+			description: "Restricts WebRTC to the default route, so voice and video only use the main network interface. Enable this if voice chat or screensharing gets stuck on \"DTLS connecting\" while a VPN such as Tailscale or WireGuard is active.",
+		}),
 		firewall: setting("checkbox", {
 			name: "Firewall",
 			defaultValue: true,
