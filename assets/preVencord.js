@@ -124,8 +124,8 @@ var titlebar_default = definePatch({
     {
       find: '"refresh-title-bar-small"',
       replacement: [
-        { match: /\i===\i\.PlatformTypes\.WINDOWS/g, replace: "true" },
-        { match: /\i===\i\.PlatformTypes\.WEB/g, replace: "false" }
+        { match: /\i===\i\.\i\.WINDOWS/g, replace: "true" },
+        { match: /\i===\i\.\i\.WEB/g, replace: "false" }
       ]
     },
     {
